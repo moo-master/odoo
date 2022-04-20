@@ -17,7 +17,7 @@
   "name"                 :  "2c2p Payment Acquirer",
   "summary"              :  """The module allow the customers to make payments on Odoo website using 2c2p Payment Gateway. The module facilitates 2c2p integration with Odoo""",
   "category"             :  "Website",
-  "version"              :  "1.0.0",
+  "version"              :  "1.0.1",
   "sequence"             :  1,
   "author"               :  "Webkul Software Pvt. Ltd.",
   "website"              :  "https://store.webkul.com/Odoo-2c2p-Payment-Acquirer.html",

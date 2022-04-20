@@ -38,7 +38,7 @@ class To_C_To_PController(http.Controller):
         request.env['payment.transaction'].sudo()._handle_feedback_data('to_c_to_p', post)
         return ''
 
-    @http.route(_return_url, type='http', auth="public", methods=['POST', 'GET'], csrf=False, website=True)
+    @http.route(_return_url, type='http', auth="public", methods=['POST', 'GET'], csrf=False, website=True, save_session=False)
     def to_c_to_p_return(self, **post):
         """ to_c_to_p return """
         _logger.info('Beginning 2c2p return response form_feedback with post data %s', pprint.pformat(post))  # debug
