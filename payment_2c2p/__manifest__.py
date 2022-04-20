@@ -20,6 +20,7 @@
   "version"              :  "1.0.1",
   "sequence"             :  1,
   "author"               :  "Webkul Software Pvt. Ltd.",
+  "license"              :  "Other proprietary",
   "website"              :  "https://store.webkul.com/Odoo-2c2p-Payment-Acquirer.html",
   "description"          :  """Odoo Website 2c2p Payment Acquirer
 Odoo 2c2p Payment Gateway
