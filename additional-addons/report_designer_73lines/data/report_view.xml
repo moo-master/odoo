@@ -1,0 +1,35 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!--
+    Part of Odoo Module Developed by 73lines
+    See LICENSE file for full copyright and licensing details.
+-->
+<odoo>
+    <data>
+         <record id="report_external_layout_without_header_footer" model="ir.ui.view">
+             <field name="name">Report with no header and footer</field>
+            <field name="model"></field>
+            <field name="type">qweb</field>
+            <field name="is_report_designer_template" eval="True"/>
+            <field name="model_data_id" ref="report_external_layout_without_header_footer"/>
+            <field name="active" eval="True"/>
+        </record>
+
+        <record id="report_header_external_layout" model="ir.ui.view">
+            <field name="name">Report with header</field>
+            <field name="model"></field>
+            <field name="type">qweb</field>
+            <field name="is_report_designer_template" eval="True"/>
+            <field name="model_data_id" ref="report_header_external_layout"/>
+            <field name="active" eval="True"/>
+        </record>
+
+        <record id="report_footer_external_layout" model="ir.ui.view">
+            <field name="name">Report with footer</field>
+            <field name="model"></field>
+            <field name="type">qweb</field>
+            <field name="is_report_designer_template" eval="True"/>
+            <field name="model_data_id" ref="report_footer_external_layout"/>
+            <field name="active" eval="True"/>
+        </record>
+    </data>
+</odoo>

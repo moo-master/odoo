@@ -1,0 +1,71 @@
+<odoo>
+    <template id="report_external_layout_without_header_footer_standard" name="Report without header and footer standard">
+        <div class="header">
+
+        </div>
+        <div class="article o_report_layout_standard" t-att-data-oe-model="o and o._name" t-att-data-oe-id="o and o.id"
+             t-att-data-oe-lang="o and o.env.context.get('lang')">
+            <t t-call="web.address_layout"/>
+            <t t-raw="0"/>
+        </div>
+        <div class="footer">
+
+        </div>
+
+    </template>
+
+    <template id="report_external_layout_without_header_footer" name="Report without header and footer">
+        <t t-if="not o" t-set="o" t-value="doc"/>
+
+        <t t-if="not company">
+            <!-- Multicompany -->
+            <t t-if="company_id">
+                <t t-set="company" t-value="company_id"/>
+            </t>
+            <t t-elif="o and 'company_id' in o">
+                <t t-set="company" t-value="o.company_id.sudo()"/>
+            </t>
+            <t t-else="else">
+                <t t-set="company" t-value="res_company"/>
+            </t>
+        </t>
+
+        <t t-call="report_designer_73lines.report_external_layout_without_header_footer_standard">
+            <t t-raw="0"/>
+        </t>
+
+    </template>
+
+    <template id="custom_report_without_header_footer_document" name="Report without header and footer">
+        <t t-call="report_designer_73lines.report_external_layout_without_header_footer">
+            <!--
+                As language is not required for all objects.
+                So for now, If partner is available in object then pass
+                that partner's language.
+            -->
+            <t t-if="'partner_id' in doc.fields_get()">
+                <t t-set="doc" t-value="doc.with_context({'lang':doc.partner_id.lang})"/>
+            </t>
+            <div class="oe_structure"/>
+        </t>
+    </template>
+
+    <!-- Common Report Structure (Main) -->
+    <template id="custom_report_without_header_footer">
+        <t t-call="web.html_container">
+            <t t-foreach="docs" t-as="doc">
+                <!--
+                    As language is not required for all objects.
+                    So for now, If partner is available in object then pass
+                    that partner's language.
+                -->
+                <t t-if="'partner_id' in doc.fields_get()">
+                    <t t-call="report_designer_73lines.custom_report_document" t-lang="doc.partner_id.lang"/>
+                </t>
+                <t t-if="'partner_id' not in doc.fields_get()">
+                    <t t-call="report_designer_73lines.custom_report_document"/>
+                </t>
+            </t>
+        </t>
+    </template>
+</odoo>

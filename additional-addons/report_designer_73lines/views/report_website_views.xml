@@ -1,0 +1,163 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!--
+    Part of Odoo Module Developed by 73lines
+    See LICENSE file for full copyright and licensing details.
+-->
+<odoo>
+    <template id="report_navbar" inherit_id="website.user_navbar">
+        <xpath expr="//ul[hasclass('o_menu_sections')]" position="attributes">
+            <attribute name="t-if">not edit_report</attribute>
+        </xpath>
+
+        <xpath expr="//ul[hasclass('o_menu_sections')]" position="after">
+            <ul class="o_menu_sections" t-if="edit_report">
+                <li class="dropdown report_customize_menu">
+                    <a id="report-customize-menu-button" class="dropdown-toggle" data-toggle="dropdown" data-display="static" href="#">Customize</a>
+                    <div id="report-customize-menu" class="dropdown-menu" role="menu">
+                        <a role="menuitem" href="#" data-action="ace" class="dropdown-item" id="html_editor">HTML/CSS Editor</a>
+                        <a class="dropdown-item" href="#" role="menuitem">
+                            <span><b>Preview Records</b></span>
+                            <select id="all_records" class="form-control"/>
+                        </a>
+                        <a class="dropdown-item" href="#" role="menuitem">
+                            <span><b>Fields</b></span>
+                            <select id="report_field_name" class="form-control"/>
+                        </a>
+                        <a class="dropdown-item" href="#" role="menuitem">
+                            <input type="text" id="report_field_generator" class="form-control" placeholder="Field Generator"/>
+                        </a>
+                    </div>
+                </li>
+            </ul>
+        </xpath>
+
+        <xpath expr="//li[hasclass('o_mobile_preview')]" position="before">
+            <t t-if="edit_report">
+                <li class="report_customize_menu">
+                    <a href="javascript:void(0);" id="report_export"><span class="fa fa-file-zip-o"> Export</span></a>
+                </li>
+            </t>
+        </xpath>
+    </template>
+
+    <template id="main_report_designer_form" name="Report Designer">
+        <t t-call="website.layout">
+            <div id="wrap" class="oe_structure oe_empty">
+                <section class="mt0 mb0">
+                    <div class="container">
+                        <div class="row">
+                            <div class="col-md-12 mb16">
+                                <h1 class="text-center mb16 mt16">
+                                    Report Designer
+                                </h1>
+                                <hr/>
+                                <div class="col-md-8 offset-md-2 mt16">
+                                    <div class="card with-nav-tabs border-alpha">
+                                        <div class="card-header">
+                                                <ul class="nav nav-pills nav-fill">
+                                                    <li class="nav-item active"><a href="#report_create_tab" data-toggle="pill" class="nav-link active show">Create Report</a></li>
+                                                    <li class="nav-item"><a href="#report_edit_tab" data-toggle="pill" class="nav-link">Edit Report</a></li>
+                                                </ul>
+                                        </div>
+                                        <div class="card-body">
+                                            <div class="tab-content">
+                                                <div class="tab-pane fade in active show" id="report_create_tab">
+                                                    <form role="form" method="post" action="/create-report">
+                                                        <input type="hidden" name="csrf_token" t-att-value="request.csrf_token()" />
+                                                        <div class="form-group">
+                                                            <label class="control-label" for="model">Model</label>
+                                                            <select name="model" id="model" class="form-control" required="required" autofocus="autofocus">
+                                                                <option value="" disabled="disabled" selected="selected">
+                                                                    -- Select Model --
+                                                                </option>
+                                                                <t t-foreach="models or []" t-as="model">
+                                                                    <option t-att-value="model.model">
+                                                                        <t t-esc="model.model" />
+                                                                    </option>
+                                                                </t>
+                                                            </select>
+                                                        </div>
+                                                        <div class="form-group">
+                                                            <label class="control-label" for="name">Name</label>
+                                                            <input type="text" id="name" class="form-control"
+                                                                name="name" placeholder="Name" title="Name" required="required" />
+                                                        </div>
+                                                        <div class="form-group">
+                                                            <label class="control-label" for="paperformat">Paper Format</label>
+                                                            <select name="paperformat" id="paperformat" class="form-control">
+                                                                <option value="" disabled="disabled">
+                                                                    -- Select Paper format --
+                                                                </option>
+                                                                <t t-foreach="paperformats or []" t-as="paperformat">
+                                                                    <option t-att-value="paperformat.id" t-att-selected="'true' if paperformat.name.find('European A4') != -1 else None">
+                                                                        <t t-esc="paperformat.name" />
+                                                                    </option>
+                                                                </t>
+                                                            </select>
+                                                        </div>
+                                                        <!--
+                                                            Feature is hidden.
+                                                            See, the @todo part
+                                                            in views/report_view.xml
+                                                         -->
+                                                        <div class="form-group hidden">
+                                                            <label class="control-label" for="layout">Layout</label>
+                                                            <select name="layout" id="layout" class="form-control">
+                                                                <option value="web.external_layout" selected="selected">
+                                                                  Default Layout
+                                                                </option>
+                                                                <t t-foreach="layouts or []" t-as="layout">
+                                                                    <option t-att-value="layout.xml_id">
+                                                                        <t t-esc="layout.name" />
+                                                                    </option>
+                                                                </t>
+                                                            </select>
+                                                        </div>
+                                                        <div class="form-group">
+                                                            <label class="control-label" for="report_type">Report Type</label>
+                                                            <select name="report_type" id="report_type" class="form-control" required="required">
+                                                                <option value="" disabled="disabled">
+                                                                    -- Select Report Type --
+                                                                </option>
+                                                                <option value="qweb-pdf" selected="true">PDF</option>
+                                                                <option value="qweb-html">HTML</option>
+                                                            </select>
+                                                        </div>
+                                                        <button class="btn btn-primary btn-block mt16">Create</button>
+                                                    </form>
+                                                </div>
+                                                <div class="tab-pane fade" id="report_edit_tab">
+                                                    <div class="text-center mb16">
+                                                        <span class="text-alpha"><i>Select existing report for editing purpose.</i></span>
+                                                    </div>
+                                                    <form role="form" method="post" action="/edit-report">
+                                                        <input type="hidden" name="csrf_token" t-att-value="request.csrf_token()" />
+                                                        <div class="form-group">
+                                                            <label class="control-label" for="reports">Report</label>
+                                                            <select name="reports" id="reports" class="form-control" required="required">
+                                                                <option value="" disabled="disabled" selected="selected">
+                                                                    -- Select Report --
+                                                                </option>
+                                                                <t t-foreach="reports or []" t-as="report">
+                                                                    <option t-att-value="report.id">
+                                                                        <t t-esc="report.name" />
+                                                                    </option>
+                                                                </t>
+                                                            </select>
+                                                        </div>
+                                                        <button class="btn btn-primary btn-block mt16">Continue</button>
+                                                    </form>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </section>
+            </div>
+        </t>
+    </template>
+
+</odoo>

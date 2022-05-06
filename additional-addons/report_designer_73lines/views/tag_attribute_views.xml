@@ -1,0 +1,114 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!--
+    Part of Odoo Module Developed by 73lines
+    See LICENSE file for full copyright and licensing details.
+-->
+<odoo>
+
+
+    <record id="res_config_settings_view_form" model="ir.ui.view">
+            <field name="name">res.config.settings.view.form.inherit.base.setup</field>
+            <field name="model">res.config.settings</field>
+            <field name="priority" eval="0"/>
+            <field name="inherit_id" ref="base.res_config_settings_view_form"/>
+            <field name="arch" type="xml">
+                <xpath expr="//div[@id='invite_users']" position="after">
+                    <h2>Reports Designer</h2>
+                    <widget name="setting_report_designer"/>
+                </xpath>
+            </field>
+    </record>
+    <!-- Start Report Designing Action -->
+    <record id="action_report_designer" model="ir.actions.act_url">
+        <field name="name">Report Designer</field>
+        <field name="url">/report/editor</field>
+        <field name="target">self</field>
+    </record>
+
+    <!-- Tag Attribute Name Tree View -->
+    <record id="tag_attribute_name_view_tree" model="ir.ui.view">
+        <field name="name">tag.attribute.name.tree</field>
+        <field name="model">tag.attribute.name</field>
+        <field name="arch" type="xml">
+            <tree string="Tag Attribute Name" editable="bottom">
+                <field name="name"/>
+            </tree>
+        </field>
+    </record>
+
+    <!-- Tag Attribute Name Action -->
+    <!--<record id="ir_action_tag_attribute_name" model="ir.actions.act_window">
+        <field name="name">Tag Attribute Name</field>
+        <field name="type">ir.actions.act_window</field>
+        <field name="res_model">tag.attribute.name</field>
+        <field name="view_type">form</field>
+        <field name="view_id" ref="tag_attribute_name_view_tree"/>
+    </record>-->
+
+    <!-- Tag Attribute Tree View -->
+    <record id="tag_attribute_view_tree" model="ir.ui.view">
+        <field name="name">tag.attribute.tree</field>
+        <field name="model">tag.attribute</field>
+        <field name="arch" type="xml">
+            <tree string="Tag Attribute" editable="bottom">
+                <field name="name"/>
+                <field name="second_attribute"/>
+                <field name="is_iterable"/>
+                <field name="is_renderable"/>
+                <field name="is_option"/>
+                <field name="is_use_with_only_field"/>
+                <field name="priority"/>
+                <field name="with_attrs" widget="many2many_tags"/>
+            </tree>
+        </field>
+    </record>
+
+    <!-- Tag Attribute Action -->
+    <record id="ir_action_tag_attribute" model="ir.actions.act_window">
+        <field name="name">Tag Attribute</field>
+        <field name="type">ir.actions.act_window</field>
+        <field name="res_model">tag.attribute</field>
+        <field name="view_mode">tree</field>
+        <field name="view_id" ref="tag_attribute_view_tree"/>
+    </record>
+
+    <!-- Main Menu: Start Report Designing -->
+    <menuitem id="report_designer_website"
+              parent="base.menu_administration"
+              name="Start Report Designing"
+              action="action_report_designer"
+              sequence="20"/>
+
+    <!--  Main Menu: Report Designer Settings -->
+    <menuitem id="report_designer_config" parent="base.menu_administration" name="Report Designer Settings" sequence="10"/>
+
+    <!-- Tag Attribute Menu -->
+    <menuitem id="tag_attribute"
+              name="Tag Attributes"
+              parent="report_designer_73lines.report_designer_config"
+              action="ir_action_tag_attribute"
+              sequence="10" />
+
+    <!-- @todo Siddharth Bhalgami <siddharth.bhalgami@gmail.com>
+              *** Idea is giving or making a common layout
+              which is usable in multiple reports template.
+              So, no need to start from scratch if we have
+              some kind of common template/view/structure. ***
+   -->
+    <record id="view_view_form_report_inherit" model="ir.ui.view">
+        <field name="name">ir.ui.view.report form</field>
+        <field name="model">ir.ui.view</field>
+        <field name="inherit_id" ref="base.view_view_form"/>
+        <field name="arch" type="xml">
+            <field name="priority" position="after">
+                <field name="is_report_designer_template"/>
+                <field name="use_as_layout"/>
+            </field>
+        </field>
+    </record>
+
+<!--    <menuitem action="base.action_ui_view" id="menu_ui_view_report_designer"
+              parent="report_designer_73lines.report_designer_configuration"
+              groups="base.group_no_one" sequence="20"/>-->
+
+</odoo>

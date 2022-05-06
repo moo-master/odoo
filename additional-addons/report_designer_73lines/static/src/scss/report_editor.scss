@@ -1,0 +1,270 @@
+.o_menu_systray {
+    li.report_customize_menu {
+        padding-left: 2px;
+        padding-right: 2px;
+        > a{
+            color: #FFFFFF !important;
+            border-radius: 0;
+        }
+        &.hover {
+            color: #FFFFFF !important;
+        }
+    }
+}
+
+.report_loader {
+    overflow: hidden;
+    position: fixed;
+    top: 0;
+    right: 0;
+    bottom: 0;
+    left: 0;
+    z-index: 1061;
+    background-color: rgba(0, 0, 0, 0.44);
+}
+
+.center {
+    top: 50%;
+    position: fixed;
+    left: 45%;
+    span {
+        color: #FFFFFF;
+        font-size: 25px;
+    }
+}
+
+#navigate_section li {
+    display: inline-block;
+}
+#navigate_section{
+    margin-bottom: 0;
+    padding: 0;
+    text-align: center;
+}
+t[t-set][t-value] {
+    border: 1px solid $o-brand-primary;
+    padding: 5px;
+}
+
+img.report-well {
+    min-height: 40px;
+    min-width: 200px;
+}
+
+.attr-1, .attr-2{
+    padding: 0 0 20px 0;
+    margin: 0 0 15px 0!important;
+}
+
+.input-attr-value-err{
+    border-color: red !important;
+}
+
+.dependency-warning {
+    padding: 5px 15px;
+    > span {
+        display: flex;
+        > .fa {
+            padding: 8px;
+        }
+    }
+}
+
+ul.o_menu_sections {
+    #report-customize-menu {
+        width: 250px;
+    }
+}
+#save_close{
+    margin-bottom:5px;
+}
+#remove_attr{
+    margin-bottom:5px;
+    margin-left:5px;
+}
+#add_update_attr{
+    margin-bottom:5px;
+}
+#s2id_m-fn,#s2id_m-fld-m2m-o2m,#s2id_m-fld-normal-m2o,#s2id_m-rel-fld {
+    margin-right: 20px;
+    height: auto !important;
+    padding: 0;
+    margin-left: 15px;
+    width: 190px;
+    margin-bottom:4px;
+}
+#attribute_type{
+    margin-right: 20px;
+    padding: 0;
+    margin-left: 15px;
+    width: 190px;
+}
+.select2-choice,.select2-default{
+    background-color:black;background:black;
+}
+.report_form_button, .report_font_button{
+    border: 1px solid black;
+    color: var(--o-we-color);
+}
+.report_form_button:hover, .report_font_button:hover{
+    border: 1px solid black;
+    color: var(--o-we-color);
+    background:black;
+}
+.report_font_button.active:hover{
+    border: 1px solid black;
+    color: var(--o-we-color);
+}
+.report_font_button.active{
+    border: 1px solid black;
+    color: var(--o-we-color);
+    background:black;
+}
+.snippet-option-report_attribute{
+    padding: 0 30px 0 30px !important;
+}
+
+.o_field_selector {
+    position: relative;
+
+    > .o_field_selector_value {
+        display: flex;
+        flex-flow: row wrap;
+        align-items: center;
+        height: 100%;
+        min-height: 20px; // needed when there is no value in it and used standalone
+        &:active, &:focus, &:active:focus {
+            outline: none;
+        }
+
+        > .o_field_selector_chain_part {
+            padding: 0px 1px;
+            border: 1px solid darken($o-brand-lightsecondary, 10%);
+            background: $o-brand-lightsecondary;
+            margin-bottom: 1px;
+        }
+        > i {
+            align-self: center;
+            margin: 0 2px;
+            font-size: 10px;
+        }
+    }
+    > .o_field_selector_controls {
+        @include o-position-absolute(0, 0, 1px);
+        display: flex;
+        align-items: center;
+        cursor: pointer;
+    }
+
+    &.o_edit_mode {
+        > .o_field_selector_controls::after {
+            @include o-caret-down;
+        }
+
+        > .o_field_selector_popover {
+            $o-field-selector-arrow-height: 7px;
+            top: 100%;
+            z-index: 1051;
+            bottom: auto;
+            //width: 265px;
+            //margin-top: $o-field-selector-arrow-height;
+            background: white;
+            //box-shadow: 0 3px 10px rgba(0,0,0,.4);
+
+            &:focus {
+                outline: none;
+            }
+
+            .o_field_selector_popover_header {
+                color: white;
+                background: theme-color('primary');
+                font-weight: bold;
+                padding: 5px 0 5px 0.4em;
+
+                .o_field_selector_title {
+                    width: 100%;
+                    @include o-text-overflow;
+                    padding: 0px 35px;
+                    text-align: center;
+                }
+                .o_field_selector_search {
+                    padding-right: 0.4rem;
+                    > .o_input {
+                        padding: 5px 0.4rem;
+                    }
+                }
+                .o_field_selector_popover_option {
+                    @include o-position-absolute($top: 0);
+                    padding: 8px;
+
+                    &.o_field_selector_prev_page {
+                        left: 0;
+                    }
+                    &.o_field_selector_close {
+                        right: 0;
+                    }
+                    &:hover {
+                        background: darken(theme-color('primary'), 10%);
+                    }
+                }
+                &:before {
+                    @include o-position-absolute($top: -$o-field-selector-arrow-height, $left: $o-field-selector-arrow-height);
+                    content: "";
+                    border-left: $o-field-selector-arrow-height solid rgba(0, 0, 0, 0);
+                    border-right: $o-field-selector-arrow-height solid rgba(0, 0, 0, 0);
+                    border-bottom: $o-field-selector-arrow-height solid theme-color('primary');
+                }
+            }
+            .o_field_selector_popover_body {
+                .o_field_selector_page {
+                    position: relative;
+                    max-height: 320px;
+                    overflow: auto;
+                    margin: 0;
+                    padding: 0;
+
+                    > .o_field_selector_item {
+                        list-style: none;
+                        position: relative;
+                        padding: 5px 0 5px 0.4em;
+                        cursor: pointer;
+                        font-family: Arial;
+                        font-size: 13px;
+                        color: #444;
+                        border-bottom: 1px solid #eee;
+                        &.active {
+                            background: #f5f5f5;
+                        }
+                        .o_field_selector_item_title {
+                            font-size: 12px;
+                        }
+                        .o_field_selector_relation_icon {
+                            @include o-position-absolute($top: 0, $right: 0, $bottom: 0);
+                            display: flex;
+                            align-items: center;
+                            padding: 10px;
+                        }
+                    }
+                }
+            }
+            .o_field_selector_popover_footer {
+                background: theme-color('primary');
+                padding: 5px 0.4em;
+
+                > input {
+                    width: 100%;
+                }
+            }
+        }
+    }
+}
+.here_form_render{
+    .o_field_selector_value{
+        color: black;
+        background-color: white;
+    }
+}
+.field_selection{
+    margin-left: 15px;
+    margin-right: 20px;
+}
