@@ -1,0 +1,315 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+    Part of Odoo Module Developed by 73lines
+    See LICENSE file for full copyright and licensing details.
+    c : container
+    m : main
+    fld : field
+    fn : function
+    rel: relation field
+    chld: child
+    attr-1 : first attribute
+    attr-2 : second attribute
+    val: value
+    sel: selection
+-->
+<templates xml:space="preserve">
+    <t t-name="AttributeSelection">
+        <option value=""></option>
+        <t t-foreach="attribute_types" t-as="attribute">
+            <option t-att-value="attribute"><t t-esc="attribute" /></option>
+        </t>
+    </t>
+
+    <t t-name="web_editor.customize_block_option">
+        <we-customizeblock-option/>
+    </t>
+
+    <t t-name="report_designer_dialogbox">
+        <div class="my_attribute_form_class">
+
+            <div class="form-group">
+                <div class="row">
+                    <div class="col-sm-12">
+                        <label style="margin-left:15px;color: var(--o-we-color)" class="control-label" for="attribute_type">Attribute Name :</label>
+                        <select style="height:26px;" id="attribute_type" class="form-control" required="required"/>
+                    </div>
+                </div>
+            </div>
+
+        <div class="form-group attr-1 d-none" style="margin-bottom:0px !important;">
+            <div class="attr-inner d-none">
+                <div class="c-m-sel">
+                    <h5 style="color: var(--o-we-color);" class="text-center">Main Object</h5>
+
+                    <!-- Main Fields (Normal and many2one) -->
+                    <div class="mr0 ml0">
+
+                        <!-- Main Fields (many2many and one2many) -->
+                        <div class="d-none c-m-fld-m2m-o2m">
+                        </div>
+
+                        <!-- Main Functions -->
+                        <div class="d-none c-m-fn">
+                            <label class="control-label" style="margin-left:15px;color: var(--o-we-color);" for="m-fn"> Functions :</label>
+                            <select id="m-fn" class="form-control">
+                                <option value=""></option>
+                                <t t-foreach="function_names" t-as="func">
+                                    <option t-att-value="'doc.' + func + '()'"><t t-esc="func + '()'" /></option>
+                                </t>
+                            </select>
+                        </div>
+                    </div>
+                </div>
+
+                <t t-if="relation_field_names">
+                    <!-- Relational Fields Name -->
+                    <div class="row mr0 ml0">
+                        <div class="col-sm-12 c-chld-fld">
+                            <h5 style="color: var(--o-we-color);" class="text-center">Child Object</h5>
+                        </div>
+                    </div>
+                </t>
+            </div>
+
+            <div class="col-sm-12 c-attr-1-custom-type d-none">
+                <label style="color: var(--o-we-color);" class="control-label" for="custom_attribute_type">Custom Attribute :</label>
+                <input style="width: 190px;height:26px;" type="text" id="custom_attribute_type" class="form-control"/>
+            </div>
+
+            <div class="field_selection"/>
+            <div class="if_field_selection"/>
+
+            <div class="col-sm-12 c-attr-1-val">
+                <label style="color: var(--o-we-color);" class="control-label" for="attribute_value">Attribute Value :</label>
+                <input style="width: 190px;height:26px;" type="text" id="attribute_value" class="form-control"/>
+            </div>
+        </div>
+
+        <div class="form-group attr-2 row d-none">
+            <h4 style="color: var(--o-we-color);margin-left:15px;" class="text-center">Second Attribute</h4>
+            <div class="col-sm-6">
+                <label style="color: var(--o-we-color);" class="control-label" for="second_attribute_type">Name :</label>
+                <input style="height:26px;" type="text" id="second_attribute_type" class="form-control" disabled="disabled"/>
+            </div>
+            <div class="col-sm-6">
+                <label style="color: var(--o-we-color);" class="control-label" for="second_attribute_value">Value :</label>
+                <input style="height:26px;" type="text" id="second_attribute_value" class="form-control"/>
+            </div>
+        </div>
+
+        <div class="form-group">
+            <div class="col-sm-12 text-center">
+                <button class="btn report_font_button" data-class="font-weight-bold" id="bold_text">
+                    <i class="fa fa-bold"/>
+                </button>
+                <button class="btn report_font_button" data-class="font-italic" id="italic_text">
+                    <i class="fa fa-italic"/>
+                </button>
+                <button class="btn report_font_button" data-class="o_underline" id="underline_text">
+                    <i class="fa fa-underline"/>
+                </button>
+            </div>
+        </div>
+
+        <div class="form-group c-add-remove">
+            <div class="col-sm-12 text-center">
+                <button class="btn report_form_button" id="save_close">Save &amp; Close</button>
+                <button class="btn report_form_button" id="remove_attr" disabled="disabled">Remove</button>
+                <button class="btn report_form_button" id="add_update_attr" disabled="disabled">Add</button>
+            </div>
+        </div>
+    </div>
+    </t>
+
+    <t t-name="MainObjectRelationFields">
+        <option value=""></option>
+        <t t-foreach="fields" t-as="field">
+            <option t-att-value="'doc.' + obj + '.' + field['name']"><t t-esc="field['field_description'] + ' (' + field['name'] + ')'" /></option>
+        </t>
+    </t>
+
+    <t t-name="report_designer_customize_block_options_section">
+        <we-customizeblock-options>
+            <we-title>
+                <span t-esc="name"/>
+                <we-top-button-group>
+                    <we-button class="fa fa-fw fa-clone oe_snippet_clone o_we_link o_we_hover_success"
+                                title="Duplicate Container"
+                                aria-label="Duplicate Container"/>
+                    <we-button class="fa fa-fw fa-trash oe_snippet_remove o_we_link o_we_hover_danger"
+                                title="Remove Block"
+                                aria-label="Remove Block"/>
+                    <we-button class="fa fa-fw fa-level-up oe_snippet_parent o_we_link o_we_hover_danger"
+                                title="Go To Parent"
+                                aria-label="Go To Parent"/>
+                </we-top-button-group>
+            </we-title>
+        </we-customizeblock-options>
+    </t>
+
+    <t t-name="report_form_field_data">
+        <div role="dialog" class="modal o_technical_modal" id="report_modal">
+                <div class="modal-dialog">
+                <div class="modal-content">
+                    <header class="modal-header" t-if="window_title">
+                        <h3 class="modal-title"><t t-esc="window_title"/></h3>
+                        <button type="button" class="close" data-dismiss="modal" aria-label="Close">×</button>
+                    </header>
+                    <main class="modal-body">
+                        <form role="form" t-att-id="id">
+                            <div class="form-group row mb0">
+                                <label for="page-name" class="col-md-4 col-form-label">
+                                    <t t-esc="field_name"/>:
+                                </label>
+                                <div class="col-md-8">
+                                    <input t-if="field_type == 'input'" type="text" class="form-control" required="required"/>
+                                    <textarea t-if="field_type == 'textarea'" class="form-control" required="required" rows="5"></textarea>
+                                    <select t-if="field_type == 'select'" class="form-control"></select>
+                                </div>
+                            </div>
+                        </form>
+                    </main>
+                    <footer class="modal-footer">
+                        <button type="button" class="btn btn-primary btn-continue">Continue</button>
+                        <button type="button" class="btn btn-secondary" data-dismiss="modal" aria-label="Cancel">Cancel</button>
+                    </footer>
+                </div>
+            </div>
+        </div>
+    </t>
+
+    <t t-name="WidgetGeneratorSelection">
+        <div class="col-sm-4 d-none" style="margin-bottom:15px;" id="widget-selection">
+            <label style="color: var(--o-we-color);" class="control-label" for="widget_name">Widget:</label>
+            <select style="width:190px;height:31px;" id="widget_name" class="form-control">
+                <option value=""></option>
+                <t t-foreach="widgets" t-as="widget">
+                    <option t-att-value="widgets[widget]">
+                        <t t-esc="widget" />
+                    </option>
+                </t>
+            </select>
+        </div>
+    </t>
+
+    <t t-extend="DashboardMain">
+        <t t-jquery=".o_web_settings_dashboard_apps" t-operation="after">
+            <div class="text-center o_web_settings_dashboard_report_designer"></div>
+        </t>
+    </t>
+
+    <t t-name="DashboardReportDesigner">
+        <div class="text-center o_web_settings_dashboard_report_designer mt8">
+            <a class="text-center inside_a_org_uuid" href="https://www.73Lines.com" target="_blank">
+                <img class="img img-responsive org_logo_with_uuid_name text-center"
+                     data-app-name="report_designer_73lines"
+                     style="margin:  auto;"
+                     src="https://srv.73lines.com/get-org-logo?dbuuid=5ede7c04-934a-11ea-93c4-1008b19ac7cf&amp;apps=report_designer_73lines"
+                     onerror="this.src='/report_designer_73lines/static/description/icon.png';"
+                />
+            </a>
+            <div class="row justify-content-center">
+                <div class="col-md-3">
+                    <a href="https://www.73lines.com/shop"
+                       target="_blank"
+                       class="btn btn-primary btn-block mt8 mb8">
+                        <i class="fa fa-shopping-cart"/> Store
+                    </a>
+                </div>
+                <div class="col-md-3">
+                    <a href="https://www.73lines.com/page/contactus"
+                       target="_blank"
+                       class="btn btn-primary btn-block mt8 mb8">
+                        <i class="fa fa-envelope"/> Contact us
+                    </a>
+                </div>
+                <div class="col-md-12">
+                    <div class="o_web_settings_dashboard_header o_report_list mt16 mb16" style="cursor: pointer;color: #555487;">
+                        0 Reports
+                    </div>
+                </div>
+                <div class="col-md-6">
+                    <a class="btn btn-primary btn-block text-white o_start_report_designing"><strong>Start Report Designing</strong></a>
+                </div>
+            </div>
+        </div>
+    </t>
+
+    <t t-name="ReportExportDialogContent">
+        <div class="form-group">
+            <div class="col-sm-12">
+                <label class="control-label" for="report-name"> Name :</label>
+                <input id="report-name" class="form-control" required="required" t-att-value="name"/>
+            </div>
+        </div>
+
+        <div class="form-group">
+            <div class="col-sm-12">
+                <label class="control-label" for="modules">Dependency :</label>
+                <select id="modules" class="form-control" required="required" multiple="">
+                    <t t-foreach="modules" t-as="module">
+                        <option t-att-value="module" selected=""><t t-esc="module" /></option>
+                    </t>
+                </select>
+                <div class="alert alert-warning mb0 mt8 dependency-warning">
+                    <span><i class="fa fa-warning fa-2x"/> Remove or Add Dependency carefully if needed. It may cause error while installing exported module.</span>
+                </div>
+            </div>
+        </div>
+    </t>
+
+    <div aria-atomic="true" t-name="ModelFieldSelector" t-attf-class="o_field_selector#{!widget.options.readonly ? ' o_edit_mode o_input' : ''}">
+    <div class="o_field_selector_value" tabindex="0"/>
+    <div class="o_field_selector_controls" tabindex="0">
+        <i role="alert" class="fa fa-exclamation-triangle o_field_selector_warning d-none" title="Invalid field chain" aria-label="Invalid field chain"/>
+    </div>
+    <div t-if="!widget.options.readonly" class="o_field_selector_popover d-none" tabindex="0">
+        <div class="o_field_selector_popover_header text-center">
+            <i class="fa fa-arrow-left o_field_selector_popover_option o_field_selector_prev_page" title="Previous" role="img" aria-label="Previous"/>
+            <div class="o_field_selector_title"/>
+            <i class="fa fa-times o_field_selector_popover_option o_field_selector_close" title="Close" role="img" aria-label="Close"/>
+            <div t-if="widget.options.showSearchInput" class="o_field_selector_search mt-2">
+                <input type="text" placeholder='Search...' class="o_input"/>
+            </div>
+        </div>
+        <div class="o_field_selector_popover_body">
+            <ul class="o_field_selector_page"/>
+        </div>
+        <div t-if="widget.options.debugMode" class="o_field_selector_popover_footer">
+            <input type="text" class="o_input o_field_selector_debug"/>
+        </div>
+    </div>
+</div>
+    <t t-name="ModelFieldSelector.value">
+    <t t-foreach="chain" t-as="fieldName">
+        <t t-if="fieldName_index > 0">
+            <i class="fa fa-chevron-right" role="img" aria-label="Followed by" title="Followed by"/>
+        </t>
+        <span class="o_field_selector_chain_part">
+            <t t-if="fieldName === '1'">
+                <t t-esc="fieldName"/>
+            </t>
+            <t t-elif="fieldName === '0'">
+                <t t-esc="fieldName"/>
+            </t>
+            <t t-else="">
+                <t t-set="fieldInfo" t-value="_.findWhere(pages[fieldName_index], {'name': fieldName})"/>
+                <t t-esc="fieldInfo &amp;&amp; fieldInfo.string || '?'"/>
+            </t>
+        </span>
+    </t>
+</t>
+<ul t-name="ModelFieldSelector.page" class="o_field_selector_page">
+    <t t-foreach="lines" t-as="line">
+        <t t-set="relationToFollow" t-value="followRelations(line) &amp;&amp; line.relation"/>
+        <li t-attf-class="o_field_selector_item #{relationToFollow and 'o_field_selector_next_page' or 'o_field_selector_select_button'}#{line_index == 0 and ' active' or ''}"
+            t-att-data-name="line.name">
+            <t t-esc="line.string"/>
+            <div t-if="debug" class="text-muted o_field_selector_item_title"><t t-esc="line.name"/> (<t t-esc="line.type"/>)</div>
+            <i t-if="relationToFollow" class="fa fa-chevron-right o_field_selector_relation_icon" role="img" aria-label="Relation to follow" title="Relation to follow"/>
+        </li>
+    </t>
+</ul>
+
+</templates>

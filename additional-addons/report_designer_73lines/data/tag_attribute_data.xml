@@ -1,0 +1,160 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!--
+    Part of Odoo Module Developed by 73lines
+    See LICENSE file for full copyright and licensing details.
+-->
+<odoo>
+    <data>
+        <record id="tag_attribute_name_custom" model="tag.attribute.name">
+            <field name="name">custom</field>
+        </record>
+        <record id="tag_attribute_name_field" model="tag.attribute.name">
+            <field name="name">t-field</field>
+        </record>
+        <record id="tag_attribute_name_raw" model="tag.attribute.name">
+            <field name="name">t-raw</field>
+        </record>
+        <record id="tag_attribute_name_esc" model="tag.attribute.name">
+            <field name="name">t-esc</field>
+        </record>
+        <record id="tag_attribute_name_foreach" model="tag.attribute.name">
+            <field name="name">t-foreach</field>
+        </record>
+        <record id="tag_attribute_name_as" model="tag.attribute.name">
+            <field name="name">t-as</field>
+        </record>
+        <record id="tag_attribute_name_set" model="tag.attribute.name">
+            <field name="name">t-set</field>
+        </record>
+        <record id="tag_attribute_name_value" model="tag.attribute.name">
+            <field name="name">t-value</field>
+        </record>
+        <record id="tag_attribute_name_if" model="tag.attribute.name">
+            <field name="name">t-if</field>
+        </record>
+        <record id="tag_attribute_name_elif" model="tag.attribute.name">
+            <field name="name">t-elif</field>
+        </record>
+        <record id="tag_attribute_name_else" model="tag.attribute.name">
+            <field name="name">t-else</field>
+        </record>
+        <record id="tag_attribute_name_options" model="tag.attribute.name">
+            <field name="name">t-options</field>
+        </record>
+        <record id="tag_attribute_name_field_options" model="tag.attribute.name">
+            <field name="name">t-field-options</field>
+        </record>
+        <record id="tag_attribute_name_groups" model="tag.attribute.name">
+            <field name="name">groups</field>
+        </record>
+        <record id="tag_attribute_name_class" model="tag.attribute.name">
+            <field name="name">class</field>
+        </record>
+        <record id="tag_attribute_name_style" model="tag.attribute.name">
+            <field name="name">style</field>
+        </record>
+
+
+        <record id="tag_attribute_custom" model="tag.attribute">
+            <field name="name" ref="tag_attribute_name_custom"/>
+            <field name="priority" eval="3"/>
+        </record>
+        <record id="tag_attribute_field" model="tag.attribute">
+            <field name="name" ref="tag_attribute_name_field"/>
+            <field name="is_iterable" eval="False"/>
+            <field name="is_renderable" eval="True"/>
+            <field name="priority" eval="1"/>
+            <field name="is_use_with_only_field" eval="True"/>
+            <field name="with_attrs" eval="[(6,0,[ref('tag_attribute_name_if'),
+                                                ref('tag_attribute_name_options'),
+                                                ref('tag_attribute_name_field_options')])]"/>
+        </record>
+        <record id="tag_attribute_raw" model="tag.attribute">
+            <field name="name" ref="tag_attribute_name_raw"/>
+            <field name="is_iterable" eval="False"/>
+            <field name="is_renderable" eval="True"/>
+            <field name="priority" eval="1"/>
+            <field name="is_use_with_only_field" eval="True"/>
+            <field name="with_attrs" eval="[(6,0,[ref('tag_attribute_name_if')])]"/>
+        </record>
+        <record id="tag_attribute_esc" model="tag.attribute">
+            <field name="name" ref="tag_attribute_name_esc"/>
+            <field name="is_iterable" eval="False"/>
+            <field name="is_renderable" eval="True"/>
+            <field name="priority" eval="1"/>
+            <field name="with_attrs" eval="[(6,0,[ref('tag_attribute_name_if'),
+                                                ref('tag_attribute_name_options'),
+                                                ref('tag_attribute_name_field_options')])]"/>
+        </record>
+        <record id="tag_attribute_foreach" model="tag.attribute">
+            <field name="name" ref="tag_attribute_name_foreach"/>
+            <field name="second_attribute" ref="tag_attribute_name_as"/>
+            <field name="is_iterable" eval="True"/>
+            <field name="is_renderable" eval="True"/>
+            <field name="priority" eval="1"/>
+            <field name="with_attrs" eval="[(6,0,[ref('tag_attribute_name_if')])]"/>
+        </record>
+        <record id="tag_attribute_value" model="tag.attribute">
+            <field name="name" ref="tag_attribute_name_value"/>
+            <field name="second_attribute" ref="tag_attribute_name_set"/>
+            <field name="is_iterable" eval="False"/>
+            <field name="is_renderable" eval="True"/>
+            <field name="priority" eval="1"/>
+            <field name="with_attrs" eval="[(6,0,[ref('tag_attribute_name_if')])]"/>
+        </record>
+        <record id="tag_attribute_if" model="tag.attribute">
+            <field name="name" ref="tag_attribute_name_if"/>
+            <field name="is_iterable" eval="False"/>
+            <field name="is_renderable" eval="True"/>
+            <field name="priority" eval="2"/>
+            <field name="with_attrs" eval="[(6,0,[ref('tag_attribute_name_field'),
+                                                ref('tag_attribute_name_raw'),
+                                                ref('tag_attribute_name_esc'),
+                                                ref('tag_attribute_name_foreach')])]"/>
+        </record>
+        <record id="tag_attribute_options" model="tag.attribute">
+            <field name="name" ref="tag_attribute_name_options"/>
+            <field name="is_iterable" eval="False"/>
+            <field name="is_renderable" eval="True"/>
+            <field name="priority" eval="2"/>
+            <field name="is_option" eval="True"/>
+            <field name="with_attrs" eval="[(6,0,[ref('tag_attribute_name_field'),
+                                                ref('tag_attribute_name_esc')])]"/>
+        </record>
+        <record id="tag_attribute_field_options" model="tag.attribute">
+            <field name="name" ref="tag_attribute_name_field_options"/>
+            <field name="is_iterable" eval="False"/>
+            <field name="is_renderable" eval="True"/>
+            <field name="priority" eval="2"/>
+            <field name="is_option" eval="True"/>
+            <field name="with_attrs" eval="[(6,0,[ref('tag_attribute_name_field'),
+                                                ref('tag_attribute_name_esc')])]"/>
+        </record>
+        <record id="tag_attribute_groups" model="tag.attribute">
+            <field name="name" ref="tag_attribute_name_groups"/>
+            <field name="is_iterable" eval="False"/>
+            <field name="is_renderable" eval="False"/>
+            <field name="priority" eval="3"/>
+            <!--<field name="with_attrs" eval="[(6,0,[ref('tag_attribute_name_field'),
+                                                ref('tag_attribute_name_raw'),
+                                                ref('tag_attribute_name_esc'),
+                                                ref('tag_attribute_name_foreach'),
+                                                ref('tag_attribute_name_set'),
+                                                ref('tag_attribute_name_if'),
+                                                ref('tag_attribute_name_options'),
+                                                ref('tag_attribute_name_field_options')])]"/>-->
+        </record>
+        <record id="tag_attribute_class" model="tag.attribute">
+            <field name="name" ref="tag_attribute_name_class"/>
+            <field name="is_iterable" eval="False"/>
+            <field name="is_renderable" eval="False"/>
+            <field name="priority" eval="3"/>
+        </record>
+        <record id="tag_attribute_style" model="tag.attribute">
+            <field name="name" ref="tag_attribute_name_style"/>
+            <field name="is_iterable" eval="False"/>
+            <field name="is_renderable" eval="False"/>
+            <field name="priority" eval="3"/>
+        </record>
+    </data>
+</odoo>

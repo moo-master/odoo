@@ -1,0 +1,83 @@
+<odoo>
+        <template id="report_header_external_layout_standard">
+                <div class="header">
+            <div class="row">
+                <div class="col-3 mb4">
+                    <img t-if="company.logo" t-att-src="image_data_uri(company.logo)" style="max-height: 45px;" alt="Logo"/>
+                </div>
+                <div class="col-9 text-right" style="margin-top:22px;" t-field="company.report_header" name="moto"/>
+            </div>
+            <div t-if="company.logo or company.report_header" class="row zero_min_height">
+                <div class="col-12">
+                    <div style="border-bottom: 1px solid black;"/>
+                </div>
+            </div>
+            <div class="row">
+                <div class="col-6" name="company_address">
+                    <div t-field="company.partner_id"
+                        t-options='{"widget": "contact", "fields": ["address", "name"], "no_marker": true}'
+                    />
+                </div>
+            </div>
+        </div>
+
+        <div class="article o_report_layout_standard"  t-att-data-oe-model="o and o._name" t-att-data-oe-id="o and o.id" t-att-data-oe-lang="o and o.env.context.get('lang')">
+            <t t-call="web.address_layout"/>
+            <t t-raw="0"/>
+        </div>
+
+    </template>
+
+    <template id="report_header_external_layout">
+        <t t-if="not o" t-set="o" t-value="doc"/>
+
+        <t t-if="not company">
+            <!-- Multicompany -->
+            <t t-if="company_id">
+                <t t-set="company" t-value="company_id"/>
+            </t>
+            <t t-elif="o and 'company_id' in o">
+                <t t-set="company" t-value="o.company_id.sudo()"/>
+            </t>
+            <t t-else="else">
+                <t t-set="company" t-value="res_company"/>
+            </t>
+        </t>
+
+        <t t-call="report_designer_73lines.report_header_external_layout_standard"><t t-raw="0"/></t>
+
+    </template>
+
+    <template id="custom_report_header_document">
+        <t t-call="report_designer_73lines.report_header_external_layout">
+            <!--
+                As language is not required for all objects.
+                So for now, If partner is available in object then pass
+                that partner's language.
+            -->
+            <t t-if="'partner_id' in doc.fields_get()">
+                <t t-set="doc" t-value="doc.with_context({'lang':doc.partner_id.lang})"/>
+            </t>
+            <div class="oe_structure"/>
+        </t>
+    </template>
+
+    <!-- Common Report Structure (Main) -->
+    <template id="custom_report_header">
+        <t t-call="web.html_container">
+            <t t-foreach="docs" t-as="doc">
+                <!--
+                    As language is not required for all objects.
+                    So for now, If partner is available in object then pass
+                    that partner's language.
+                -->
+                <t t-if="'partner_id' in doc.fields_get()">
+                    <t t-call="report_designer_73lines.custom_report_header_document" t-lang="doc.partner_id.lang"/>
+                </t>
+                <t t-if="'partner_id' not in doc.fields_get()">
+                    <t t-call="report_designer_73lines.custom_report_header_document"/>
+                </t>
+            </t>
+        </t>
+    </template>
+</odoo>
