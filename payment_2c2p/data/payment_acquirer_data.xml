@@ -1,0 +1,26 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo noupdate="1">
+    <record id="payment_acquirer_2c2p" model="payment.acquirer">
+        <field name="name">2c2p</field>
+        <field name="image_128" type="base64" file="payment_2c2p/static/src/img/2c2p_icon.png"/>
+        <field name="provider">to_c_to_p</field>
+        <field name="company_id" ref="base.main_company"/>
+        <field name="redirect_form_view_id" ref="redirect_form"/>
+        <field name="to_c_to_p_merchant_id">dummy</field>
+        <field name="to_c_to_p_secret_key">dummy</field>
+        <field name="description" type="html">
+            <p>
+                A 2c2p payment gateway to accept online payments via credit cards.
+            </p>
+            <ul>
+                <li><i class="fa fa-check"/>eCommerce</li>
+            </ul>
+        </field>
+    </record>
+
+    <record id="payment_method_2c2p" model="account.payment.method">
+        <field name="name">2c2p</field>
+        <field name="code">to_c_to_p</field>
+        <field name="payment_type">inbound</field>
+    </record>
+</odoo>
