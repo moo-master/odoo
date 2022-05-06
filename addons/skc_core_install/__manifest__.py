@@ -8,7 +8,6 @@
         'kbt_partner_api',
         'kbt_res_company',
         'kbt_sale_order_api',
-        'report_designer_73lines',
         'skc_core_update'
     ]
 }
