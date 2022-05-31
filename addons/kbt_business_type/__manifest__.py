@@ -12,13 +12,13 @@
         'Pachara P.',
     ],
     'depends': [
-        'sale',
+        'kbt_sale_order_api',
         'account',
         'purchase',
     ],
     'data': [
-        # 'views/business_menuitem.xml',
         'security/ir.model.access.csv',
-        'views/view_business_type_form.xml',
+        'views/business_type_form_views.xml',
+        'views/sale_order_views.xml',
     ],
 }
