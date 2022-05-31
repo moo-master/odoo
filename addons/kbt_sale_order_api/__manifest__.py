@@ -13,6 +13,7 @@
     ],
     'depends': [
         'sale',
+        'kbt_core_update',
     ],
     'data': [
         'views/sale_order_views.xml',
