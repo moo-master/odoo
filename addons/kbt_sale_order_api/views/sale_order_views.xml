@@ -5,13 +5,14 @@
         <field name="name">inherit.sale.order.view.form</field>
         <field name="model">sale.order</field>
         <field name="inherit_id" ref="sale.view_order_form"/>
+        <field name="priority" eval="100"/>
         <field name="arch" type="xml">
             <xpath expr="//field[@name='payment_term_id']" position="after">
-                <field name="is_interface"/>
+                <field name="x_is_interface"/>
             </xpath>
 
             <xpath expr="//field[@name='order_line']//tree//field[@name='sequence']" position="attributes">
-                <attribute name="attrs">{'column_invisible': [('parent.is_interface', '=', True)]}</attribute>
+                <attribute name="attrs">{'column_invisible': [('parent.x_is_interface', '=', True)]}</attribute>
             </xpath>
         </field>
     </record>
