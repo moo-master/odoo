@@ -6,7 +6,7 @@ class BusinessType(models.Model):
     _description = "Business Type"
 
     x_name = fields.Char(
-        string='x_name',
+        string='Name',
         required=True,
     )
 
