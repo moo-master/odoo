@@ -3,6 +3,7 @@ from odoo import models, fields
 
 class BusinessType(models.Model):
     _name = "business.type"
+    _rec_name = "x_name"
     _description = "Business Type"
 
     x_name = fields.Char(
