@@ -6,7 +6,7 @@
         <field name="inherit_id" ref="sale.view_order_form"/>
         <field name="priority" eval="150"/>
         <field name="arch" type="xml">
-            <xpath expr="//field[@name='is_interface']" position="before">
+            <xpath expr="//field[@name='x_is_interface']" position="before">
                 <field name="so_type_id" string="Business Type"/>
             </xpath>
         </field>
