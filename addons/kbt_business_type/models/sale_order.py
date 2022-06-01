@@ -17,7 +17,7 @@ class SaleOrder(models.Model):
             self = self.with_company(vals['company_id'])
         if vals.get('name', _('New')) == _('New'):
             seq_id = None
-            if 'so_type_id' in vals:
+            if not self.x_is_interface:
                 seq_id = self.env['business.type'].search(
                     [('id', '=', vals['so_type_id'])]).x_sequence_id
             vals['name'] = seq_id.next_by_id() or _('New')
