@@ -19,6 +19,7 @@
     'data': [
         'security/ir.model.access.csv',
         'views/business_type_form_views.xml',
-        'views/sale_order_views.xml',
+        'views/inherit_purchase_order_views.xml',
+        'views/inherit_sale_order_views.xml',
     ],
 }
