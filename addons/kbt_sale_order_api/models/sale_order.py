@@ -21,7 +21,8 @@ class SaleOrderInherit(models.Model):
         string='Product Serie Name',
     )
 
-    is_interface = fields.Boolean(
+    # pylint: disable=biszx-boolean-field-name
+    x_is_interface = fields.Boolean(
         string='Interface',
         readonly=True,
     )

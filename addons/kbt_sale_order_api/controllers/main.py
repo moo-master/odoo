@@ -6,7 +6,7 @@ from odoo.http import request
 
 class SaleOrderDataController(http.Controller):
 
-    @http.route('/sale-order/data', type='json', auth='user')
+    @http.route('/sale/create', type='json', auth='user')
     def sale_order_api(self, **params):
         try:
             msg = self._check_sale_order_values(**params)
