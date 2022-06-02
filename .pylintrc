@@ -1,0 +1,109 @@
+[MASTER]
+load-plugins=pylint_odoo,biszx_pylint_odoo
+score=y
+
+[ODOOLINT]
+# List of license allowed in manifest file, separated by a comma.
+license_allowed=AGPL-3,GPL-2,GPL-2 or any later version,GPL-3,GPL-3 or any later version,LGPL-3,Other OSI approved licence,Other proprietary,OEEL-1
+
+# List of keys deprecated in manifest file, separated by a comma.
+manifest_deprecated_keys=description
+
+# List of keys required in manifest file, separated by a comma.
+manifest_required_keys=name,summary,author,website,version
+
+# Regex to check version format in manifest file. Use "{valid_odoo_versions}"
+# to check the parameter of "valid_odoo_versions"
+manifest_version_format=({valid_odoo_versions})\.\d+\.\d+\.\d+$
+
+# List of valid odoo versions separated by a comma.
+valid_odoo_versions=15.0
+
+# Disable code
+disable=
+    C7902,
+
+[MESSAGES CONTROL]
+disable=all
+
+# This .pylintrc contains optional AND mandatory checks and is meant to be
+# loaded in an IDE to have it check everything, in the hope this will make
+# optional checks more visible to contributors who otherwise never look at a
+# green travis to see optional checks that failed.
+# .pylintrc-mandatory containing only mandatory checks is used the pre-commit
+# config as a blocking check.
+
+enable=anomalous-backslash-in-string,
+    api-one-deprecated,
+    api-one-multi-together,
+    assignment-from-none,
+    attribute-deprecated,
+    class-camelcase,
+    dangerous-default-value,
+    dangerous-view-replace-wo-priority,
+    duplicate-id-csv,
+    duplicate-key,
+    duplicate-xml-fields,
+    duplicate-xml-record-id,
+    eval-referenced,
+    eval-used,
+    incoherent-interpreter-exec-perm,
+    license-allowed,
+    manifest-author-string,
+    manifest-deprecated-key,
+    manifest-required-key,
+    manifest-version-format,
+    method-required-super,
+    missing-import-error,
+    missing-manifest-dependency,
+    openerp-exception-warning,
+    pointless-statement,
+    pointless-string-statement,
+    print-used,
+    redundant-keyword-arg,
+    redundant-modulename-xml,
+    reimported,
+    relative-import,
+    return-in-init,
+    rst-syntax-error,
+    sql-injection,
+    too-few-format-args,
+    translation-field,
+    translation-required,
+    unreachable,
+    use-vim-comment,
+    wrong-tabs-instead-of-spaces,
+    xml-syntax-error,
+    # messages that do not cause the lint step to fail
+    consider-merging-classes-inherited,
+    create-user-wo-reset-password,
+    dangerous-filter-wo-user,
+    deprecated-module,
+    file-not-used,
+    invalid-commit,
+    missing-newline-extrafiles,
+    missing-readme,
+    no-utf8-coding-comment,
+    odoo-addons-relative-import,
+    old-api7-method-defined,
+    redefined-builtin,
+    too-complex,
+    unnecessary-utf8-coding-comment,
+    # biszx pylint
+    biszx-default-func-name,
+    biszx-search-func-name,
+    biszx-compute-func-name,
+    biszx-onchange-func-name,
+    biszx-constrains-func-name,
+    biszx-domain-func-name,
+    biszx-inverse-func-name,
+    biszx-relation2one-field-name,
+    biszx-relation2many-field-name,
+    biszx-boolean-field-name,
+    biszx-date-field-name,
+    biszx-datetime-field-name
+
+[REPORTS]
+msg-template={path}:{line}: [{msg_id}({symbol}), {obj}] {msg}
+output-format=colorized
+reports=n

@@ -1,0 +1,35 @@
+repos:
+- repo: https://gitlab.com/is4res/odoo-core-install-generator
+  rev: 1.0.3
+  hooks:
+  - id: generate-core-install
+    args: ['project=skc', 'version=15.0', 'website=https://roots.tech']
+- repo: https://github.com/pre-commit/pre-commit-hooks
+  rev: v2.5.0
+  hooks:
+  - id: check-merge-conflict
+  - id: trailing-whitespace
+  - id: end-of-file-fixer
+  - id: check-yaml
+  - id: check-xml
+- repo: https://github.com/pre-commit/mirrors-autopep8
+  rev: v1.5.4
+  hooks:
+  - id: autopep8
+    args: ['-riaaa', 'addons']
+- repo: https://gitlab.com/pycqa/flake8/
+  rev: 3.8.4
+  hooks:
+  - id: flake8
+    pass_filenames: false
+    args: ['--count', '--show-source', '--statistics', 'addons']
+    exclude: |
+      (?x)(
+        tests/|
+        ^additional-addons/
+      )
+- repo: https://gitlab.com/is4res/biszx-pylint-odoo
+  rev: 1.0.3
+  hooks:
+  - id: pylint
+    exclude: ^additional-addons/
