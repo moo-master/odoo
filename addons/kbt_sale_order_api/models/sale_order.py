@@ -4,7 +4,7 @@ from odoo import models, fields
 class SaleOrderInherit(models.Model):
     _inherit = 'sale.order'
 
-    so_orderreference = fields.Char(
+    x_so_orderreference = fields.Char(
         string='SO Interface',
         readonly=True,
     )
