@@ -13,6 +13,7 @@
     ],
     'depends': [
         'base',
+        'kbt_core_update',
     ],
     'data': [
         'views/view_company_form.xml',
