@@ -1,0 +1,29 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!-- Copyright (c) 2015-Present Webkul Software Pvt. Ltd. (<https://webkul.com/>) -->
+<!-- See LICENSE file for full copyright and licensing details. -->
+<!-- "License URL : <https://store.webkul.com/license.html/>" -->
+
+<odoo>
+
+    <template id="product_inherit" inherit_id="website_sale.product" name="Product">
+        <xpath expr="//t[@t-call='website.layout']" position="inside">
+            <div class="modal fade" id="recurringWarning" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+				<div class="modal-dialog" style="min-height:70%;max-width:70%;margin-top:10%;">
+					<div class="modal-content">
+						<div class="modal-header">
+							<h4 class="modal-title">Warning</h4>
+						</div>
+						<div class="modal-body" style="max-height:300px;overflow:auto;">
+							You cannot add product in the cart as the recurring type product is already added and you are trying to add normal product or normal product is already added and you are trying to add recurring type product in the cart. if you want to add the product you can remove the previous product by clicking clear cart button.
+						</div>
+						<div class="modal-footer">
+							<a role="button" class="btn btn-primary recurClearCart" href="/clear/shop/cart">Clear Cart</a>
+							<button class="btn btn-default" onclick="$('#recurringWarning').modal('hide');">Cancel</button>
+						</div>
+					</div>
+				</div>
+			</div>
+        </xpath>
+    </template>
+
+</odoo>

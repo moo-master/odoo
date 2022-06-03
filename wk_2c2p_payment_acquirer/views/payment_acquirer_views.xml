@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!-- Copyright (c) 2015-Present Webkul Software Pvt. Ltd. (<https://webkul.com/>) -->
+<!-- See LICENSE file for full copyright and licensing details. -->
+<!-- "License URL : <https://store.webkul.com/license.html/>" -->
+
+<odoo>
+    <record id="payment_acquirer_form_view_inherited" model="ir.ui.view">
+        <field name="name">payment.acquirer.form.view.inherited</field>
+        <field name="model">payment.acquirer</field>
+        <field name="inherit_id" ref="payment.payment_acquirer_form"/>
+        <field name="arch" type="xml">
+            <xpath expr="//group[@name='payment_state']" after="inside">
+                <field name="recurring_type"/>
+            </xpath>
+        </field>
+    </record>
+</odoo>

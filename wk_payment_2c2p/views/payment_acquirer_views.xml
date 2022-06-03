@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!-- Copyright (c) 2015-Present Webkul Software Pvt. Ltd. (<https://webkul.com/>) -->
+<!-- See LICENSE file for full copyright and licensing details. -->
+<!-- "License URL : <https://store.webkul.com/license.html/>" -->
+
+<odoo>
+    <record id="payment_acquirer_form_inherited" model="ir.ui.view">
+        <field name="name">Payment Acquirer Form Inherited</field>
+        <field name="model">payment.acquirer</field>
+        <field name="inherit_id" ref="payment.payment_acquirer_form"/>
+        <field name="arch" type="xml">
+            <xpath expr='//group[@name="acquirer"]' position='inside'>
+                <group attrs="{'invisible': [('provider', '!=', '2c2p')]}">
+                    <field name="twoctwop_merchant_id"
+                           attrs="{'required':[('provider', '=', '2c2p'), ('state', '!=', 'disabled')]}"/>
+                    <field name="twoctwop_secret_key"
+                           attrs="{'required':[('provider', '=', '2c2p'), ('state', '!=', 'disabled')]}"/>
+                </group>
+            </xpath>
+        </field>
+    </record>
+</odoo>
