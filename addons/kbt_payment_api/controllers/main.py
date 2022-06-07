@@ -4,7 +4,7 @@ from odoo import http
 from odoo.http import request
 
 
-class PurchaseDataController(http.Controller):
+class PaymentDataController(http.Controller):
 
     @http.route('/create_payment', type='json', auth='user')
     def payment_api(self, **params):
