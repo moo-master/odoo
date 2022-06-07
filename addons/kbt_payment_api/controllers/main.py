@@ -7,14 +7,14 @@ from odoo.http import request
 class PurchaseDataController(http.Controller):
 
     @http.route('/create_payment', type='json', auth='user')
-    def sale_order_api(self, **params):
+    def payment_api(self, **params):
         try:
-            msg = self._check_sale_order_values(**params)
+            msg = self._check_payment_values(**params)
             if msg:
                 return {
                     'error': msg,
                 }
-            partner_id = self._create_update_sale_order(**params)
+            partner_id = self._create_update_payment(**params)
             if partner_id:
                 return {
                     'code': http.requests.codes.ok,
@@ -28,95 +28,44 @@ class PurchaseDataController(http.Controller):
                 'error': error,
             }
 
-    def _check_sale_order_values(self, **params):
+    def _check_payment_values(self, **params):
         msg_list = []
-        data_params = params.get('data')
-        for data in data_params:
-            if not data.get('service_name'):
-                msg_list.append('service_name: No Data')
-            if not data.get('product_serie_name'):
-                msg_list.append('product_serie_name: No Data')
         return msg_list
 
-    def _prepare_order_line(self, order_line):
-        product_id = request.env['product.product'].search(
-            [('name', '=', order_line.get('product_id'))])
-        return {
-            'product_id': product_id.id,
-            'name': order_line.get('product_description'),
-            'product_uom_qty': order_line.get('product_qty'),
-            'price_unit': order_line.get('product_price'),
-            'discount': order_line.get('discount'),
-            'sequence': order_line.get('seq_line')
-        }
-
-    def _create_update_sale_order(self, **params):
-
-        list_data_params = params.get('data')
-        Sale = request.env['sale.order']
+    def _create_update_payment(self, **params):
+        data_params_lst = params['data']
         Partner = request.env['res.partner']
-        Company = request.env['res.company']
+        PartnerBank = request.env['res.partner.bank']
+        AccountPayment = request.env['account.payment']
+        Journal = request.env['account.journal']
 
-        for data in list_data_params:
-            partner_id = Partner.search(
-                [('name', '=', data.get('partner_id'))])
+        for data in data_params_lst:
+            vals = {}
+            x_interface_id = Partner.search(
+                [('x_interface_id', '=', data['x_interface_id'])])
 
-            if not partner_id:
-                partner_id = Partner.create({'name': data.get('partner_id')})
+            journal_code = Journal.search(
+                [('code', '=', data['journal_code'])])
 
-            company_name_id = Company.search(
-                [('company_code', '=', data.get('company_code'))])
-
-            date_order = data.get('date_order').split('-')
-            datetime_order = '{0}-{1}-{2}'.format(
-                date_order[2], date_order[1], date_order[0])
-
-            delivery_date = data.get('delivery_datetime').split('-')
-            delivery_datetime = '{0}-{1}-{2}'.format(
-                delivery_date[2], delivery_date[1], delivery_date[0])
-
-            account_term = request.env['account.payment.term']
-            account_term_id = account_term.search(
-                [('name', '=', data.get('payment_term'))])
-
-            account_analytic = request.env['account.analytic.account']
-            account_analytic_id = account_analytic.search(
-                [('name', '=', data.get('analytic_account'))])
+            date_api = data['date'].split('/')
+            date_data = '{0}-{1}-{2}'.format(
+                date_api[0], date_api[1], date_api[2])
 
             vals = {
-                'partner_id': partner_id.id,
-                'date_order': datetime_order,
-                'delivery_datetime': delivery_datetime,
-                'payment_term_id': account_term_id.id,
-                'analytic_account_id': account_analytic_id.id,
-                'company_id': company_name_id.id,
-                'currency_id': company_name_id.currency_id.id,
-                'so_orderreference': data.get('so_orderreference'),
-                'is_interface': True
+                'payment_type': data['payment_type'],
+                'partner_id': x_interface_id.id,
+                'journal_id': journal_code.id,
+                'amount': data['amount'],
+                'ref': data['ref'],
+                'date': date_data,
             }
 
-            so_orderreference = Sale.search(
-                [('so_orderreference', '=', data.get('so_orderreference'))])
+            if data['payment_type'] == 'outbound':
+                partner_bank_id = PartnerBank.search(
+                    [('partner_id', '=', x_interface_id.id),
+                     ('acc_number', '=', data['partner_bank_code']),
+                     ('bank_id.bic', '=', data['bank_code'])])
+                vals['partner_bank_id'] = partner_bank_id.id
 
-            order_line_vals_list = []
-            for order_line in data.get('lineitems'):
-                is_seq_line = request.env['sale.order.line'].search([
-                    ('sequence', '=', order_line.get('seq_line')),
-                    ('order_id', '=', so_orderreference.id)
-                ])
-
-                if not is_seq_line:
-                    order_line_vals_list.append(
-                        (0, 0, self._prepare_order_line(order_line)))
-                else:
-                    order_line_vals_list.append(
-                        (1, is_seq_line.id, self._prepare_order_line(order_line)))
-
-            vals['order_line'] = order_line_vals_list
-            if not so_orderreference:
-                sale = Sale.new(vals)
-                sale.onchange_partner_id()
-                sale_values = sale._convert_to_write(sale._cache)
-                Sale.create(sale_values)
-            else:
-                so_orderreference.update(vals)
+            acc_payment = AccountPayment.create(vals)
+            acc_payment.action_post()
