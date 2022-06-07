@@ -5,6 +5,8 @@
     'website': 'https://roots.tech',
     'version': '15.0.0.0.1',
     'depends': [
+        'kbt_account_ext',
+        'kbt_business_type',
         'kbt_core_update',
         'kbt_partner_api',
         'kbt_res_company',
