@@ -57,10 +57,10 @@ class PartnerDataController(http.Controller):
                  ])
 
             partner_id = Partner.search(
-                [('external_interface_id', '=', data.get('external_interface_id'))])
+                [('x_interface_id', '=', data.get('x_interface_id'))])
 
             vals_dict = {
-                'external_interface_id': data.get('external_interface_id'),
+                'x_interface_id': data.get('x_interface_id'),
                 'name': data.get('name'),
                 'is_company': data.get('is_company'),
                 'type': data.get('type'),
