@@ -12,10 +12,7 @@
         'Pachara P.',
     ],
     'depends': [
-        'sale',
-        'kbt_core_update',
+        'kbt_business_type',
+        'kbt_partner_api',
     ],
-    'data': [
-        'views/sale_order_views.xml',
-    ]
 }
