@@ -1,0 +1,173 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+
+    <record id="account_wht_pnd_view_form" model="ir.ui.view">
+        <field name="name">account.wht.pnd.view.form</field>
+        <field name="model">account.wht.pnd</field>
+        <field name="arch" type="xml">
+            <form string="">
+                <sheet>
+                    <div name="button_box" class="oe_button_box">
+                        <button class="oe_stat_button"
+                                string="PND 3"
+                                name="action_print_pnd3"
+                                invisible="context.get('default_pnd_type') != 'pnd3'"
+                                type="object"
+                                icon="fa-print"/>
+                        <button
+                                class="oe_stat_button"
+                                string="PND 53"
+                                invisible="context.get('default_pnd_type') != 'pnd53'"
+                                name="action_print_pnd53"
+                                type="object"
+                                icon="fa-print"/>
+                        <button class="oe_stat_button" string="Attachment" name="action_files_docs" type="object" icon="fa-files-o"/>
+                        <button class="oe_stat_button" string="Text File" name="action_file" type="object" icon="fa-file"/>
+                    </div>
+                    <div class="oe_title">
+                        <h1 attrs="{'invisible': [('name', '!=', '/')]}">
+                            <span>Draft</span>
+                        </h1>
+
+                        <!-- Number -->
+                        <h1 class="mt0" attrs="{'invisible':[('name', '=', '/')]}">
+                            <field name="name" readonly="1"/>
+                        </h1>
+                    </div>
+                    <group>
+                        <group>
+                            <field name="select_month"
+                                   class="oe_read_only"
+                                   force_save="1"
+                                   string="Month"
+                            />
+                            <field name="select_month_date"
+                                   widget="date"
+                                   class="oe_edit_only"
+                                   force_save="1"
+                                   string="Month"
+                                   options="{
+                                    'datepicker':{
+                                    'format': 'MM/YYYY',
+                                    'maxViewMode': 'years',
+                                    'viewModes': 'months',} }"
+                            />
+                            <field name="pnd_date" />
+                            <field name="fill_type" />
+                            <field name="additional_fill" />
+                        </group>
+                        <group>
+                            <field name="pnd_type" invisible="1"/>
+                            <field name="company_id" invisible="1"/>
+                            <field name="section" widget="radio"/>
+                            <field name="attachment_type" widget="radio"/>
+                            <field name="wht_ids_count_str" attrs="{'invisible': [('wht_ids_count_str', '=', False)]}"/>
+                        </group>
+                        <field name="wht_ids" nolabel="1" domain="[('wht_kind', '=', pnd_type), ('status', '=', 'done')]" context="{'default_wht_kind': pnd_type}">
+                            <tree editable="bottom">
+                                <field name="name" readonly="1"/>
+                                <field name="document_date" readonly="1"/>
+                                <field name="partner_id" readonly="1"/>
+                                <field name="base_amount" readonly="1"/>
+                                <field name="tax" readonly="1"/>
+                            </tree>
+                        </field>
+                    </group>
+                    <group col="4">
+                        <group>
+                        </group>
+                        <group class="oe_subtotal_footer oe_right">
+                            <field name="total_amount" class="oe_subtotal_footer_separator"/>
+                            <field name="total_tax" class="oe_subtotal_footer_separator"/>
+                            <field name="add_amount" class="oe_subtotal_footer_separator"/>
+                            <field name="total_tax_send" class="oe_subtotal_footer_separator"/>
+                        </group>
+                    </group>
+                </sheet>
+            </form>
+        </field>
+    </record>
+
+    <record id="account_wht_pnd_view_tree" model="ir.ui.view">
+        <field name="name">account.wht.pnd.view.tree</field>
+        <field name="model">account.wht.pnd</field>
+        <field name="arch" type="xml">
+            <tree string="">
+                <field name="name" />
+                <field name="pnd_date" />
+                <field name="fill_type" class="fill_type"/>
+                <field name="total_amount" />
+                <field name="total_tax" />
+                <field name="add_amount" />
+                <field name="total_tax_send" />
+            </tree>
+        </field>
+    </record>
+
+    <record id="view_account_wht_pnd3_vender_filter" model="ir.ui.view">
+        <field name="name">account.wht.pnd.select</field>
+        <field name="model">account.wht.pnd</field>
+        <field name="arch" type="xml">
+            <search string="Search PND3">
+                <field name="name" string="All"
+                       filter_domain="[('name', 'ilike', self)]"/>
+                <separator/>
+                <group expand="0" string="Group By">
+                    <filter name="month_year" string="Month Year" context="{'group_by':'name'}"/>
+                    <filter string="Filing Type" name="fill_type" context="{'group_by':'fill_type'}"/>
+                    <separator/>
+                    <filter string="PND Date" name="pnd_date" context="{'group_by': 'pnd_date'}"/>
+                </group>
+            </search>
+        </field>
+    </record>
+
+
+    <record id="action_account_wht_pnd3_vender" model="ir.actions.act_window">
+        <field name="name">PND 3</field>
+        <field name="type">ir.actions.act_window</field>
+        <field name="res_model">account.wht.pnd</field>
+        <field name="view_mode">tree,form</field>
+        <field name="context">{'default_pnd_type': 'pnd3'}</field>
+        <field name="domain">[('pnd_type', '=', 'pnd3')]</field>
+        <field name="view_id" ref="account_wht_pnd_view_tree"/>
+        <field name="search_view_id" ref="view_account_wht_pnd3_vender_filter"/>
+        <field name="help" type="html">
+            <p class="o_view_nocontent_smiling_face">
+            Create a new PND 3 in your WHT PND
+            </p><p>
+            Odoo helps you easily track all activities related to a vender.
+            </p>
+        </field>
+    </record>
+
+    <menuitem
+        id="menu_sub_account_wht_pnd3_vender"
+        parent="beecy_account_wht.menu_account_wht_vender"
+        action="beecy_account_wht.action_account_wht_pnd3_vender"
+        sequence="25"/>
+
+
+    <record id="action_account_wht_pnd53_vender" model="ir.actions.act_window">
+        <field name="name">PND 53</field>
+        <field name="type">ir.actions.act_window</field>
+        <field name="res_model">account.wht.pnd</field>
+        <field name="view_mode">tree,form</field>
+        <field name="context">{'default_pnd_type': 'pnd53'}</field>
+        <field name="domain">[('pnd_type', '=', 'pnd53')]</field>
+        <field name="help" type="html">
+            <p class="o_view_nocontent_smiling_face">
+            Create a new PND 53 in your WHT PND
+            </p><p>
+            Odoo helps you easily track all activities related to a vender.
+            </p>
+        </field>
+    </record>
+
+    <menuitem
+        id="menu_sub_account_wht_pnd53_vender"
+        parent="beecy_account_wht.menu_account_wht_vender"
+        action="beecy_account_wht.action_account_wht_pnd53_vender"
+        sequence="25"/>
+
+</odoo>

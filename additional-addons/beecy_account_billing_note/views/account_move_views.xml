@@ -1,0 +1,38 @@
+<?xml version='1.0' encoding='utf-8'?>
+<odoo>
+    <!-- Form view for smart button -->
+    <record id="inherit_view_move_form" model="ir.ui.view">
+        <field name="name">inherit.account.move.form</field>
+        <field name="model">account.move</field>
+        <field name="inherit_id" ref="account.view_move_form"/>
+        <field name="arch" type="xml">
+            <div name="button_box" position="inside">
+                <button type="object" class="oe_stat_button"
+                        icon="fa-pencil-square-o"
+                        name="action_billing_note_ids"
+                        attrs="{'invisible':[('billing_note_count', '==', 0)]}">
+                    <div class="o_form_field o_stat_info">
+                        <span class="o_stat_value">
+                            <field name="billing_note_count"/>
+                        </span>
+                        <span class="o_stat_text">Billing Note</span>
+                    </div>
+                </button>
+            </div>
+        </field>
+    </record>
+    <record id="inherit_view_invoice_tree" model="ir.ui.view">
+        <field name="name">inherit.account.invoice.tree</field>
+        <field name="model">account.move</field>
+        <field name="inherit_id" ref="account.view_invoice_tree"/>
+        <field name="arch" type="xml">
+            <xpath expr="//button[@name='action_register_payment']" position="before">
+                <button
+                        name="action_create_billing_note"
+                        type="object"
+                        string="Create Billing Note"
+                        context="{'form_view_ref': 'beecy_account_billing_note.account_billing_note_view_tree'}" />
+            </xpath>
+        </field>
+    </record>
+</odoo>

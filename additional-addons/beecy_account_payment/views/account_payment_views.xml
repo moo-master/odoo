@@ -1,0 +1,26 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <record id="view_account_payment_form_inherited" model="ir.ui.view">
+        <field name="name">account.payment.form.inherited</field>
+        <field name="model">account.payment</field>
+        <field name="inherit_id" ref="account.view_account_payment_form" />
+        <field name="arch" type="xml">
+            <xpath expr="//div[@name='button_box']" position="inside">
+                <button name="%(action_payment_voucher_report)d"
+                    icon="fa-print"
+                    string="Payment Voucher"
+                    type="action"
+                    attrs="{'invisible':[('partner_type','!=','supplier')]}"
+                />
+            </xpath>
+            <xpath expr="//div[@name='button_box']" position="inside">
+                <button name="%(action_payment_receipt_report)d"
+                    icon="fa-print"
+                    string="Receipt Voucher"
+                    type="action"
+                    attrs="{'invisible':[('partner_type','!=','customer')]}"
+                />
+            </xpath>
+        </field>
+    </record>
+</odoo>

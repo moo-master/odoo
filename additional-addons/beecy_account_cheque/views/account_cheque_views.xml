@@ -1,0 +1,202 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+
+    <record id="view_account_cheque_search" model="ir.ui.view">
+       <field name="name">view.account.cheque.search</field>
+       <field name="model">account.cheque</field>
+        <field name="arch" type="xml">
+            <search>
+                <field name="name" string="Search All"
+                    filter_domain="[
+                        '|', '|' ,
+                        ('name', 'ilike', self), ('partner_id', 'ilike', self),
+                        ('reference', 'ilike', self)]"/>
+                <filter name="partner_id" string="Partner"/>
+                <group expand="0" string="Group By">
+                    <filter string="State" name="state" context="{'group_by':'state'}" help="State"/>
+                    <filter string="Partner" name="partner_id" context="{'group_by':'partner_id'}" help="Partner"/>
+                    <filter string="Bank" name="bank_id" context="{'group_by':'bank_id'}" help="Bank"/>
+                    <filter string="To Bank" name="to_bank_id" context="{'group_by':'to_bank_id'}" help="To Bank"/>
+                    <filter string="Cheque Date" name="cheque_date" context="{'group_by':'cheque_date'}" help="Cheque Date"/>
+                </group>
+            </search>
+       </field>
+    </record>
+
+    <record id="view_account_cheque_tree" model="ir.ui.view">
+        <field name="name">view.account.cheque.tree</field>
+        <field name="model">account.cheque</field>
+        <field name="arch" type="xml">
+            <tree>
+                <field name="name"/>
+                <field name="cheque_date"/>
+                <field name="bank_id"/>
+                <field name="partner_id"/>
+                <field name="amount"/>
+                <field name="state"/>
+            </tree>
+        </field>
+    </record>
+
+    <record id="view_account_cheque_form" model="ir.ui.view">
+        <field name="name">view.account.cheque.form</field>
+        <field name="model">account.cheque</field>
+        <field name="arch" type="xml">
+            <form>
+                <field name="type" invisible="1"/>
+                <header>
+                    <!-- customer -->
+                    <button string="Confirm"
+                            class="oe_highlight"
+                            attrs="{'invisible': ['|', ('type', '!=', 'customer'), ('state', '!=', 'draft')]}"
+                            name="action_confirm"
+                            type="object"/>
+                    <button string="Deposit"
+                            states="to_deposit"
+                            class="oe_highlight"
+                            name="action_to_deposit"
+                            type="object"/>
+                    <button string="Close"
+                            states="deposit"
+                            class="oe_highlight"
+                            name="action_close"
+                            type="object"/>
+                    <button string="Cancel"
+                            attrs="{'invisible':[
+                            ('state', 'not in', ('draft', 'to_deposit', 'deposit'))]}"
+                            class="oe_highlight"
+                            name="action_cancel"
+                            type="object"/>
+                    <button string="Change Cheque"
+                            states="deposit"
+                            class="oe_highlight"
+                            name="action_change_cheque"
+                            type="object"/>
+                    <button string="Set to Draft"
+                            states="cancel"
+                            class="oe_highlight"
+                            name="action_set_draft"
+                            type="object"/>
+                    <!-- vendor -->
+                    <button string="Print"
+                            class="oe_highlight"
+                            name="action_print_cheque"
+                            attrs="{'invisible': ['|', ('type', '!=', 'vendor'), ('state', '!=', 'draft')]}"
+                            type="object"/>
+                    <button string="Approve"
+                            class="oe_highlight"
+                            name="action_approve"
+                            attrs="{'invisible': ['|', ('type', '!=', 'vendor'), ('state', '!=', 'to_approve')]}"
+                            type="object"/>
+                    <button string="Reject"
+                            class="oe_highlight"
+                            name="action_reject"
+                            attrs="{'invisible': ['|', ('type', '!=', 'vendor'), ('state', '!=', 'to_approve')]}"
+                            type="object"/>
+                    <button string="Set to Draft"
+                            states="reject"
+                            class="oe_highlight"
+                            name="action_set_draft"
+                            type="object"/>
+                    <field name="state" widget="statusbar" statusbar_visible="draft,to_approve,to_deposit,deposit,close"/>
+                </header>
+                <sheet>
+                    <div class="oe_button_box" name="button_box">
+                        <button
+                                name="action_print_cheque"
+                                icon="fa-print"
+                                string="Print Cheque"
+                                attrs="{'invisible':[('type', '!=', 'vendor')]}"
+                                type="object"
+                            />
+                    </div>
+                    <div class="oe_title">
+                        <label for="name"/>
+                        <h1><field name="name"  attrs="{'required': [('type','=','customer')]}"/></h1>
+                    </div>
+                    <group>
+                        <group>
+                            <field name="from_bank_id" string="Bank"
+                                   domain="[('partner_id', '=', partner_id)]"
+                                   attrs="{'invisible': [('type', '!=', 'vendor')], 'required': [('type','=','vendor')]}"/>
+                            <field name="bank_id"
+                                   attrs="{'invisible': [('type', '!=', 'customer')], 'required': [('type','=','customer')]}"/>
+                            <field name="partner_id"/>
+                            <field name="amount" attrs="{'required':  [('type', 'in', ['customer', 'vendor'])], 'readonly': [('state', '=', 'close')]}"/>
+                            <label for="pay_id" attrs="{'invisible': [('type', '!=', 'vendor')]}"/>
+                            <div attrs="{'invisible': [('type', '!=', 'vendor')]}">
+                                <field name="pay_id"
+                                       domain="[('partner_id', '=', partner_id)]"
+                                       attrs="{'required': [('type', '=', 'vendor')]}"
+                                />
+                                <div class="row o_form_label">
+                                    <field name="is_cash"/>
+                                    <label for="is_cash"/>
+                                    <field name="is_payee_only"/>
+                                    <label for="is_payee_only"/>
+                                    <field name="is_bearer"/>
+                                    <label for="is_bearer"/>
+                                </div>
+                            </div>
+                            <field name="currency_id"/>
+                            <field name="company_id" readonly="1" force_save="1"/>
+                            <field name="reference"/>
+                        </group>
+                        <group>
+                            <field name="journal_id"/>
+                            <field name="cheque_date" attrs="{'required': [('type', 'in', ['customer', 'vendor'])]}"/>
+                            <field name="deposit_date"/>
+                            <field name="close_date"/>
+                            <field name="account_move_id" readonly="1" force_save="1"/>
+                            <field name="to_bank_id"
+                                   attrs="{
+                                   'invisible': [('type', '!=', 'customer')],
+                                   'required': [('state', '=', 'deposit'), ('type', '=', 'customer')]
+                                   }"/>
+                            <field name="cancel_reason"
+                                   attrs="{'invisible': [
+                                   ('cancel_reason', '=', ''),
+                                   ('state', 'not in', ['to_deposit', 'deposit'])
+                                   ]}"
+                            />
+                            <field name="reject_reason" string="Reject Reason" attrs="{'invisible': [('reject_reason', '=', ''), ('state', 'not in', ['to_deposit', 'deposit'])]}"
+                            />
+                        </group>
+                    </group>
+                    <field name="note"/>
+                </sheet>
+            </form>
+        </field>
+    </record>
+
+    <record id="vendor_account_cheque_action" model="ir.actions.act_window">
+        <field name="name">Payment Cheque</field>
+        <field name="type">ir.actions.act_window</field>
+        <field name="res_model">account.cheque</field>
+        <field name="domain">[('type', '=', 'vendor')]</field>
+        <field name="context">{'default_type': 'vendor'}</field>
+        <field name="view_mode">tree,form</field>
+    </record>
+
+    <menuitem id="vendor_account_cheque_categ"
+              name="Cheque Control"
+              parent="account.menu_finance_payables"
+              action="vendor_account_cheque_action"
+              sequence="21"/>
+
+    <record id="customer_account_cheque_action" model="ir.actions.act_window">
+        <field name="name">Payment Cheque</field>
+        <field name="type">ir.actions.act_window</field>
+        <field name="res_model">account.cheque</field>
+        <field name="domain">[('type', '=', 'customer')]</field>
+        <field name="context">{'default_type': 'customer'}</field>
+        <field name="view_mode">tree,form</field>
+    </record>
+
+    <menuitem id="customer_account_cheque_categ"
+              name="Cheque Control"
+              parent="account.menu_finance_receivables"
+              action="customer_account_cheque_action"
+              sequence="16"/>
+
+</odoo>

@@ -1,0 +1,371 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+
+    <template id="report_account_wht">
+        <t t-foreach="docs" t-as="o">
+            <t t-call="web.basic_layout">
+                <div data-name="wh3" style="background-image: url(/beecy_account_wht/static/src/img/wh3.png); background-repeat: no-repeat; background-size: 210mm 297mm; ">
+                    <div class="page height_background">
+                        <t t-if="substitute">
+                            <t t-if="o.wht_type == 'purchase'">
+                                <div class="substitute">
+                                    <b>ใบแทน</b>
+                                </div>
+                            </t>
+                        </t>
+                        <div class='name-wht'>
+                            <span t-if="o.name" t-field="o.name" />
+                        </div>
+                        <!-- ผู้ถูกเสียภาษี -->
+                        <div class='id-card'>
+                            <t t-if="o.split_company_id_card()">
+                                <span t-esc="o.split_company_id_card()[0]"/>
+                                <span style="padding-left:14px;" class="spacing-9" t-esc="o.split_company_id_card()[1]"/>
+                                <span class="spacing-9" t-esc="o.split_company_id_card()[2]"/>
+                                <span class="spacing-9" t-esc="o.split_company_id_card()[3]"/>
+                                <span style="padding-left:5px;" class="spacing-9" t-esc="o.split_company_id_card()[4]"/>
+                            </t>
+                        </div>
+                        <div class="taxpayer">
+                           <span t-esc="o.env.company.partner_id.title.name"/> <span t-field="o.env.company.name" />
+                        </div>
+                        <div class="taxpayer-address">
+                            <span t-field="o.env.company.street" />
+                            <span t-field="o.env.company.street2" />
+                            <span t-field="o.env.company.country_id.code" />
+                            <span t-field="o.env.company.city" />
+                             <span t-field="o.env.company.zip" />
+                        </div>
+                        <!-- ผู้ถูกหักภาษี -->
+                        <div class='id-card-2'>
+                            <t t-if="o.split_id_card()">
+                                <span t-esc="o.split_id_card()[0]"/>
+                                <span style="padding-left:14px;" class="spacing-9" t-esc="o.split_id_card()[1]"/>
+                                <span class="spacing-9" t-esc="o.split_id_card()[2]"/>
+                                <span class="spacing-9" t-esc="o.split_id_card()[3]"/>
+                                <span style="padding-left:5px;" class="spacing-9" t-esc="o.split_id_card()[4]"/>
+                            </t>
+                        </div>
+                        <div class="taxpayer-2">
+                            <span t-field="o.partner_id.title.name" /> <span t-field="o.partner_id.name" />
+                        </div>
+                        <div class="taxpayer-address-2">
+                            <span t-field="o.partner_id.street" />
+                            <span t-field="o.partner_id.street2" />
+                            <span t-field="o.partner_id.country_id.code" />
+                            <span t-field="o.partner_id.zip" />
+                            <span t-field="o.partner_id.city" />
+                        </div>
+                        <t t-if="o.wht_kind=='pnd1k'">
+                            <div class="pnd1k">
+                                <span> &#x2713;</span>
+                            </div>
+                        </t>
+                        <t t-elif="o.wht_kind=='pnd1ks'">
+                            <div class="pnd1ks">
+                                <span> &#x2713;</span>
+                            </div>
+                        </t>
+                        <t t-elif="o.wht_kind=='pnd2'">
+                            <div class="pnd2">
+                                <span> &#x2713;</span>
+                            </div>
+                        </t>
+                        <t t-elif="o.wht_kind=='pnd3'">
+                            <div class="pnd3">
+                                <span> &#x2713;</span>
+                            </div>
+                        </t>
+                        <t t-elif="o.wht_kind=='pnd2k'">
+                            <div class="pnd2k">
+                                <span> &#x2713;</span>
+                            </div>
+                        </t>
+                        <t t-elif="o.wht_kind=='pnd3k'">
+                            <div class="pnd3k">
+                                <span> &#x2713;</span>
+                            </div>
+                        </t>
+                        <t t-else="">
+                            <div class="pnd53">
+                                <span> &#x2713;</span>
+                            </div>
+                        </t>
+                        <!-- line wht -->
+                        <t t-if="o.line_ids">
+                            <t t-set="data" t-value="o.prepare_lines_wht()" />
+                            <t t-if="data.get('seq_wht_1_date')">
+                                <div class="wht-1-col-1">
+                                    <span style="padding-left:5px;" t-esc="data.get('seq_wht_1_date')" />
+                                </div>
+                                <div class="wht-1-col-2">
+                                    <span t-esc="data.get('seq_wht_1_base_amount')" />
+                                    <span style="padding-left:5px;" t-esc="data.get('seq_wht_1_base_amount_precision')" />
+                                </div>
+                                <div class="wht-1-col-3">
+                                    <span t-esc="data.get('seq_wht_1_tax_amount')" />
+                                    <span style="padding-left:3px;" t-esc="data.get('seq_wht_1_tax_amount_precision')" />
+                                </div>
+                            </t>
+                            <!-- wh2 -->
+                            <t t-if="data.get('seq_wht_2_date')">
+                                <div class="wht-2-col-1">
+                                    <span style="padding-left:5px;" t-esc="data.get('seq_wht_2_date')" />
+                                </div>
+                                <div class="wht-2-col-2">
+                                    <span t-esc="data.get('seq_wht_2_base_amount')" />
+                                    <span style="padding-left:5px;" t-esc="data.get('seq_wht_2_base_amount_precision')" />
+                                </div>
+                                <div class="wht-2-col-3">
+                                    <span t-esc="data.get('seq_wht_2_tax_amount')" />
+                                    <span style="padding-left:4px;" t-esc="data.get('seq_wht_2_tax_amount_precision')" />
+                                </div>
+                            </t>
+                            <!-- wh3 -->
+                            <t t-if="data.get('seq_wht_3_date')">
+                                <div class="wht-3-col-1">
+                                    <span style="padding-left:5px;" t-esc="data.get('seq_wht_3_date')" />
+                                </div>
+                                <div class="wht-3-col-2">
+                                    <span t-esc="data.get('seq_wht_3_base_amount')" />
+                                    <span style="padding-left:5px;" t-esc="data.get('seq_wht_3_base_amount_precision')" />
+                                </div>
+                                <div class="wht-3-col-3">
+                                    <span t-esc="data.get('seq_wht_3_tax_amount')" />
+                                    <span style="padding-left:4px;" t-esc="data.get('seq_wht_3_tax_amount_precision')" />
+                                </div>
+                            </t>
+                            <!-- wh4 -->
+                            <t t-if="data.get('seq_wht_4_date')">
+                                <div class="wht-4-col-1">
+                                    <span style="padding-left:5px;" t-esc="data.get('seq_wht_4_date')" />
+                                </div>
+                                <div class="wht-4-col-2">
+                                    <span t-esc="data.get('seq_wht_4_base_amount')" />
+                                    <span style="padding-left:5px;" t-esc="data.get('seq_wht_4_base_amount_precision')" />
+                                </div>
+                                <div class="wht-4-col-3">
+                                    <span t-esc="data.get('seq_wht_4_tax_amount')" />
+                                    <span style="padding-left:4px;" t-esc="data.get('seq_wht_4_tax_amount_precision')" />
+                                </div>
+                            </t>
+                            <!-- wh4 (1.1) -->
+                            <t t-if="data.get('seq_wht_4_1_1_date')">
+                                <div class="wht-4-1-1-col-1">
+                                    <span style="padding-left:5px;" t-esc="data.get('seq_wht_4_1_1_date')" />
+                                </div>
+                                <div class="wht-4-1-1-col-2">
+                                    <span t-esc="data.get('seq_wht_4_1_1_base_amount')" />
+                                    <span style="padding-left:5px;" t-esc="data.get('seq_wht_4_1_1_base_amount_precision')" />
+                                </div>
+                                <div class="wht-4-1-1-col-3">
+                                    <span t-esc="data.get('seq_wht_4_1_1_tax_amount')" />
+                                    <span style="padding-left:4px;" t-esc="data.get('seq_wht_4_1_1_tax_amount_precision')" />
+                                </div>
+                            </t>
+                            <!-- wh4 (1.2) -->
+                            <t t-if="data.get('seq_wht_4_1_2_date')">
+                                <div class="wht-4-1-2-col-1">
+                                    <span style="padding-left:5px;" t-esc="data.get('seq_wht_4_1_2_date')" />
+                                </div>
+                                <div class="wht-4-1-2-col-2">
+                                    <span t-esc="data.get('seq_wht_4_1_2_base_amount')" />
+                                    <span style="padding-left:5px;" t-esc="data.get('seq_wht_4_1_2_base_amount_precision')" />
+                                </div>
+                                <div class="wht-4-1-2-col-3">
+                                    <span t-esc="data.get('seq_wht_4_1_2_tax_amount')" />
+                                    <span style="padding-left:4px;" t-esc="data.get('seq_wht_4_1_2_tax_amount_precision')" />
+                                </div>
+                            </t>
+                            <!-- wh4 (1.3) -->
+                            <t t-if="data.get('seq_wht_4_1_3_date')">
+                                <div class="wht-4-1-3-col-1">
+                                    <span style="padding-left:5px;" t-esc="data.get('seq_wht_4_1_3_date')" />
+                                </div>
+                                <div class="wht-4-1-3-col-2">
+                                    <span t-esc="data.get('seq_wht_4_1_3_base_amount')" />
+                                    <span style="padding-left:5px;" t-esc="data.get('seq_wht_4_1_3_base_amount_precision')" />
+                                </div>
+                                <div class="wht-4-1-3-col-3">
+                                    <span t-esc="data.get('seq_wht_4_1_3_tax_amount')" />
+                                    <span style="padding-left:4px;" t-esc="data.get('seq_wht_4_1_3_tax_amount_precision')" />
+                                </div>
+                            </t>
+                            <!-- wh4 (1.4) -->
+                            <t t-if="data.get('seq_wht_4_1_4_date')">
+                                <div class="wht-4-1-4-col-1">
+                                    <span style="padding-left:5px;" t-esc="data.get('seq_wht_4_1_4_date')" />
+                                </div>
+                                <div class="wht-4-1-4-col-2">
+                                    <span t-esc="data.get('seq_wht_4_1_4_base_amount')" />
+                                    <span style="padding-left:5px;" t-esc="data.get('seq_wht_4_1_4_base_amount_precision')" />
+                                </div>
+                                <div class="wht-4-1-4-col-3">
+                                    <span t-esc="data.get('seq_wht_4_1_4_tax_amount')" />
+                                    <span style="padding-left:4px;" t-esc="data.get('seq_wht_4_1_4_tax_amount_precision')" />
+                                </div>
+                            </t>
+
+                            <!-- wh4 (2.1) -->
+                            <t t-if="data.get('seq_wht_4_2_1_date')">
+                                <div class="wht-4-2-1-col-1">
+                                    <span style="padding-left:5px;" t-esc="data.get('seq_wht_4_2_1_date')" />
+                                </div>
+                                <div class="wht-4-2-1-col-2">
+                                    <span t-esc="data.get('seq_wht_4_2_1_base_amount')" />
+                                    <span style="padding-left:5px;" t-esc="data.get('seq_wht_4_2_1_base_amount_precision')" />
+                                </div>
+                                <div class="wht-4-2-1-col-3">
+                                    <span t-esc="data.get('seq_wht_4_2_1_tax_amount')" />
+                                    <span style="padding-left:4px;" t-esc="data.get('seq_wht_4_2_1_tax_amount_precision')" />
+                                </div>
+                            </t>
+                            <!-- wh4 (2.2) -->
+                            <t t-if="data.get('seq_wht_4_2_2_date')">
+                                <div class="wht-4-2-2-col-1">
+                                    <span style="padding-left:5px;" t-esc="data.get('seq_wht_4_2_2_date')" />
+                                </div>
+                                <div class="wht-4-2-2-col-2">
+                                    <span t-esc="data.get('seq_wht_4_2_2_base_amount')" />
+                                    <span style="padding-left:5px;" t-esc="data.get('seq_wht_4_2_2_base_amount_precision')" />
+                                </div>
+                                <div class="wht-4-2-2-col-3">
+                                    <span t-esc="data.get('seq_wht_4_2_2_tax_amount')" />
+                                    <span style="padding-left:4px;" t-esc="data.get('seq_wht_4_2_2_tax_amount_precision')" />
+                                </div>
+                            </t>
+                            <!-- wh4 (2.3) -->
+                            <t t-if="data.get('seq_wht_4_2_3_date')">
+                                <div class="wht-4-2-3-col-1">
+                                    <span style="padding-left:5px;" t-esc="data.get('seq_wht_4_2_3_date')" />
+                                </div>
+                                <div class="wht-4-2-3-col-2">
+                                    <span t-esc="data.get('seq_wht_4_2_3_base_amount')" />
+                                    <span style="padding-left:5px;" t-esc="data.get('seq_wht_4_2_3_base_amount_precision')" />
+                                </div>
+                                <div class="wht-4-2-3-col-3">
+                                    <span t-esc="data.get('seq_wht_4_2_3_tax_amount')" />
+                                    <span style="padding-left:4px;" t-esc="data.get('seq_wht_4_2_3_tax_amount_precision')" />
+                                </div>
+                            </t>
+                            <!-- wh4 (2.4) -->
+                            <t t-if="data.get('seq_wht_4_2_4_date')">
+                                <div class="wht-4-2-4-col-1">
+                                    <span style="padding-left:5px;" t-esc="data.get('seq_wht_4_2_4_date')" />
+                                </div>
+                                <div class="wht-4-2-4-col-2">
+                                    <span t-esc="data.get('seq_wht_4_2_4_base_amount')" />
+                                    <span style="padding-left:5px;" t-esc="data.get('seq_wht_4_2_4_base_amount_precision')" />
+                                </div>
+                                <div class="wht-4-2-4-col-3">
+                                    <span t-esc="data.get('seq_wht_4_2_4_tax_amount')" />
+                                    <span style="padding-left:4px;" t-esc="data.get('seq_wht_4_2_4_tax_amount_precision')" />
+                                </div>
+                            </t>
+                            <!-- wh4 (2.5) -->
+                            <t t-if="data.get('seq_wht_4_2_5_date')">
+                                <div class="wht-4-2-5-col-1">
+                                    <span style="padding-left:5px;" t-esc="data.get('seq_wht_4_2_5_date')" />
+                                </div>
+                                <div class="wht-4-2-5-col-2">
+                                    <span t-esc="data.get('seq_wht_4_2_5_base_amount')" />
+                                    <span style="padding-left:5px;" t-esc="data.get('seq_wht_4_2_5_base_amount_precision')" />
+                                </div>
+                                <div class="wht-4-2-5-col-3">
+                                    <span t-esc="data.get('seq_wht_4_2_5_tax_amount')" />
+                                    <span style="padding-left:4px;" t-esc="data.get('seq_wht_4_2_5_tax_amount_precision')" />
+                                </div>
+                            </t>
+                            <!-- wh5 -->
+                            <t t-if="data.get('seq_wht_5_date')">
+                                <div class="wht-5-col-1">
+                                    <span style="padding-left:5px;" t-esc="data.get('seq_wht_5_date')" />
+                                </div>
+                                <div class="wht-5-col-2">
+                                    <span t-esc="data.get('seq_wht_5_base_amount')" />
+                                    <span style="padding-left:5px;" t-esc="data.get('seq_wht_5_base_amount_precision')" />
+                                </div>
+                                <div class="wht-5-col-3">
+                                    <span t-esc="data.get('seq_wht_5_tax_amount')" />
+                                    <span style="padding-left:4px;" t-esc="data.get('seq_wht_5_tax_amount_precision')" />
+                                </div>
+                            </t>
+                            <!-- wht_note_4-2-5 -->
+                            <t t-if="data.get('wht_note_4_2_5')">
+                                <div class="wht_note_4-2-5-col-1">
+                                    <span style="padding-left:5px;" t-esc="data.get('wht_note_4_2_5')" />
+                                </div>
+                            </t>
+                            <!-- wh6 -->
+                            <t t-if="data.get('seq_wht_6_date')">
+                                <div class="wht-6-col-1">
+                                    <span style="padding-left:5px;" t-esc="data.get('seq_wht_6_date')" />
+                                </div>
+                                <div class="wht-6-col-2">
+                                    <span t-esc="data.get('seq_wht_6_base_amount')" />
+                                    <span style="padding-left:5px;" t-esc="data.get('seq_wht_6_base_amount_precision')" />
+                                </div>
+                                <div class="wht-6-col-3">
+                                    <span t-esc="data.get('seq_wht_6_tax_amount')" />
+                                    <span style="padding-left:4px;" t-esc="data.get('seq_wht_6_tax_amount_precision')" />
+                                </div>
+                            </t>
+                            <!-- wht_note_6 -->
+                            <t t-if="data.get('wht_note_6')">
+                                <div class="wht_note_6-col-1">
+                                    <span style="padding-left:5px;" t-esc="data.get('wht_note_6')" />
+                                </div>
+                            </t>
+                            <!-- wht total -->
+                            <div class="wht-total-col-1" style="font-weight: bold;">
+                                <span t-esc="data.get('wht_total_base_amount')" />
+                                <span style="padding-left:5px;" t-esc="data.get('wht_total_base_amount_precision')" />
+                            </div>
+                            <div class="wht-total-col-2" style="font-weight: bold;">
+                                <span t-esc="data.get('wht_total_tax_amount')" />
+                                <span style="padding-left:4px;" t-esc="data.get('wht_total_tax_amount_precision')" />
+                            </div>
+                            <!-- wht tota th -->
+                            <div class="wht-total-th-col-1" style="font-weight: bold;">
+                                <span t-esc="data.get('th_wht_total_tax_amount')" />
+                            </div>
+                        </t>
+
+                        <!-- ผู้จ่ายเงิน -->
+                        <t t-if="o.wht_payment=='wht'">
+                            <div class="wht-payment-wht">
+                                <span> &#x2713;</span>
+                            </div>
+                        </t>
+                        <t t-elif="o.wht_payment=='forever'">
+                            <div class="wht-payment-forever">
+                                <span> &#x2713;</span>
+                            </div>
+                        </t>
+                        <t t-elif="o.wht_payment=='once'">
+                            <div class="wht-payment-once">
+                                <span> &#x2713;</span>
+                            </div>
+                        </t>
+                        <t t-elif="o.wht_payment=='other'">
+                            <div class="wht-payment-other">
+                                <span> &#x2713;</span>
+                            </div>
+                        </t>
+                    </div>
+                    <t t-if="o.split_datetime()">
+                        <div class="wht-document-datetime-days">
+                            <span t-esc="o.split_datetime()[0]" />
+                        </div>
+                        <div class="wht-document-datetime-month">
+                            <span t-esc="o.split_datetime()[1]" />
+                        </div>
+                        <div class="wht-document-datetime-year">
+                            <span t-esc="o.split_datetime()[2]" />
+                        </div>
+                    </t>
+                </div>
+            </t>
+        </t>
+    </template>
+</odoo>

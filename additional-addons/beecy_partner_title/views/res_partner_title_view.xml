@@ -1,0 +1,18 @@
+<?xml version='1.0' encoding='utf-8'?>
+<odoo>
+    <record id="view_partner_title_tree" model="ir.ui.view">
+        <field name="name">res.partner.title.inherit.view.tree</field>
+        <field name="model">res.partner.title</field>
+        <field name="inherit_id" ref="base.view_partner_title_tree"/>
+        <field name="arch" type="xml">
+            <field name="shortcut" position="attributes">
+                <attribute name="invisible">1</attribute>
+            </field>
+            <field name="name" position="after">
+                <field name="contact_type"/>
+                <field name="prefix"/>
+                <field name="suffix"/>
+            </field>
+        </field>
+    </record>
+</odoo>

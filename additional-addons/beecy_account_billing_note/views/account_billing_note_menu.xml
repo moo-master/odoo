@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <data>
+         <menuitem id="menu_sale_invoices_credit_notes"
+            name="Billing Note"
+            parent="account.menu_finance_receivables"
+            sequence="3"
+            action="action_billing_note"
+         />
+    </data>
+</odoo>

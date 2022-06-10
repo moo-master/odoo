@@ -1,0 +1,81 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <data>
+        <record id="view_company_form" model="ir.ui.view">
+            <field name="name">res.company.form</field>
+            <field name="model">res.company</field>
+            <field name="inherit_id" ref="base.view_company_form" />
+            <field name="priority" eval="100"/>
+            <field name="arch" type="xml">
+                <xpath expr="//field[@name='vat']" position="attributes">
+                    <attribute name="invisible">1</attribute>
+                </xpath>
+                <xpath expr="//field[@name='name']" position="attributes">
+                    <attribute name="class">o_text_overflow oe_inline</attribute>
+                </xpath>
+                <xpath expr="//field[@name='logo']" position="after">
+                    <field name="title_id"/>
+                </xpath>
+                <xpath expr="//field[@name='name']" position="before">
+                    <field name="prefix" style="margin-right: 10px"
+                           readonly="1" force_save="1" class="oe_inline"/>
+                </xpath>
+                <xpath expr="//field[@name='name']" position="after">
+                    <field name="suffix" style="margin-left: 10px"
+                           readonly="1" force_save="1"/>
+                    <br></br>
+                    <field name="name_english"
+                           class="o_text_overflow oe_inline"
+                           placeholder="Name English"/>
+                </xpath>
+                <xpath expr="//field[@name='partner_id']" position="before">
+                    <field name="nationality"/>
+                    <field name="vat"
+                           placeholder="e.g. BE0477472701"
+                           attrs="{'readonly': [('parent_id','!=',False)]}" string="ID Card/Tax ID"/>
+                    <field name="branch" widget="radio"/>
+                    <field name="branch_code"
+                           attrs="{'required': [('branch', '=', 'branch')]}"
+                           placeholder="Branch Code"/>
+                </xpath>
+                <xpath expr="//field[@name='street']" position="attributes">
+                    <attribute name="attrs">{'invisible': [('nationality', '=', 'th')]}</attribute>
+                </xpath>
+                <xpath expr="//field[@name='street2']" position="before">
+                    <field name="house_number"
+                           attrs="{'invisible': [('nationality', '=', 'other')]}"
+                           placeholder="No."
+                           class="o_address_house_number"/>
+                    <field name="village_number"
+                           attrs="{'invisible': [('nationality', '=', 'other')]}"
+                           placeholder="Moo"
+                           class="o_address_village_number"/>
+                    <field name="village"
+                           attrs="{'invisible': [('nationality', '=', 'other')]}"
+                           placeholder="Village"
+                           class="o_address_village"/>
+                    <field name="building"
+                           attrs="{'invisible': [('nationality', '=', 'other')]}"
+                           placeholder="Building"
+                           class="o_address_building"/>
+                    <field name="floor"
+                           attrs="{'invisible': [('nationality', '=', 'other')]}"
+                           placeholder="Floor"
+                           class="o_address_floor"/>
+                    <field name="room_number"
+                           attrs="{'invisible': [('nationality', '=', 'other')]}"
+                           placeholder="Room No."
+                           class="o_address_room_number"/>
+                    <field name="alley"
+                           attrs="{'invisible': [('nationality', '=', 'other')]}"
+                           placeholder="Alley"
+                           class="o_address_alley"/>
+                    <field name="sub_alley"
+                           attrs="{'invisible': [('nationality', '=', 'other')]}"
+                           placeholder="Sub Alley"
+                           class="o_address_sub_alley"/>
+                </xpath>
+            </field>
+        </record>
+    </data>
+</odoo>

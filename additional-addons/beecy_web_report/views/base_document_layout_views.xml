@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <record id="inherit_view_base_document_layout" model="ir.ui.view">
+        <field name="name">Document Layout</field>
+        <field name="model">base.document.layout</field>
+        <field name="inherit_id" ref="web.view_base_document_layout"/>
+        <field name="arch" type="xml">
+            <xpath expr="//field[@name='company_details']" position="after">
+            <label for="action_update_company_detail" string="Update Detail"/>
+                <button
+                    name="action_update_company_detail"
+                    class="btn-primary"
+                    type="object"
+                    string="Update"
+                />
+            </xpath>
+        </field>
+    </record>
+</odoo>

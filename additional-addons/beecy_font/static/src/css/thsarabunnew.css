@@ -1,0 +1,9 @@
+@font-face {
+  font-family: 'THSarabunNew';
+  src: url('/beecy_font/static/src/font/Sarabun-Medium.ttf') format('woff'),
+    url('/beecy_font/static/src/font/Sarabun-Medium.ttf') format('truetype');
+}
+
+.font-th {
+  font-family: 'THSarabunNew', sans-serif;
+}

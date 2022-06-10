@@ -1,0 +1,28 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+
+    <record id="account_debit_note_reason_view_form" model="ir.ui.view">
+        <field name="name">account.debit.note.reason.view.form</field>
+        <field name="model">account.debit.note.reason</field>
+        <field name="arch" type="xml">
+            <form string="Debit Note">
+                <sheet>
+                    <group>
+                        <field name="reason_id" required="1"/>
+                        <field name="is_reason_description" invisible="1"/>
+                        <field name="reason_description"
+                            attrs="{
+                                'invisible': [('is_reason_description', '=', False),],
+                                'required': [('is_reason_description', '=', True),],
+                            }"/>
+                    </group>
+                    <footer>
+                        <button name="action_debit_note_moves" string="Confirm" type="object" class="oe_highlight"/>
+                        <button string="Cancel" special="cancel" class="oe_link"/>
+                    </footer>
+                </sheet>
+            </form>
+        </field>
+    </record>
+
+</odoo>
