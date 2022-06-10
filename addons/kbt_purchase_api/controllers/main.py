@@ -39,26 +39,29 @@ class PurchaseController(http.Controller):
         if po_type in ['K-RENT', 'K-MATCH']:
             qty_received = order_line.get('product_uom_qty')
 
-        wht_seq = order_line.get('x_wht_id')
-        wht_id = request.env['account.wht.type'].search([
-            ('sequence', '=', wht_seq),
-        ])
-
-        if order_line.get('x_wht_id') and not wht_id:
-            raise ValueError(
-                "Withholding Tax: %s have no data." % wht_seq
-            )
-
-        return {
+        vals = {
             'account_analytic_id': account_analytic_id.id,
             'product_id': product_id.id,
             'name': order_line.get('name'),
             'qty_received': qty_received,
             'product_qty': order_line.get('product_uom_qty'),
-            'price_unit': order_line.get('product_price'),
+            'price_unit': order_line.get('price_unit'),
             'sequence': order_line.get('seq_line'),
-            'x_wht_id': wht_id.id or False,
         }
+
+        if 'x_wht_id' in order_line:
+            wht_seq = order_line.get('x_wht_id')
+            wht_id = request.env['account.wht.type'].search([
+                ('sequence', '=', wht_seq),
+            ])
+
+            if order_line.get('x_wht_id') and not wht_id:
+                raise ValueError(
+                    "Withholding Tax: %s have no data." % wht_seq
+                )
+            vals['x_wht_id'] = wht_id.id or False
+
+        return vals
 
     def _create_purchase_order(self, **params):
         Purchase = request.env['purchase.order']
@@ -68,11 +71,11 @@ class PurchaseController(http.Controller):
 
         partner_ref = params.get('partner_id.ref')
         partner_id = Partner.search(
-            [('external_interface_id', '=', partner_ref)])
+            [('x_interface_id', '=', partner_ref)])
 
         if not partner_id:
             partner_id = Partner.create({
-                'external_interface_id': partner_ref
+                'x_interface_id': partner_ref
             })
 
         account_analytic_id = Account.search(
@@ -116,3 +119,56 @@ class PurchaseController(http.Controller):
         purchase_id.button_confirm()
         if po_type in ['K-RENT', 'K-MATCH']:
             purchase_id.action_create_invoice()
+
+    @http.route('/purchase/update', type='json', auth='user')
+    def purchase_order_update_api(self, **params):
+        try:
+            self._update_purchase_order(**params)
+        except requests.HTTPError as http_err:
+            return {
+                'HTTP error': http_err,
+            }
+        except Exception as error:
+            return {
+                'error': error,
+            }
+
+    def _update_purchase_order(self, **params):
+        Purchase = request.env['purchase.order']
+
+        purchase_ref = params['x_purchase_ref']
+        purchase_ref_id = Purchase.search([
+            ('name', '=', purchase_ref),
+            ('x_is_interface', '=', True)
+        ])
+        if not purchase_ref_id:
+            raise ValueError(
+                "Purchase %s does not exist." % purchase_ref
+            )
+        update_line_lst = []
+        for order_line in params['lineItems']:
+            seq_id = request.env['purchase.order.line'].search([
+                ('sequence', '=', order_line.get('seq_line')),
+                ('order_id', '=', purchase_ref_id.id)
+            ])
+            if order_line['qty_received'] > seq_id.product_qty:
+                name = seq_id.name
+                prod_qty = seq_id.product_uom_qty
+                qty_recv = order_line['qty_received']
+                raise ValueError(f"Your ordered quantity of {name} is "
+                                 f"{prod_qty} and current delivered "
+                                 f"quantity is {qty_recv} your order "
+                                 f"quantity can’t more than {prod_qty}")
+            else:
+                update_line_lst.append((1, seq_id.id,
+                                        self._update_order_line(order_line)))
+
+        purchase_ref_id.update({
+            'order_line': update_line_lst
+        })
+        purchase_ref_id.action_create_invoice()
+
+    def _update_order_line(self, order_line):
+        return {
+            'qty_received': order_line['qty_received']
+        }
