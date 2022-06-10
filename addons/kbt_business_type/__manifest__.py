@@ -12,9 +12,10 @@
         'Pachara P.',
     ],
     'depends': [
-        'kbt_sale_order_api',
+        'sale',
         'account',
         'purchase',
+        'kbt_core_update'
     ],
     'data': [
         'security/ir.model.access.csv',

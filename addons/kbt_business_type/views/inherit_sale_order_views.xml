@@ -6,6 +6,16 @@
         <field name="inherit_id" ref="sale.view_order_form"/>
         <field name="priority" eval="150"/>
         <field name="arch" type="xml">
+            <xpath expr="//field[@name='payment_term_id']" position="after">
+                <field name="x_is_interface"/>
+            </xpath>
+
+            <xpath expr="//field[@name='order_line']//tree//field[@name='sequence']" position="attributes">
+                <attribute name="attrs">{'column_invisible': [('parent.x_is_interface', '=', True)]}</attribute>
+            </xpath>
+            <xpath expr="//field[@name='order_line']//tree//field[@name='qty_delivered']" position="attributes">
+                <attribute name="attrs"></attribute>
+            </xpath>
             <xpath expr="//field[@name='x_is_interface']" position="before">
                 <field name="so_type_id" string="Business Type"/>
             </xpath>

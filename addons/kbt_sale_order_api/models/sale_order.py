@@ -1,7 +1,7 @@
 from odoo import models, fields
 
 
-class SaleOrderInherit(models.Model):
+class SaleOrder(models.Model):
     _inherit = 'sale.order'
 
     x_so_orderreference = fields.Char(
@@ -19,12 +19,6 @@ class SaleOrderInherit(models.Model):
 
     product_serie_name = fields.Char(
         string='Product Serie Name',
-    )
-
-    # pylint: disable=biszx-boolean-field-name
-    x_is_interface = fields.Boolean(
-        string='Interface',
-        readonly=True,
     )
 
 

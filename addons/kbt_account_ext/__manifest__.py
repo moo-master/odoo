@@ -13,6 +13,5 @@
     ],
     'depends': [
         'kbt_business_type',
-        'kbt_core_update',
     ]
 }
