@@ -12,8 +12,7 @@
         'Pachara P.',
     ],
     'depends': [
-        'payment',
+        'kbt_business_type',
         'kbt_partner_api',
-        'kbt_core_update',
     ]
 }

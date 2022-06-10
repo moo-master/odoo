@@ -1,7 +1,7 @@
 {
-    'name': 'SKC Core Update',
-    'summary': 'SKC Core Update',
-    'author': 'SKC',
+    'name': 'KBT Core Update',
+    'summary': 'KBT Core Update',
+    'author': 'KBT',
     'website': 'https://roots.tech',
     'version': '15.0.0.0.1',
 }

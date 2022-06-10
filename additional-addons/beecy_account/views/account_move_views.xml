@@ -1,0 +1,285 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+
+    <record id="view_move_form_inherit_beecy_accont" model="ir.ui.view">
+        <field name="name">view.move.form.form.inherit.beecy.account</field>
+        <field name="model">account.move</field>
+        <field name="priority">100</field>
+        <field name="inherit_id" ref="account.view_move_form"/>
+        <field name="arch" type="xml">
+            <xpath expr="//group[@id='header_right_group']/div[@class='o_td_label']/label[2]" position="attributes">
+                <attribute name="attrs">
+                    {'invisible': [('move_type', 'not in', ('in_invoice', 'in_refund', 'in_receipt', 'in_debit'))]}
+                </attribute>
+            </xpath>
+            <xpath expr="//group[@id='header_right_group']/field[@name='invoice_date']" position="attributes">
+                <attribute name="attrs">{'invisible':
+                        [('move_type',
+                        'not in',
+                        ('out_invoice', 'out_refund', 'in_invoice', 'in_refund', 'out_receipt', 'in_receipt', 'in_debit'))]}
+                </attribute>
+            </xpath>
+            <xpath expr="//field[@name='state']" position="attributes">
+                <attribute name="invisible">1</attribute>
+            </xpath>
+            <xpath expr="//field[@name='name']" position="attributes">
+                <attribute name="readonly">1</attribute>
+            </xpath>
+            <!-- use for switch state display   -->
+            <xpath expr="//field[@name='state']" position="after">
+                <field
+                    name="state_customer"
+                    widget="statusbar"
+                    attrs="{'invisible':[('move_type', 'not in', ('out_invoice', 'out_debit', 'out_refund'))]}"
+                    statusbar_visible="draft,to_approve,posted,reject"/>
+                <field
+                    name="state_vendor"
+                    widget="statusbar"
+                    attrs="{'invisible':[('move_type', 'in', ('out_invoice', 'out_debit', 'out_refund'))]}"
+                    statusbar_visible="draft,posted,cancel"/>
+            </xpath>
+            <xpath expr="//form//header//button[2][@name='action_post']" position="attributes">
+                <attribute name="attrs">{'invisible':
+                    ['|',
+                        '|', '|', ('state', '!=', 'draft'),
+                                  ('auto_post', '=', True),
+                                  ('move_type', 'in', ('entry', 'out_invoice', 'out_debit', 'out_refund')),
+                                  ('display_inactive_currency_warning','=',True)]}
+                </attribute>
+            </xpath>
+            <xpath expr="//button[@name='button_cancel'][1]" position="replace">
+                <button
+                    name="button_cancel"
+                    string="Cancel Entry"
+                    type="object"
+                    groups="account.group_account_invoice"
+                    data-hotkey="w"
+                    attrs="{'invisible' : ['|', '|', ('id', '=', False),('state', 'in', ['reject','cancel']),('move_type', '!=', 'entry')]}"/>
+            </xpath>
+            <xpath expr="//button[@name='button_cancel'][2]" position="replace">
+                <button name="button_cancel"
+                    string="Cancel"
+                    type="object"
+                    groups="account.group_account_invoice"
+                    data-hotkey="w"
+                    attrs="{'invisible' : ['|', '|', ('id', '=', False), ('state', 'in', ['reject','cancel']),('move_type', '==', 'entry')]}"/>
+            </xpath>
+            <xpath expr="//button[@name='action_reverse']" position="after">
+                <button name="action_debit_note_reason_wizard"
+                        type="object"
+                        string="Add Debit Note"
+                        title="Add Debit Note"
+                        states="posted"
+                        context="{'default_move_type': 'out_invoice'}"/>
+                <button name="action_approve"
+                        type="object"
+                        states="to_approve"
+                        class="oe_highlight"
+                        groups="account.group_account_manager"
+                        string="Approve"/>
+                <button name="action_cancel_reject_reason_wizard"
+                        type="object"
+                        states="to_approve"
+                        groups="account.group_account_manager"
+                        string="Reject" />
+                <button name="action_to_approve"
+                        type="object"
+                        attrs="{'invisible':['|', ('move_type', 'not in', ('out_invoice', 'out_debit', 'out_refund')),('state', '!=', 'draft')]}"
+                        class="oe_highlight"
+                        string="To Approve" />
+            </xpath>
+            <xpath expr="//div[@name='button_box']" position="inside">
+                <button type="object" class="oe_stat_button" icon="fa-pencil-square-o" name="action_credit_debit_note_view"
+                    context="{'account_type': 'debit', }" attrs="{'invisible': [('debit_note_count', '=', 0)]}">
+                    <div class="o_form_field o_stat_info">
+                        <span class="o_stat_value">
+                            <field name="debit_note_count"/>
+                        </span>
+                        <span class="o_stat_text">Debit Note</span>
+                    </div>
+                </button>
+                <button type="object" class="oe_stat_button" icon="fa-pencil-square-o" name="action_credit_debit_note_view"
+                    context="{'account_type': 'credit', }" attrs="{'invisible': [('credit_note_count', '=', 0)]}">
+                    <div class="o_form_field o_stat_info">
+                        <span class="o_stat_value">
+                            <field name="credit_note_count"/>
+                        </span>
+                        <span class="o_stat_text">Credit Note</span>
+                    </div>
+                </button>
+            </xpath>
+            <xpath expr="//form/sheet/group/group[1]/div" position="replace">
+                <div class="o_td_label">
+                    <label for="partner_id" string="Customer" style="font-weight:bold;" attrs="{'invisible': [('move_type', 'not in', ('out_invoice', 'out_refund', 'out_receipt', 'out_debit'))]}"/>
+                    <label for="partner_id" string="Vendor" style="font-weight:bold;" attrs="{'invisible': [('move_type', 'not in', ('in_invoice', 'in_refund', 'in_receipt', 'in_debit'))]}"/>
+                </div>
+            </xpath>
+            <xpath expr="//group[@id='header_right_group']/label[@for='invoice_payment_term_id']" position="attributes">
+                <attribute name="attrs">{'invisible': [('move_type', 'not in', ('out_invoice', 'out_refund', 'out_debit', 'in_invoice', 'in_refund', 'in_debit'))]}</attribute>
+            </xpath>
+            <xpath expr="//group[@id='header_right_group']/div[@class='d-flex']" position="attributes">
+                <attribute name="attrs">{'invisible': [('move_type', 'not in', ('out_invoice', 'out_refund', 'out_debit', 'in_invoice', 'in_refund', 'in_debit'))]}</attribute>
+            </xpath>
+            <xpath expr="//group[@id='header_right_group']/div[@class='d-flex']/field[@name='invoice_date_due']" position="attributes">
+                <attribute name="attrs">{'invisible': [('move_type', 'not in', ('out_invoice', 'out_refund', 'out_debit', 'in_invoice', 'in_refund', 'in_debit'))]}</attribute>
+            </xpath>
+            <xpath expr="//group[@id='header_right_group']/div[@class='d-flex']/span[@class='o_form_label mx-3 oe_edit_only']" position="replace">
+                <span class="o_form_label mx-3" attrs="{'invisible': [('move_type', 'not in', ('in_debit','out_debit')), ('invoice_payment_term_id', '=', False)]}"> or </span>
+            </xpath>
+            <xpath expr="//div[@name='journal_div']" position="after">
+                <field name="reason_id" invisible="1"/>
+                <field name="reject_reason_id" attrs="{'invisible':[('reject_reason_id', '=', False)]}"/>
+                <field name="approve_uid" attrs="{'invisible':[('approve_uid', '=', False)]}"/>
+                <field name="approve_date" attrs="{'invisible':[('approve_date', '=', False)]}"/>
+                <field name="reject_uid" attrs="{'invisible':[('reject_uid', '=', False)]}"/>
+                <field name="reject_date" attrs="{'invisible':[('reject_date', '=', False)]}"/>
+                <field name="reject_reason" string="Reject Reason" states="reject" attrs="{'invisible':[('reject_reason', '=', False)]}"/>
+                <field name="cn_dn_reason" string="Reason" attrs="{'invisible': [('cn_dn_reason', '=', False),('move_type', '!=', 'out_debit')]}"/>
+                <field name="invoice_ref_id" domain="[('move_type', '=', move_type)]"/>
+            </xpath>
+            <xpath expr="//group[@name='sale_info_group']" position='attributes'>
+                <attribute name="attrs"/>
+                <attribute name="attrs">{'invisible': [('move_type', 'not in', ('out_invoice', 'out_refund', 'in_debit','out_debit'))]}</attribute>
+            </xpath>
+            <xpath expr="//group[@name='sale_info_group']/field[@name='ref']" position="after">
+                <field name="old_invoice_no" />
+                <field name="old_invoice_date" />
+                <field name="old_invoice_amount" />
+                <field name="old_invoice_tax_amount" />
+            </xpath>
+            <xpath expr="//form/sheet/group/group/field[@name='partner_id']" position="attributes">
+                <attribute name="attrs">{'invisible': [
+                    ('move_type', 'not in',
+                    ('out_invoice',
+                    'out_refund',
+                    'in_invoice',
+                    'in_refund',
+                    'out_receipt',
+                    'in_receipt',
+                    'out_debit',
+                    'in_debit',
+                    ))
+                    ]}
+                </attribute>
+            </xpath>
+            <xpath expr="//page[@id='other_tab']" position="attributes">
+                <attribute name="attrs">{'invisible': [
+                    ('move_type', 'not in',
+                    ('out_invoice',
+                    'out_refund',
+                    'in_invoice',
+                    'in_refund',
+                    'in_debit',
+                    'out_debit'))
+                    ]}
+                </attribute>
+            </xpath>
+            <xpath expr="//div[hasclass('o_attachment_preview')]" position="attributes">
+                <attribute name="attrs">
+                    {'invisible': ['|',
+                    ('move_type', 'not in',
+                    ('out_invoice', 'out_refund', 'in_invoice', 'in_refund', 'out_debit', 'in_debit')),
+                    ('state', '!=', 'draft')]}
+                </attribute>
+            </xpath>
+            <xpath expr="//group[hasclass('oe_subtotal_footer')]" position="attributes">
+                <attribute name="attrs">
+                    {'invisible': ['|', ('move_type', 'not in',
+                    ('out_invoice', 'out_refund', 'in_invoice', 'in_refund', 'out_receipt', 'in_receipt', 'out_debit', 'in_debit')),
+                    ('payment_state' ,'=', 'invoicing_legacy')]}
+                </attribute>
+            </xpath>
+            <xpath expr="//field[@name='invoice_outstanding_credits_debits_widget']" position="attributes">
+            <attribute name="attrs">
+                {'invisible': ['|', ('state', '!=', 'posted'), ('move_type', 'in', ('out_receipt', 'in_receipt', 'out_debit', 'in_debit'))]}
+            </attribute>
+            </xpath>
+            <xpath expr="//group[@name='accounting_info_group']" position="attributes">
+                <attribute name="attrs">{'invisible': [
+                    ('move_type', 'not in',
+                    ('out_invoice', 'out_refund', 'in_invoice', 'in_refund', 'out_debit', 'in_debit'))]}</attribute>
+            </xpath>
+
+        </field>
+    </record>
+
+    <record id="view_move_form_inherit_edi" model="ir.ui.view">
+        <field name="name">view.move.form.form.inherit.edi</field>
+        <field name="model">account.move</field>
+        <field name="priority">100</field>
+        <field name="inherit_id" ref="account_edi.view_move_form_inherit"/>
+        <field name="arch" type="xml">
+            <xpath expr="//page[@id='edi_documents']" position="attributes">
+                <attribute name="attrs"/>
+                <attribute name="attrs">
+                    {'invisible': [
+                    ('edi_document_ids', '=', []),
+                    ('move_type', 'not in',
+                    ('out_invoice',
+                    'out_refund',
+                    'in_invoice',
+                    'in_refund',
+                    'in_debit',
+                    'out_debit'))
+                    ]}
+                </attribute>
+            </xpath>
+        </field>
+    </record>
+
+    <record id="debit_inherit_view_invoice_tree" model="ir.ui.view">
+        <field name="name">inherit.account.invoice.tree</field>
+        <field name="model">account.move</field>
+        <field name="inherit_id" ref="account.view_invoice_tree"/>
+        <field name="priority">100</field>
+        <field name="arch" type="xml">
+            <xpath expr="//field[@name='invoice_partner_display_name'][1]" position="replace">
+                <field name="invoice_partner_display_name" invisible="context.get('default_move_type') not in ('in_invoice', 'in_refund','in_receipt', 'in_debit')" groups="base.group_user" string="Vendor" />
+            </xpath>
+            <xpath expr="//field[@name='invoice_partner_display_name'][2]" position="replace">
+                <field name="invoice_partner_display_name" invisible="context.get('default_move_type') not in ('out_invoice', 'out_refund','out_receipt', 'out_debit')" groups="base.group_user" string="Customer" />
+            </xpath>
+        </field>
+    </record>
+
+    <record id="action_move_out_debit_type" model="ir.actions.act_window">
+            <field name="name">Debit Notes</field>
+            <field name="res_model">account.move</field>
+            <field name="view_mode">tree,form</field>
+            <field name="view_id" ref="beecy_account.debit_inherit_view_invoice_tree"/>
+            <field name="search_view_id" ref="account.view_account_invoice_filter"/>
+            <field name="domain">[('move_type', '=', 'out_debit')]</field>
+            <field name="context">{'default_move_type': 'out_debit'}</field>
+            <field name="help" type="html">
+              <p class="o_view_nocontent_smiling_face">
+                Create a debit note
+              </p><p>
+                Note that the easiest way to create a debit note is to do it directly
+                from the customer invoice.
+              </p>
+            </field>
+        </record>
+
+    <menuitem id="menu_action_move_out_debit_type" parent="account.menu_finance_receivables" action="action_move_out_debit_type" sequence="2"/>
+
+    <record id="action_move_in_debit_type" model="ir.actions.act_window">
+            <field name="name">Debit Notes</field>
+            <field name="res_model">account.move</field>
+            <field name="view_mode">tree,form</field>
+            <field name="view_id" ref="beecy_account.debit_inherit_view_invoice_tree"/>
+            <field name="search_view_id" ref="account.view_account_invoice_filter"/>
+            <field name="domain">[('move_type', '=', 'in_debit')]</field>
+            <field name="context">{'default_move_type': 'in_debit'}</field>
+            <field name="help" type="html">
+              <p class="o_view_nocontent_smiling_face">
+                Create a debit note
+              </p><p>
+                Note that the easiest way to create a debit note is to do it directly
+                from the vender invoice.
+              </p>
+            </field>
+        </record>
+
+    <menuitem id="menu_action_move_in_debit_type" parent="account.menu_finance_payables" action="action_move_in_debit_type" sequence="2"/>
+
+</odoo>

@@ -1,0 +1,621 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+
+    <template id="report_beecy_payment_receipt_document">
+        <t t-call="web.basic_layout">
+            <t t-set="primary" t-value="o.company_id.primary_color or 'black'" />
+            <t t-set="secondary" t-value="o.company_id.secondary_color or 'black'" />
+                <div class="page">
+                    <style>
+                            .line_dill:nth-child(even) {background-color: #ebf5ff;}
+                            .primary_color {color: <t t-esc='primary'/>;}
+                    </style>
+                    <div class="content">
+                        <div class="col-12" style="width:100%; background-color: #c2e2ff; font-size: 14px;margin: 0px;">
+                            <div class="row font-th">
+                                <div style="width:2%;text-align: center;height: 50px;">
+                                </div>
+                                <div class="primary_color" style="width:20%;text-align: center;height: 50px;">
+                                    <b>เลขที่เอกสาร</b>
+                                    <br/>
+                                    <b>Document No.</b>
+                                </div>
+                                <div class="primary_color" style="width:10%;text-align: right;height: 50px;">
+                                    <b>วันที่เอกสาร</b>
+                                    <br/>
+                                    <b>Issue Date</b>
+                                </div>
+                                <div class="primary_color" style="width: 14%;text-align: right;height: 50px;">
+                                    <b>วันที่ครบกำหนด</b>
+                                    <br/>
+                                    <b>Due Date</b>
+                                </div>
+                                <div class="primary_color" style="width:14%;text-align: right;height: 50px;">
+                                    <b>มูลค่าเอกสาร</b>
+                                    <br/>
+                                    <b>Doc. Amount</b>
+                                </div>
+                                <div class="primary_color" style="width:14%;text-align: right;height: 50px;">
+                                    <b>มูลค่าที่ชำระแล้ว</b>
+                                    <br/>
+                                    <b>Paid Amount</b>
+                                </div>
+                                <div class="primary_color" style="width:11%;text-align: right;height: 50px;">
+                                    <b>หัก ณ ที่จ่าย</b>
+                                    <br/>
+                                    <b>WHT</b>
+                                </div>
+                                <div class="primary_color" style="width:14%;text-align: right;height: 50px;">
+                                    <b>มูลค่าคงเหลือ</b>
+                                    <br/>
+                                    <b>Balance</b>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <t t-set="counter" t-value="1" />
+                    <t t-set="total_balance" t-value="0"/>
+                    <t t-foreach="o.payment_line_invoice_ids" t-as="line">
+                        <div class="row line_dill" style="font-size: 14px;padding: 0px; margin: 0px;">
+                            <div style="width:2%;text-align: center;">
+                                <span t-esc="counter"/>.
+                            </div>
+                            <div style="width:20%;text-align: center;">
+                                <span t-esc="line.invoice_id.name"/>
+                            </div>
+                            <div style="width:10%;text-align: left;">
+                                <t t-if="line.invoice_id.invoice_date">
+                                    <t t-esc="line.invoice_id.invoice_date.strftime('%m/%d/%Y')"/>
+                                </t>
+                                <t t-else="">
+                                    <t t-esc="''"/>
+                                </t>
+                            </div>
+                            <div style="width:14%;text-align: right;">
+                                <t t-if="line.invoice_date_due_date">
+                                    <t t-if="o.partner_id.lang == 'th_TH'">
+                                        <t t-esc="line.invoice_date_due_date.strftime('%d/%m/%Y')"/>
+                                    </t>
+                                    <t t-else="">
+                                        <t t-esc="line.invoice_date_due_date.strftime('%m/%d/%Y')"/>
+                                    </t>
+                                </t>
+                                <t t-else="">
+                                    <t t-esc="''"/>
+                                </t>
+                            </div>
+                            <div style="width:14%;text-align: right;">
+                                <t t-if="line.amount_total == 0.00">
+                                    -
+                                </t>
+                                <t t-elif="line.amount_total &lt; 0">
+                                    ( <t t-esc="'{:,.2f}'.format(line.amount_total)"/> )
+                                </t>
+                                    <t t-else="">
+                                    <t t-esc="'{:,.2f}'.format(line.amount_total)"/>
+                                </t>
+                            </div>
+                            <div style="width:14%;text-align: right;">
+                                <!-- <t t-esc="line"/>-->
+                                <t t-set="amount_tobe_paid" t-value="line.amount_tobe_paid"/>
+                                <t t-if="amount_tobe_paid == 0.00">
+                                    -
+                                </t>
+                                <t t-elif="amount_tobe_paid &lt; 0">
+                                    ( <t t-esc="'{:,.2f}'.format(amount_tobe_paid)"/> )
+                                </t>
+                                <t t-else="">
+                                    <t t-esc="'{:,.2f}'.format(amount_tobe_paid)"/>
+                                </t>
+                            </div>
+                            <div style="width:11%;text-align: right;">
+                                <t t-if="line.amount_wht == 0.00">
+                                    -
+                                </t>
+                                <t t-elif="line.amount_wht &lt; 0">
+                                    ( <t t-esc="'{:,.2f}'.format(line.amount_wht)"/> )
+                                </t>
+                                    <t t-else="">
+                                    <t t-esc="'{:,.2f}'.format(line.amount_wht)"/>
+                                </t>
+                            </div>
+                            <div style="width:14%;text-align: right;">
+                                <t t-if="line.invoice_id.amount_residual == 0.00">
+                                    -
+                                </t>
+                                <t t-elif="line.invoice_id.amount_residual &lt; 0">
+                                    ( <t t-esc="'{:,.2f}'.format(line.invoice_id.amount_residual)"/> )
+                                    <t t-set="balance" t-value="abs(line.invoice_id.amount_residual)"/>
+                                </t>
+                                <t t-else="">
+                                    <t t-set="balance" t-value="abs(line.invoice_id.amount_residual)"/>
+                                    <t t-esc="'{:,.2f}'.format(balance)"/>
+                                </t>
+                            </div>
+                            <t t-set="total_balance" t-value="total_balance +balance "/>
+                            <t t-set="counter" t-value="counter+1"/>
+                        </div>
+                    </t>
+                </div>
+        </t>
+
+    </template>
+
+    <template id="report_beecy_payment_receipt">
+        <t t-call="web.html_container">
+            <t t-foreach="docs" t-as="o">
+                <t t-foreach="2" t-as="lable_header">
+                    <t t-set="lang" t-value="request.env.user.sudo().lang if o.payment_type in ('inbound', 'outbound') else o.partner_id.lang"/>
+                    <t t-call="beecy_account_payment.report_beecy_payment_receipt_document" t-lang="lang">
+                        <t t-set="old_detail" t-value="1"/>
+                        <t t-set="beecy_basic" t-value="1"/>
+                    </t>
+                    <t t-set="name_bill" t-value="'ใบเสร็จรับเงิน'"/>
+                    <t t-set="name_bill_en" t-value='"RECEIPT"'/>
+                    <t t-if="lable_header== 0">
+                        <t t-set="name_type_bill" t-value='"( ต้นฉบับ / Original )"'/>
+                    </t>
+                    <t t-else="">
+                        <t t-set="name_type_bill" t-value='"( สำเนา / Copy )"'/>
+                    </t>
+                    <t t-set="display_name" t-value="o.partner_id.display_name"/>
+                    <t t-set="street" t-value="o.partner_id.street"/>
+                    <t t-set="street2" t-value="o.partner_id.street2"/>
+                    <t t-set="city" t-value="o.partner_id.city"/>
+                    <t t-set="state_id_name" t-value="o.partner_id.state_id.name"/>
+                    <t t-set="zip_partner" t-value="o.partner_id.zip"/>
+                    <t t-set="phone" t-value="o.partner_id.phone"/>
+                    <t t-set="vat" t-value="o.partner_id.vat"/>
+                    <t t-set="ref" t-value="o.note"/>
+                    <t t-set="invoice_name" t-value="o.name"/>
+                    <t t-if="o.date_date">
+                        <t t-set="invoice_date" t-value="o.date_date.strftime('%d/%m/%Y')"/>
+                    </t>
+                    <t t-else="">
+                        <t t-set="invoice_date" t-value="''"/>
+                    </t>
+                    <t t-set="price_subtotal" t-value="0" />
+                    <t t-foreach="o.payment_line_invoice_ids" t-as="line">
+                        <t t-set="price_subtotal" t-value="line.amount_total"/>
+                    </t>
+                    <t t-set="footer"  t-call="beecy_account_payment.payment_receipt_footer"/>
+                    <t t-set="header"  t-call="beecy_account_payment.payment_receipt_header"/>
+                </t>
+            </t>
+        </t>
+    </template>
+
+    <template id="payment_receipt_header" >
+            <div class="header font-th">
+                <div class="float-right">
+                    <h3 class="mt0 text-right" t-field="o.company_id.report_header"/>
+                </div>
+                <div class="content" style="font-size: 12px;">
+                    <div class="row">
+                        <div class="col-4"><![CDATA[&nbsp;]]></div>
+                        <div class="col-4"><![CDATA[&nbsp;]]></div>
+                        <div class="col-4"><![CDATA[&nbsp;]]></div>
+                    </div>
+                    <div class="row">
+                        <div class="col-2">
+                            <img t-if="o.company_id.logo" t-att-src="image_data_uri(o.company_id.logo)" class="float-left" style="max-height: 90px;width: 100px; margin-top: 15px" alt="Logo"/>
+                        </div>
+                        <div class="col-4">
+                            <div class="row">
+                                <div class="col-6"><![CDATA[&nbsp;]]></div>
+                                <div class="col-6"><![CDATA[&nbsp;]]></div>
+                            </div>
+                            <div class="row" >
+                                <div class="col-12" style="color:#666666;">
+                                    <div class="company_address" style="color:#666666;">
+                                        <span t-if="o.company_id.company_details" t-esc="o.company_id.company_details" />
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-6">
+                            <div class="row">
+                                <div class="col-12 text-right" style="font-size:12px; color:#666666;" >
+                                    <t t-esc="name_type_bill">  </t>
+                                </div>
+                            </div>
+                            <div class="col-12" style="font-size:21px; color:#3297ff; padding: 0px;">
+                                <div class="text-right">
+                                    <b><t t-esc="name_bill">  </t></b>
+                                </div>
+                                <div class="text-right">
+                                    <b><t t-esc="name_bill_en">  </t></b>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="content" style="font-size: 12px;">
+                    <div class="row">
+                        <div class="col-2">
+                            <div class="row">
+                                <div class="col-6"><![CDATA[&nbsp;]]></div>
+                            </div>
+                            <div style="color:#434343;" >
+                                <b><span> ลูกค้า / Customer : </span></b>
+                            </div>
+                            <div style="color:#434343;" >
+                                <b><span> ที่อยู่ / Address : </span></b>
+                            </div>
+                            <div style="height: 40pt" class="col-6"><![CDATA[&nbsp;]]></div>
+                            <div style="color:#434343;" >
+                            <!-- <b><span> ผู้ติดต่อ / Contact : </span></b> -->
+                            </div>
+                        </div>
+                        <div class="col-5">
+                            <div class="row">
+                                <div class="col-6"><![CDATA[&nbsp;]]></div>
+                                <div class="col-6"><![CDATA[&nbsp;]]></div>
+                            </div>
+                            <div class="row" >
+                                <div class="col-12" style="color:#434343;">
+                                    <b><span t-esc="display_name"/></b>
+                                </div>
+                            </div>
+                            <div class="row" style="color:#434343;">
+                                <div class="col-12">
+                                    <span t-esc="street"/>
+                                    <span t-esc="street2"/>
+                                </div>
+                            </div>
+                            <div class="row" style="color:#434343;">
+                                <div class="col-12">
+                                    <div>
+                                        <span t-esc="city"/>
+                                        <span t-esc="state_i_name"/>
+                                        <span t-esc="zip_partner"/>
+                                    </div>
+                                    <div>
+                                        <span class="fa-phone"/>
+                                        <span t-esc="phone"/>
+                                    </div>
+                                    <div>
+                                        <span>Tax ID :</span>
+                                        <span t-esc="vat"/>
+                                    </div>
+                                </div>
+                            </div>
+                            <div>
+                            <!-- <span t-esc="' '"/> -->
+                            </div>
+                        </div>
+
+                        <div class="col-5">
+                            <div class="col-12" style="font-size:11px; background-color: #ebf5ff;">
+                                <div class="row">
+                                    <div class="col-6"><![CDATA[&nbsp;]]></div>
+                                    <div class="col-6"><![CDATA[&nbsp;]]></div>
+                                </div>
+
+                                <div class="row" style="color:#434343;" align="left">
+                                    <div  class="col-5" >
+                                        <b><span>เลขที่ / Doc No. :</span></b>
+                                    </div>
+                                    <div  class="col-7" style="padding: 0px">
+                                        <b><span t-esc="o.name"/></b>
+                                    </div>
+                                </div>
+                                <div class="row" style="color:#434343;" align="left">
+                                    <div  class="col-5" >
+                                        <b><span>วันที่ / Date :</span></b>
+                                    </div>
+                                    <div  class="col-7" style="padding: 0px">
+                                        <span t-esc="invoice_date"/>
+                                    </div>
+                                </div>
+                                <div class="col-6" style="height: 10pt;"><![CDATA[&nbsp;]]></div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+    </template>
+
+    <template id="payment_receipt_footer" >
+        <div class="footer font-th">
+            <style>
+                .triangle {
+                        position: absolute;
+                        left: 15px;
+                        bottom: 0;
+                        width: 0px;
+                        height: 0px;
+                        border-right: 50px solid transparent;
+                        border-bottom: 50px solid  #e6f2ff;
+                    }
+            </style>
+            <div style="border-top: 1px solid #cccccc;">
+                <div style="height:10pt;"><![CDATA[&nbsp;]]></div>
+                </div>
+                <div class="row" style="padding: 0px; font-size: 12px;">
+                    <div class="col-1" style="text-align: left;">
+                        <b><span> สรุป </span></b>
+                    </div>
+                    <div class="col-6 row">
+                        <div class="col-9">
+                            <div style="text-align: left;" >
+                                <b> รวมมูลค่าเอกสาร / Total Document Amount</b>
+                            </div>
+                            <div style="text-align: left;" >
+                                <b> รวมมูลค่าที่ชำระแล้ว / Total Paid Amount</b>
+                            </div>
+                            <div style="text-align: left;" >
+                                <b> รวมภาษี หัก ณ ที่จ่าย / Total WHT Amount</b>
+                            </div>
+                            <div style="text-align: left;" >
+                                <b> มูลค่าคงเหลือรวม / Total Balance</b>
+                            </div>
+                        </div>
+                        <div class="col-3">
+                            <div style="text-align: right;" >
+                                <t t-if="o.amount_balance == 0.00">
+                                    -
+                                </t>
+                                <t t-elif="o.amount_balance &lt; 0">
+                                    ( <t t-esc="'{:,.2f}'.format(o.amount_balance)"/> )
+                                </t>
+                                    <t t-else="">
+                                    <t t-esc="'{:,.2f}'.format(o.amount_balance)"/>
+                                </t>
+                            </div>
+                            <div style="text-align: right;" >
+                                <t t-if="o.amount_paid == 0.00">
+                                    -
+                                </t>
+                                <t t-elif="o.amount_paid &lt; 0">
+                                    ( <t t-esc="'{:,.2f}'.format(o.amount_paid)"/> )
+                                </t>
+                                    <t t-else="">
+                                    <t t-esc="'{:,.2f}'.format(o.amount_paid)"/>
+                                </t>
+                            </div>
+                            <div style="text-align: right;" >
+                                <t t-if="o.amount_wht == 0.00">
+                                    -
+                                </t>
+                                <t t-elif="o.amount_wht &lt; 0">
+                                    ( <t t-esc="'{:,.2f}'.format(o.amount_wht)"/> )
+                                </t>
+                                    <t t-else="">
+                                    <t t-esc="'{:,.2f}'.format(o.amount_wht)"/>
+                                </t>
+                            </div>
+                            <div style="text-align: right;" >
+                                <t t-set="amount_sum" t-value="(o.amount_balance)-(o.amount_wht + o.amount_paid)"/>
+                                <t t-if="'{:,.2f}'.format(amount_sum) == 0.00 or '{:,.2f}'.format(amount_sum) == -0.00 ">
+                                    0.00
+                                </t>
+                                <t t-elif="amount_sum &lt; 0">
+                                    <t t-esc="'{:,.2f}'.format(amount_sum)"/>
+                                </t>
+                                <t t-else="">
+                                    <t t-esc="'{:,.2f}'.format(amount_sum)"/>
+                                </t>
+                            </div>
+                        </div>
+
+                    </div>
+
+                    <div class="col-5"  style="margin: 16px; margin-top: 5px; font-size:12px; background-color: #e6f2ff;">
+                        <div class="col-12 row" style="margin: 0px;">
+                            <div style="color:#333333; text-align: left;" class="col-6" >
+                                <div style="height:10pt;"><![CDATA[&nbsp;]]></div>
+                                <div style="margin-left: -20px;" >
+                                    <b>จำนวนเงินทั้งสิ้น / </b>
+                                </div>
+                            </div>
+                            <div style="color:#333333; text-align: right;" class="col-6" >
+                                <div style="height:10pt;"><![CDATA[&nbsp;]]></div>
+                                <div style="text-align: right; margin-left: 10px;" >
+                                    <t t-if="o.amount_tobe_paid == 0.00">
+                                        <b>-</b>
+                                    </t>
+                                    <t t-elif="o.amount_tobe_paid &lt; 0">
+                                        <b>( <t t-esc="'{:,.2f}'.format(o.amount_tobe_paid)"/> )&#160;</b>บาท
+                                    </t>
+                                    <t t-else="">
+                                        <b><t t-esc="'{:,.2f}'.format(o.amount_tobe_paid)"/>&#160;</b>บาท
+                                    </t>
+                                </div>
+                            </div>
+                        </div>
+                        <div style="text-align: left;" class="col-6" >
+                            <b><span>Total Amount </span></b>
+                        </div>
+                        <div style="height:10pt;"><![CDATA[&nbsp;]]></div>
+                    </div>
+                </div>
+
+                <div style="font-size:12px;">
+                    <div style="text-align: right;" >
+                        <t t-esc="o._amount_total_text(o.amount_tobe_paid)"/>
+                    </div>
+                </div>
+                <div style="height:5pt;"><![CDATA[&nbsp;]]></div>
+                <div style="border-top: 1px solid #cccccc;">
+                    <div style="height:5pt;"><![CDATA[&nbsp;]]></div>
+                </div>
+
+                <div class="row" style="padding: 0px; font-size: 12px;">
+                    <div class="col-2" style="text-align: left;">
+                        <b><span> ชำระเงิน </span></b>
+                    </div>
+                    <div class="col-6" >
+                        <div style="margin-left: -65px;">
+                            <t t-set="amount_method_total" t-value="0"/>
+                            <t t-foreach="o.payment_line_method_ids.mapped('payment_method_line_id')" t-as="line_method">
+                                <div class="row">
+                                    <div class="col-6">
+                                        <span t-esc="line_method.name"/>
+                                    </div>
+                                    <div class="col-6" style="text-align: right; margin-left: -120px;">
+                                        <t t-set="amount_method" t-value="sum(o.payment_line_method_ids.filtered(lambda m: m.payment_method_line_id.id ==  line_method.id).mapped('amount_total'))"/>
+                                        <t t-if="amount_method == 0.00">
+                                            -
+                                        </t>
+                                        <t t-elif="amount_method &lt; 0">
+                                            ( <t t-esc="'{:,.2f}'.format(amount_method)"/> )
+                                        </t>
+                                        <t t-else="">
+                                            <t t-esc="'{:,.2f}'.format(amount_method)"/>
+                                        </t>
+                                    </div>
+                                </div>
+                                <t t-set="amount_method_total" t-value="sum(o.payment_line_method_ids.filtered(lambda m: m.payment_method_line_id.id).mapped('amount_total'))"/>
+                            </t>
+                        </div>
+                        <div class="row" style="margin-left: -80px;">
+                            <div class="col-8">
+                                <div style="text-align: left;">
+                                    ภาษีถูกหัก ณ ที่จ่าย
+                                </div>
+                                <div style="text-align: left;" >
+                                    <b> รวมมูลค่าที่ชำระ / Total Payment </b>
+                                </div>
+                            </div>
+                            <div class="col-4" style="margin-left: -120px;">
+                                <div style="text-align: right;" >
+                                    <t t-if="o.amount_wht == 0.00">
+                                        -
+                                    </t>
+                                    <t t-elif="o.amount_wht &lt; 0">
+                                        ( <t t-esc="'{:,.2f}'.format(o.amount_wht)"/> )
+                                    </t>
+                                        <t t-else="">
+                                        <t t-esc="'{:,.2f}'.format(o.amount_wht)"/>
+                                    </t>
+                                </div>
+                                <div style="text-align: right;" >
+                                    <t t-if="o.amount_tobe_paid == 0.00">
+                                        -
+                                    </t>
+                                    <t t-elif="o.amount_tobe_paid &lt; 0">
+                                        <t t-esc="'{:,.2f}'.format(amount_method_total)"/>
+                                    </t>
+                                    <t t-else="">
+                                        <t t-esc="'{:,.2f}'.format(o.amount_tobe_paid)"/>
+                                    </t>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-4">
+                        <div style="col-4"><![CDATA[&nbsp;]]></div>
+                    </div>
+                </div>
+                <div style="height:5pt;"><![CDATA[&nbsp;]]></div>
+                <div style="border-top: 1px solid #cccccc;">
+                    <div style="height:15pt;"><![CDATA[&nbsp;]]></div>
+                </div>
+
+                <div name="beecy_basic_remarks" class="content" style="font-size: 12px;">
+                    <div class="row">
+                        <div class="col-5" style="padding: 0px;">
+                            <div class="col-12">
+                                <div style="text-align: left;" >
+                                    <b>หมายเหตุ/Remarks</b>
+                                </div>
+                                <div style="text-align: left; height:90pt;" >
+                                    <t t-esc="o.note"/>
+                                </div>
+                                <div>
+                                    <div class="triangle" >
+                                    </div>
+                                    <div style="position: absolute; top: 119px; left: 35px;" class="row">
+                                        <div class="page"/> / <div class="topage"/>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div style="border-right: 1px solid #cccccc;">
+                            <div><![CDATA[&nbsp;]]></div>
+                        </div>
+                        <div class="col-7">
+                            <div class="row">
+                                <div class="col-4">
+                                    <div style="text-align: center;">
+                                        <b>ผู้ออกเอกสาร </b>
+                                    </div>
+                                    <div style="text-align: center;">
+                                        <b>Responsible By</b>
+                                    </div>
+                                </div>
+                                <div class="col-4">
+                                    <div style="text-align: center;">
+                                        <b>ผู้อนุมัติเอกสาร</b>
+                                    </div>
+                                    <div style="text-align: center;">
+                                        <b>Approved By</b>
+                                    </div>
+                                </div>
+                                <div class="col-4">
+                                    <div style="text-align: center;">
+                                        <b>ผู้รับเอกสาร</b>
+                                    </div>
+                                    <div style="text-align: center;">
+                                        <b>Received By</b>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="col-6"><![CDATA[&nbsp;]]></div>
+                            <div class="row">
+                                <div class="col-4">
+                                    <div style="text-align: center;position: absolute; top: -20px; left: 30px;">
+                                        <img t-if="o.create_uid.signature" t-att-src="image_data_uri(o.create_uid.signature)" style="max-height: 30px;width: 100px; margin-top: 15px" alt="Logo"/>
+                                    </div>
+                                </div>
+                                <div class="col-4">
+                                    <div style="text-align: center;position: absolute; top: -20px; left: 30px;">
+                                        <img t-if="o.create_uid.signature" t-att-src="image_data_uri(o.create_uid.signature)" style="max-height: 30px;width: 100px; margin-top: 15px" alt="Logo"/>
+                                    </div>
+                                </div>
+                                <div class="col-4"/>
+                            </div>
+                            <div class="row" style="padding-top: 50px;">
+                                <div class="col-4">
+                                    <div style="text-align: center;">
+                                        (<t t-esc="o.create_uid.name"/>)
+                                    </div>
+                                    <div style="text-align: center;">
+                                        <span t-field="o.create_date" t-options="{'format': 'dd/MM/YYYY'}"/>
+                                    </div>
+                                </div>
+                                <div class="col-4">
+                                    <div style="text-align: center;">
+                                        (<t t-esc="o.create_uid.name"/>)
+                                    </div>
+                                    <div style="text-align: center;">
+                                        <span t-field="o.create_date" t-options="{'format': 'dd/MM/YYYY'}"/>
+                                    </div>
+                                </div>
+                                <div class="col-4">
+                                    <div class="row">
+                                        <div class="col-4" style="text-align: center;">(
+                                        </div>
+                                        <div class="col-4" style="text-align: center;">
+                                            <![CDATA[&nbsp;]]>
+                                        </div>
+                                        <div class="col-4" style="text-align: center;">)
+                                        </div>
+                                    </div>
+                                    <div class="row">
+                                        <div class="col-6" style="text-align: right;">/
+                                        </div>
+                                        <div class="col-6" style="text-align: left;">/
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+        </div>
+    </template>
+
+</odoo>

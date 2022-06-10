@@ -1,0 +1,31 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <record id="view_account_billing_note_form_inherited" model="ir.ui.view">
+        <field name="name">account.billing.note.form.inherited</field>
+        <field name="model">account.billing.note</field>
+        <field name="inherit_id" ref="beecy_account_billing_note.account_billing_note_view_form" />
+        <field name="arch" type="xml">
+            <xpath expr="//button[@name='button_customer_confirm']" position="after">
+                <button name="action_register_payment"
+                        string="Register Payment"
+                        type="object"
+                        class="oe_highlight"
+                        attrs="{'invisible': ['|',
+                        ('count_payment', '&gt;', 0),
+                        ('state', 'not in', ['waiting_payment'])]}"
+                        />
+            </xpath>
+
+            <xpath expr="//div[@name='button_box']" position="inside">
+                <field name="beecy_payment_ids" invisible="1" />
+                <field name="count_payment" invisible="1"/>
+                <button name="action_register_payment"
+                        class="oe_stat_button"
+                        icon="fa-bars"
+                        type="object"
+                        attrs="{'invisible': [('line_ids', '&lt;', 1)]}"
+                        string="Payment" />
+            </xpath>
+        </field>
+    </record>
+</odoo>

@@ -12,7 +12,6 @@
         'Rattapong C.',
     ],
     'depends': [
-        'purchase',
         'kbt_business_type',
         'kbt_partner_api',
     ],

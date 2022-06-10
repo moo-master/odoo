@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+
+    <template id="cheque_report">
+        <t t-foreach="docs" t-as="o">
+                <t t-call="web.basic_layout">
+                    <div class="page">
+                        <h1 style="text-align: center;"> Waiting Template</h1>
+                        <p style="text-align: center;">Draft template</p>
+                    </div>
+                </t>
+            </t>
+    </template>
+</odoo>

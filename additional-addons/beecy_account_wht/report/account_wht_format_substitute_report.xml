@@ -1,0 +1,31 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <data noupdate="0">
+
+        <record id="account_wht_substitute_format" model="report.paperformat">
+            <field name="name">WHT Substitute</field>
+            <field name="default" eval="True"/>
+            <field name="format">A4</field>
+            <field name="orientation">Portrait</field>
+            <field name="margin_top">0</field>
+            <field name="margin_bottom">0</field>
+            <field name="margin_left">0</field>
+            <field name="margin_right">0</field>
+            <field name="header_spacing">70</field>
+            <field name="dpi">80</field>
+        </record>
+
+        <record id="action_acc_move_wht_substitute" model="ir.actions.report">
+            <field name="name">WHT Substitute</field>
+            <field name="model">account.wht</field>
+            <field name="report_type">qweb-pdf</field>
+            <field name="report_name">beecy_account_wht.report_account_wht_substitute</field>
+            <field name="report_file">beecy_account_wht.report_account_wht_substitute</field>
+            <field name="print_report_name">'WHT Substitute - %s' % (object.name)</field>
+            <field name="paperformat_id" ref="beecy_account_wht.account_wht_substitute_format"/>
+            <field name="binding_model_id" ref="model_account_wht"/>
+            <field name="binding_type">report</field>
+        </record>
+
+    </data>
+</odoo>

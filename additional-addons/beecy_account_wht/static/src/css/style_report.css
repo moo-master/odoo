@@ -1,0 +1,854 @@
+.height_background {
+  height: 297mm;
+}
+
+div.substitute {
+  position: absolute;
+  top: 5mm;
+  left: 180mm;
+  font-size: 30px;
+}
+/* name-wht */
+div.name-wht {
+  position: absolute;
+  top: 23.5mm;
+  left: 186mm;
+  font-size: 2.7mm;
+}
+/* ผู้ถูกเสียภาษี  */
+
+div.id-card {
+  position: absolute;
+  top: 29.5mm;
+  left: 137mm;
+  font-size: 3.7mm;
+}
+
+div.taxpayer {
+  position: absolute;
+  top: 36mm;
+  left: 23mm;
+  font-size: 2.65mm;
+}
+
+div.taxpayer-address {
+  position: absolute;
+  top: 44.5mm;
+  left: 25mm;
+  font-size: 2.65mm;
+}
+
+div.vat-1 {
+  position: absolute;
+  top: 35.5mm;
+  left: 152.5mm;
+  font-size: 3.7mm;
+}
+
+/* ผู้ถูกหักภาษี  */
+
+div.id-card-2 {
+  position: absolute;
+  top: 53.5mm;
+  left: 137mm;
+  font-size: 3.7mm;
+}
+
+div.taxpayer-2 {
+  position: absolute;
+  top: 62mm;
+  left: 23mm;
+  font-size: 2.65mm;
+}
+
+div.taxpayer-address-2 {
+  position: absolute;
+  top: 71.5mm;
+  left: 25mm;
+  font-size: 2.65mm;
+}
+
+div.vat-2 {
+  position: absolute;
+  top: 60.5mm;
+  left: 152.5mm;
+  font-size: 3.7mm;
+}
+
+/* king of wht */
+div.pnd1k {
+  position: absolute;
+  top: 79mm;
+  left: 78mm;
+  font-size: 5mm;
+}
+
+div.pnd1ks {
+  position: absolute;
+  top: 79mm;
+  left: 105.5mm;
+  font-size: 5mm;
+}
+
+div.pnd2 {
+  position: absolute;
+  top: 79mm;
+  left: 143.5mm;
+  font-size: 5mm;
+}
+
+div.pnd3 {
+  position: absolute;
+  top: 79mm;
+  left: 171mm;
+  font-size: 5mm;
+}
+
+/* row 2 pnd */
+div.pnd2k {
+  position: absolute;
+  top: 85.5mm;
+  left: 78mm;
+  font-size: 5mm;
+}
+
+div.pnd3k {
+  position: absolute;
+  top: 85.5mm;
+  left: 105.5mm;
+  font-size: 5mm;
+}
+
+div.pnd53 {
+  position: absolute;
+  top: 85.5mm;
+  left: 143.5mm;
+  font-size: 5mm;
+}
+
+span.spacing-9 {
+  letter-spacing: 9px;
+}
+
+/* pnd */
+div.id-card-pnd53 {
+  position: absolute;
+  top: 34.5mm;
+  left: 62mm;
+  font-size: 3.7mm;
+}
+
+span.spacing-7 {
+  letter-spacing: 7px;
+}
+
+div.department-pnd53 {
+  position: absolute;
+  top: 51mm;
+  left: 22mm;
+  font-size: 3.7mm;
+}
+
+div.pnd3-section3 {
+  position: absolute;
+  top: 108mm;
+  left: 49mm;
+  font-size: 5mm;
+}
+
+div.pnd3-section48 {
+  position: absolute;
+  top: 108mm;
+  left: 90mm;
+  font-size: 5mm;
+}
+
+div.pnd3-section50 {
+  position: absolute;
+  top: 108mm;
+  left: 131mm;
+  font-size: 5mm;
+}
+
+div.pnd3-month1-pos {
+  position: absolute;
+  top: 48mm;
+  left: 123mm;
+  font-size: 5mm;
+}
+
+div.pnd3-month2-pos {
+  position: absolute;
+  top: 57mm;
+  left: 123mm;
+  font-size: 5mm;
+}
+
+div.pnd3-month3-pos {
+  position: absolute;
+  top: 66mm;
+  left: 123mm;
+  font-size: 5mm;
+}
+
+div.pnd3-month4-pos {
+  position: absolute;
+  top: 48mm;
+  left: 143mm;
+  font-size: 5mm;
+}
+
+div.pnd3-month5-pos {
+  position: absolute;
+  top: 57mm;
+  left: 143mm;
+  font-size: 5mm;
+}
+
+div.pnd3-month6-pos {
+  position: absolute;
+  top: 66mm;
+  left: 143mm;
+  font-size: 5mm;
+}
+
+div.pnd3-month7-pos {
+  position: absolute;
+  top: 49mm;
+  left: 164mm;
+  font-size: 5mm;
+}
+
+div.pnd3-month8-pos {
+  position: absolute;
+  top: 57mm;
+  left: 164mm;
+  font-size: 5mm;
+}
+
+div.pnd3-month9-pos {
+  position: absolute;
+  top: 66mm;
+  left: 164mm;
+  font-size: 5mm;
+}
+
+div.pnd3-month10-pos {
+  position: absolute;
+  top: 49mm;
+  left: 183mm;
+  font-size: 5mm;
+}
+
+div.pnd3-month11-pos {
+  position: absolute;
+  top: 57mm;
+  left: 183mm;
+  font-size: 5mm;
+}
+
+div.pnd3-month12-pos {
+  position: absolute;
+  top: 66mm;
+  left: 183mm;
+  font-size: 5mm;
+}
+
+div.pnd3-year-pos {
+  position: absolute;
+  top: 42mm;
+  left: 190mm;
+  font-size: 8pt;
+}
+
+div.total-pnd3 {
+  position: absolute;
+  top: 176mm;
+  left: 165mm;
+  font-size: 8pt;
+}
+
+div.tax-pnd3 {
+  position: absolute;
+  top: 182mm;
+  left: 165mm;
+  font-size: 8pt;
+}
+
+div.pnd53-section53 {
+  position: absolute;
+  top: 43mm;
+  left: 135mm;
+  font-size: 12pt;
+}
+
+div.pnd53-section65 {
+  position: absolute;
+  top: 49mm;
+  left: 135mm;
+  font-size: 12pt;
+}
+
+div.pnd53-section69 {
+  position: absolute;
+  top: 56mm;
+  left: 135mm;
+  font-size: 12pt;
+}
+
+div.pnd53-month1-pos {
+  position: absolute;
+  top: 66mm;
+  left: 143mm;
+  font-size: 5mm;
+}
+
+div.pnd53-year-pos {
+  position: absolute;
+  top: 89.5mm;
+  left: 113mm;
+  font-size: 8pt;
+}
+
+div.pnd53-month1-pos {
+  position: absolute;
+  top: 94mm;
+  left: 20mm;
+  font-size: 10pt;
+}
+
+div.pnd53-month2-pos {
+  position: absolute;
+  top: 99mm;
+  left: 20mm;
+  font-size: 10pt;
+}
+
+div.pnd53-month3-pos {
+  position: absolute;
+  top: 104mm;
+  left: 20mm;
+  font-size: 10pt;
+}
+
+div.pnd53-month4-pos {
+  position: absolute;
+  top: 94mm;
+  left: 46.5mm;
+  font-size: 10pt;
+}
+
+div.pnd53-month5-pos {
+  position: absolute;
+  top: 99mm;
+  left: 46.5mm;
+  font-size: 10pt;
+}
+
+div.pnd53-month6-pos {
+  position: absolute;
+  top: 104mm;
+  left: 46.5mm;
+  font-size: 10pt;
+}
+
+div.pnd53-month7-pos {
+  position: absolute;
+  top: 94mm;
+  left: 73mm;
+  font-size: 10pt;
+}
+
+div.pnd53-month8-pos {
+  position: absolute;
+  top: 99mm;
+  left: 73mm;
+  font-size: 10pt;
+}
+
+div.pnd53-month9-pos {
+  position: absolute;
+  top: 104mm;
+  left: 73mm;
+  font-size: 10pt;
+}
+
+div.pnd53-month10-pos {
+  position: absolute;
+  top: 94mm;
+  left: 99mm;
+  font-size: 10pt;
+}
+
+div.pnd53-month11-pos {
+  position: absolute;
+  top: 99mm;
+  left: 99mm;
+  font-size: 10pt;
+}
+
+div.pnd53-month12-pos {
+  position: absolute;
+  top: 104mm;
+  left: 99mm;
+  font-size: 10pt;
+}
+
+div.total-pnd53 {
+  position: absolute;
+  top: 169mm;
+  left: 152mm;
+  font-size: 8pt;
+}
+
+div.tax-pnd53 {
+  position: absolute;
+  top: 176mm;
+  left: 152mm;
+  font-size: 8pt;
+}
+
+/* wht_payment */
+
+div.wht-payment-wht {
+  position: absolute;
+  top: 249mm;
+  left: 33.5mm;
+  font-size: 5mm;
+}
+
+div.wht-payment-forever {
+  position: absolute;
+  top: 249mm;
+  left: 66.5mm;
+  font-size: 5mm;
+}
+
+div.wht-payment-once {
+  position: absolute;
+  top: 249mm;
+  left: 104.5mm;
+  font-size: 5mm;
+}
+
+div.wht-payment-other {
+  position: absolute;
+  top: 249mm;
+  left: 143.5mm;
+  font-size: 5mm;
+}
+
+div.wht-note {
+  position: absolute;
+  top: 223mm;
+  left: 37mm;
+  font-size: 2.67mm;
+}
+
+div.wht-document-datetime-days {
+  position: absolute;
+  top: 267mm;
+  left: 128mm;
+  font-size: 2.67mm;
+}
+
+
+div.wht-document-datetime-month {
+  position: absolute;
+  top: 267mm;
+  left: 143mm;
+  font-size: 2.67mm;
+}
+
+div.wht-document-datetime-year {
+  position: absolute;
+  top: 267mm;
+  left: 160mm;
+  font-size: 2.67mm;
+}
+
+/* line wht  */
+/* line wht-1  */
+div.wht-1-col-1 {
+  position: absolute;
+  top: 105mm;
+  left: 125mm;
+  font-size: 2.67mm;
+}
+
+div.wht-1-col-2 {
+  position: absolute;
+  top: 105mm;
+  right: 43mm;
+  font-size: 2.67mm;
+}
+
+div.wht-1-col-3 {
+  position: absolute;
+  top: 105mm;
+  right: 18mm;
+  font-size: 2.67mm;
+}
+
+/* line wht-2  */
+div.wht-2-col-1 {
+  position: absolute;
+  top: 110mm;
+  left: 125mm;
+  font-size: 2.67mm;
+}
+
+div.wht-2-col-2 {
+  position: absolute;
+  top: 110mm;
+  right: 43mm;
+  font-size: 2.67mm;
+}
+
+div.wht-2-col-3 {
+  position: absolute;
+  top: 110mm;
+  right: 17.8mm;
+  font-size: 2.67mm;
+}
+
+/* line wht-3  */
+div.wht-3-col-1 {
+  position: absolute;
+  top: 115mm;
+  left: 125mm;
+  font-size: 2.67mm;
+}
+
+div.wht-3-col-2 {
+  position: absolute;
+  top: 115mm;
+  right: 43mm;
+  font-size: 2.67mm;
+}
+
+div.wht-3-col-3 {
+  position: absolute;
+  top: 115mm;
+  right: 17.8mm;
+  font-size: 2.67mm;
+}
+
+/* line wht-4  */
+div.wht-4-col-1 {
+  position: absolute;
+  top: 120mm;
+  left: 125mm;
+  font-size: 2.67mm;
+}
+
+div.wht-4-col-2 {
+  position: absolute;
+  top: 120mm;
+  right: 43mm;
+  font-size: 2.67mm;
+}
+
+div.wht-4-col-3 {
+  position: absolute;
+  top: 120mm;
+  right: 17.8mm;
+  font-size: 2.67mm;
+}
+
+/* line wht-4-1-1  */
+div.wht-4-1-1-col-1 {
+  position: absolute;
+  top: 141mm;
+  left: 125mm;
+  font-size: 2.67mm;
+}
+
+div.wht-4-1-1-col-2 {
+  position: absolute;
+  top: 141mm;
+  right: 43mm;
+  font-size: 2.67mm;
+}
+
+div.wht-4-1-1-col-3 {
+  position: absolute;
+  top: 141mm;
+  right: 17.8mm;
+  font-size: 2.67mm;
+}
+
+
+/* line wht-4-1-2  */
+div.wht-4-1-2-col-1 {
+  position: absolute;
+  top: 146mm;
+  left: 125mm;
+  font-size: 2.67mm;
+}
+
+div.wht-4-1-2-col-2 {
+  position: absolute;
+  top: 146mm;
+  right: 43mm;
+  font-size: 2.67mm;
+}
+
+div.wht-4-1-2-col-3 {
+  position: absolute;
+  top: 146mm;
+  right: 17.8mm;
+  font-size: 2.67mm;
+}
+
+/* line wht-4-1-3  */
+div.wht-4-1-3-col-1 {
+  position: absolute;
+  top: 151mm;
+  left: 125mm;
+  font-size: 2.67mm;
+}
+
+div.wht-4-1-3-col-2 {
+  position: absolute;
+  top: 151mm;
+  right: 43mm;
+  font-size: 2.67mm;
+}
+
+div.wht-4-1-3-col-3 {
+  position: absolute;
+  top: 151mm;
+  right: 17.8mm;
+  font-size: 2.67mm;
+}
+
+/* line wht-4-1-4  */
+div.wht-4-1-4-col-1 {
+  position: absolute;
+  top: 156mm;
+  left: 125mm;
+  font-size: 2.67mm;
+}
+
+div.wht-4-1-4-col-2 {
+  position: absolute;
+  top: 156mm;
+  right: 43mm;
+  font-size: 2.67mm;
+}
+
+div.wht-4-1-4-col-3 {
+  position: absolute;
+  top: 156mm;
+  right: 17.8mm;
+  font-size: 2.67mm;
+}
+
+
+/* line wht-4-2-1  */
+div.wht-4-2-1-col-1 {
+  position: absolute;
+  top: 166mm;
+  left: 125mm;
+  font-size: 2.67mm;
+}
+
+div.wht-4-2-1-col-2 {
+  position: absolute;
+  top: 166mm;
+  right: 43mm;
+  font-size: 2.67mm;
+}
+
+div.wht-4-2-1-col-3 {
+  position: absolute;
+  top: 166mm;
+  right: 17.8mm;
+  font-size: 2.67mm;
+}
+
+/* line wht-4-2-2  */
+div.wht-4-2-2-col-1 {
+  position: absolute;
+  top: 177mm;
+  left: 125mm;
+  font-size: 2.67mm;
+}
+
+div.wht-4-2-2-col-2 {
+  position: absolute;
+  top: 177mm;
+  right: 43mm;
+  font-size: 2.67mm;
+}
+
+div.wht-4-2-2-col-3 {
+  position: absolute;
+  top: 177mm;
+  right: 17.8mm;
+  font-size: 2.67mm;
+}
+
+/* line wht-4-2-3  */
+div.wht-4-2-3-col-1 {
+  position: absolute;
+  top: 187mm;
+  left: 125mm;
+  font-size: 2.67mm;
+}
+
+div.wht-4-2-3-col-2 {
+  position: absolute;
+  top: 187mm;
+  right: 43mm;
+  font-size: 2.67mm;
+}
+
+div.wht-4-2-3-col-3 {
+  position: absolute;
+  top: 187mm;
+  right: 17.8mm;
+  font-size: 2.67mm;
+}
+/* line wht-4-2-4  */
+div.wht-4-2-4-col-1 {
+  position: absolute;
+  top: 192mm;
+  left: 125mm;
+  font-size: 2.67mm;
+}
+
+div.wht-4-2-4-col-2 {
+  position: absolute;
+  top: 192mm;
+  right: 43mm;
+  font-size: 2.67mm;
+}
+
+div.wht-4-2-4-col-3 {
+  position: absolute;
+  top: 192mm;
+  right: 17.8mm;
+  font-size: 2.67mm;
+}
+/* wht_note-4-2-5-col-1 */
+div.wht_note_4-2-5-col-1 {
+  position: absolute;
+  top: 197.5mm;
+  right: 115mm;
+  font-size: 2.67mm;
+  white-space: nowrap;
+  width: 50mm;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+div.wht_note_4-2-5-col-1:hover {
+  overflow: visible;
+}
+
+/* line wht-4-2-5  */
+div.wht-4-2-5-col-1 {
+  position: absolute;
+  top: 197mm;
+  left: 125mm;
+  font-size: 2.67mm;
+}
+
+div.wht-4-2-5-col-2 {
+  position: absolute;
+  top: 197mm;
+  right: 43mm;
+  font-size: 2.67mm;
+}
+
+div.wht-4-2-5-col-3 {
+  position: absolute;
+  top: 197mm;
+  right: 17.8mm;
+  font-size: 2.67mm;
+}
+
+/* line wht-5  */
+div.wht-5-col-1 {
+  position: absolute;
+  top: 217mm;
+  left: 125mm;
+  font-size: 2.67mm;
+}
+
+div.wht-5-col-2 {
+  position: absolute;
+  top: 217mm;
+  right: 43mm;
+  font-size: 2.67mm;
+}
+
+div.wht-5-col-3 {
+  position: absolute;
+  top: 217mm;
+  right: 17.8mm;
+  font-size: 2.67mm;
+}
+
+/* line wht-6  */
+div.wht-6-col-1 {
+  position: absolute;
+  top: 222mm;
+  left: 125mm;
+  font-size: 2.67mm;
+}
+
+div.wht-6-col-2 {
+  position: absolute;
+  top: 222mm;
+  right: 43mm;
+  font-size: 2.67mm;
+}
+
+div.wht-6-col-3 {
+  position: absolute;
+  top: 222mm;
+  right: 17.8mm;
+  font-size: 2.67mm;
+}
+
+
+/* wht_note_6-col-1 */
+div.wht_note_6-col-1 {
+  position: absolute;
+  top: 222.5mm;
+  right: 115mm;
+  font-size: 2.67mm;
+  white-space: nowrap;
+  width: 68mm;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+div.wht_note_6-col-1:hover {
+  overflow: visible;
+}
+
+/* line wht-total  */
+div.wht-total-col-1 {
+  position: absolute;
+  top: 230mm;
+  right: 43mm;
+  font-size: 2.67mm;
+}
+
+div.wht-total-col-2 {
+  position: absolute;
+  top: 230mm;
+  right: 17.8mm;
+  font-size: 2.67mm;
+}
+
+
+/* line wht-total-th  */
+div.wht-total-th-col-1 {
+  position: absolute;
+  top: 236mm;
+  left: 70mm;
+  font-size: 3.67mm;
+}
