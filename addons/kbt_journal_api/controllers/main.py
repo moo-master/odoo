@@ -36,6 +36,7 @@ class JournalController(http.Controller):
             'move_type': 'entry',
             'currency_id': currency_id.id or False,
             'journal_id': journal_id.id or False,
+            'x_is_interface': True,
         }
         line_vals_lst = [(0, 0, self._prepare_line_ids(order_line, User))
                          for order_line in params.get('lineItems')]
