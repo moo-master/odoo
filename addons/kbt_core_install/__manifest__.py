@@ -8,6 +8,7 @@
         'kbt_account_ext',
         'kbt_business_type',
         'kbt_core_update',
+        'kbt_journal_api',
         'kbt_partner_api',
         'kbt_payment_api',
         'kbt_purchase_api',
