@@ -39,6 +39,16 @@ class PurchaseController(http.Controller):
         if po_type in ['K-RENT', 'K-MATCH']:
             qty_received = order_line.get('product_uom_qty')
 
+        vals = {
+            'account_analytic_id': account_analytic_id.id,
+            'product_id': product_id.id,
+            'name': order_line.get('name'),
+            'qty_received': qty_received,
+            'product_qty': order_line.get('product_uom_qty'),
+            'price_unit': order_line.get('price_unit'),
+            'sequence': order_line.get('seq_line'),
+        }
+
         if 'x_wht_id' in order_line:
             wht_seq = order_line.get('x_wht_id')
             wht_id = request.env['account.wht.type'].search([
@@ -49,17 +59,9 @@ class PurchaseController(http.Controller):
                 raise ValueError(
                     "Withholding Tax: %s have no data." % wht_seq
                 )
+            vals['x_wht_id'] = wht_id.id or False
 
-        return {
-            'account_analytic_id': account_analytic_id.id,
-            'product_id': product_id.id,
-            'name': order_line.get('name'),
-            'qty_received': qty_received,
-            'product_qty': order_line.get('product_uom_qty'),
-            'price_unit': order_line.get('price_unit'),
-            'sequence': order_line.get('seq_line'),
-            # 'x_wht_id': wht_id.id or False,
-        }
+        return vals
 
     def _create_purchase_order(self, **params):
         Purchase = request.env['purchase.order']
