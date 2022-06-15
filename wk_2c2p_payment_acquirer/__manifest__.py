@@ -25,7 +25,7 @@
 	"live_test_url": "http://odoodemo.webkul.com/?module=wk_2c2p_payment_acquirer&version=15.0",
 	"depends" 	   : ["base", "website_sale","sale_management","sale_subscription"],
 	"data"         : [
-		'views/product_product_views.xml',
+		# 'views/product_product_views.xml',
 		'views/website_template.xml',
 		'views/payment_acquirer_views.xml',
 		'data/2c2p_payment_acquirer.xml',

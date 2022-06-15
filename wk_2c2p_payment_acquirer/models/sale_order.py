@@ -16,6 +16,6 @@ class SaleOrder(models.Model):
     @api.onchange('order_line')
     def check_recurring_product(self):
         for rec in self:
-            if any((l.product_id.is_recurring_type or l.product_id.recurring_invoice) for l in rec.order_line) and \
+            if any((l.product_id.recurring_invoice) for l in rec.order_line) and \
                 len(rec.order_line or []) > 1:
                 raise ValidationError(_("You cannot add product in the cart as the recurring type product is already added and you are trying to add normal product or normal product is already added and you are trying to add recurring type product in the cart. if you want to add the product you can remove the previous product by clicking clear cart button."));

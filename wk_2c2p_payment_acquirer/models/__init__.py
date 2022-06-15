@@ -7,5 +7,5 @@
 
 
 from . import payment_acquirer
-from . import product_product
+# from . import product_product
 from . import sale_order
