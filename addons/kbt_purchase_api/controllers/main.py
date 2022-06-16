@@ -2,21 +2,28 @@ import requests
 
 from odoo import http
 from odoo.http import request
+from odoo.addons.rts_api_base.controllers.main import APIBase
 
 
 class PurchaseController(http.Controller):
 
+    @APIBase.api_wrapper(['kbt.purchase-create'])
     @http.route('/purchase/create', type='json', auth='user')
     def purchase_order_create_api(self, **params):
         try:
             self._create_purchase_order(**params)
+            return {
+                'code': requests.codes.no_content,
+            }
         except requests.HTTPError as http_err:
             return {
-                'HTTP error': http_err,
+                'code': requests.codes.server_error,
+                'message': str(http_err),
             }
         except Exception as error:
             return {
-                'error': error,
+                'code': requests.codes.server_error,
+                'message': str(error),
             }
 
     def _prepare_order_line(self, order_line, account_analytic_id, po_type):
@@ -120,17 +127,23 @@ class PurchaseController(http.Controller):
         if po_type in ['K-RENT', 'K-MATCH']:
             purchase_id.action_create_invoice()
 
+    @APIBase.api_wrapper(['kbt.purchase-update'])
     @http.route('/purchase/update', type='json', auth='user')
     def purchase_order_update_api(self, **params):
         try:
             self._update_purchase_order(**params)
+            return {
+                'code': requests.codes.no_content,
+            }
         except requests.HTTPError as http_err:
             return {
-                'HTTP error': http_err,
+                'code': requests.codes.server_error,
+                'message': str(http_err),
             }
         except Exception as error:
             return {
-                'error': error,
+                'code': requests.codes.server_error,
+                'message': str(error),
             }
 
     def _update_purchase_order(self, **params):
