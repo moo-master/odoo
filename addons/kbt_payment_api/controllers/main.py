@@ -2,10 +2,12 @@ import requests
 
 from odoo import http
 from odoo.http import request
+from odoo.addons.rts_api_base.controllers.main import APIBase
 
 
 class PaymentDataController(http.Controller):
 
+    @APIBase.api_wrapper(['kbt.payment'])
     @http.route('/create_payment', type='json', auth='user')
     def payment_api(self, **params):
         try:
@@ -14,18 +16,19 @@ class PaymentDataController(http.Controller):
                 return {
                     'error': msg,
                 }
-            partner_id = self._create_update_payment(**params)
-            if partner_id:
-                return {
-                    'code': http.requests.codes.ok,
-                    'Response': http.Response("OK", status=200)}
+            self._create_update_payment(**params)
+            return {
+                'code': requests.codes.no_content,
+            }
         except requests.HTTPError as http_err:
             return {
-                'HTTP error': http_err,
+                'code': requests.codes.server_error,
+                'message': str(http_err),
             }
         except Exception as error:
             return {
-                'error': error,
+                'code': requests.codes.server_error,
+                'message': str(error),
             }
 
     def _check_payment_values(self, **params):
@@ -37,15 +40,16 @@ class PaymentDataController(http.Controller):
         Partner = request.env['res.partner']
         PartnerBank = request.env['res.partner.bank']
         AccountPayment = request.env['account.payment']
-        Journal = request.env['account.journal']
+        User = request.env.user
 
         for data in data_params_lst:
             vals = {}
             x_interface_id = Partner.search(
                 [('x_interface_id', '=', data['x_interface_id'])])
 
-            journal_code = Journal.search(
-                [('code', '=', data['journal_code'])])
+            journal_code = AccountPayment.journal_id.search([
+                ('code', '=', data['journal_code']),
+                ('company_id', '=', User.company_id.id)])
 
             date_api = data['date'].split('/')
             date_data = '{0}-{1}-{2}'.format(
