@@ -26,43 +26,10 @@ class TwoCTwoPController(http.Controller):
     _confirm_url = '/payment/twoctwop/confirm'
 
 
-    @http.route(_response_url, type='http', auth='public', methods=['POST'])
+    @http.route(_response_url, type='http', auth='public', methods=['GET'])
     def twoctwop_form_feedback(self, **post):
-        try:
-            response = self.obj.payment_inquiry({
-                    "paymentToken" : self.payment_token,
-                    "merchantID" : self.merchant_id,
-                    "invoiceNo" : self.invoice_no,
-                })
-        except:
-            return request.redirect("/shop/cart")
-        _logger.info("beginning _handle_feedback_data with post data %s", pprint.pformat(response))
-        state_pol = response.get('respCode')
-        if state_pol == '0000':
-            lapTransactionState = 'APPROVED'
-        elif state_pol == '6':
-            lapTransactionState = 'DECLINED'
-        elif state_pol == '5':
-            lapTransactionState = 'EXPIRED'
-        else:
-            lapTransactionState = f'INVALID state_pol {state_pol}'
-
-        sale_order = request.env["sale.order"].sudo().browse(request.session.get('sale_order_id' or []));
-
-        data = {
-            'TX_VALUE': response.get('fxAmount') or response.get('amount'),
-            'currency': response.get('fxCurrencyCode') or response.get('currencyCode'),
-            'referenceCode': response.get('referenceNo'),
-            'transactionId': response.get('tranRef'),
-            'transactionState': response.get('respCode'),
-            'message': response.get('respDesc'),
-            'lapTransactionState': lapTransactionState,
-            'invoiceNo': response.get('invoiceNo'),
-            'recurringUniqueID': response.get('recurringUniqueID',''),
-            'sale_order': sale_order,
-        }
-        _logger.info("111beginning _handle_feedback_data with post data %s", pprint.pformat(post))
-        request.env['payment.transaction'].sudo()._handle_feedback_data('2c2p', data)
+        _logger.info("beginning _handle_feedback_data with post data %s", pprint.pformat(post))
+        request.env['payment.transaction'].sudo()._handle_feedback_data('2c2p', post)
         return request.redirect('/payment/status')
 
     
@@ -90,8 +57,8 @@ class TwoCTwoPController(http.Controller):
         sale_order = request.env["sale.order"].sudo().browse(request.session.get('sale_order_id' or []));
 
         data = {
-            'TX_VALUE': response.get('fxAmount'),
-            'currency': response.get('fxCurrencyCode'),
+            'TX_VALUE': response.get('fxAmount') or response.get('amount'),
+            'currency': response.get('fxCurrencyCode') or response.get('currencyCode'),
             'referenceCode': response.get('referenceNo'),
             'transactionId': response.get('tranRef'),
             'transactionState': response.get('respCode'),
@@ -101,6 +68,7 @@ class TwoCTwoPController(http.Controller):
             'recurringUniqueID': response.get('recurringUniqueID',''),
             'sale_order': sale_order,
         }
+
         try:
             request.env['payment.transaction'].sudo()._handle_feedback_data('2c2p', data)
         except ValidationError:

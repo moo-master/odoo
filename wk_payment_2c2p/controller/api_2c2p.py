@@ -1,10 +1,14 @@
+# -*- coding: utf-8 -*-
+##############################################################################
+# Copyright (c) 2015-Present Webkul Software Pvt. Ltd. (<https://webkul.com/>)
+# See LICENSE file for full copyright and licensing details.
+# License URL : <https://store.webkul.com/license.html/>
+##############################################################################
+
 
 import base64
 import json
-import hmac
-import hashlib
 import requests
-import uuid
 from .api_2c2p_env import *
 import jwt
 import logging
@@ -39,7 +43,7 @@ class TwoCTwoPAPI:
 
     def prepare_payment_token(self, user={}, invoice_no='', desc='', \
         amount=0.0, currency_code='USD', \
-        payment_channel=PAYMENTCHANNEL.get("CREDIT_CARD"), \
+        payment_channel=PAYMENTCHANNEL.get("ALL"), \
         user_defined1='', user_defined2='', user_defined3='', \
         user_defined4='', user_defined5='', interest_type='', \
         product_code='', recurring=RECURRING.get("NO"), invoice_prefix='', \
@@ -57,6 +61,7 @@ class TwoCTwoPAPI:
             "currencyCode": currency_code,
             "frontendReturnUrl": frontendReturnUrl,
             "backendReturnUrl": backendReturnUrl,
+            # "paymentChannel": payment_channel,
             "recurring": recurring,
             "recurringAmount": recurring_amount,
             "recurringInterval": recurring_interval,

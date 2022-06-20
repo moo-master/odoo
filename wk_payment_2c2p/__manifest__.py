@@ -23,7 +23,8 @@
 	"price" 	   : 00,
 	"currency"     : "",
 	"live_test_url": "http://odoodemo.webkul.com/?module=wk_payment_2c2p&version=15.0",
-	"depends" 	   : ["payment", "portal", "website_sale"],
+	"depends" 	   : ["payment", "portal","wk_2c2p_payment_acquirer"],
+	"external_dependencies": {"python": ["jwt"]},
 	"data"         : [
 		'views/payment_2c2p_template.xml',
 		'views/payment_acquirer_views.xml',

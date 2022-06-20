@@ -33,17 +33,13 @@ class WebsiteSaleInherit(WebsiteSale):
         else:
             product = request.env['product.template'].sudo().browse(product_temp_id);
 
-        print("++++++++++++",product_id, product_temp_id, product)
         sale_order = request.website.sale_get_order(force_create=False);
-        print("++++++++++++",sale_order, product, product.recurring_invoice)
         if product and (product.recurring_invoice):
             if not sale_order:
                 return False;
             if sale_order and not sale_order.order_line:
                 return False;
             if sale_order and len(sale_order.order_line or []) == 1:
-                print("1++++++++++++",sale_order.order_line.product_id.id == product.id)
-                print("2++++++++++++",sale_order.order_line.product_id.product_tmpl_id.id == product.id)
                 if sale_order.order_line.product_id.id == product.id or\
                  sale_order.order_line.product_id.product_tmpl_id.id == product.id:
                     return "same";

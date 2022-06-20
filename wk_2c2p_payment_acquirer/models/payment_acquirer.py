@@ -11,5 +11,4 @@ from odoo import api, fields, models, _
 class PaymentAcquirer(models.Model):
     _inherit = "payment.acquirer"
 
-
     recurring_type = fields.Boolean(string="Recurring Type");

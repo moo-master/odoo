@@ -17,16 +17,29 @@ class SubscriptionSale(models.Model):
     acquirer_id = fields.Many2one("payment.acquirer");
 
 
+    # def _cron_recurring_create_invoice(self):
+    #     res = super(SubscriptionSale, self)._cron_recurring_create_invoice();
+
+    #     if len(res or []) != 0:
+    #         obj = self._prepare_api_obj("RECURRING_TEST", "RECURRING");
+
+            
+
+
+
+    # def _prepare_api_obj(self, test, main):
+    #     return TwoCTwoPAPI(
+    #             self.acquirer_id.twoctwop_merchant_id,
+    #             self.acquirer_id.twoctwop_secret_key,
+    #             test if self.acquirer_id.state == 'test' else main
+    #         )
+
     # def set_close(self):
     #     res = super(SubscriptionSale, self).set_close()
 
     #     #api call
     #     print("+++++++++++++++++",self.acquirer_id)
-    #     obj = TwoCTwoPAPI(
-    #             self.acquirer_id.twoctwop_merchant_id,
-    #             self.acquirer_id.twoctwop_secret_key,
-    #             'RECURRING_CANCEL_SANDBOX' if self.acquirer_id.state == 'test' else 'RECURRING_CANCEL'
-    #         )
+    #     obj = self._prepare_api_obj('RECURRING_CANCEL_SANDBOX', 'RECURRING_CANCEL')
     #     print("+++++++++++++++++++++++",obj)
     #     obj.recurring_payment_cancel({
     #             "version": 2.1,
@@ -56,13 +69,13 @@ class SaleOrderInherit(models.Model):
         return res;
 
 
-    def _action_confirm(self):
+    # def _action_confirm(self):
 
-        res = super(SaleOrderInherit, self)._action_confirm()
+    #     res = super(SaleOrderInherit, self)._action_confirm()
 
-        subscription = self.order_line.mapped('subscription_id');
-        if subscription and len(self.recurring_unique_id):
-            self._create_invoices();
-        return res
+    #     subscription = self.order_line.mapped('subscription_id');
+    #     if subscription and len(self.recurring_unique_id or ""):
+    #          #self._create_invoices();
+    #     return res
 
 

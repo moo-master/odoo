@@ -142,7 +142,8 @@ class PaymentTransaction(models.Model):
     @api.model
     def _handle_feedback_data(self, provider, data):
         tx = super(PaymentTransaction, self)._handle_feedback_data(provider, data)
-
+        if provider != '2c2p':
+            return tx;
         data['sale_order'].sudo().write({
                 "recurring_unique_id": data.get("recurringUniqueID",""),
                 "acquirer_id": tx.acquirer_id.id,
