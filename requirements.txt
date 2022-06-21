@@ -4,3 +4,4 @@
 --extra-index-url https://${PYPI_NEXUS_ROOTS_AUTH}@nexus.3roots.live/repository/pypi/simple
 
 bahttext
+html2text
