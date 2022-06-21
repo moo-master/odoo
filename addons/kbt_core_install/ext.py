@@ -1,4 +1,4 @@
 options = {
     'addon_path': ['additional-addons'],
-    'depends': []
+    'depends': ['rts_api_base'],
 }

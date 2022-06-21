@@ -2,21 +2,28 @@ import requests
 
 from odoo import http
 from odoo.http import request
+from odoo.addons.rts_api_base.controllers.main import APIBase
 
 
 class JournalController(http.Controller):
 
+    @APIBase.api_wrapper(['kbt.journal'])
     @http.route('/journal/create', type='json', auth='user')
     def journal_create_api(self, **params):
         try:
             self._create_journal(**params)
+            return {
+                'code': requests.codes.no_content,
+            }
         except requests.HTTPError as http_err:
             return {
-                'HTTP error': http_err,
+                'code': requests.codes.server_error,
+                'message': str(http_err),
             }
         except Exception as error:
             return {
-                'error': error,
+                'code': requests.codes.server_error,
+                'message': str(error),
             }
 
     def _create_journal(self, **params):
