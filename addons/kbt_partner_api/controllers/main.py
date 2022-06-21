@@ -2,10 +2,12 @@ import requests
 
 from odoo import http
 from odoo.http import request
+from odoo.addons.rts_api_base.controllers.main import APIBase
 
 
 class PartnerDataController(http.Controller):
 
+    @APIBase.api_wrapper(['kbt.partner'])
     @http.route('/partner/data', type='json', auth='user')
     def res_partner_api(self, **params):
         try:
@@ -14,18 +16,19 @@ class PartnerDataController(http.Controller):
                 return {
                     'error': msg,
                 }
-            partner_id = self._create_update_partner(**params)
-            if partner_id:
-                return {
-                    'code': http.requests.codes.ok,
-                    'Response': http.Response("OK", status=200)}
+            self._create_update_partner(**params)
+            return {
+                'code': requests.codes.no_content,
+            }
         except requests.HTTPError as http_err:
             return {
-                'HTTP error': http_err,
+                'code': requests.codes.server_error,
+                'message': str(http_err),
             }
         except Exception as error:
             return {
-                'error': error,
+                'code': requests.codes.server_error,
+                'message': str(error),
             }
 
     def _check_partner_values(self, **params):
