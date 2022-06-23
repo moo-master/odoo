@@ -13,6 +13,13 @@ from .api_2c2p_env import *
 import jwt
 import logging
 import pprint
+# import os
+# import sys
+
+# from cryptography import x509
+# from cryptography.hazmat.primitives import serialization
+# from cryptography.hazmat.backends import default_backend
+from jose import jwe
 
 _logger = logging.getLogger(__name__)
 
@@ -134,24 +141,69 @@ class TwoCTwoPAPI:
             return json.loads(response)
 
 
-    # def recurring_payment_cancel(self, payload):
+    def recurring_payment_cancel(self, payload):
 
-    #     url = self._get_url("RECURRING_CANCEL");
-    #     print("++|++++++++++", url);
+        url = self._get_url("RECURRING_CANCEL");
+        print("++|++++++++++", url);
+        print("payload++|++++++++++", payload);
 
-    #     headers = {"Accept": "text/plain", "Content-Type": "application/*+json"}
-    #     payment_request = str(self._generate_sign(payload))
-    #     print("++|++++++++++", payment_request);
-    #     print(jwt.decode(payment_request, self.secret_key, algorithms="HS256"))
-    #     payment_request = "{\"payload\":\"%s\"}"%payment_request
+        str_payload = '''
+            <RecurringMaintenanceRequest>
+                <version>%s</version>
+                <merchantID>%s</merchantID>
+                <recurringUniqueID>%s</recurringUniqueID>
+                <processType>%s</processType>
+                <recurringStatus>Y</recurringStatus>
+            </RecurringMaintenanceRequest>
+        '''%(payload.get('version'), payload.get('merchantID'), payload.get('recurringUniqueID'), payload.get('processType'))
 
-    #     response = requests.post(url, data=payment_request, headers=headers).text
-    #     print("++|++++++++++", response);
-    #     # try:
-    #     #     if isinstance(response, str) and response.index('payload'):
-    #     #         response_dict = jwt.decode(json.loads(response)['payload'], self.secret_key, algorithms="HS256")
-    #     #         return response_dict
-    #     #     else:
-    #     #         return json.loads(response)
-    #     # except:
-    #     #     return json.loads(response)
+        headers = {"Accept": "text/plain"}
+        print("str_payload++|++++++++++", str_payload);
+        payment_request = str(self._generate_sign(payload))
+        print("++|++++++++++", payment_request);
+        print(jwt.decode(payment_request, self.secret_key, algorithms="HS256"))
+        # payment_request = "{\"payload\":\"%s\"}"%payment_request
+
+        cert_str = open(os.path.join(os.getcwd(), "demo2.crt"), "rb").read()
+        cert_obj = x509.load_pem_x509_certificate(cert_str)
+        pubKey = cert_obj.public_key()
+
+        print("                    ", jwe.encrypt('Hello, World!', '+KbPeSgVkYp3s6v9y$B&E)H@McQfTjWm', algorithm='dir', encryption='A256GCM'))
+        enc_payload = jwe.encrypt('Hello, World!', 'asecret128bitkey', algorithm='RSA-OAEP', encryption='A256GCM')
+
+        print("+++++++++++++++++++++++", enc_payload)
+
+        # import json
+        # import requests
+        # from OpenSSL import crypto
+        # from cryptography import x509
+
+        # raw_data = ''.join(open(os.path.join(os.getcwd(), "demo2.crt")).read().split('\n')[1:-2])
+        # print("++++++++++++++++++++++++veveve", raw_data)
+
+        # cet = x509.load_pem_x509_certificate(bytes(raw_data, 'utf-8'))
+
+        # p12_cert = crypto.load_pkcs12(open(os.path.join(os.getcwd(), "demo2.crt")).read(), 'X509')
+        # pem_cert = crypto.dump_certificate(crypto.FILETYPE_PEM, p12_cert.get_certificate())
+
+        # raw_data = ''.join(pem_cert.split('\n')[1:-2])
+
+        # print("++++++++++++++++++++++++veveve", raw_data)
+        # cert_data = json.dumps({'RawData': raw_data})
+        
+        # print("---------1111111111111", os.getcwd())
+        # print("---------1111111111111", open(os.path.join(os.getcwd(), "demo2.crt"), "r"))
+
+
+
+        # response = requests.post(url, data=payment_request, headers=headers).text
+        # print("++|++++++++++", response);
+        # 5/0
+        # try:
+        #     if isinstance(response, str) and response.index('payload'):
+        #         response_dict = jwt.decode(json.loads(response)['payload'], self.secret_key, algorithms="HS256")
+        #         return response_dict
+        #     else:
+        #         return json.loads(response)
+        # except:
+        #     return json.loads(response)

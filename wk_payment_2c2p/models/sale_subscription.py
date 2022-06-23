@@ -38,7 +38,7 @@ class SubscriptionSale(models.Model):
     #     res = super(SubscriptionSale, self).set_close()
 
     #     #api call
-    #     print("+++++++++++++++++",self.acquirer_id)
+    #     print("+++++++++++++++++resaaaaaaaa",res)
     #     obj = self._prepare_api_obj('RECURRING_CANCEL_SANDBOX', 'RECURRING_CANCEL')
     #     print("+++++++++++++++++++++++",obj)
     #     obj.recurring_payment_cancel({

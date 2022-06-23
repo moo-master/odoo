@@ -33,7 +33,7 @@ class TwoCTwoPController(http.Controller):
         return request.redirect('/payment/status')
 
     
-    @http.route(_confirm_url, type='http', auth='public', methods=['POST'], csrf=False)
+    @http.route(_confirm_url, type='http', auth='public', methods=['POST'], csrf=False, save_session=False)
     def twoctwop_form_confirm(self, **post):
         try:
             response = self.obj.payment_inquiry({
