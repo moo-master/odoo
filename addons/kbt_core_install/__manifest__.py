@@ -44,6 +44,7 @@
         'kbt_purchase_api',
         'kbt_res_company',
         'kbt_sale_order_api',
+        'kbt_stock_picking_ext',
         'os_disable_quick_create',
         'report_xlsx',
         'rts_api_base',
