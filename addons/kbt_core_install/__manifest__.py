@@ -38,6 +38,7 @@
         'kbt_api_base',
         'kbt_business_type',
         'kbt_core_update',
+        'kbt_delivery_api',
         'kbt_journal_api',
         'kbt_partner_api',
         'kbt_payment_api',
