@@ -12,6 +12,6 @@
         'Pachara P.',
     ],
     'depends': [
-        'account',
+        'kbt_partner_ext',
     ]
 }
