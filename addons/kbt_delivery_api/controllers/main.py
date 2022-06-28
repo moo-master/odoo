@@ -17,12 +17,12 @@ class DeliveryController(http.Controller):
                     'isSuccess': 'Fail',
                     'message': msg,
                     'code': requests.codes.server_error,
-                    'invoice_number': params['so_orderreference'] or 'No Data',
                 }
-            self._update_delivery_order(**params)
+            res = self._update_delivery_order(**params)
             return {
                 'isSuccess': 'Success',
                 'code': requests.codes.no_content,
+                'invoice_number': res
             }
         except requests.HTTPError as http_err:
             return {
@@ -52,7 +52,9 @@ class DeliveryController(http.Controller):
         Product = request.env['product.product']
         StockMove = request.env['stock.move']
         StockPick = request.env['stock.picking']
+        StockBack = request.env['stock.backorder.confirmation']
 
+        response_api = []
         for data in params['data']:
             sale_order = Sale.search([
                 ('x_so_orderreference', '=', data.get('so_orderreference')),
@@ -64,6 +66,7 @@ class DeliveryController(http.Controller):
                 )
             stock = StockPick.search([
                 ('sale_id', '=', sale_order.id),
+                ('state', 'in', ['assigned', 'confirmed']),
             ])
 
             for item in data['item']:
@@ -75,11 +78,25 @@ class DeliveryController(http.Controller):
                     ('sequence', '=', item['seq_line']),
                     ('product_id', '=', product_id.id),
                 ])
-                stock = StockMove.search([
+                stock_line = StockMove.search([
                     ('sale_line_id', '=', sale_line.id),
                 ])
-                stock.quantity_done = item['qty_done']
+                stock_line.quantity_done = item['qty_done']
             stock.write({
                 'x_is_interface': True,
             })
-            stock.button_validate()
+            res = stock._pre_action_done_hook()
+            if res is True:
+                stock.button_validate()
+            else:
+                result = stock.button_validate()
+                ctx = result.get('context')
+                wiz = StockBack.create({
+                    'pick_ids': ctx['default_pick_ids'],
+                    'show_transfers': ctx['default_show_transfers'],
+                }).with_context(button_validate_picking_ids=ctx['button_validate_picking_ids'])
+                wiz.process()
+
+            response_api.append(data.get('so_orderreference'))
+
+        return response_api
