@@ -22,7 +22,7 @@ def currency(env):
     ({'type': 'out_invoice', 'type_debit': 'out_debit'}),
     ({'type': 'in_invoice', 'type_debit': 'in_debit'})
 ])
-def test_create(model, env, test_input, currency):
+def test_x_offset(model, env, test_input, currency):
     acc_move = env['account.move'].with_context({
         'default_move_type': test_input['type']
     }).create({})
