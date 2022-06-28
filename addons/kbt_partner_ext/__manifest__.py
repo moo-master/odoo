@@ -13,6 +13,7 @@
     ],
     'depends': [
         'base',
+        'account',
     ],
     'data': [
         'views/view_partner_form.xml',
