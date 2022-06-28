@@ -13,7 +13,8 @@
                 (0, 0, {'name': 'KBT Journal',              'key': 'journal',           'route_type': 'incoming', 'method': 'post', 'path': 'journal/create'}),
                 (0, 0, {'name': 'KBT Payment',              'key': 'payment',           'route_type': 'incoming', 'method': 'post', 'path': 'create_payment'}),
                 (0, 0, {'name': 'KBT Purchase Create',      'key': 'purchase-create',   'route_type': 'incoming', 'method': 'post', 'path': 'purchase/create'}),
-                (0, 0, {'name': 'KBT Purchase Update',      'key': 'purchase-update',   'route_type': 'incoming', 'method': 'post', 'path': 'purchase/update'})
+                (0, 0, {'name': 'KBT Purchase Update',      'key': 'purchase-update',   'route_type': 'incoming', 'method': 'post', 'path': 'purchase/update'}),
+                (0, 0, {'name': 'KBT Delivery Update',      'key': 'delivery-update',   'route_type': 'incoming', 'method': 'post', 'path': 'delivery/update'}),
             ]"/>
         </record>
     </data>
