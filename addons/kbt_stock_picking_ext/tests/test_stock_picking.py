@@ -8,44 +8,13 @@ def model(env):
 
 
 @pytest.fixture
-def partner_demo(env):
-    partner = env.ref('base.partner_demo')
-    return partner
+def stock_picking(env):
+    stock_picking = env.ref('stock.incomming_chicago_warehouse')
+    return stock_picking
 
 
-@pytest.fixture
-def product_demo(env):
-    product = env.ref('sale.advance_product_0')
-    return product
-
-
-@pytest.fixture
-def company_demo(env):
-    company = env.ref('stock.res_company_1')
-    return company
-
-
-@pytest.fixture
-def warehouse(env):
-    warehouse = env.ref('stock.warehouse0')
-    return warehouse
-
-
-@pytest.fixture
-def stock_picking_type(env, company_demo, warehouse):
-    stock = env['stock.picking.type'].create({
-        'name': 'test',
-        'sequence_code': 'test',
-        'code': 'incoming',
-        # 'company_id': company_demo.id,
-        'warehouse_id': warehouse.id,
+def test_create_field(env, model, stock_picking):
+    stock_picking.write({
+        'x_is_interface': True,
     })
-    return stock
-
-
-def test_create_field(env, model, stock_picking_type):
-    res = model.create({
-        'picking_type_id': stock_picking_type.id,
-        'x_is_interface': False,
-    })
-    assert res
+    assert stock_picking.x_is_interface
