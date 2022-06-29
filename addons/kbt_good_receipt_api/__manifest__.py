@@ -12,7 +12,9 @@
         'Pachara P.',
     ],
     'depends': [
-        'kbt_business_type',
         'kbt_stock_picking_ext',
     ],
+    'data': [
+        'views/inherit_view_picking_form.xml',
+    ]
 }
