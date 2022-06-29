@@ -7,26 +7,31 @@ from odoo.addons.rts_api_base.controllers.main import APIBase
 
 class SaleOrderDataController(http.Controller):
 
-    @APIBase.api_wrapper(['kbt.sale-order-create'])
+    @APIBase.api_wrapper(['kbt.sale_order_create'])
     @http.route('/sale/create', type='json', auth='user')
     def sale_order_create_api(self, **params):
         try:
             msg = self._check_sale_order_values(**params)
             if msg:
                 return {
+                    'isSuccess': False,
+                    'code': requests.codes.server_error,
                     'error': msg,
                 }
             self._create_sale_order(**params)
             return {
+                'isSuccess': True,
                 'code': requests.codes.no_content,
             }
         except requests.HTTPError as http_err:
             return {
+                'isSuccess': False,
                 'code': requests.codes.server_error,
                 'message': str(http_err),
             }
         except Exception as error:
             return {
+                'isSuccess': False,
                 'code': requests.codes.server_error,
                 'message': str(error),
             }
@@ -122,28 +127,35 @@ class SaleOrderDataController(http.Controller):
         sale_id = Sale.create(sale_values)
         sale_id.action_confirm()
 
-    @APIBase.api_wrapper(['kbt.sale-order-update'])
+    @APIBase.api_wrapper(['kbt.sale_order_update'])
     @http.route('/sale/update', type='json', auth='user')
     def sale_order_update_api(self, **params):
         try:
             msg = self._check_sale_order_values(**params)
             if msg:
                 return {
+                    'isSuccess': False,
                     'error': msg,
                 }
-            self._update_sale_order(**params)
+            res = self._update_sale_order(**params)
             return {
+                'isSuccess': True,
                 'code': requests.codes.no_content,
+                'invoice_number': res,
             }
         except requests.HTTPError as http_err:
             return {
+                'isSuccess': False,
                 'code': requests.codes.server_error,
                 'message': str(http_err),
+                'invoice_number': params.get('x_so_orderreference'),
             }
         except Exception as error:
             return {
+                'isSuccess': False,
                 'code': requests.codes.server_error,
                 'message': str(error),
+                'invoice_number': params.get('x_so_orderreference'),
             }
 
     def _update_sale_order(self, **params):
@@ -180,3 +192,4 @@ class SaleOrderDataController(http.Controller):
             'order_line': update_line_lst
         })
         so_orderreference._create_invoices(final=True)
+        return so_orderreference.name
