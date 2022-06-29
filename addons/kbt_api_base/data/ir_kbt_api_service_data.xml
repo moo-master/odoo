@@ -8,8 +8,8 @@
             <field name="route_ids" eval="[
                 (5, 0),
                 (0, 0, {'name': 'KBT Partner',              'key': 'partner',           'route_type': 'incoming', 'method': 'post', 'path': 'partner/data'}),
-                (0, 0, {'name': 'KBT Sale Order Create',    'key': 'sale-order-create', 'route_type': 'incoming', 'method': 'post', 'path': 'sale/create'}),
-                (0, 0, {'name': 'KBT Sale Order Update',    'key': 'sale-order-update', 'route_type': 'incoming', 'method': 'post', 'path': 'sale/update'}),
+                (0, 0, {'name': 'KBT Sale Order Create',    'key': 'sale_order_create', 'route_type': 'incoming', 'method': 'post', 'path': 'sale/create'}),
+                (0, 0, {'name': 'KBT Sale Order Update',    'key': 'sale_order_update', 'route_type': 'incoming', 'method': 'post', 'path': 'sale/update'}),
                 (0, 0, {'name': 'KBT Journal',              'key': 'journal',           'route_type': 'incoming', 'method': 'post', 'path': 'journal/create'}),
                 (0, 0, {'name': 'KBT Payment',              'key': 'payment',           'route_type': 'incoming', 'method': 'post', 'path': 'create_payment'}),
                 (0, 0, {'name': 'KBT Purchase Create',      'key': 'purchase-create',   'route_type': 'incoming', 'method': 'post', 'path': 'purchase/create'}),
