@@ -19,13 +19,17 @@ class PurchaseController(http.Controller):
             }
         except requests.HTTPError as http_err:
             return {
+                'isSuccess': False,
                 'code': requests.codes.server_error,
                 'message': str(http_err),
+                'invoice_number': params.get('x_purchase_ref') or "No Data"
             }
         except Exception as error:
             return {
+                'isSuccess': False,
                 'code': requests.codes.server_error,
                 'message': str(error),
+                'invoice_number': params.get('x_purchase_ref') or "No Data"
             }
 
     def _prepare_order_line(self, order_line, account_analytic_id, po_type):
@@ -142,13 +146,17 @@ class PurchaseController(http.Controller):
             }
         except requests.HTTPError as http_err:
             return {
+                'isSuccess': False,
                 'code': requests.codes.server_error,
                 'message': str(http_err),
+                'invoice_number': params.get('x_purchase_ref') or "No Data"
             }
         except Exception as error:
             return {
+                'isSuccess': False,
                 'code': requests.codes.server_error,
                 'message': str(error),
+                'invoice_number': params.get('x_purchase_ref') or "No Data"
             }
 
     def _update_purchase_order(self, **params):
