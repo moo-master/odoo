@@ -7,23 +7,29 @@ from odoo.addons.rts_api_base.controllers.main import APIBase
 
 class PurchaseController(http.Controller):
 
-    @APIBase.api_wrapper(['kbt.purchase-create'])
+    @APIBase.api_wrapper(['kbt.purchase_create'])
     @http.route('/purchase/create', type='json', auth='user')
     def purchase_order_create_api(self, **params):
         try:
-            self._create_purchase_order(**params)
+            res = self._create_purchase_order(**params)
             return {
+                'isSuccess': True,
                 'code': requests.codes.no_content,
+                'invoice_number': res,
             }
         except requests.HTTPError as http_err:
             return {
+                'isSuccess': False,
                 'code': requests.codes.server_error,
                 'message': str(http_err),
+                'invoice_number': params.get('x_purchase_ref') or "No Data"
             }
         except Exception as error:
             return {
+                'isSuccess': False,
                 'code': requests.codes.server_error,
                 'message': str(error),
+                'invoice_number': params.get('x_purchase_ref') or "No Data"
             }
 
     def _prepare_order_line(self, order_line, account_analytic_id, po_type):
@@ -126,24 +132,31 @@ class PurchaseController(http.Controller):
         purchase_id.button_confirm()
         if po_type in ['K-RENT', 'K-MATCH']:
             purchase_id.action_create_invoice()
+        return purchase_id.name
 
-    @APIBase.api_wrapper(['kbt.purchase-update'])
+    @APIBase.api_wrapper(['kbt.purchase_update'])
     @http.route('/purchase/update', type='json', auth='user')
     def purchase_order_update_api(self, **params):
         try:
-            self._update_purchase_order(**params)
+            res = self._update_purchase_order(**params)
             return {
+                'isSuccess': True,
                 'code': requests.codes.no_content,
+                'invoice_number': res,
             }
         except requests.HTTPError as http_err:
             return {
+                'isSuccess': False,
                 'code': requests.codes.server_error,
                 'message': str(http_err),
+                'invoice_number': params.get('x_purchase_ref') or "No Data"
             }
         except Exception as error:
             return {
+                'isSuccess': False,
                 'code': requests.codes.server_error,
                 'message': str(error),
+                'invoice_number': params.get('x_purchase_ref') or "No Data"
             }
 
     def _update_purchase_order(self, **params):
@@ -180,6 +193,7 @@ class PurchaseController(http.Controller):
             'order_line': update_line_lst
         })
         purchase_ref_id.action_create_invoice()
+        return purchase_ref_id.name
 
     def _update_order_line(self, order_line):
         return {
