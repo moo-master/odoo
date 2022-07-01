@@ -13,6 +13,8 @@ def test_create_partner(model):
         'email': 'supplier@other.company.com',
         'company_id': 1,
         'x_interface_id': 'Test-id-001',
+        'x_is_interface': True
     })
     assert res_partner.x_interface_id
+    assert res_partner.x_is_interface
     assert res_partner.ref == res_partner.x_interface_id
