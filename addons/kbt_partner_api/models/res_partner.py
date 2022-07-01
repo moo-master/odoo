@@ -14,6 +14,6 @@ class ResPartnerInherit(models.Model):
         string='Interface',
     )
 
-    def create(self):
-        res = super().create()
+    def create(self, vals):
+        res = super().create(vals)
         res.ref = res.x_interface_id
