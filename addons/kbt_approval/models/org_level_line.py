@@ -5,11 +5,6 @@ class OrgLevelLine(models.Model):
     _name = 'org.level.line'
     _order = 'model_id'
 
-    _sql_constraints = [
-        ('org_level_line_move_type_id_uniq',
-         'unique (model_id, move_type)',
-         'Duplicate model_id and move_type in org.level.line not allowed !')]
-
     model_id = fields.Many2one(
         string='Model',
         comodel_name='ir.model',

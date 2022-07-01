@@ -1,7 +1,7 @@
 from odoo import models, fields
 
 
-class OrgLevelLine(models.Model):
+class HrEmployee(models.Model):
     _inherit = 'hr.employee'
 
     level_id = fields.Many2one(

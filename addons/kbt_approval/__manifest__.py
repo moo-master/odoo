@@ -14,6 +14,7 @@
     'depends': [
         'kbt_business_type',
         'hr',
+        'beecy_reason',
     ],
     'data': [
         'views/org_level_menuitem.xml',

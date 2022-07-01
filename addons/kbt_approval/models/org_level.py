@@ -1,13 +1,18 @@
-from odoo import models, fields
+from odoo import models, fields, api
 
 
 class OrgLevel(models.Model):
     _name = 'org.level'
     _order = 'write_date asc'
-    # _rec_name = level + role
+    _rec_name = "display_name"
 
-    _sql_constraints = [('org_level_field_level_uniq', 'unique (level)',
-                         'Duplicate level in org.level not allowed !')]
+    _sql_constraints = [
+        ('org_level_field_level_uniq',
+         'unique (level)',
+         'Duplicate level in org.level not allowed !'),
+        ('org_level_line_move_type_id_uniq',
+         'unique (line_ids.model_id, line_ids.move_type)',
+         'Duplicate model_id and move_type in org.level.line not allowed !')]
 
     level = fields.Integer(
         string='Level',
@@ -25,7 +30,18 @@ class OrgLevel(models.Model):
         inverse_name='org_level_id',
     )
 
-    def approval_vilidation(self, model, amount, move_type):
+    display_name = fields.Char(
+        compute="_compute_new_display_name", store=True, index=True
+    )
+
+    @api.depends('level')
+    def _compute_new_display_name(self):
+        for rec in self:
+            # _rec_name = level + role
+            rec.display_name = str(rec.level)
+
+    def approval_validation(self, model, amount, move_type):
         for line in self.line_ids:
-            if line.model_id == model.id and line.move_type == move_type:
+            if line.model_id == model and line.move_type == move_type:
                 return amount < line.limit
+        return False
