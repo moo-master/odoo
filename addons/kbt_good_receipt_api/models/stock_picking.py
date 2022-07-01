@@ -13,3 +13,5 @@ class SaleOrder(models.Model):
         string='Bill Reference',
         readonly=True,
     )
+    # pylint: disable=biszx-boolean-field-name
+    x_is_interface = fields.Boolean('Interface')
