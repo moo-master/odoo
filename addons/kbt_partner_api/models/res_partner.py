@@ -1,4 +1,4 @@
-from odoo import models, fields
+from odoo import models, fields, api
 
 
 class ResPartnerInherit(models.Model):
@@ -14,6 +14,8 @@ class ResPartnerInherit(models.Model):
         string='Interface',
     )
 
+    @api.model
     def create(self, vals):
-        res = super().create(vals)
+        res = super(ResPartnerInherit, self).create(vals)
         res.ref = res.x_interface_id
+        return res
