@@ -59,7 +59,6 @@ class PaymentDataController(http.Controller):
 
     def _create_update_payment(self, **params):
         data_params_lst = params.get('data')
-        # Partner = request.env['res.partner']
         PartnerBank = request.env['res.partner.bank']
         AccountMove = request.env['account.move']
         AccountJournal = request.env['account.journal']
@@ -68,8 +67,6 @@ class PaymentDataController(http.Controller):
 
         for data in data_params_lst:
             vals = {}
-            # x_interface_id = Partner.search(
-            #     [('x_interface_id', '=', data['x_external_code'])])
 
             partner_bank = PartnerBank.search([
                 ('acc_number', '=', data['partner_bank_code']),
@@ -97,6 +94,22 @@ class PaymentDataController(http.Controller):
                 'payment_date': date_data,
                 'partner_bank_id': partner_bank.id,
             }
+            so_id = acc_move.mapped(
+                'invoice_line_ids.sale_line_ids.order_id')
+            po_id = acc_move.mapped(
+                'invoice_line_ids.purchase_line_id.order_id')
+
+            business_type = so_id.so_type_id \
+                if acc_move.move_type == 'out_invoice' \
+                else po_id.po_type_id
+            if data['amount'] > acc_move.amount_residual \
+                    and business_type.x_name != 'K-RENT':
+                vals.update({
+                    'payment_difference_handling': 'reconcile',
+                    'writeoff_account_id':
+                    business_type.default_gl_account_id.id,
+                    'writeoff_label': 'Post-Difference',
+                })
             payment_id = PaymentRegister.with_context(
                 active_model=ctx['active_model'],
                 active_ids=ctx['active_ids']).create(vals)
