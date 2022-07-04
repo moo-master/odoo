@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+
+    <record id="inherit_view_partner_form" model="ir.ui.view">
+        <field name="name">inherit.inherit.res.partner.view.form</field>
+        <field name="model">res.partner</field>
+        <field name="inherit_id" ref="base.view_partner_form"/>
+        <field name="priority" eval="100"/>
+        <field name="arch" type="xml">
+            <xpath expr="//field[@name='ref']" position="after">
+                <field name="x_is_interface" invisible="1" />
+            </xpath>
+            <xpath expr="//field[@name='ref']" position="attributes">
+                <attribute name="attrs">{'invisible': [('x_is_interface', '=', True)]}</attribute>
+            </xpath>
+        </field>
+    </record>
+
+</odoo>

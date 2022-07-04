@@ -15,4 +15,7 @@
         'kbt_res_company',
         'web',
     ],
+    'data': [
+        'views/inherit_res_partner_view.xml',
+    ]
 }
