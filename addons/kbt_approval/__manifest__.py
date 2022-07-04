@@ -20,5 +20,7 @@
         'views/org_level_menuitem.xml',
         'views/inherit_hr_employee_views.xml',
         'views/inherit_purchase_order_views.xml',
+        'views/inherit_sale_order_views.xml',
+        'views/inherit_account_move_views.xml',
     ]
 }

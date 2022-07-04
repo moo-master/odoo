@@ -37,11 +37,10 @@ class OrgLevel(models.Model):
     @api.depends('level')
     def _compute_new_display_name(self):
         for rec in self:
-            # _rec_name = level + role
             rec.display_name = str(rec.level)
 
     def approval_validation(self, model, amount, move_type):
         for line in self.line_ids:
             if line.model_id == model and line.move_type == move_type:
                 return amount < line.limit
-        return False
+        return True

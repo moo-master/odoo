@@ -2,25 +2,25 @@ from odoo import models, fields, _
 from odoo.exceptions import ValidationError
 
 
-class PurchaseOrder(models.Model):
-    _inherit = 'purchase.order'
+class AccountMove(models.Model):
+    _inherit = 'account.move'
 
     is_approve_send = fields.Boolean(
         string='is_approve_send',
         invisible=True,
     )
 
-    cancel_reason = fields.Char(
-        string='Cancel Reason Note',
+    reject_reason = fields.Char(
+        string='Reject Reason Note',
     )
 
-    def button_confirm(self):
+    def action_post(self):
         employee = self.env['hr.employee'].search(
             [('id', '=', self.partner_id.employee_ids.id)])
         if not self.x_is_interface:
-            if employee.level_id.approval_validation(
-                    'purchase.order', self.amount_total, False):
-                super().button_confirm()
+            if employee.level_id.approval_validation('account.move', sum(
+                    self.debit_note_ids.mapped('amount_total')), False):
+                super().action_post()
             else:
                 self.is_approve_send = True
                 em_level = employee.level_id._rec_name if employee.level_id else "no level_id"
@@ -34,8 +34,8 @@ class PurchaseOrder(models.Model):
         view = self.env.ref('beecy_reason.view_cancel_reject_reason_form')
         context = dict(
             self.env.context,
-            model_name='purchase.order',
-            state='cancel'
+            model_name='account.move',
+            state='reject'
         )
         return {
             'name': _('Reject Quotations'),
