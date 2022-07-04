@@ -14,6 +14,7 @@
     'depends': [
         'kbt_stock_picking_ext',
         'purchase_stock'
+        'kbt_api_base'
     ],
     'data': [
         'views/inherit_view_picking_form.xml',
