@@ -15,6 +15,7 @@
                 (0, 0, {'name': 'KBT Purchase Create',      'key': 'purchase_create',   'route_type': 'incoming', 'method': 'post', 'path': 'purchase/create'}),
                 (0, 0, {'name': 'KBT Purchase Update',      'key': 'purchase_update',   'route_type': 'incoming', 'method': 'post', 'path': 'purchase/update'}),
                 (0, 0, {'name': 'KBT Delivery Update',      'key': 'delivery_update',   'route_type': 'incoming', 'method': 'post', 'path': 'delivery/update'}),
+                (0, 0, {'name': 'KBT Good Receipt',         'key': 'good_receipt',      'route_type': 'incoming', 'method': 'post', 'path': 'good/receipt'}),
             ]"/>
         </record>
     </data>
