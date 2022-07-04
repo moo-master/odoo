@@ -1,0 +1,38 @@
+#div_checkout {
+  position: relative;
+
+}
+
+.guest-checkout-popover {
+  max-width: 500px !important;
+  ;
+  min-width: 150px !important;
+  ;
+}
+
+.check_login_error {
+  font-size: 14px;
+  max-width: 240px;
+  color    : #dc3545;
+}
+
+.popover {
+  width    : 340px;
+  height   : 440px;
+  max-width: 100%;
+  min-width: 150px !important;
+  ;
+}
+
+.guest_email_label .guest_psw_label .name_label .email_label .password_label .confirm_password_label {
+  font-family: "Roboto", "Odoo Unicode Support Noto", sans-serif;
+  color      : #14356F;
+  font-style : normal;
+  font-weight: 600;
+  font-size  : 14px;
+  line-height: 22px;
+}
+
+ul.nav.nav-tabs.justify-content-center.pt-1 li span.active{
+  border-bottom: 4px solid #3AADAA;
+}
