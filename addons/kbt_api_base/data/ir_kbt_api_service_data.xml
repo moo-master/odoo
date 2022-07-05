@@ -4,17 +4,18 @@
         <record id="kbt_api_service_data" model="api.service">
             <field name="name">KBT</field>
             <field name="key">kbt</field>
-            <field name="base_url">https://kbt.com</field>
+            <field name="base_url">https://www.kaset-inno.com</field>
             <field name="route_ids" eval="[
                 (5, 0),
                 (0, 0, {'name': 'KBT Partner',              'key': 'partner',           'route_type': 'incoming', 'method': 'post', 'path': 'partner/data'}),
-                (0, 0, {'name': 'KBT Sale Order Create',    'key': 'sale-order-create', 'route_type': 'incoming', 'method': 'post', 'path': 'sale/create'}),
-                (0, 0, {'name': 'KBT Sale Order Update',    'key': 'sale-order-update', 'route_type': 'incoming', 'method': 'post', 'path': 'sale/update'}),
+                (0, 0, {'name': 'KBT Sale Order Create',    'key': 'sale_order_create', 'route_type': 'incoming', 'method': 'post', 'path': 'sale/create'}),
+                (0, 0, {'name': 'KBT Sale Order Update',    'key': 'sale_order_update', 'route_type': 'incoming', 'method': 'post', 'path': 'sale/update'}),
                 (0, 0, {'name': 'KBT Journal',              'key': 'journal',           'route_type': 'incoming', 'method': 'post', 'path': 'journal/create'}),
                 (0, 0, {'name': 'KBT Payment',              'key': 'payment',           'route_type': 'incoming', 'method': 'post', 'path': 'create_payment'}),
-                (0, 0, {'name': 'KBT Purchase Create',      'key': 'purchase-create',   'route_type': 'incoming', 'method': 'post', 'path': 'purchase/create'}),
-                (0, 0, {'name': 'KBT Purchase Update',      'key': 'purchase-update',   'route_type': 'incoming', 'method': 'post', 'path': 'purchase/update'}),
-                (0, 0, {'name': 'KBT Delivery Update',      'key': 'delivery-update',   'route_type': 'incoming', 'method': 'post', 'path': 'delivery/update'}),
+                (0, 0, {'name': 'KBT Purchase Create',      'key': 'purchase_create',   'route_type': 'incoming', 'method': 'post', 'path': 'purchase/create'}),
+                (0, 0, {'name': 'KBT Purchase Update',      'key': 'purchase_update',   'route_type': 'incoming', 'method': 'post', 'path': 'purchase/update'}),
+                (0, 0, {'name': 'KBT Delivery Update',      'key': 'delivery_update',   'route_type': 'incoming', 'method': 'post', 'path': 'delivery/update'}),
+                (0, 0, {'name': 'KBT Good Receipt',         'key': 'good_receipt',      'route_type': 'incoming', 'method': 'post', 'path': 'good/receipt'}),
             ]"/>
         </record>
     </data>

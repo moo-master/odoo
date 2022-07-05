@@ -7,32 +7,32 @@ from odoo.addons.rts_api_base.controllers.main import APIBase
 
 class DeliveryController(http.Controller):
 
-    @APIBase.api_wrapper(['kbt.delivery-update'])
+    @APIBase.api_wrapper(['kbt.delivery_update'])
     @http.route('/delivery/update', type='json', auth='user')
     def delivery_update_api(self, **params):
         try:
             msg = self._check_delivery_values(**params)
             if msg:
                 return {
-                    'isSuccess': 'Fail',
+                    'isSuccess': False,
                     'message': msg,
                     'code': requests.codes.server_error,
                 }
             res = self._update_delivery_order(**params)
             return {
-                'isSuccess': 'Success',
+                'isSuccess': True,
                 'code': requests.codes.no_content,
                 'invoice_number': res
             }
         except requests.HTTPError as http_err:
             return {
-                'isSuccess': 'Fail',
+                'isSuccess': False,
                 'code': requests.codes.server_error,
                 'message': str(http_err),
             }
         except Exception as error:
             return {
-                'isSuccess': 'Fail',
+                'isSuccess': False,
                 'code': requests.codes.server_error,
                 'message': str(error),
             }
@@ -53,6 +53,7 @@ class DeliveryController(http.Controller):
         StockMove = request.env['stock.move']
         StockPick = request.env['stock.picking']
         StockBack = request.env['stock.backorder.confirmation']
+        SaleInvoice = request.env['sale.advance.payment.inv']
 
         response_api = []
         for data in params['data']:
@@ -97,6 +98,10 @@ class DeliveryController(http.Controller):
                 }).with_context(button_validate_picking_ids=ctx['button_validate_picking_ids'])
                 wiz.process()
 
-            response_api.append(data.get('so_orderreference'))
+            invoice_order = SaleInvoice.create({
+                'advance_payment_method': 'delivered',
+            }).with_context(active_ids=sale_order.id)
+            invoice_order.create_invoices()
+            response_api.append(sale_order.name)
 
         return response_api
