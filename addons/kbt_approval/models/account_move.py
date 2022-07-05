@@ -19,7 +19,7 @@ class AccountMove(models.Model):
             [('id', '=', self.partner_id.employee_ids.id)])
         if not self.x_is_interface:
             if employee.level_id.approval_validation('account.move', sum(
-                    self.debit_note_ids.mapped('amount_total')), False):
+                    self.line_ids.mapped('debit')), self.move_type):
                 super().action_post()
             else:
                 self.is_approve_send = True

@@ -9,15 +9,17 @@
                 <sheet>
                     <group>
                         <field name="level"/>
-                        <field name="description" />
+                        <field name="description"/>
                     </group>
                     <notebook colspan="4">
                         <page string="Configuration Lines">
                             <field name="line_ids" widget="section_and_note_one2many">
                                 <tree editable="bottom">
-                                    <field name="limit" />
+                                    <field name="model_id_name" invisible="1"/>
+
+                                    <field name="limit"/>
                                     <field name="model_id"/>
-                                    <field name="move_type"/>
+                                    <field name="move_type" attrs="{'readonly':[('model_id_name','!=','account.move')]}"/>
                                 </tree>
                             </field>
                         </page>

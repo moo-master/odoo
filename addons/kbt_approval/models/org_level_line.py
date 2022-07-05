@@ -1,4 +1,4 @@
-from odoo import models, fields, api
+from odoo import models, fields
 
 
 class OrgLevelLine(models.Model):
@@ -8,6 +8,11 @@ class OrgLevelLine(models.Model):
     model_id = fields.Many2one(
         string='Model',
         comodel_name='ir.model',
+    )
+
+    model_id_name = fields.Char(
+        string='Model Name',
+        related='model_id.model'
     )
 
     org_level_id = fields.Many2one(
@@ -31,8 +36,3 @@ class OrgLevelLine(models.Model):
             ('in_receipt', 'Purchase Receipt'),
         ]
     )
-
-    @api.depends('model_id')
-    def _compute_model_id_readonly(self):
-        for rec in self:
-            rec.move_type.readonly = rec.model_id != "account.move"
