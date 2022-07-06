@@ -5,8 +5,6 @@ options = {
         'base_account_budget',
         'base_accounting_kit',
         'base_country_state_translatable',
-        'base_location',
-        'base_location_geonames_import',
         'beecy_account',
         'beecy_account_billing_note',
         'beecy_account_cheque',
