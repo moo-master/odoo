@@ -1,7 +1,7 @@
 {
-    'name': 'KBT Partner Api',
+    'name': 'KBT Good Receipt Api',
     'summary': '''
-        KBT Partner Api
+        KBT Good Receipt Api
     ''',
     'author': 'Roots',
     'category': 'Company',
@@ -12,10 +12,11 @@
         'Pachara P.',
     ],
     'depends': [
-        'kbt_res_company',
-        'web',
+        'kbt_stock_picking_ext',
+        'purchase_stock',
+        'kbt_api_base',
     ],
     'data': [
-        'views/inherit_res_partner_view.xml',
+        'views/inherit_view_picking_form.xml',
     ]
 }

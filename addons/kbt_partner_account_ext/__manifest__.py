@@ -1,7 +1,7 @@
 {
-    'name': 'KBT Partner Api',
+    'name': 'KBT Partner Account Ext',
     'summary': '''
-        KBT Partner Api
+        KBT Partner Account Ext
     ''',
     'author': 'Roots',
     'category': 'Company',
@@ -12,10 +12,6 @@
         'Pachara P.',
     ],
     'depends': [
-        'kbt_res_company',
-        'web',
-    ],
-    'data': [
-        'views/inherit_res_partner_view.xml',
+        'kbt_partner_ext',
     ]
 }

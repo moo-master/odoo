@@ -1,7 +1,7 @@
 {
-    'name': 'KBT Partner Api',
+    'name': 'KBT Delivery Api',
     'summary': '''
-        KBT Partner Api
+        KBT Delivery Api
     ''',
     'author': 'Roots',
     'category': 'Company',
@@ -12,10 +12,6 @@
         'Pachara P.',
     ],
     'depends': [
-        'kbt_res_company',
-        'web',
+        'kbt_stock_picking_ext',
     ],
-    'data': [
-        'views/inherit_res_partner_view.xml',
-    ]
 }

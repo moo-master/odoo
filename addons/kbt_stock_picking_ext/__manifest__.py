@@ -1,7 +1,7 @@
 {
-    'name': 'KBT Partner Api',
+    'name': 'KBT Stock Picking Ext',
     'summary': '''
-        KBT Partner Api
+        KBT Stock Picking Extension
     ''',
     'author': 'Roots',
     'category': 'Company',
@@ -12,10 +12,7 @@
         'Pachara P.',
     ],
     'depends': [
-        'kbt_res_company',
-        'web',
+        'delivery',
+        'kbt_core_update',
     ],
-    'data': [
-        'views/inherit_res_partner_view.xml',
-    ]
 }
