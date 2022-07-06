@@ -1,0 +1,88 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <data>
+        <record id="api_service_search_view" model="ir.ui.view">
+            <field name="name">api.service.search</field>
+            <field name="model">api.service</field>
+            <field name="arch" type="xml">
+                <search string="API Service">
+                    <field name="name"/>
+                    <field name="key"/>
+                </search>
+            </field>
+        </record>
+
+        <record id="api_service_form_view" model="ir.ui.view">
+            <field name="name">api.service.form</field>
+            <field name="model">api.service</field>
+            <field name="arch" type="xml">
+                <form>
+                    <header>
+                        <button
+                            name="%(action_api_service_try_wizard)d"
+                            type="action"
+                            string="Try"
+                            class="oe_highlight"
+                            attrs="{'invisible' : [('id', '=', False)]}"
+                            context="{
+                                'default_service_id': active_id
+                            }"
+                        />
+                    </header>
+                    <sheet>
+                        <div class="oe_button_box" name="button_box">
+                            <button
+                                name="%(action_api_service_route)d"
+                                class="oe_stat_button"
+                                type="action"
+                                icon="fa-bars"
+                                attrs="{'invisible' : [('id', '=', False)]}"
+                                context="{
+                                    'default_service_id': active_id
+                                }"
+                            >
+                                <field string="Routes" name="route_count" widget="statinfo"/>
+                            </button>
+                        </div>
+                        <h1>
+                            <field name="reference" class="oe_inline" attrs="{'invisible' : [('id', '=', False)]}"/>
+                        </h1>
+                        <div class="oe_title oe_edit_only">
+                            <label for="name"/>
+                            <h1>
+                                <field name="name" class="oe_inline"/>
+                            </h1>
+                        </div>
+                        <group>
+                            <group>
+                                <field name="key"/>
+                                <field name="base_url"/>
+                                <field name="active" widget="boolean_toggle"/>
+                            </group>
+                        </group>
+                    </sheet>
+                </form>
+            </field>
+        </record>
+
+        <record id="api_service_tree_view" model="ir.ui.view">
+            <field name="name">api.service.tree</field>
+            <field name="model">api.service</field>
+            <field name="priority">1</field>
+            <field name="arch" type="xml">
+                <tree string="API Service">
+                    <field name="reference"/>
+                    <field name="base_url"/>
+                </tree>
+            </field>
+        </record>
+
+        <record id="action_api_service" model="ir.actions.act_window">
+            <field name="name">API Service</field>
+            <field name="type">ir.actions.act_window</field>
+            <field name="res_model">api.service</field>
+            <field name="view_mode">tree,form</field>
+            <field name="search_view_id" ref="api_service_search_view"/>
+        </record>
+    </data>
+</odoo>

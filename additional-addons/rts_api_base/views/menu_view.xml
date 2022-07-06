@@ -1,0 +1,8 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<odoo>
+    <menuitem id="parent_menu_interface" name="Interface" groups="base.group_system"/>
+
+    <menuitem id="menu_interface_service" name="API Service" action="rts_api_base.action_api_service" parent="rts_api_base.parent_menu_interface" groups="base.group_system" sequence="1"/>
+
+    <menuitem id="menu_interface_log" name="Logs" action="rts_api_base.action_api_logs" parent="rts_api_base.parent_menu_interface" sequence="10"/>
+</odoo>

@@ -11,4 +11,4 @@ bahttext
 html2text
 xlsxwriter
 xlrd
-odoo-addon-rts-api-base~=15.0
+zeep
