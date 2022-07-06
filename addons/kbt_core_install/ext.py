@@ -1,6 +1,5 @@
 options = {
     'addon_path': ['additional-addons'],
-    'depends': ['rts_api_base'],
     'exclude_dirs': [
         'base_account_budget',
         'base_accounting_kit',
