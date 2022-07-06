@@ -1,0 +1,79 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <data>
+        <record id="api_service_route_search_view" model="ir.ui.view">
+            <field name="name">api.service.route.search</field>
+            <field name="model">api.service.route</field>
+            <field name="arch" type="xml">
+                <search string="API Service Route">
+                    <field name="reference"/>
+                    <field name="name"/>
+                    <field name="key"/>
+                </search>
+            </field>
+        </record>
+
+        <record id="api_service_route_form_view" model="ir.ui.view">
+            <field name="name">api.service.route.form</field>
+            <field name="model">api.service.route</field>
+            <field name="arch" type="xml">
+                <form>
+                    <sheet>
+                        <h1>
+                            <field name="reference" class="oe_inline"/>
+                        </h1>
+                        <div class="oe_title">
+                            <label for="name" class="oe_edit_only"/>
+                            <h1>
+                                <field name="name" class="oe_inline"/>
+                            </h1>
+                        </div>
+                        <group>
+                            <group>
+                                <field name="key"/>
+                                <field name="route_type"/>
+                                <field name="method"/>
+                                <field name="path" attrs="{'required' : [('route_type', '=', 'incoming')]}"/>
+                            </group>
+                            <group>
+                                <field name="url"/>
+                                <field name="is_required_auth_token"/>
+                                <field name="active" widget="boolean_toggle"/>
+                            </group>
+                        </group>
+                    </sheet>
+                </form>
+            </field>
+        </record>
+
+        <record id="api_service_route_tree_view" model="ir.ui.view">
+            <field name="name">api.service.route.tree</field>
+            <field name="model">api.service.route</field>
+            <field name="priority">1</field>
+            <field name="arch" type="xml">
+                <tree string="API Service Route">
+                    <field name="reference"/>
+                    <field name="name"/>
+                    <field
+                        name="route_type"
+                        widget="badge"
+                        decoration-info="route_type == 'outgoing'"
+                        decoration-muted="route_type == 'incoming'"
+                    />
+                    <field name="method"/>
+                    <field name="url"/>
+                    <field name="is_required_auth_token"/>
+                </tree>
+            </field>
+        </record>
+
+        <record id="action_api_service_route" model="ir.actions.act_window">
+            <field name="name">API Service Route</field>
+            <field name="type">ir.actions.act_window</field>
+            <field name="res_model">api.service.route</field>
+            <field name="view_mode">tree,form</field>
+            <field name="search_view_id" ref="api_service_route_search_view"/>
+            <field name="domain">[('service_id', '=', active_id)]</field>
+        </record>
+    </data>
+</odoo>

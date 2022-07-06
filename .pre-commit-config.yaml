@@ -1,6 +1,6 @@
 repos:
 - repo: https://gitlab.com/is4res/odoo-core-install-generator
-  rev: 1.0.3
+  rev: 1.2.0
   hooks:
   - id: generate-core-install
     args: ['project=kbt', 'version=15.0', 'website=https://roots.tech']
