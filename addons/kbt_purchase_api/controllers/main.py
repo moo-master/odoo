@@ -82,7 +82,7 @@ class PurchaseController(http.Controller):
         Account = request.env['account.analytic.account']
         Business = request.env['business.type']
 
-        partner_ref = params.get('partner_id.ref')
+        partner_ref = params.get('x_external_code')
         partner_id = Partner.search(
             [('x_interface_id', '=', partner_ref)])
 
