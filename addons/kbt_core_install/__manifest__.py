@@ -36,6 +36,7 @@
         'beecy_web_report',
         'kbt_account_ext',
         'kbt_api_base',
+        'kbt_approval',
         'kbt_business_type',
         'kbt_core_update',
         'kbt_delivery_api',
