@@ -12,3 +12,4 @@ html2text
 xlsxwriter
 xlrd
 zeep
+validators
