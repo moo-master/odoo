@@ -47,6 +47,7 @@
         'os_disable_quick_create',
         'report_xlsx',
         'rts_api_base',
+        'rts_api_base',
         'th_address'
     ]
 }
