@@ -113,6 +113,7 @@ class PaymentDataController(http.Controller):
                     business_type.default_gl_account_id.id,
                     'writeoff_label': 'Post-Difference',
                 })
+
             payment_id = PaymentRegister.with_context(
                 active_model=ctx['active_model'],
                 active_ids=ctx['active_ids']).create(vals)
