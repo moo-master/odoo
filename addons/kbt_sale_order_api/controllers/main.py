@@ -38,15 +38,11 @@ class SaleOrderDataController(http.Controller):
 
     def _check_sale_order_values(self, **params):
         msg_list = []
-        if not params.get('service_name'):
-            msg_list.append('service_name: No Data')
-        if not params.get('product_serie_name'):
-            msg_list.append('product_serie_name: No Data')
         return msg_list
 
-    def _prepare_order_line(self, order_line, is_new_line):
+    def _prepare_order_line(self, order_line, is_new_line, seq_id):
         product_id = request.env['product.product'].search(
-            [('name', '=', order_line.get('product_id'))])
+            [('default_code', '=', order_line.get('product_id'))])
         if is_new_line:
             return {
                 'product_id': product_id.id,
@@ -59,7 +55,7 @@ class SaleOrderDataController(http.Controller):
             }
 
         return {
-            'qty_delivered': order_line['qty_delivered']
+            'qty_delivered': seq_id.qty_delivered + order_line['qty_delivered']
         }
 
     def _create_sale_order(self, **params):
@@ -104,10 +100,10 @@ class SaleOrderDataController(http.Controller):
         vals['analytic_account_id'] = account_analytic_id.id
 
         business_type = request.env['business.type'].search([
-            ('x_code', '=', data['business_type'])])
+            ('x_code', '=', data['x_so_type_code'])])
         vals['so_type_id'] = business_type.id
 
-        so_type = params.get('business_type').upper()
+        so_type = params.get('x_so_type_code').upper()
         so_type_id = Business.search([
             ('x_code', '=ilike', so_type)
         ])
@@ -116,8 +112,10 @@ class SaleOrderDataController(http.Controller):
         vals['x_so_orderreference'] = data.get('x_so_orderreference')
         vals['x_is_interface'] = True
 
+        vals['x_address'] = data.get('x_address')
+
         order_line_vals_list = [(0, 0, self._prepare_order_line(
-            order_line, True))
+            order_line, True, False))
             for order_line in params.get('lineItems')
         ]
         vals['order_line'] = order_line_vals_list
@@ -125,6 +123,9 @@ class SaleOrderDataController(http.Controller):
         sale.onchange_partner_id()
         sale_values = sale._convert_to_write(sale._cache)
         sale_id = Sale.create(sale_values)
+        sale_id.write({
+            'name': params.get('x_so_orderreference')
+        })
         sale_id.action_confirm()
 
     @APIBase.api_wrapper(['kbt.sale_order_update'])
@@ -176,20 +177,24 @@ class SaleOrderDataController(http.Controller):
                 ('sequence', '=', order_line.get('seq_line')),
                 ('order_id', '=', so_orderreference.id)
             ])
-            if order_line['qty_delivered'] > seq_id.product_uom_qty:
+            if order_line['qty_delivered'] + seq_id.qty_delivered >\
+                    seq_id.product_uom_qty:
                 name = seq_id.name
                 prod_qty = seq_id.product_uom_qty
                 qty_deli = order_line['qty_delivered']
-                raise ValueError(f"Your ordered quantity of {name} is "
-                                 f"{prod_qty} and current delivered "
-                                 f"quantity is {qty_deli} your order "
-                                 f"quantity can’t more than {prod_qty}")
+                raise ValueError(
+                    f"Your ordered quantity of {name} is "
+                    f"{prod_qty} and current delivered "
+                    f"quantity is {qty_deli} your order "
+                    f"quantity can’t more than {prod_qty - seq_id.qty_delivered}")
             else:
                 update_line_lst.append(
                     (1, seq_id.id,
-                     self._prepare_order_line(order_line, False)))
+                     self._prepare_order_line(order_line, False, seq_id)))
         so_orderreference.update({
-            'order_line': update_line_lst
+            'order_line': update_line_lst,
+            'x_address': params['x_address'],
         })
-        so_orderreference._create_invoices(final=True)
+        move_id = so_orderreference._create_invoices()
+        move_id.action_post()
         return so_orderreference.name
