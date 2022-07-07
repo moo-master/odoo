@@ -24,6 +24,6 @@ class PurchaseOrder(models.Model):
             if not self.x_is_interface:
                 seq_id = self.env['business.type'].search(
                     [('id', '=', vals['po_type_id'])]).x_sequence_id
-            vals['name'] = seq_id.next_by_id() or '/'
+                vals['name'] = seq_id.next_by_id() or '/'
         res = super(PurchaseOrder, self).create(vals)
         return res
