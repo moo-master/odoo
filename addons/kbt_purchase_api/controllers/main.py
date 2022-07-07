@@ -35,7 +35,6 @@ class PurchaseController(http.Controller):
     def _prepare_order_line(self, order_line, account_analytic_id, po_type):
         product_id = request.env['product.product'].search([
             ('default_code', '=', order_line.get('product_code')),
-            ('name', '=', order_line.get('name'))
         ])
 
         product_type = product_id.detailed_type
@@ -48,15 +47,12 @@ class PurchaseController(http.Controller):
                 "Product %s is not a Service, Business Code must be K-STORE"
                 % product_id.name
             )
-        qty_received = 0
-        if po_type in ['K-RENT', 'K-MATCH']:
-            qty_received = order_line.get('product_uom_qty')
 
         vals = {
             'account_analytic_id': account_analytic_id.id,
             'product_id': product_id.id,
             'name': order_line.get('name'),
-            'qty_received': qty_received,
+            'qty_received': 0,
             'product_qty': order_line.get('product_uom_qty'),
             'price_unit': order_line.get('price_unit'),
             'sequence': order_line.get('seq_line'),
@@ -130,8 +126,7 @@ class PurchaseController(http.Controller):
         purchase_values = purchase._convert_to_write(purchase._cache)
         purchase_id = Purchase.create(purchase_values)
         purchase_id.button_confirm()
-        if po_type in ['K-RENT', 'K-MATCH']:
-            purchase_id.action_create_invoice()
+
         return purchase_id.name
 
     @APIBase.api_wrapper(['kbt.purchase_update'])
@@ -177,17 +172,20 @@ class PurchaseController(http.Controller):
                 ('sequence', '=', order_line.get('seq_line')),
                 ('order_id', '=', purchase_ref_id.id)
             ])
-            if order_line['qty_received'] > seq_id.product_qty:
+            if order_line['qty_received'] + seq_id.qty_received >\
+                    seq_id.product_qty:
                 name = seq_id.name
                 prod_qty = seq_id.product_uom_qty
                 qty_recv = order_line['qty_received']
-                raise ValueError(f"Your ordered quantity of {name} is "
-                                 f"{prod_qty} and current delivered "
-                                 f"quantity is {qty_recv} your order "
-                                 f"quantity can’t more than {prod_qty}")
+                raise ValueError(
+                    f"Your ordered quantity of {name} is "
+                    f"{prod_qty} and current delivered "
+                    f"quantity is {qty_recv} your order "
+                    f"quantity can’t more than {prod_qty - seq_id.qty_received}")
             else:
-                update_line_lst.append((1, seq_id.id,
-                                        self._update_order_line(order_line)))
+                update_line_lst.append(
+                    (1, seq_id.id, self._update_order_line(
+                        order_line, seq_id)))
 
         purchase_ref_id.update({
             'order_line': update_line_lst
@@ -195,7 +193,7 @@ class PurchaseController(http.Controller):
         purchase_ref_id.action_create_invoice()
         return purchase_ref_id.name
 
-    def _update_order_line(self, order_line):
+    def _update_order_line(self, order_line, seq_id):
         return {
-            'qty_received': order_line['qty_received']
+            'qty_received': seq_id.qty_received + order_line['qty_received']
         }

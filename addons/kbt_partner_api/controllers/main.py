@@ -33,12 +33,6 @@ class PartnerDataController(http.Controller):
 
     def _check_partner_values(self, **params):
         msg_list = []
-        data_params = params.get('data')
-        for data in data_params:
-            if not data.get('service_name'):
-                msg_list.append('service_name: No Data')
-            if not data.get('product_serie_name'):
-                msg_list.append('product_serie_name: No Data')
 
         return msg_list
 
@@ -63,7 +57,7 @@ class PartnerDataController(http.Controller):
                 [('x_interface_id', '=', data.get('x_external_code'))])
 
             vals_dict = {
-                'x_interface_id': data.get('x_interface_id'),
+                'x_interface_id': data.get('x_external_code'),
                 'name': data.get('name'),
                 'is_company': data.get('is_company'),
                 'type': data.get('type'),
