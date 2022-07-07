@@ -60,6 +60,7 @@ class PaymentDataController(http.Controller):
     def _create_update_payment(self, **params):
         data_params_lst = params.get('data')
         PartnerBank = request.env['res.partner.bank']
+        Partner = request.env['res.partner']
         AccountMove = request.env['account.move']
         AccountJournal = request.env['account.journal']
         PaymentRegister = request.env['account.payment.register']
@@ -67,6 +68,8 @@ class PaymentDataController(http.Controller):
 
         for data in data_params_lst:
             vals = {}
+            Partner.search(
+                [('x_interface_id', '=', data['x_external_code'])])
 
             partner_bank = PartnerBank.search([
                 ('acc_number', '=', data['partner_bank_code']),

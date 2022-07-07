@@ -26,6 +26,6 @@ class SaleOrder(models.Model):
             if not self.x_is_interface:
                 seq_id = self.env['business.type'].search(
                     [('id', '=', vals['so_type_id'])]).x_sequence_id
-            vals['name'] = seq_id.next_by_id() or _('New')
+                vals['name'] = seq_id.next_by_id() or _('New')
         result = super(SaleOrder, self).create(vals)
         return result
