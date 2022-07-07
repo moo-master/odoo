@@ -45,7 +45,7 @@ class PaymentDataController(http.Controller):
         for data in data_params_lst:
             vals = {}
             x_interface_id = Partner.search(
-                [('x_interface_id', '=', data['x_interface_id'])])
+                [('x_interface_id', '=', data['x_external_code'])])
 
             journal_code = AccountPayment.journal_id.search([
                 ('code', '=', data['journal_code']),

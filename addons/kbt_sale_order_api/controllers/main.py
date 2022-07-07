@@ -78,7 +78,7 @@ class SaleOrderDataController(http.Controller):
             )
 
         partner_id = Partner.search(
-            [('x_interface_id', '=', data.get('x_interface_id'))])
+            [('x_interface_id', '=', data.get('x_external_code'))])
         if not partner_id:
             partner_id = Partner.create(
                 {'name': data.get('x_interface_id')})
