@@ -15,6 +15,7 @@ class PaymentDataController(http.Controller):
             if msg:
                 return {
                     'error': msg,
+                    'code': requests.codes.server_error,
                 }
             self._create_update_payment(**params)
             return {
@@ -33,21 +34,49 @@ class PaymentDataController(http.Controller):
 
     def _check_payment_values(self, **params):
         msg_list = []
+        if not params.get('data'):
+            msg_list.append('Data: No Data')
+        for idx, data in enumerate(params.get('data')):
+            msg_list += self._check_payment_line_values(data, idx)
         return msg_list
 
+    def _check_payment_line_values(self, data, idx):
+        ckeck_lst = {
+            'payment_type',
+            'invoice_number',
+            'x_external_code',
+            'journal_code',
+            'partner_bank_code',
+            'bank_code',
+            'amount',
+            'date',
+            'ref'
+        }
+        data_key = set(data.keys())
+        missing_value = ckeck_lst - data_key
+        res = [f'Line {idx + 1} {val}: No Data' for val in missing_value]
+        return res
+
     def _create_update_payment(self, **params):
-        data_params_lst = params['data']
-        Partner = request.env['res.partner']
+        data_params_lst = params.get('data')
         PartnerBank = request.env['res.partner.bank']
-        AccountPayment = request.env['account.payment']
+        Partner = request.env['res.partner']
+        AccountMove = request.env['account.move']
+        AccountJournal = request.env['account.journal']
+        PaymentRegister = request.env['account.payment.register']
         User = request.env.user
 
         for data in data_params_lst:
             vals = {}
-            x_interface_id = Partner.search(
+            Partner.search(
                 [('x_interface_id', '=', data['x_external_code'])])
 
-            journal_code = AccountPayment.journal_id.search([
+            partner_bank = PartnerBank.search([
+                ('acc_number', '=', data['partner_bank_code']),
+                ('bank_id.bic', '=', data['bank_code']),
+            ])
+
+            journal_code = AccountJournal.search([
                 ('code', '=', data['journal_code']),
                 ('company_id', '=', User.company_id.id)])
 
@@ -55,21 +84,37 @@ class PaymentDataController(http.Controller):
             date_data = '{0}-{1}-{2}'.format(
                 date_api[0], date_api[1], date_api[2])
 
+            acc_move = AccountMove.search([
+                ('name', '=', data['invoice_number']),
+                ('state', '=', 'posted'),
+            ])
+            res_action = acc_move.action_register_payment()
+            ctx = res_action.get('context')
             vals = {
                 'payment_type': data['payment_type'],
-                'partner_id': x_interface_id.id,
                 'journal_id': journal_code.id,
                 'amount': data['amount'],
-                'ref': data['ref'],
-                'date': date_data,
+                'payment_date': date_data,
+                'partner_bank_id': partner_bank.id,
             }
+            so_id = acc_move.mapped(
+                'invoice_line_ids.sale_line_ids.order_id')
+            po_id = acc_move.mapped(
+                'invoice_line_ids.purchase_line_id.order_id')
 
-            if data['payment_type'] == 'outbound':
-                partner_bank_id = PartnerBank.search(
-                    [('partner_id', '=', x_interface_id.id),
-                     ('acc_number', '=', data['partner_bank_code']),
-                     ('bank_id.bic', '=', data['bank_code'])])
-                vals['partner_bank_id'] = partner_bank_id.id
+            business_type = so_id.so_type_id \
+                if acc_move.move_type == 'out_invoice' \
+                else po_id.po_type_id
+            if data['amount'] > acc_move.amount_residual \
+                    and business_type.x_name != 'K-RENT':
+                vals.update({
+                    'payment_difference_handling': 'reconcile',
+                    'writeoff_account_id':
+                    business_type.default_gl_account_id.id,
+                    'writeoff_label': 'Post-Difference',
+                })
 
-            acc_payment = AccountPayment.create(vals)
-            acc_payment.action_post()
+            payment_id = PaymentRegister.with_context(
+                active_model=ctx['active_model'],
+                active_ids=ctx['active_ids']).create(vals)
+            payment_id.action_create_payments()

@@ -34,6 +34,12 @@ class BusinessType(models.Model):
         required=True,
     )
 
+    default_gl_account_id = fields.Many2one(
+        string='Default GL Account',
+        comodel_name='account.account',
+        required=True,
+    )
+
     active = fields.Boolean(
         string='active',
         default=True,
