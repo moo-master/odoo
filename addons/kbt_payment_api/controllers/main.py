@@ -36,26 +36,26 @@ class PaymentDataController(http.Controller):
         msg_list = []
         if not params.get('data'):
             msg_list.append('Data: No Data')
-        for data in params.get('data'):
-            if not data.get('payment_type'):
-                msg_list.append('payment_type: No Data')
-            if not data.get('invoice_number'):
-                msg_list.append('invoice_number: No Data')
-            if not data.get('x_external_code'):
-                msg_list.append('x_external_code: No Data')
-            if not data.get('journal_code'):
-                msg_list.append('journal_code: No Data')
-            if not data.get('partner_bank_code'):
-                msg_list.append('partner_bank_code: No Data')
-            if not data.get('bank_code'):
-                msg_list.append('bank_code: No Data')
-            if not data.get('amount'):
-                msg_list.append('amount: No Data')
-            if not data.get('date'):
-                msg_list.append('date: No Data')
-            if not data.get('ref'):
-                msg_list.append('ref: No Data')
+        for idx, data in enumerate(params.get('data')):
+            msg_list += self._check_payment_line_values(data, idx)
         return msg_list
+
+    def _check_payment_line_values(self, data, idx):
+        ckeck_lst = {
+            'payment_type',
+            'invoice_number',
+            'x_external_code',
+            'journal_code',
+            'partner_bank_code',
+            'bank_code',
+            'amount',
+            'date',
+            'ref'
+        }
+        data_key = set(data.keys())
+        missing_value = ckeck_lst - data_key
+        res = [f'Line {idx + 1} {val}: No Data' for val in missing_value]
+        return res
 
     def _create_update_payment(self, **params):
         data_params_lst = params.get('data')
