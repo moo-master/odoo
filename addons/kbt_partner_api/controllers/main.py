@@ -14,26 +14,32 @@ class PartnerDataController(http.Controller):
             msg = self._check_partner_values(**params)
             if msg:
                 return {
+                    'isSuccess': False,
                     'error': msg,
+                    'code': requests.codes.server_error,
                 }
             self._create_update_partner(**params)
             return {
+                'isSuccess': True,
                 'code': requests.codes.no_content,
             }
         except requests.HTTPError as http_err:
             return {
+                'isSuccess': False,
                 'code': requests.codes.server_error,
                 'message': str(http_err),
             }
         except Exception as error:
             return {
+                'isSuccess': False,
                 'code': requests.codes.server_error,
                 'message': str(error),
             }
 
     def _check_partner_values(self, **params):
         msg_list = []
-
+        if not params.get('data'):
+            msg_list.append('Data: No Data')
         return msg_list
 
     def _create_update_partner(self, **params):
