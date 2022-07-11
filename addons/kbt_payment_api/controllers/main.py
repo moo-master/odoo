@@ -14,7 +14,7 @@ class PaymentDataController(http.Controller):
             msg = self._check_payment_values(**params)
             if msg:
                 return {
-                    'error': msg,
+                    'message': msg,
                     'code': requests.codes.server_error,
                 }
             self._create_update_payment(**params)
