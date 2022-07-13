@@ -74,6 +74,18 @@ class PaymentTransaction(models.Model):
                     'postalCode': shipping_add.zip,
                     'countryCode': shipping_add.country_id.code
                 },
+
+        base_url = self.get_base_url()
+        if sale_order_id.website_id.id and sale_order_id.website_id.domain:
+            domain = sale_order_id.website_id.domain
+            if not 'http' in domain:
+                if 'https' in base_url:
+                    base_url = '%s://%s'%('https', domain)
+                elif 'http' in domain:
+                    base_url = '%s://%s'%('http', domain)
+            else:
+                base_url = domain
+
         twoc2p_values = {
             'user': json.dumps(user),
             'merchantId': self.acquirer_id.twoctwop_merchant_id,
@@ -88,8 +100,8 @@ class PaymentTransaction(models.Model):
             'buyerEmail': self.partner_email,
             'buyerPhone': self.partner_phone,
             'countryCode': self.partner_country_id.code,
-            'responseUrl': urls.url_join(self.get_base_url(), TwoCTwoPController._response_url),
-            'confirmationUrl': urls.url_join(self.get_base_url(), TwoCTwoPController._confirm_url),
+            'responseUrl': urls.url_join(base_url, TwoCTwoPController._response_url),
+            'confirmationUrl': urls.url_join(base_url, TwoCTwoPController._confirm_url),
             'api_url': api_url,
         }
         if self.acquirer_id.state != 'enabled':

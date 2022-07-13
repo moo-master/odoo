@@ -19,7 +19,7 @@ import pprint
 # from cryptography import x509
 # from cryptography.hazmat.primitives import serialization
 # from cryptography.hazmat.backends import default_backend
-from jose import jwe
+# from jose import jwe
 
 _logger = logging.getLogger(__name__)
 
@@ -141,37 +141,37 @@ class TwoCTwoPAPI:
             return json.loads(response)
 
 
-    def recurring_payment_cancel(self, payload):
+#     def recurring_payment_cancel(self, payload):
 
-        url = self._get_url("RECURRING_CANCEL");
-        print("++|++++++++++", url);
-        print("payload++|++++++++++", payload);
+#         url = self._get_url("RECURRING_CANCEL");
+#         print("++|++++++++++", url);
+#         print("payload++|++++++++++", payload);
 
-        str_payload = '''
-            <RecurringMaintenanceRequest>
-                <version>%s</version>
-                <merchantID>%s</merchantID>
-                <recurringUniqueID>%s</recurringUniqueID>
-                <processType>%s</processType>
-                <recurringStatus>Y</recurringStatus>
-            </RecurringMaintenanceRequest>
-        '''%(payload.get('version'), payload.get('merchantID'), payload.get('recurringUniqueID'), payload.get('processType'))
+#         str_payload = '''
+#             <RecurringMaintenanceRequest>
+#                 <version>%s</version>
+#                 <merchantID>%s</merchantID>
+#                 <recurringUniqueID>%s</recurringUniqueID>
+#                 <processType>%s</processType>
+#                 <recurringStatus>Y</recurringStatus>
+#             </RecurringMaintenanceRequest>
+#         '''%(payload.get('version'), payload.get('merchantID'), payload.get('recurringUniqueID'), payload.get('processType'))
 
-        headers = {"Accept": "text/plain"}
-        print("str_payload++|++++++++++", str_payload);
-        payment_request = str(self._generate_sign(payload))
-        print("++|++++++++++", payment_request);
-        print(jwt.decode(payment_request, self.secret_key, algorithms="HS256"))
-        # payment_request = "{\"payload\":\"%s\"}"%payment_request
+#         headers = {"Accept": "text/plain"}
+#         print("str_payload++|++++++++++", str_payload);
+#         payment_request = str(self._generate_sign(payload))
+#         print("++|++++++++++", payment_request);
+#         print(jwt.decode(payment_request, self.secret_key, algorithms="HS256"))
+#         # payment_request = "{\"payload\":\"%s\"}"%payment_request
 
-        cert_str = open(os.path.join(os.getcwd(), "demo2.crt"), "rb").read()
-        cert_obj = x509.load_pem_x509_certificate(cert_str)
-        pubKey = cert_obj.public_key()
+#         cert_str = open(os.path.join(os.getcwd(), "demo2.crt"), "rb").read()
+#         cert_obj = x509.load_pem_x509_certificate(cert_str)
+#         pubKey = cert_obj.public_key()
 
-        print("                    ", jwe.encrypt('Hello, World!', '+KbPeSgVkYp3s6v9y$B&E)H@McQfTjWm', algorithm='dir', encryption='A256GCM'))
-        enc_payload = jwe.encrypt('Hello, World!', 'asecret128bitkey', algorithm='RSA-OAEP', encryption='A256GCM')
+#         print("                    ", jwe.encrypt('Hello, World!', '+KbPeSgVkYp3s6v9y$B&E)H@McQfTjWm', algorithm='dir', encryption='A256GCM'))
+#         enc_payload = jwe.encrypt('Hello, World!', 'asecret128bitkey', algorithm='RSA-OAEP', encryption='A256GCM')
 
-        print("+++++++++++++++++++++++", enc_payload)
+#         print("+++++++++++++++++++++++", enc_payload)
 
         # import json
         # import requests

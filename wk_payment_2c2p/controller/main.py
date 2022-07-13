@@ -26,7 +26,7 @@ class TwoCTwoPController(http.Controller):
     _confirm_url = '/payment/twoctwop/confirm'
 
 
-    @http.route(_response_url, type='http', auth='public', methods=['GET'])
+    @http.route(_response_url, type='json', auth='public', methods=['GET','POST'], save_session=False)
     def twoctwop_form_feedback(self, **post):
         _logger.info("beginning _handle_feedback_data with post data %s", pprint.pformat(post))
         request.env['payment.transaction'].sudo()._handle_feedback_data('2c2p', post)
@@ -78,7 +78,7 @@ class TwoCTwoPController(http.Controller):
         return request.redirect('/payment/status')
 
     
-    @http.route('/payment/2c2p/init', type='http', auth='public', methods=['POST'], csrf=False)
+    @http.route('/payment/2c2p/init', type='http', auth='public', methods=['POST'], csrf=False, save_session=False)
     def init_2c2p_payment(self, **post):
         _logger.info(post)
         user = {}

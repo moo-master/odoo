@@ -58,7 +58,22 @@ class TxTo_C_To_P(models.Model):
 
     def _generate_form_values(self, acquirer):
         vals = dict()
+
+        # Added By Webkul Start
+        sale_order_id = self.sale_order_ids.filtered(lambda s: s.partner_id.id == self.partner_id.id)
         base_url = self.get_base_url()
+        if sale_order_id.website_id.id and sale_order_id.website_id.domain:
+            domain = sale_order_id.website_id.domain
+            if not 'http' in domain:
+                if 'https' in base_url:
+                    base_url = '%s://%s'%('https', domain)
+                elif 'http' in domain:
+                    base_url = '%s://%s'%('http', domain)
+            else:
+                base_url = domain
+        # Added By Webkul End
+        
+        # base_url = self.get_base_url()
         currency_id = self.currency_id.name
         vals['data'] = vals['version'] = "6.9"
         vals['reference'] = vals['invoice_no'] = self.reference
