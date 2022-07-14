@@ -14,19 +14,19 @@ class PurchaseController(http.Controller):
             self._create_purchase_order(**params)
             return {
                 'isSuccess': True,
-                'code': requests.codes.no_content,
+                'code': requests.codes.all_ok,
             }
         except requests.HTTPError as http_err:
             return {
                 'isSuccess': False,
-                'code': requests.codes.server_error,
-                'error': str(http_err),
+                'code': requests.codes.bad_request,
+                'message': str(http_err),
             }
         except Exception as error:
             return {
                 'isSuccess': False,
-                'code': requests.codes.server_error,
-                'error': str(error),
+                'code': requests.codes.bad_request,
+                'message': str(error),
             }
 
     def _prepare_order_line(self, order_line, account_analytic_id, po_type):
@@ -87,7 +87,7 @@ class PurchaseController(http.Controller):
         account_analytic_id = Account.search(
             [('name', '=', params.get('analytic_account'))])
 
-        po_type = params.get('business_type_code').upper()
+        po_type = params.get('x_po_type_code').upper()
         po_type_id = Business.search([
             ('x_code', '=ilike', po_type)
         ])
@@ -108,9 +108,11 @@ class PurchaseController(http.Controller):
         vals = {
             'partner_id': partner_id.id,
             'name': purchase_ref,
-            'x_is_interface': params.get('x_is_interface'),
+            'x_is_interface': True,
             'date_planned': params.get('receipt_date'),
             'po_type_id': po_type_id.id,
+            'x_bill_date': params.get('x_bill_date'),
+            'x_bill_ref': params.get('x_bill_ref'),
         }
         order_line_vals_list = [(0, 0, self._prepare_order_line(
             order_line, account_analytic_id, po_type))
@@ -133,26 +135,25 @@ class PurchaseController(http.Controller):
             res = self._update_purchase_order(**params)
             return {
                 'isSuccess': True,
-                'code': requests.codes.no_content,
-                'invoice_number': res,
+                'code': requests.codes.all_ok,
+                'x_purchase_ref': res,
             }
         except requests.HTTPError as http_err:
             return {
                 'isSuccess': False,
-                'code': requests.codes.server_error,
+                'code': requests.codes.bad_request,
                 'message': str(http_err),
-                'invoice_number': params.get('x_purchase_ref') or "No Data"
             }
         except Exception as error:
             return {
                 'isSuccess': False,
-                'code': requests.codes.server_error,
+                'code': requests.codes.bad_request,
                 'message': str(error),
-                'invoice_number': params.get('x_purchase_ref') or "No Data"
             }
 
     def _update_purchase_order(self, **params):
         Purchase = request.env['purchase.order']
+        AccountMove = request.env['account.move']
 
         purchase_ref = params['x_purchase_ref']
         purchase_ref_id = Purchase.search([
@@ -188,5 +189,10 @@ class PurchaseController(http.Controller):
         purchase_ref_id.update({
             'order_line': update_line_lst
         })
-        purchase_ref_id.action_create_invoice()
-        return purchase_ref_id.name
+        res_id = purchase_ref_id.action_create_invoice()
+        move_id = AccountMove.browse(res_id['res_id'])
+        move_id.write({
+            'x_bill_ref': purchase_ref_id.x_bill_ref,
+            'x_bill_date': purchase_ref_id.x_bill_date,
+        })
+        return purchase_ref

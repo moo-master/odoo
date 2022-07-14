@@ -8,27 +8,27 @@ from odoo.addons.rts_api_base.controllers.main import APIBase
 class PaymentDataController(http.Controller):
 
     @APIBase.api_wrapper(['kbt.payment'])
-    @http.route('/create_payment', type='json', auth='user')
+    @http.route('/payment/create', type='json', auth='user')
     def payment_api(self, **params):
         try:
             msg = self._check_payment_values(**params)
             if msg:
                 return {
                     'message': msg,
-                    'code': requests.codes.server_error,
+                    'code': requests.codes.bad_request,
                 }
             self._create_update_payment(**params)
             return {
-                'code': requests.codes.no_content,
+                'code': requests.codes.all_ok,
             }
         except requests.HTTPError as http_err:
             return {
-                'code': requests.codes.server_error,
+                'code': requests.codes.bad_request,
                 'message': str(http_err),
             }
         except Exception as error:
             return {
-                'code': requests.codes.server_error,
+                'code': requests.codes.bad_request,
                 'message': str(error),
             }
 
@@ -64,6 +64,7 @@ class PaymentDataController(http.Controller):
         AccountMove = request.env['account.move']
         AccountJournal = request.env['account.journal']
         PaymentRegister = request.env['account.payment.register']
+        # AccountPayment = request.env['account.payment']
         User = request.env.user
 
         for data in data_params_lst:
@@ -118,3 +119,8 @@ class PaymentDataController(http.Controller):
                 active_model=ctx['active_model'],
                 active_ids=ctx['active_ids']).create(vals)
             payment_id.action_create_payments()
+            # pay_id = res['res_id']
+            # payment = AccountPayment.browse(pay_id)
+            # payment.write({
+            #     'is_internal_transfer': data['is_internal_transfer'],
+            # })

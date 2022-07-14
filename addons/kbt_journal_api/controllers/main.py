@@ -13,16 +13,16 @@ class JournalController(http.Controller):
         try:
             self._create_journal(**params)
             return {
-                'code': requests.codes.no_content,
+                'code': requests.codes.all_ok,
             }
         except requests.HTTPError as http_err:
             return {
-                'code': requests.codes.server_error,
+                'code': requests.codes.bad_request,
                 'message': str(http_err),
             }
         except Exception as error:
             return {
-                'code': requests.codes.server_error,
+                'code': requests.codes.bad_request,
                 'message': str(error),
             }
 

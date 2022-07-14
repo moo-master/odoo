@@ -16,23 +16,23 @@ class ReceiptController(http.Controller):
                 return {
                     'isSuccess': False,
                     'message': msg,
-                    'code': requests.codes.server_error,
+                    'code': requests.codes.bad_request,
                 }
             self._create_goods_receipt(**params)
             return {
                 'isSuccess': True,
-                'code': requests.codes.no_content,
+                'code': requests.codes.all_ok,
             }
         except requests.HTTPError as http_err:
             return {
                 'isSuccess': False,
-                'code': requests.codes.server_error,
+                'code': requests.codes.bad_request,
                 'message': str(http_err),
             }
         except Exception as error:
             return {
                 'isSuccess': False,
-                'code': requests.codes.server_error,
+                'code': requests.codes.bad_request,
                 'message': str(error),
             }
 

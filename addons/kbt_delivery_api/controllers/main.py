@@ -16,24 +16,24 @@ class DeliveryController(http.Controller):
                 return {
                     'isSuccess': False,
                     'message': msg,
-                    'code': requests.codes.server_error,
+                    'code': requests.codes.bad_request,
                 }
             res = self._update_delivery_order(**params)
             return {
                 'isSuccess': True,
-                'code': requests.codes.no_content,
+                'code': requests.codes.all_ok,
                 'invoice_number': res
             }
         except requests.HTTPError as http_err:
             return {
                 'isSuccess': False,
-                'code': requests.codes.server_error,
+                'code': requests.codes.bad_request,
                 'message': str(http_err),
             }
         except Exception as error:
             return {
                 'isSuccess': False,
-                'code': requests.codes.server_error,
+                'code': requests.codes.bad_request,
                 'message': str(error),
             }
 
@@ -47,6 +47,7 @@ class DeliveryController(http.Controller):
         return msg_list
 
     def _update_delivery_order(self, **params):
+        AccountMove = request.env['account.move']
         Sale = request.env['sale.order']
         SaleOrderLine = request.env['sale.order.line']
         Product = request.env['product.product']
@@ -72,7 +73,7 @@ class DeliveryController(http.Controller):
 
             for item in data['item']:
                 product_id = Product.search([
-                    ('name', '=', item['product_id']),
+                    ('default_code', '=', item['product_id']),
                 ])
                 sale_line = SaleOrderLine.search([
                     ('order_id', '=', sale_order.id),
@@ -82,7 +83,10 @@ class DeliveryController(http.Controller):
                 stock_line = StockMove.search([
                     ('sale_line_id', '=', sale_line.id),
                 ])
-                stock_line.quantity_done = item['qty_done']
+                stock_line.write({
+                    'quantity_done':
+                        stock_line.quantity_done + item['qty_done']
+                })
             stock.write({
                 'x_is_interface': True,
             })
@@ -101,7 +105,9 @@ class DeliveryController(http.Controller):
             invoice_order = SaleInvoice.create({
                 'advance_payment_method': 'delivered',
             }).with_context(active_ids=sale_order.id)
-            invoice_order.create_invoices()
-            response_api.append(sale_order.name)
+            res = invoice_order.create_invoices()
+            acc_move = AccountMove.browse(res['res_id'])
+            acc_move.action_post()
+            response_api.append(acc_move.name)
 
         return response_api

@@ -15,25 +15,25 @@ class SaleOrderDataController(http.Controller):
             if msg:
                 return {
                     'isSuccess': False,
-                    'code': requests.codes.server_error,
-                    'error': msg,
+                    'code': requests.codes.bad_request,
+                    'message': msg,
                 }
             self._create_sale_order(**params)
             return {
                 'isSuccess': True,
-                'code': requests.codes.no_content,
+                'code': requests.codes.all_ok,
             }
         except requests.HTTPError as http_err:
             return {
                 'isSuccess': False,
-                'code': requests.codes.server_error,
-                'error': str(http_err),
+                'code': requests.codes.bad_request,
+                'message': str(http_err),
             }
         except Exception as error:
             return {
                 'isSuccess': False,
-                'code': requests.codes.server_error,
-                'error': str(error),
+                'code': requests.codes.bad_request,
+                'message': str(error),
             }
 
     def _check_sale_order_values(self, **params):
@@ -111,7 +111,7 @@ class SaleOrderDataController(http.Controller):
 
         vals['x_so_orderreference'] = data.get('x_so_orderreference')
         vals['x_is_interface'] = True
-
+        vals['x_partner_name'] = data.get('x_partner_name')
         vals['x_address'] = data.get('x_address')
 
         order_line_vals_list = [(0, 0, self._prepare_order_line(
@@ -136,25 +136,25 @@ class SaleOrderDataController(http.Controller):
             if msg:
                 return {
                     'isSuccess': False,
-                    'error': msg,
+                    'message': msg,
                 }
             res = self._update_sale_order(**params)
             return {
                 'isSuccess': True,
-                'code': requests.codes.no_content,
+                'code': requests.codes.all_ok,
                 'invoice_number': res,
             }
         except requests.HTTPError as http_err:
             return {
                 'isSuccess': False,
-                'code': requests.codes.server_error,
-                'error': str(http_err),
+                'code': requests.codes.bad_request,
+                'message': str(http_err),
             }
         except Exception as error:
             return {
                 'isSuccess': False,
-                'code': requests.codes.server_error,
-                'error': str(error),
+                'code': requests.codes.bad_request,
+                'message': str(error),
             }
 
     def _update_sale_order(self, **params):
@@ -194,5 +194,8 @@ class SaleOrderDataController(http.Controller):
             'x_address': params['x_address'],
         })
         move_id = so_orderreference._create_invoices()
+        move_id.write({
+            'x_partner_name': so_orderreference.x_partner_name,
+        })
         move_id.action_post()
         return move_id.name
