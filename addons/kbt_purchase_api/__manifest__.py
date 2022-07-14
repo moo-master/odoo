@@ -14,6 +14,7 @@
     'depends': [
         'kbt_business_type',
         'kbt_partner_api',
+        'kbt_api_base',
     ],
     'data': [
         'views/purchase_order_views.xml',

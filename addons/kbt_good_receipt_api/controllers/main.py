@@ -123,3 +123,4 @@ class ReceiptController(http.Controller):
             'ref': data.get('x_bill_reference'),
             'invoice_date': x_bill_date,
         })
+        inv_ids.action_post()

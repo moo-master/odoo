@@ -11,25 +11,22 @@ class PurchaseController(http.Controller):
     @http.route('/purchase/create', type='json', auth='user')
     def purchase_order_create_api(self, **params):
         try:
-            res = self._create_purchase_order(**params)
+            self._create_purchase_order(**params)
             return {
                 'isSuccess': True,
                 'code': requests.codes.no_content,
-                'invoice_number': res,
             }
         except requests.HTTPError as http_err:
             return {
                 'isSuccess': False,
                 'code': requests.codes.server_error,
-                'message': str(http_err),
-                'invoice_number': params.get('x_purchase_ref') or "No Data"
+                'error': str(http_err),
             }
         except Exception as error:
             return {
                 'isSuccess': False,
                 'code': requests.codes.server_error,
-                'message': str(error),
-                'invoice_number': params.get('x_purchase_ref') or "No Data"
+                'error': str(error),
             }
 
     def _prepare_order_line(self, order_line, account_analytic_id, po_type):
@@ -181,19 +178,15 @@ class PurchaseController(http.Controller):
                     f"Your ordered quantity of {name} is "
                     f"{prod_qty} and current delivered "
                     f"quantity is {qty_recv} your order "
-                    f"quantity can’t more than {prod_qty - seq_id.qty_received}")
+                    f"quantity can’t more than "
+                    f"{prod_qty - seq_id.qty_received}")
             else:
                 update_line_lst.append(
-                    (1, seq_id.id, self._update_order_line(
-                        order_line, seq_id)))
+                    (1, seq_id.id, {
+                        'qty_received': seq_id.qty_received + order_line['qty_received']}))
 
         purchase_ref_id.update({
             'order_line': update_line_lst
         })
         purchase_ref_id.action_create_invoice()
         return purchase_ref_id.name
-
-    def _update_order_line(self, order_line, seq_id):
-        return {
-            'qty_received': seq_id.qty_received + order_line['qty_received']
-        }

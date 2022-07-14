@@ -27,13 +27,13 @@ class SaleOrderDataController(http.Controller):
             return {
                 'isSuccess': False,
                 'code': requests.codes.server_error,
-                'message': str(http_err),
+                'error': str(http_err),
             }
         except Exception as error:
             return {
                 'isSuccess': False,
                 'code': requests.codes.server_error,
-                'message': str(error),
+                'error': str(error),
             }
 
     def _check_sale_order_values(self, **params):
@@ -148,15 +148,13 @@ class SaleOrderDataController(http.Controller):
             return {
                 'isSuccess': False,
                 'code': requests.codes.server_error,
-                'message': str(http_err),
-                'invoice_number': params.get('x_so_orderreference'),
+                'error': str(http_err),
             }
         except Exception as error:
             return {
                 'isSuccess': False,
                 'code': requests.codes.server_error,
-                'message': str(error),
-                'invoice_number': params.get('x_so_orderreference'),
+                'error': str(error),
             }
 
     def _update_sale_order(self, **params):
@@ -197,4 +195,4 @@ class SaleOrderDataController(http.Controller):
         })
         move_id = so_orderreference._create_invoices()
         move_id.action_post()
-        return so_orderreference.name
+        return move_id.name
