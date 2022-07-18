@@ -1,0 +1,161 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<odoo>
+    <data>
+
+        <template id="account_pnd3_template_id">
+            <t t-foreach="docs" t-as="o">
+                <t t-foreach="o.wht_ids" t-as="wht">
+                    <t t-call="web.basic_layout">
+                        <div data-name="pnd3" style="background-image: url(/beecy_account_wht/static/src/img/pnd3-1.png);
+                            background-repeat: no-repeat; background-size: 210mm 297mm; ">
+                            <div class="page height_background">
+                                <div class='id-card-pnd53'>
+                                    <t t-if="wht.split_id_card()">
+                                        <span t-esc="wht.split_id_card()[0]"></span>
+                                        <span><![CDATA[&nbsp;&nbsp;&nbsp;]]></span>
+                                        <span class="spacing-7" t-esc="wht.split_id_card()[1]"></span>
+                                        <span class="spacing-7" t-esc="wht.split_id_card()[2]"></span>
+                                        <span><![CDATA[&nbsp;]]></span>
+                                        <span class="spacing-7" t-esc="wht.split_id_card()[3]"></span>
+                                        <span><![CDATA[&nbsp;]]></span>
+                                        <span class="spacing-9" t-esc="wht.split_id_card()[4]"></span>
+                                    </t>
+                                </div>
+                                <div class="department-pnd53">
+                                    <t t-esc="wht.partner_id.name"/>
+                                </div>
+
+                                <t t-if="o.select_month_date">
+                                    <t t-set="year_selected" t-value="int(o.select_month_date.strftime('%Y')) + 543"/>
+                                    <div class="pnd3-year-pos">
+                                        <t t-esc="year_selected"/>
+                                    </div>
+                                    <t t-set="month_selected" t-value="int(o.select_month_date.strftime('%m'))"/>
+                                    <t t-if="month_selected == 1">
+                                        <div class="pnd3-month1-pos">
+                                            <span>&#10003;</span>
+                                        </div>
+                                    </t>
+                                    <t t-elif="month_selected == 2">
+                                        <div class="pnd3-month2-pos">
+                                            <span>&#10003;</span>
+                                        </div>
+                                    </t>
+                                    <t t-elif="month_selected == 3">
+                                        <div class="pnd3-month3-pos">
+                                            <span>&#10003;</span>
+                                        </div>
+                                    </t>
+                                    <t t-elif="month_selected == 4">
+                                        <div class="pnd3-month4-pos">
+                                            <span>&#10003;</span>
+                                        </div>
+                                    </t>
+                                    <t t-elif="month_selected == 5">
+                                        <div class="pnd3-month5-pos">
+                                            <span>&#10003;</span>
+                                        </div>
+                                    </t>
+                                    <t t-elif="month_selected == 6">
+                                        <div class="pnd3-month6-pos">
+                                            <span>&#10003;</span>
+                                        </div>
+                                    </t>
+                                    <t t-elif="month_selected == 7">
+                                        <div class="pnd3-month7-pos">
+                                            <span>&#10003;</span>
+                                        </div>
+                                    </t>
+                                    <t t-elif="month_selected == 8">
+                                        <div class="pnd3-month8-pos">
+                                            <span>&#10003;</span>
+                                        </div>
+                                    </t>
+                                    <t t-elif="month_selected == 9">
+                                        <div class="pnd3-month9-pos">
+                                            <span>&#10003;</span>
+                                        </div>
+                                    </t>
+                                    <t t-elif="month_selected == 10">
+                                        <div class="pnd3-month10-pos">
+                                            <span>&#10003;</span>
+                                        </div>
+                                    </t>
+                                    <t t-elif="month_selected == 11">
+                                        <div class="pnd3-month11-pos">
+                                            <span>&#10003;</span>
+                                        </div>
+                                    </t>
+                                    <t t-elif="month_selected == 12">
+                                        <div class="pnd3-month12-pos">
+                                            <span>&#10003;</span>
+                                        </div>
+                                    </t>
+
+                                </t>
+
+                                <t t-if="o.section == 'section3'">
+                                    <div class="pnd3-section3">
+                                        <span>&#10003;</span>
+                                    </div>
+                                </t>
+                                <t t-elif="o.section == 'section48'">
+                                    <div class="pnd3-section48">
+                                        <span>&#10003;</span>
+                                    </div>
+                                </t>
+                                <t t-elif="o.section == 'section50'">
+                                    <div class="pnd3-section50">
+                                        <span>&#10003;</span>
+                                    </div>
+                                </t>
+
+                                <div class="total-pnd3">
+                                    <t t-esc="'%.2f' % wht.base_amount"/>
+                                </div>
+                                <div class="tax-pnd3">
+                                    <t t-esc="'%.2f' % wht.tax"/>
+                                </div>
+
+                            </div>
+                        </div>
+
+
+                    <div style="page-break-before:always;"/>
+                    <div data-name="pnd53" style="background-image: url(/beecy_account_wht/static/src/img/pnd3-2.png);
+                        background-repeat: no-repeat; background-size: 210mm 297mm; ">
+                        <div class="page height_background">
+
+                        </div>
+                    </div>
+                    </t>
+
+                </t>
+            </t>
+        </template>
+
+        <record id="account_pnd3_paperformat" model="report.paperformat">
+            <field name="name">PND3 Paperformat</field>
+            <field name="default" eval="True"/>
+            <field name="format">A4</field>
+            <field name="orientation">Portrait</field>
+            <field name="margin_top">0</field>
+            <field name="margin_bottom">0</field>
+            <field name="margin_left">0</field>
+            <field name="margin_right">0</field>
+            <field name="header_spacing">70</field>
+            <field name="dpi">80</field>
+        </record>
+
+        <record id="action_pnd3_report" model="ir.actions.report">
+            <field name="name">PND3 Report</field>
+            <field name="model">account.wht.pnd</field>
+            <field name="report_type">qweb-pdf</field>
+            <field name="report_name">beecy_account_wht.account_pnd3_template_id</field>
+            <field name="report_file">beecy_account_wht.account_pnd3_template_id</field>
+            <field name="print_report_name">'PND3 - %s' % (object.name)</field>
+            <field name="paperformat_id" ref="beecy_account_wht.account_pnd3_paperformat"/>
+        </record>
+    </data>
+
+</odoo>

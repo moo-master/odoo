@@ -1,0 +1,43 @@
+.o_address_format {
+    .o_address_house_number {
+        margin-right: 2%;
+    }
+    .o_address_village_number {
+        margin-right: 2%;
+    }
+    .o_address_building {
+        margin-right: 2%;
+    }
+    .o_address_floor {
+        margin-right: 2%;
+    }
+    .o_address_alley {
+        margin-right: 2%;
+    }
+}
+.o_form_editable .o_address_format {
+    .o_address_house_number {
+        width: 38%;
+    }
+    .o_address_village_number {
+        width: 33%;
+    }
+    .o_address_village {
+        width: 25%;
+    }
+    .o_address_building {
+        width: 38%;
+    }
+    .o_address_floor {
+        width: 33%;
+    }
+    .o_address_room_number {
+        width: 25%;
+    }
+    .o_address_alley {
+        width: 49%;
+    }
+    .o_address_sub_alley {
+        width: 49%;
+    }
+}

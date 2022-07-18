@@ -1,0 +1,4 @@
+id,name,model_id:id,group_id:id,perm_read,perm_write,perm_create,perm_unlink
+access_res_reason_all,beecy_reason.res_reason,model_res_reason,,1,1,1,1
+access_create_reason_all,beecy_reason.create_reason,model_create_reason,,1,1,1,1
+access_cancel_reject_reason_all,beecy_reason.cancel_reject_reason,model_cancel_reject_reason,,1,1,1,1

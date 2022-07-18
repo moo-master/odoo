@@ -1,0 +1,64 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+
+    <record id="inherit_res_config_settings_view_form" model="ir.ui.view">
+        <field name="name">inherit.res.config.settings.view.form.inherit.account</field>
+        <field name="model">res.config.settings</field>
+        <field name="inherit_id" ref="account.res_config_settings_view_form"/>
+        <field name="arch" type="xml">
+            <xpath expr="//div[@name='sepa_right_pane']" position="after">
+                <div class="o_setting_left_pane" style="margin-top: 20px;">
+                    <field name="is_module_beecy_account_payment_vendor_steps"/>
+                </div>
+                <div class="o_setting_right_pane" style="margin-top: 20px;">
+                    <label for="is_module_beecy_account_payment_vendor_steps"/>
+                    <div class="text-muted">
+                        Add step for accountant or manager to validate/approve
+                    </div>
+                    <div class="content-group" attrs="{'invisible': [('is_module_beecy_account_payment_vendor_steps', '=', False)]}">
+                        <div class="mt16">
+                            <field name="beecy_account_payment_vendor_steps"
+                                   class="o_light_label"
+                                   widget="radio"/>
+                        </div>
+                    </div>
+
+                </div>
+                <div class="o_setting_left_pane">
+                </div>
+            </xpath>
+            <xpath expr="//div[@name='sepa_direct_debit_right_pane']" position="after">
+                <div class="o_setting_left_pane" style="margin-top: 20px;">
+                    <field name="is_module_beecy_account_payment_customer_steps"/>
+                </div>
+                <div class="o_setting_right_pane" style="margin-top: 20px;">
+                    <label for="is_module_beecy_account_payment_customer_steps"/>
+                    <div class="text-muted">
+                        Add step for accountant or manager to validate/approve
+                    </div>
+                    <div class="content-group" attrs="{'invisible': [('is_module_beecy_account_payment_customer_steps', '=', False)]}">
+                        <div class="mt16">
+                            <field name="beecy_account_payment_customer_steps"
+                                   string="Customer Payment Approval Steps"
+                                   class="o_light_label" widget="radio"/>
+                        </div>
+                    </div>
+
+                </div>
+                <div class="o_setting_left_pane">
+                </div>
+            </xpath>
+            <xpath expr="//div[@id='default_accounts']/div[2]/div[hasclass('o_setting_right_pane')]/div[hasclass('content-group')]" position="inside">
+                <div class="row mt8">
+                    <label for="ap_wht_default_account_id" class="col-lg-5 o_light_label"/>
+                    <field name="ap_wht_default_account_id"/>
+                </div>
+                <div class="row mt8">
+                    <label for="ar_wht_default_account_id" class="col-lg-5 o_light_label"/>
+                    <field name="ar_wht_default_account_id"/>
+                </div>
+            </xpath>
+        </field>
+    </record>
+
+</odoo>

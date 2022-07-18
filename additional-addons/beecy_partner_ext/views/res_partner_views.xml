@@ -1,0 +1,149 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <data>
+        <record id="view_partner_form" model="ir.ui.view">
+            <field name="name">res.partner.form</field>
+            <field name="model">res.partner</field>
+            <field name="inherit_id" ref="base.view_partner_form" />
+            <field name="priority" eval="100"/>
+            <field name="arch" type="xml">
+                <xpath expr="//field[@name='company_type']" position="after">
+                    <field name="title"/>
+                </xpath>
+                <xpath expr="//field[@name='title']" position="attributes">
+                    <attribute name="invisible">1</attribute>
+                </xpath>
+                <xpath expr="//field[@name='vat']" position="attributes">
+                    <attribute name="invisible">1</attribute>
+                </xpath>
+                <xpath expr="//field[@name='name']" position="attributes">
+                    <attribute name="class">o_text_overflow oe_inline</attribute>
+                </xpath>
+                <xpath expr="//field[@name='name']" position="before">
+                    <field name="prefix" style="margin-right: 10px"
+                           readonly="1" force_save="1" class="oe_inline"/>
+                </xpath>
+                <xpath expr="//field[@name='name']" position="after">
+                    <field name="suffix" style="margin-left: 10px"
+                           readonly="1" force_save="1"/>
+                    <br/>
+                    <field name="name_english"
+                           class="o_text_overflow oe_inline"
+                           placeholder="Name English"/>
+                </xpath>
+                <xpath expr="//field[@name='type']/.." position="before">
+                    <field name="nationality"/>
+                    <field name="vat"
+                           placeholder="e.g. BE0477472701"
+                           attrs="{'readonly': [('parent_id','!=',False)]}" string="ID Card/Tax ID"/>
+                    <field name="branch" widget="radio"/>
+                    <field name="branch_code"
+                           attrs="{'required': [('branch', '=', 'branch')]}"
+                           placeholder="Branch Code"/>
+                </xpath>
+                <xpath expr="//field[@name='street']" position="attributes">
+                    <attribute name="attrs">{'invisible': [('nationality', '=', 'th')]}</attribute>
+                </xpath>
+                <xpath expr="//field[@name='zip_id']" position="replace"/>
+                <xpath expr="//field[@name='street2']" position="before">
+                    <field name="house_number"
+                           attrs="{'invisible': [('nationality', '=', 'other')]}"
+                           placeholder="No."
+                           class="o_address_house_number"/>
+                    <field name="village_number"
+                           attrs="{'invisible': [('nationality', '=', 'other')]}"
+                           placeholder="Moo"
+                           class="o_address_village_number"/>
+                    <field name="village"
+                           attrs="{'invisible': [('nationality', '=', 'other')]}"
+                           placeholder="Village"
+                           class="o_address_village"/>
+                    <field name="building"
+                           attrs="{'invisible': [('nationality', '=', 'other')]}"
+                           placeholder="Building"
+                           class="o_address_building"/>
+                    <field name="floor"
+                           attrs="{'invisible': [('nationality', '=', 'other')]}"
+                           placeholder="Floor"
+                           class="o_address_floor"/>
+                    <field name="room_number"
+                           attrs="{'invisible': [('nationality', '=', 'other')]}"
+                           placeholder="Room No."
+                           class="o_address_room_number"/>
+                    <field name="alley"
+                           attrs="{'invisible': [('nationality', '=', 'other')]}"
+                           placeholder="Alley"
+                           class="o_address_alley"/>
+                    <field name="sub_alley"
+                           attrs="{'invisible': [('nationality', '=', 'other')]}"
+                           placeholder="Sub Alley"
+                           class="o_address_sub_alley"/>
+                    <field
+                            name="zip_id"
+                            options="{'create_name_field': 'city', 'no_open': True, 'no_create': True}"
+                            placeholder="Input zip code or district or subdistrict"
+                            class="oe_edit_only"
+                            attrs="{'readonly': [('type', '=', 'contact'),('parent_id', '!=', False)]}"
+                    />
+                    <field name="street"
+                           attrs="{'invisible': [('nationality', '=', 'other')]}"
+                           placeholder="Street"
+                           class="o_address_street"/>
+                </xpath>
+                <xpath expr="//field[@name='child_ids']/form/sheet/group[1]/group/field[@name='name']" position="after">
+                    <field name="nationality" attrs="{'invisible': [('nationality', '=', 'other')]}"/>
+                    <field name="vat"
+                            placeholder="e.g. BE0477472701"
+                           attrs="{'readonly': [('parent_id','!=',False)]}"
+                           string="ID Card/Tax ID"/>
+                    <field name="branch_code"
+                           placeholder="Branch Code"/>
+                </xpath>
+                <xpath expr="//div[@name='div_address']/field[@name='street']" position="before">
+                    <field name="house_number"
+                           attrs="{'invisible': [('nationality', '=', 'other')]}"
+                           placeholder="No."
+                           class="o_address_house_number"/>
+                    <field name="village_number"
+                           attrs="{'invisible': [('nationality', '=', 'other')]}"
+                           placeholder="Moo"
+                           class="o_address_village_number"/>
+                    <field name="village"
+                           attrs="{'invisible': [('nationality', '=', 'other')]}"
+                           placeholder="Village"
+                           class="o_address_village"/>
+                    <field name="building"
+                           attrs="{'invisible': [('nationality', '=', 'other')]}"
+                           placeholder="Building"
+                           class="o_address_building"/>
+                    <field name="floor"
+                           attrs="{'invisible': [('nationality', '=', 'other')]}"
+                           placeholder="Floor"
+                           class="o_address_floor"/>
+                    <field name="room_number"
+                           attrs="{'invisible': [('nationality', '=', 'other')]}"
+                           placeholder="Room No."
+                           class="o_address_room_number"/>
+                    <field name="alley"
+                           attrs="{'invisible': [('nationality', '=', 'other')]}"
+                           placeholder="Alley"
+                           class="o_address_alley"/>
+                    <field name="sub_alley"
+                           attrs="{'invisible': [('nationality', '=', 'other')]}"
+                           placeholder="Sub Alley"
+                           class="o_address_sub_alley"/>
+                </xpath>
+                <xpath expr="//div[@name='div_address']/field[@name='zip_id']" position="replace"/>
+                 <xpath expr="//div[@name='div_address']/field[@name='street2']" position="replace"/>
+                <xpath expr="//div[@name='div_address']/field[@name='street']" position="after">
+                        <field  name="zip_id"
+                            options="{'create_name_field': 'city', 'no_open': True, 'no_create': True}"
+                            placeholder="Input zip code or district or subdistrict"
+                            class="oe_edit_only"
+                            attrs="{'readonly': [('type', '=', 'contact'),('parent_id', '!=', False)]}"/>
+                    <field name="street2" placeholder="Street 2..." class="o_address_street"/>
+                </xpath>
+            </field>
+        </record>
+    </data>
+</odoo>

@@ -1,0 +1,169 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+
+    <record id="account_wht_view_form" model="ir.ui.view">
+        <field name="name">account.wht.view.form</field>
+        <field name="model">account.wht</field>
+        <field name="arch" type="xml">
+            <form string="" create="1">
+                <header>
+                    <button name="action_set_to_draft"
+                            string="Set to Draft"
+                            type="object"
+                            attrs="{'invisible':[('status', '!=', 'done')]}"
+                        />
+                    <button name="action_done"
+                            string="Confirm"
+                            type="object" class="oe_highlight"
+                            attrs="{'invisible':[('status', '!=', 'draft')]}"
+                        />
+                    <field name="status" widget="statusbar"/>
+                </header>
+                <sheet>
+                    <div class="oe_button_box" name="button_box">
+                        <button name="%(action_acc_move_wht_certificate)d"
+                            icon="fa-print"
+                            string="Print"
+                            type="action"
+                            attrs="{'invisible':[('wht_type', '!=', 'sale')]}"
+                            />
+                        <button name="%(action_acc_move_wht_certificate)d"
+                            icon="fa-print"
+                            string="WHT Certificate"
+                            type="action"
+                            attrs="{'invisible':[('wht_type', '!=', 'purchase')]}"
+                            />
+                        <button name="%(action_acc_move_wht_substitute)d"
+                            icon="fa-print"
+                            string="WHT Substitute"
+                            type="action"
+                            attrs="{'invisible':[('wht_type', '!=', 'purchase')]}"
+                            />
+                    </div>
+                    <div class="oe_title">
+                        <label for="name"/>
+                        <h1><field name="name" readonly="1"/></h1>
+                    </div>
+                    <group>
+                        <group>
+                            <field name="partner_id" required="1"/>
+                            <field name="document_date"/>
+                            <field name="invoice_line_ids" invisible="1"/>
+                        </group>
+                        <group>
+                            <field name="wht_type" readonly="1"/>
+                            <field name="wht_kind" />
+                            <field name="wht_payment" />
+                            <field name="account_id" />
+                        </group>
+                    </group>
+                    <notebook>
+                        <page name="detail" string="Detail">
+                            <field name="line_ids">
+                                <tree editable="bottom">
+                                    <field name="invoice_line_id"
+                                           domain="[
+                                                ('id', 'not in', parent.invoice_line_ids),
+                                                ('wht_type_id', '!=', False),
+                                                ('move_id.partner_id', '=', parent.partner_id)
+                                            ]"/>
+                                    <field name="invoice_no"/>
+                                    <field name="wht_type_id" required="1"/>
+                                    <field name="percent" />
+                                    <field name="base_amount" />
+                                    <field name="wht_amount" />
+                                    <field name="note"/>
+                                </tree>
+                            </field>
+                            <group col="4">
+                                <group colspan="3">
+                                    <field name="note" class="oe_inline" nolabel="1"/>
+                                </group>
+                                <!-- Totals (only invoices / receipts) -->
+                                <group class="oe_subtotal_footer oe_right">
+                                    <field name="base_amount" class="oe_subtotal_footer_separator"/>
+                                    <field name="wht_amount" class="oe_subtotal_footer_separator"/>
+                                </group>
+                            </group>
+                        </page>
+                    </notebook>
+                </sheet>
+            </form>
+        </field>
+    </record>
+
+    <record id="account_wht_view_tree" model="ir.ui.view">
+        <field name="name">account.wht.view.tree</field>
+        <field name="model">account.wht</field>
+        <field name="arch" type="xml">
+            <tree create="1">
+                <field name="name" />
+                <field name="document_date" />
+                <field name="partner_id" />
+                <field name="wht_kind" />
+                <field name="base_amount" />
+                <field name="wht_amount" />
+                <field name="status" />
+            </tree>
+        </field>
+    </record>
+
+    <record id="account_wht_view_search" model="ir.ui.view">
+        <field name="name">account.wht.view.search</field>
+        <field name="model">account.wht</field>
+        <field name="arch" type="xml">
+            <search string="Account WHT">
+                <field name="name" string="All"
+                    filter_domain="[
+                        '|',
+                        ('name', 'ilike', self), ('partner_id', 'ilike', self)]"/>
+                <field name="line_ids" string="Invoice No" filter_domain="[('line_ids.invoice_no', 'ilike', self)]"/>
+                <filter name="filter_date" date="document_date" string="WHT Date"/>
+                <group expand="0" string="Group By">
+                    <filter name="filter_wht_date_group" string="WHT Date" context="{'group_by': 'document_date'}"/>
+                    <filter name="filter_wht_status_group" string="WHT Status" context="{'group_by': 'status'}"/>
+                    <filter name="filter_wht_partner_group" string="WHT Partner" context="{'group_by': 'partner_id'}"/>
+                </group>
+            </search>
+        </field>
+    </record>
+
+    <!-- action wht vender -->
+    <record id="action_account_wht_vender" model="ir.actions.act_window">
+        <field name="name">WHT</field>
+        <field name="res_model">account.wht</field>
+        <field name="domain">[('wht_type', '=', 'purchase')]</field>
+        <field name="context">{'default_wht_type': 'purchase'}</field>
+        <field name="view_mode">tree,form</field>
+        <field name="search_view_id" ref="beecy_account_wht.account_wht_view_search"/>
+    </record>
+
+    <menuitem
+            id="menu_account_wht_vender"
+            name="WHT"
+            parent="account.menu_finance_payables"
+            sequence="25"/>
+
+    <menuitem
+        id="menu_sub_account_wht_vender"
+        parent="beecy_account_wht.menu_account_wht_vender"
+        action="beecy_account_wht.action_account_wht_vender"
+        sequence="0"/>
+
+    <!-- action wht customer -->
+    <record id="action_account_wht_customer" model="ir.actions.act_window">
+        <field name="name">WHT</field>
+        <field name="res_model">account.wht</field>
+        <field name="view_mode">tree,form</field>
+        <field name="domain">[('wht_type', '=', 'sale')]</field>
+        <field name="context">{'default_wht_type': 'sale'}</field>
+        <field name="search_view_id" ref="beecy_account_wht.account_wht_view_search"/>
+    </record>
+
+    <menuitem
+        id="menu_account_wht_customer"
+        parent="account.menu_finance_receivables"
+        action="beecy_account_wht.action_account_wht_customer"
+        sequence="20"/>
+
+</odoo>

@@ -1,0 +1,473 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+
+    <record id="view_beecy_account_payment_tree" model="ir.ui.view">
+        <field name="name">beecy.account.payment.tree</field>
+        <field name="model">beecy.account.payment</field>
+        <field name="arch" type="xml">
+            <tree edit="false" sample="1" decoration-info="state == 'draft'" decoration-muted="state == 'cancel'">
+                <field name="date_date"/>
+                <field name="name"/>
+                <field name="journal_id"/>
+                <field name="partner_id" string="Customer"/>
+                <field name="currency_id" string="Payment Currency" groups="base.group_multi_currency" optional="hide"/>
+                <field name="amount_paid" widget="monetary" string="Amount" sum="Total"/>
+                <field name="state" widget="badge" decoration-info="state == 'draft'" decoration-success="state == 'posted'"/>
+            </tree>
+        </field>
+    </record>
+
+    <record id="view_beecy_account_supplier_payment_tree" model="ir.ui.view">
+        <field name="name">beecy.account.supplier.payment.tree</field>
+        <field name="model">beecy.account.payment</field>
+        <field name="inherit_id" ref="view_beecy_account_payment_tree"/>
+        <field name="mode">primary</field>
+        <field name="arch" type="xml">
+            <field name="partner_id" position="attributes">
+                <attribute name="string">Vendor</attribute>
+            </field>
+        </field>
+    </record>
+
+
+    <record id="view_beecy_account_various_payment_tree" model="ir.ui.view">
+        <field name="name">beecy.account.supplier.payment.tree</field>
+        <field name="model">beecy.account.payment</field>
+        <field name="inherit_id" ref="view_beecy_account_payment_tree"/>
+        <field name="mode">primary</field>
+        <field name="arch" type="xml">
+            <field name="partner_id" position="attributes">
+                <attribute name="string">Partner</attribute>
+            </field>
+        </field>
+    </record>
+
+    <record id="view_beecy_account_payment_kanban" model="ir.ui.view">
+        <field name="name">beecy.account.payment.kanban</field>
+        <field name="model">beecy.account.payment</field>
+        <field name="arch" type="xml">
+            <kanban class="o_kanban_mobile" create="0" group_create="0" sample="1">
+                <field name="partner_id"/>
+                <field name="date_date"/>
+                <field name="state"/>
+                <templates>
+                    <t t-name="kanban-box">
+                        <div t-attf-class="oe_kanban_global_click">
+                            <div class="row mb4">
+                                <div class="col-6">
+                                    <strong><span><field name="partner_id"/></span></strong>
+                                </div>
+                                <div class="col-6 text-right">
+                                    <strong><i class="fa fa-clock-o" role="img" aria-label="Date" title="Date"/> <t t-esc="record.date_date.value"/></strong>
+                                </div>
+                            </div>
+                            <div class="row">
+                                <div class="col-12">
+                                    <span><field name="partner_id"/></span>
+                                </div>
+                            </div>
+                            <div class="row">
+                                <div class="col-6">
+                                    <field name="amount_balance" widget='monetary'/>
+                                    <field name="currency_id" invisible="1"/>
+                                </div>
+                                <div class="col-6">
+                                    <span class="float-right">
+                                        <field name="state" widget="label_selection" options="{'classes': {'draft': 'secondary', 'sent': 'success'}}"/>
+                                    </span>
+                                </div>
+                            </div>
+                        </div>
+                    </t>
+                </templates>
+            </kanban>
+        </field>
+    </record>
+
+    <record id="view_beecy_account_payment_search" model="ir.ui.view">
+        <field name="name">beecy.account.payment.search</field>
+        <field name="model">beecy.account.payment</field>
+        <field name="arch" type="xml">
+            <search string="Payments">
+                <field name="name" string="Search All"
+                        filter_domain="[
+                            '|', '|' ,
+                            ('name', 'ilike', self), ('partner_id', 'ilike', self),
+                            ('payment_line_invoice_ids.invoice_id', 'ilike', self)]"/>
+                <field name="partner_id" string="Customer/Vendor"/>
+                <field name="journal_id"/>
+                <separator/>
+                <filter string="Draft" name="state_draft" domain="[('state', '=', 'draft')]"/>
+                <filter string="Posted" name="state_posted" domain="[('state', '=', 'posted')]"/>
+                <separator/>
+                <filter string="Payment Date" name="date_date" date="date_date"/>
+                <separator/>
+                <field name="company_id" groups="base.group_multi_company"/>
+                <filter string="Customer/Vendor" name="partner" domain="[]" context="{'group_by': 'partner_id'}"/>
+                <filter string="Journal" name="journal" domain="[]" context="{'group_by': 'journal_id'}"/>
+                <filter string="Status" name="state" domain="[]" context="{'group_by': 'state'}"/>
+                <filter string="Payment Date" name="groupby_date" domain="[]" context="{'group_by': 'date_date'}"/>
+                <filter string="Currency" name="currency" domain="[]" context="{'group_by': 'currency_id'}" groups="base.group_multi_currency"/>
+                <filter string="Company" name="company" domain="[]" context="{'group_by': 'company_id'}" groups="base.group_multi_company"/>
+                <separator/>
+                </search>
+        </field>
+    </record>
+
+    <record id="view_beecy_account_payment_form" model="ir.ui.view">
+        <field name="name">beecy.account.payment.form</field>
+        <field name="model">beecy.account.payment</field>
+        <field name="arch" type="xml">
+            <form string="Register Payment">
+                <header>
+                    <button name="action_confirm"
+                            string="Confirm"
+                            states="draft"
+                            type="object"
+                            class="oe_highlight"
+                            groups="account.group_account_invoice,account.group_account_manager"
+                           />
+                    <button name="action_validate"
+                            string="Validate"
+                            states="waiting_payment"
+                            type="object"
+                            class="oe_highlight"
+                            groups="account.group_account_invoice,account.group_account_manager"
+                           />
+                    <button name="action_validate"
+                            string="Approve"
+                            type="object"
+                            class="oe_highlight"
+                            states="to_approve"
+                             />
+                    <button name="action_set_to_draft"
+                            string="Set To Draft"
+                            type="object"
+                            class="btn btn-secondary"
+                            states="waiting_payment,reject,cancel"
+                            groups="account.group_account_invoice" />
+                    <button name="create_account_move_entry"
+                            string="Account Entry"
+                            type="object"
+                            states="waiting_payment"
+                            />
+                    <button name="action_cancel_reject_reason_wizard"
+                            string="Reject"
+                            states="to_approve"
+                            type="object"
+                            context="{'state': 'reject'}"
+                    />
+                    <button name="action_cancel_reject_reason_wizard"
+                            string="Cancel"
+                            states="draft"
+                            type="object"
+                            context="{'state': 'cancel'}"
+                    />
+                    <field name="state"
+                           widget="statusbar"
+                           statusbar_visible="draft,waiting_payment,paid"
+                    />
+                </header>
+                <sheet>
+                    <!-- Invisible fields -->
+                    <field name="id" invisible="1"/>
+                    <field name="is_check_line_invoice" invisible="1"/>
+                    <div class="oe_button_box" name="button_box">
+                        <button name="%(action_beecy_payment_receipt_report)d"
+                            icon="fa-print"
+                            string="Receipt"
+                            type="action"
+                            attrs="{'invisible':[('payment_type','!=','inbound')]}"
+                        />
+                        <button name="%(action_beecy_payment_receipt__tax_invoice_report)d"
+                            icon="fa-print"
+                            string="Receipt / Tax Invoice"
+                            type="action"
+                            attrs="{'invisible':['|',('payment_type','!=','inbound'),('is_check_line_invoice','=',True)]}"
+                        />
+                        <button name="action_account_wht_print"
+                                icon="fa-print"
+                                string="WHT Certificate"
+                                type="object"/>
+                        <button name="%(action_payment_voucher_report)d"
+                            icon="fa-print"
+                            string="Payment Voucher"
+                            type="action"
+                            attrs="{'invisible':[('payment_type','!=','outbound')]}"
+                        />
+                        <button name="%(action_payment_receipt_report)d"
+                            icon="fa-print"
+                            string="Receipt Voucher"
+                            type="action"
+                            attrs="{'invisible':[('payment_type','!=','inbound')]}"
+                        />
+                    </div>
+                    <div class="oe_title">
+                        <h1 attrs="{'invisible': [('state', '!=', 'draft')]}"><span>Draft</span></h1>
+                        <h1 attrs="{'invisible': [('state', '=', 'draft')]}"><field name="name" readonly="1"/></h1>
+                    </div>
+
+                    <div class="oe_button_box" name="button_box">
+
+                    </div>
+                    <div class="row">
+                        <div class="col-2 border-right">
+                            <span class="o_form_label o_td_label">
+                                <b>Customer</b>
+                            </span>
+                        </div>
+                        <div class="col-4">
+                            <field name="payment_type"
+                                widget="radio"
+                                options="{'horizontal': True}"
+                                attrs="{'readonly': [('state', '!=', 'draft')]}"
+                                force_save="1"
+                                invisible="1"
+                            />
+                            <field name="partner_id" string="Customer" attrs="{'readonly': [('state', '=', 'paid')]}"/>
+                        </div>
+                        <div class="col-2 border-right">
+                            <span class="o_form_label o_td_label">
+
+                                <b>Payment Date</b>
+                            </span>
+                        </div>
+                        <div class="col-4">
+                            <field name="date_date"
+                                attrs="{'readonly': [('state', '!=', 'draft')]}"/>
+                        </div>
+                    </div>
+
+                    <div class="row">
+                        <div class="col-2 border-right">
+                            <span class="o_form_label o_td_label">
+                                <b>Note</b>
+                            </span>
+                        </div>
+                        <div class="col-4">
+                            <field name="note" attrs="{'readonly': [('state', '=', 'paid')]}"/>
+                            <field name="left_paid_amount" invisible="1"/>
+                        </div>
+                        <div class="col-2 border-right">
+                            <span class="o_form_label o_td_label">
+                                <b>Vat Date</b>
+                            </span>
+                        </div>
+                        <div class="col-4">
+                            <field name="vat_date"
+                                attrs="{'readonly': [('state', '!=', 'draft')]}"/>
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="col-6"/>
+                        <div class="col-2 border-right">
+                            <span class="o_form_label o_td_label">
+                                <b>Journal</b>
+                            </span>
+                        </div>
+                        <div class="col-4">
+                            <field name="journal_id"
+                                domain="[('type', 'in', ('bank', 'cash'))]"
+                                attrs="{'readonly': [('state', '!=', 'draft')]}"/>
+                        </div>
+                    </div>
+                    <div class="row" attrs="{'invisible': [('relate_move_id', '=', False)]}">
+                        <div class="col-6"/>
+                        <div class="col-2 border-right">
+                            <span class="o_form_label o_td_label">
+                                <b>Journal Entry</b>
+                            </span>
+                        </div>
+                        <div class="col-4">
+                            <field name="relate_move_id"
+                                attrs="{'readonly': [('state', '!=', 'draft')]}"/>
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="col-6">
+                            <button name="action_get_account_move"
+                                    string="Choose from Invoices"
+                                    type="object"
+                                    class="oe_highlight"
+                                    context="{'choose': 'manual'}"
+                                    states="draft" />
+                            <span class="o_form_label o_td_label">
+                                <b> </b>
+                            </span>
+                            <button name="action_get_account_move"
+                                    string="Show All"
+                                    type="object"
+                                    class="oe_highlight"
+                                    context="{'choose': 'auto'}"
+                                    states="draft" />
+                            <span class="o_form_label o_td_label">
+                                <b> </b>
+                            </span>
+                            <button name="action_get_account_move"
+                                    string="Choose from Billing Note"
+                                    type="object"
+                                    class="oe_highlight"
+                                    context="{'choose': 'bill_note'}"
+                                    states="draft" />
+                        </div>
+                        <div class="col-2 border-right">
+                            <span class="o_form_label o_td_label">
+                                <b>Company</b>
+                            </span>
+                        </div>
+                        <div class="col-4">
+                            <field name="company_id" groups="base.group_multi_company" attrs="{'readonly': [('state', '=', 'paid')]}"/>
+                        </div>
+                    </div>
+                     <div class="row">
+                        <div class="col-6"/>
+                        <div class="col-2 border-right">
+                            <span class="o_form_label o_td_label">
+                                <b>Cancel Reason</b>
+                            </span>
+                        </div>
+                        <div class="col-4">
+                            <field name="cancel_reason"
+                                attrs="{'invisible': [
+                                ('cancel_reason', '=', ''),
+                                ('state', '!=', 'cancel')
+                                ]}"
+                            />
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="col-6">
+
+                        </div>
+                        <div class="col-2 border-right">
+                            <span class="o_form_label o_td_label">
+                                <b>Reject Reason</b>
+                            </span>
+                        </div>
+                        <div class="col-4">
+                            <field name="reject_reason" string="Reject Reason" attrs="{'invisible': [('reject_reason', '=', ''), ('state', '!=', 'reject')]}"/>
+                        </div>
+                    </div>
+                    <notebook>
+                        <page id="invoice_tab" string="Invoice Lines">
+                            <field name="payment_line_invoice_ids" widget="section_and_note_one2many" mode="tree,kanban"
+                                attrs="{'readonly': [('state', '=', 'paid')]}">
+                                <tree editable="bottom" create="false" delete="true">
+                                    <field name="payment_id" invisible="1"/>
+                                    <field name="invoice_id"/>
+                                    <field name="invoice_date_due_date"/>
+                                    <field name="amount_untaxed"/>
+                                    <field name="amount_total"/>
+                                    <field name="currency_id"/>
+                                    <field name="amount_wht"/>
+                                    <field name="amount_residual"/>
+                                    <field name="amount_tobe_paid" string="Amount Paid"/>
+                                </tree>
+                            </field>
+                            <group>
+                                <group>
+                                    <label for="wht_payment"/>
+                                    <div name="wht_payment_div" class="o_row">
+                                        <field name="wht_payment"
+                                            attrs="{'readonly': [('state', '!=', 'draft')]}"/>
+                                    </div>
+                                </group>
+                            </group>
+                            <field name="payment_line_wht_ids" widget="section_and_note_one2many" mode="tree,kanban"
+                                attrs="{'readonly': [('state', '=', 'paid')]}">
+                            <tree editable="bottom">
+                                <field name="payment_id" invisible="1"/>
+                                <field name="invoice_line_id" invisible="1"/>
+                                <field name="invoice_id"/>
+                                <field name="wht_type_id"/>
+                                <field name="percent"/>
+                                <field name="price_subtotal"/>
+                                <field name="amount_wht"/>
+                                <field name="note"/>
+                            </tree>
+                            </field>
+                            <group col="2">
+                                <group>
+                                    <field name="payment_line_method_ids" nolabel="1" attrs="{'readonly': [('state', '=', 'paid')]}" context="{'default_amount_total': left_paid_amount}">
+                                        <tree  editable="bottom">
+                                            <field name="payment_id" invisible="1"/>
+                                            <field name="payment_method_line_id"/>
+                                            <field name="amount_total"/>
+                                            <field name="note"/>
+                                        </tree>
+                                    </field>
+                                </group>
+                                <group class="oe_subtotal_footer oe_right">
+                                    <field name="amount_balance"/>
+                                    <field name="amount_tobe_paid"/>
+                                    <field name="amount_wht"/>
+                                    <field name="amount_paid"/>
+                                </group>
+                            </group>
+                        </page>
+                    </notebook>
+                </sheet>
+                <div class="o_attachment_preview"/>
+                <div class="oe_chatter">
+                    <field name="message_follower_ids" groups="base.group_user"/>
+                    <field name="activity_ids"/>
+                    <field name="message_ids"/>
+                </div>
+            </form>
+        </field>
+    </record>
+
+    <record id="beecy_action_account_payments" model="ir.actions.act_window">
+        <field name="name">Payments</field>
+        <field name="res_model">beecy.account.payment</field>
+        <field name="view_mode">tree,kanban,form,graph</field>
+        <field name="context">{
+            'default_payment_type': 'inbound',
+            'default_move_journal_types': ('bank', 'cash'),
+            'move_type': ('out_invoice','out_refund', 'out_debit'),
+            }</field>
+        <field name="domain">[('payment_type', '=', 'inbound')]</field>
+        <field name="view_id" ref="view_beecy_account_payment_tree"/>
+        <field name="help" type="html">
+            <p class="o_view_nocontent_smiling_face">
+                Register a payment
+            </p><p>
+            Payments are used to register liquidity movements. You can process those payments by your own means or by using installed facilities.
+        </p>
+        </field>
+    </record>
+
+    <menuitem
+            id="account.menu_action_account_payments_receivable"
+            parent="account.menu_finance_receivables"
+            action="beecy_account_payment.beecy_action_account_payments"
+            sequence="15"/>
+
+
+
+    <record id="action_beecy_account_payments_payable" model="ir.actions.act_window">
+        <field name="name">Payments</field>
+        <field name="res_model">beecy.account.payment</field>
+        <field name="view_mode">tree,kanban,form,graph</field>
+        <field name="context">{
+            'default_payment_type': 'outbound',
+            'default_move_journal_types': ('bank', 'cash'),
+            'move_type': ('in_invoice','in_refund', 'in_debit'),
+            }</field>
+        <field name="domain">[('payment_type', '=', 'outbound')]</field>
+        <field name="view_id" ref="view_beecy_account_supplier_payment_tree"/>
+        <field name="help" type="html">
+            <p class="o_view_nocontent_smiling_face">
+                Register a payment
+            </p><p>
+            Payments are used to register liquidity movements. You can process those payments by your own means or by using installed facilities.
+        </p>
+        </field>
+    </record>
+
+    <menuitem
+            id="account.menu_action_account_payments_payable"
+            parent="account.menu_finance_payables"
+            action="beecy_account_payment.action_beecy_account_payments_payable"
+            sequence="20"/>
+</odoo>

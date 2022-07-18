@@ -1,0 +1,35 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <data>
+        <record id="inherit_view_move_form" model="ir.ui.view">
+            <field name="name">inherit.view.move.form</field>
+            <field name="model">account.move</field>
+            <field name="inherit_id" ref="account.view_move_form" />
+            <field name="arch" type="xml">
+                <xpath expr="//field[@name='tax_totals_json']" position="attributes">
+                    <attribute name="invisible">1</attribute>
+                </xpath>
+                <xpath expr="//field[@name='tax_totals_json']" position="after">
+                    <div style="text-align: right;padding-right: 20px;">
+                        <h6 class="oe_inline">Untaxed Amount:</h6>
+                    </div>
+                    <div style="text-align: right;">
+                        <field class="oe_inline" name="amount_untaxed" widget="monetary" options="{'currency_field': 'currency_id'}" nolabel="1" />
+                    </div>
+                    <div style="text-align: right;padding-right: 20px;">
+                        <h6 class="oe_inline">Tax:</h6>
+                    </div>
+                    <div style="text-align: right;">
+                        <field class="oe_inline" name="amount_tax" widget="monetary" options="{'currency_field': 'currency_id'}" nolabel="1" />
+                    </div>
+                    <field name="amount_total" class="oe_subtotal_footer_separator" />
+                    <field name="amount_wht" class="oe_subtotal_footer_separator" widget='monetary' />
+                </xpath>
+                <xpath expr="//field[@name='invoice_line_ids']//field[@name='price_subtotal']" position="after">
+                    <field name="amount_wht" attrs="{'column_invisible': [('parent.move_type', 'not in', ('out_invoice', 'out_refund', 'out_debit', 'in_invoice', 'in_refund', 'in_debit'))]}" />
+                    <field name="wht_type_id" attrs="{'column_invisible': [('parent.move_type', 'not in', ('out_invoice', 'out_refund', 'out_debit', 'in_invoice', 'in_refund', 'in_debit'))]}" force_save="1" />
+                </xpath>
+            </field>
+        </record>
+    </data>
+</odoo>

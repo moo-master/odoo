@@ -1,0 +1,41 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <data noupdate="0">
+        <record id="payment_vouche_report_format" model="report.paperformat">
+            <field name="name">ใบสำคัญ</field>
+            <field name="default" eval="True"/>
+            <field name="format">A4</field>
+            <field name="orientation">Portrait</field>
+            <field name="margin_top">78</field>
+            <field name="margin_bottom">65</field>
+            <field name="margin_left">5</field>
+            <field name="margin_right">5</field>
+            <field name="header_spacing">78</field>
+            <field name="dpi">80</field>
+        </record>
+
+        <record id="action_payment_voucher_report" model="ir.actions.report">
+            <field name="name">ใบสำคัญจ่าย</field>
+            <field name="model">beecy.account.payment</field>
+            <field name="report_type">qweb-pdf</field>
+            <field name="report_name">beecy_account_payment.report_payment_voucher</field>
+            <field name="report_file">beecy_account_payment.report_payment_voucher</field>
+            <field name="print_report_name">'ใบสำคัญจ่าย - %s' % (object.name)</field>
+            <field name="paperformat_id" ref="beecy_account_payment.payment_vouche_report_format"/>
+            <field name="binding_model_id" ref="beecy_account_payment.model_beecy_account_payment"/>
+            <field name="binding_type">report</field>
+        </record>
+
+        <record id="action_payment_receipt_report" model="ir.actions.report">
+            <field name="name">ใบสำคัญรับ</field>
+            <field name="model">beecy.account.payment</field>
+            <field name="report_type">qweb-pdf</field>
+            <field name="report_name">beecy_account_payment.report_payment_receipt</field>
+            <field name="report_file">beecy_account_payment.report_payment_receipt</field>
+            <field name="print_report_name">'ใบสำคัญรับ - %s' % (object.name)</field>
+            <field name="paperformat_id" ref="beecy_account_payment.payment_vouche_report_format"/>
+            <field name="binding_model_id" ref="beecy_account_payment.model_beecy_account_payment"/>
+            <field name="binding_type">report</field>
+        </record>
+    </data>
+</odoo>

@@ -1,0 +1,34 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <record id="view_create_reason_form" model="ir.ui.view">
+        <field name="name">create.reason.form</field>
+        <field name="model">create.reason</field>
+        <field name="arch" type="xml">
+            <form string="Create Reason">
+                <group>
+                    <group>
+                        <field name="reason"/>
+                    </group>
+                </group>
+                <footer>
+                    <button name="create_reason"
+                            string="Create"
+                            type="object"
+                            class="oe_highlight"/>
+                    <button special="cancel"
+                            string="Cancel"
+                            class="oe_link"/>
+                </footer>
+            </form>
+        </field>
+    </record>
+
+    <record id="action_create_reason" model="ir.actions.act_window">
+        <field name="name">Create Reason</field>
+        <field name="type">ir.actions.act_window</field>
+        <field name="res_model">create.reason</field>
+        <field name="context">{}</field>
+        <field name="view_mode">form</field>
+        <field name="target">new</field>
+    </record>
+</odoo>

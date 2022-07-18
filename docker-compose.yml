@@ -1,0 +1,48 @@
+version: '3.8'
+
+services:
+  odoo:
+    image: registry.3roots.live/skc
+    container_name: odoo
+    depends_on:
+      - db
+    ports:
+      - 8069:8069
+    networks:
+      - odoo-network
+    environment:
+      - COMPOSE_CONVERT_WINDOWS_PATHS=1 # for windows
+    volumes:
+      - odoo-data:/var/lib/odoo
+      - odoo-addons:/mnt/extra-addons
+      - ./odoo.conf:/etc/odoo/odoo.conf
+      - ./additional-addons:/mnt/additional-addons
+      - ./addons:/mnt/addons
+    logging:
+      options:
+        max-size: 10m
+    command: --dev=qweb,xml
+    stdin_open: true
+    tty: true
+
+  db:
+    image: postgres:12
+    container_name: db
+    networks:
+      - odoo-network
+    environment:
+      - POSTGRES_DB=postgres
+      - POSTGRES_USER=odoo
+      - POSTGRES_PASSWORD=odoo
+    volumes:
+      - db-data:/var/lib/postgresql/data
+    logging:
+      options:
+        max-size: 10m
+
+volumes:
+  odoo-data:
+  odoo-addons:
+  db-data:
+networks:
+  odoo-network:

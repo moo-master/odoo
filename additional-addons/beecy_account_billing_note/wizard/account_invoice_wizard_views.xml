@@ -1,0 +1,41 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <record id="account_invoice_wizard_search" model="ir.ui.view">
+        <field name="name">account.invoice.wizard.search</field>
+        <field name="model">account.invoice.wizard</field>
+        <field name="arch" type="xml">
+            <search string="Account Invoice Wizard">
+                <field name="invoice_id" string="Account Invoice"
+                    filter_domain="[('invoice_id', 'ilike', self)]"/>
+            </search>
+        </field>
+    </record>
+
+    <record id="account_invoice_wizard_views" model="ir.ui.view">
+        <field name="name">account.invoice.wizard.views</field>
+        <field name="model">account.invoice.wizard</field>
+        <field name="arch" type="xml">
+            <tree editable="bottom" export_xlsx="false" create="false" delete="false" >
+                <header>
+                    <button name="action_confirm_invoice" string="Confirm" type="object" class="oe_highlight"/>
+                    <button string="Cancel" class="oe_link" special="cancel"/>
+                </header>
+                <field name="invoice_id" string='Invoice'/>
+                <field name="invoice_due_date"/>
+                <field name="amount_untaxed_signed"/>
+                <field name="amount_total_signed"/>
+                <field name="payment_state"/>
+                <field name="move_type"/>
+            </tree>
+        </field>
+    </record>
+
+    <record id="action_account_invoice_wizard_views" model="ir.actions.act_window">
+        <field name="name">Account Invoice Wizard</field>
+        <field name="res_model">account.invoice.wizard</field>
+        <field name="view_mode">tree</field>
+        <field name="search_view_id" ref="account_invoice_wizard_search" />
+        <field name="view_id" ref="account_invoice_wizard_views" />
+        <field name="target">new</field>
+    </record>
+</odoo>

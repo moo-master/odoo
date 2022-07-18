@@ -1,0 +1,47 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <!-- Inherit Form View to Modify it -->
+    <record id="view_account_journal_form" model="ir.ui.view">
+        <field name="name">account.journal.form</field>
+        <field name="model">account.journal</field>
+        <field name="priority">1</field>
+        <field name="inherit_id" ref="account.view_account_journal_form"/>
+        <field name="arch" type="xml">
+            <xpath expr="//field[@name='code']" position="before">
+                <div attrs="{'invisible': [('type', 'not in', ['sale', 'purchase'])]}">
+                    <h5 style="color: green; text-decoration: underline;">
+                        Tax Invoice Sequence
+                    </h5>
+                </div>
+            </xpath>
+            <xpath expr="//field[@name='code']" position="after">
+                <field name="invoice_sequence_id"
+                       attrs="{'invisible': [('type', 'not in', ['sale', 'purchase'])]}"/>
+            </xpath>
+            <xpath expr="//field[@name='refund_sequence']" position="before">
+                <div attrs="{'invisible': [('type', 'not in', ['sale', 'purchase'])]}">
+                    <h5 style="color: green; text-decoration: underline;">
+                        Credit Note Sequence
+                    </h5>
+                </div>
+            </xpath>
+            <xpath expr="//field[@name='refund_sequence']" position="after">
+                <field name="credit_note_sequence_id"
+                       attrs="{'invisible': ['|',
+                       ('type', 'not in', ['sale', 'purchase']),
+                       ('refund_sequence', '=', False)]}"/>
+                <div attrs="{'invisible': [('type', 'not in', ['sale', 'purchase'])]}">
+                    <h5 style="color: green; text-decoration: underline;">
+                        Debit Note Sequence
+                    </h5>
+                </div>
+                <field name="is_debit_note_sequence"
+                       attrs="{'invisible': [('type', 'not in', ['sale', 'purchase'])]}"/>
+                <field name="debit_note_sequence_id"
+                       attrs="{'invisible': ['|',
+                       ('type', 'not in', ['sale', 'purchase']),
+                       ('is_debit_note_sequence', '=', False)]}"/>
+            </xpath>
+        </field>
+    </record>
+</odoo>
