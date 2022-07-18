@@ -16,6 +16,7 @@
                 </attribute>
             </xpath>
             <xpath expr="//field[@name='partner_id']" position="after">
+                <field name="x_partner_name" attrs="{'invisible': [('move_type', '!=', 'out_invoice')]}"/>
                 <field name="x_address" attrs="{'invisible': [('move_type', '!=', 'out_invoice')]}"/>
             </xpath>
         </field>

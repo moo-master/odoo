@@ -2,12 +2,12 @@ import requests
 
 from odoo import http
 from odoo.http import request
-from odoo.addons.rts_api_base.controllers.main import APIBase
+from odoo.addons.kbt_api_base.controllers.main import KBTApiBase
 
 
-class SaleOrderDataController(http.Controller):
+class SaleOrderDataController(KBTApiBase):
 
-    @APIBase.api_wrapper(['kbt.sale_order_create'])
+    @KBTApiBase.api_wrapper(['kbt.sale_order_create'])
     @http.route('/sale/create', type='json', auth='user')
     def sale_order_create_api(self, **params):
         try:
@@ -15,26 +15,15 @@ class SaleOrderDataController(http.Controller):
             if msg:
                 return {
                     'isSuccess': False,
-                    'code': requests.codes.server_error,
-                    'error': msg,
+                    'code': requests.codes.bad_request,
+                    'message': msg,
                 }
             self._create_sale_order(**params)
-            return {
-                'isSuccess': True,
-                'code': requests.codes.no_content,
-            }
+            return self._response_api(isSuccess=True)
         except requests.HTTPError as http_err:
-            return {
-                'isSuccess': False,
-                'code': requests.codes.server_error,
-                'error': str(http_err),
-            }
+            return self._response_api(message=str(http_err))
         except Exception as error:
-            return {
-                'isSuccess': False,
-                'code': requests.codes.server_error,
-                'error': str(error),
-            }
+            return self._response_api(message=str(error))
 
     def _check_sale_order_values(self, **params):
         msg_list = []
@@ -111,7 +100,7 @@ class SaleOrderDataController(http.Controller):
 
         vals['x_so_orderreference'] = data.get('x_so_orderreference')
         vals['x_is_interface'] = True
-
+        vals['x_partner_name'] = data.get('x_partner_name')
         vals['x_address'] = data.get('x_address')
 
         order_line_vals_list = [(0, 0, self._prepare_order_line(
@@ -128,34 +117,19 @@ class SaleOrderDataController(http.Controller):
         })
         sale_id.action_confirm()
 
-    @APIBase.api_wrapper(['kbt.sale_order_update'])
+    @KBTApiBase.api_wrapper(['kbt.sale_order_update'])
     @http.route('/sale/update', type='json', auth='user')
     def sale_order_update_api(self, **params):
         try:
             msg = self._check_sale_order_values(**params)
             if msg:
-                return {
-                    'isSuccess': False,
-                    'error': msg,
-                }
+                return self._response_api(message=msg)
             res = self._update_sale_order(**params)
-            return {
-                'isSuccess': True,
-                'code': requests.codes.no_content,
-                'invoice_number': res,
-            }
+            return self._response_api(isSuccess=True, invoice_number=res)
         except requests.HTTPError as http_err:
-            return {
-                'isSuccess': False,
-                'code': requests.codes.server_error,
-                'error': str(http_err),
-            }
+            return self._response_api(message=str(http_err))
         except Exception as error:
-            return {
-                'isSuccess': False,
-                'code': requests.codes.server_error,
-                'error': str(error),
-            }
+            return self._response_api(message=str(error))
 
     def _update_sale_order(self, **params):
         Sale = request.env['sale.order']
@@ -194,5 +168,8 @@ class SaleOrderDataController(http.Controller):
             'x_address': params['x_address'],
         })
         move_id = so_orderreference._create_invoices()
+        move_id.write({
+            'x_partner_name': so_orderreference.x_partner_name,
+        })
         move_id.action_post()
         return move_id.name
