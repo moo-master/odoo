@@ -2,35 +2,24 @@ import requests
 
 from odoo import http
 from odoo.http import request
-from odoo.addons.rts_api_base.controllers.main import APIBase
+from odoo.addons.kbt_api_base.controllers.main import KBTApiBase
 
 
-class PaymentDataController(http.Controller):
+class PaymentDataController(KBTApiBase):
 
-    @APIBase.api_wrapper(['kbt.payment'])
+    @KBTApiBase.api_wrapper(['kbt.payment'])
     @http.route('/payment/create', type='json', auth='user')
     def payment_api(self, **params):
         try:
             msg = self._check_payment_values(**params)
             if msg:
-                return {
-                    'message': msg,
-                    'code': requests.codes.bad_request,
-                }
+                return self._response_api(message=msg)
             self._create_update_payment(**params)
-            return {
-                'code': requests.codes.all_ok,
-            }
+            return self._response_api(isSuccess=True)
         except requests.HTTPError as http_err:
-            return {
-                'code': requests.codes.bad_request,
-                'message': str(http_err),
-            }
+            return self._response_api(message=str(http_err))
         except Exception as error:
-            return {
-                'code': requests.codes.bad_request,
-                'message': str(error),
-            }
+            return self._response_api(message=str(error))
 
     def _check_payment_values(self, **params):
         msg_list = []
@@ -64,7 +53,6 @@ class PaymentDataController(http.Controller):
         AccountMove = request.env['account.move']
         AccountJournal = request.env['account.journal']
         PaymentRegister = request.env['account.payment.register']
-        # AccountPayment = request.env['account.payment']
         User = request.env.user
 
         for data in data_params_lst:
@@ -119,8 +107,3 @@ class PaymentDataController(http.Controller):
                 active_model=ctx['active_model'],
                 active_ids=ctx['active_ids']).create(vals)
             payment_id.action_create_payments()
-            # pay_id = res['res_id']
-            # payment = AccountPayment.browse(pay_id)
-            # payment.write({
-            #     'is_internal_transfer': data['is_internal_transfer'],
-            # })

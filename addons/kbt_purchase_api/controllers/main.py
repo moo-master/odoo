@@ -2,32 +2,21 @@ import requests
 
 from odoo import http
 from odoo.http import request
-from odoo.addons.rts_api_base.controllers.main import APIBase
+from odoo.addons.kbt_api_base.controllers.main import KBTApiBase
 
 
-class PurchaseController(http.Controller):
+class PurchaseController(KBTApiBase):
 
-    @APIBase.api_wrapper(['kbt.purchase_create'])
+    @KBTApiBase.api_wrapper(['kbt.purchase_create'])
     @http.route('/purchase/create', type='json', auth='user')
     def purchase_order_create_api(self, **params):
         try:
             self._create_purchase_order(**params)
-            return {
-                'isSuccess': True,
-                'code': requests.codes.all_ok,
-            }
+            return self._response_api(isSuccess=True)
         except requests.HTTPError as http_err:
-            return {
-                'isSuccess': False,
-                'code': requests.codes.bad_request,
-                'message': str(http_err),
-            }
+            return self._response_api(message=str(http_err))
         except Exception as error:
-            return {
-                'isSuccess': False,
-                'code': requests.codes.bad_request,
-                'message': str(error),
-            }
+            return self._response_api(message=str(error))
 
     def _prepare_order_line(self, order_line, account_analytic_id, po_type):
         product_id = request.env['product.product'].search([
@@ -114,6 +103,7 @@ class PurchaseController(http.Controller):
             'x_bill_date': params.get('x_bill_date'),
             'x_bill_ref': params.get('x_bill_ref'),
         }
+
         order_line_vals_list = [(0, 0, self._prepare_order_line(
             order_line, account_analytic_id, po_type))
             for order_line in params.get('lineItems')
@@ -128,32 +118,19 @@ class PurchaseController(http.Controller):
 
         return purchase_id.name
 
-    @APIBase.api_wrapper(['kbt.purchase_update'])
+    @KBTApiBase.api_wrapper(['kbt.purchase_update'])
     @http.route('/purchase/update', type='json', auth='user')
     def purchase_order_update_api(self, **params):
         try:
             res = self._update_purchase_order(**params)
-            return {
-                'isSuccess': True,
-                'code': requests.codes.all_ok,
-                'x_purchase_ref': res,
-            }
+            return self._response_api(isSuccess=True, x_purchase_ref=res)
         except requests.HTTPError as http_err:
-            return {
-                'isSuccess': False,
-                'code': requests.codes.bad_request,
-                'message': str(http_err),
-            }
+            return self._response_api(message=str(http_err))
         except Exception as error:
-            return {
-                'isSuccess': False,
-                'code': requests.codes.bad_request,
-                'message': str(error),
-            }
+            return self._response_api(message=str(error))
 
     def _update_purchase_order(self, **params):
         Purchase = request.env['purchase.order']
-        AccountMove = request.env['account.move']
 
         purchase_ref = params['x_purchase_ref']
         purchase_ref_id = Purchase.search([
@@ -189,10 +166,6 @@ class PurchaseController(http.Controller):
         purchase_ref_id.update({
             'order_line': update_line_lst
         })
-        res_id = purchase_ref_id.action_create_invoice()
-        move_id = AccountMove.browse(res_id['res_id'])
-        move_id.write({
-            'x_bill_ref': purchase_ref_id.x_bill_ref,
-            'x_bill_date': purchase_ref_id.x_bill_date,
-        })
+        purchase_ref_id.action_create_invoice()
+
         return purchase_ref

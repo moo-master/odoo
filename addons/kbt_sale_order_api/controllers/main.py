@@ -2,12 +2,12 @@ import requests
 
 from odoo import http
 from odoo.http import request
-from odoo.addons.rts_api_base.controllers.main import APIBase
+from odoo.addons.kbt_api_base.controllers.main import KBTApiBase
 
 
-class SaleOrderDataController(http.Controller):
+class SaleOrderDataController(KBTApiBase):
 
-    @APIBase.api_wrapper(['kbt.sale_order_create'])
+    @KBTApiBase.api_wrapper(['kbt.sale_order_create'])
     @http.route('/sale/create', type='json', auth='user')
     def sale_order_create_api(self, **params):
         try:
@@ -19,22 +19,11 @@ class SaleOrderDataController(http.Controller):
                     'message': msg,
                 }
             self._create_sale_order(**params)
-            return {
-                'isSuccess': True,
-                'code': requests.codes.all_ok,
-            }
+            return self._response_api(isSuccess=True)
         except requests.HTTPError as http_err:
-            return {
-                'isSuccess': False,
-                'code': requests.codes.bad_request,
-                'message': str(http_err),
-            }
+            return self._response_api(message=str(http_err))
         except Exception as error:
-            return {
-                'isSuccess': False,
-                'code': requests.codes.bad_request,
-                'message': str(error),
-            }
+            return self._response_api(message=str(error))
 
     def _check_sale_order_values(self, **params):
         msg_list = []
@@ -128,34 +117,19 @@ class SaleOrderDataController(http.Controller):
         })
         sale_id.action_confirm()
 
-    @APIBase.api_wrapper(['kbt.sale_order_update'])
+    @KBTApiBase.api_wrapper(['kbt.sale_order_update'])
     @http.route('/sale/update', type='json', auth='user')
     def sale_order_update_api(self, **params):
         try:
             msg = self._check_sale_order_values(**params)
             if msg:
-                return {
-                    'isSuccess': False,
-                    'message': msg,
-                }
+                return self._response_api(message=msg)
             res = self._update_sale_order(**params)
-            return {
-                'isSuccess': True,
-                'code': requests.codes.all_ok,
-                'invoice_number': res,
-            }
+            return self._response_api(isSuccess=True, invoice_number=res)
         except requests.HTTPError as http_err:
-            return {
-                'isSuccess': False,
-                'code': requests.codes.bad_request,
-                'message': str(http_err),
-            }
+            return self._response_api(message=str(http_err))
         except Exception as error:
-            return {
-                'isSuccess': False,
-                'code': requests.codes.bad_request,
-                'message': str(error),
-            }
+            return self._response_api(message=str(error))
 
     def _update_sale_order(self, **params):
         Sale = request.env['sale.order']

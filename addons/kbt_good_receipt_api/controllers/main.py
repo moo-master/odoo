@@ -2,39 +2,24 @@ import requests
 
 from odoo import http
 from odoo.http import request
-from odoo.addons.rts_api_base.controllers.main import APIBase
+from odoo.addons.kbt_api_base.controllers.main import KBTApiBase
 
 
-class ReceiptController(http.Controller):
+class ReceiptController(KBTApiBase):
 
-    @APIBase.api_wrapper(['kbt.good_receipt'])
+    @KBTApiBase.api_wrapper(['kbt.good_receipt'])
     @http.route('/good/receipt', type='json', auth='user')
     def good_receipt_api(self, **params):
         try:
             msg = self._check_api_values(**params)
             if msg:
-                return {
-                    'isSuccess': False,
-                    'message': msg,
-                    'code': requests.codes.bad_request,
-                }
-            self._create_goods_receipt(**params)
-            return {
-                'isSuccess': True,
-                'code': requests.codes.all_ok,
-            }
+                return self._response_api(message=msg)
+            res = self._create_goods_receipt(**params)
+            return self._response_api(isSuccess=True, invoice_number=res)
         except requests.HTTPError as http_err:
-            return {
-                'isSuccess': False,
-                'code': requests.codes.bad_request,
-                'message': str(http_err),
-            }
+            return self._response_api(message=str(http_err))
         except Exception as error:
-            return {
-                'isSuccess': False,
-                'code': requests.codes.bad_request,
-                'message': str(error),
-            }
+            return self._response_api(message=str(error))
 
     def _check_api_values(self, **params):
         msg_list = []
@@ -119,8 +104,12 @@ class ReceiptController(http.Controller):
 
         purchase_order.action_create_invoice()
         inv_ids = purchase_order.invoice_ids
-        inv_ids.update({
-            'ref': data.get('x_bill_reference'),
-            'invoice_date': x_bill_date,
-        })
-        inv_ids.action_post()
+        response_api = []
+        for inv in inv_ids.filtered(lambda z: z.state == 'draft'):
+            inv.write({
+                'ref': data.get('x_bill_reference'),
+                'invoice_date': x_bill_date,
+            })
+            inv.action_post()
+            response_api.append(inv.name)
+        return response_api

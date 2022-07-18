@@ -2,39 +2,24 @@ import requests
 
 from odoo import http
 from odoo.http import request
-from odoo.addons.rts_api_base.controllers.main import APIBase
+from odoo.addons.kbt_api_base.controllers.main import KBTApiBase
 
 
-class PartnerDataController(http.Controller):
+class PartnerDataController(KBTApiBase):
 
-    @APIBase.api_wrapper(['kbt.partner'])
+    @KBTApiBase.api_wrapper(['kbt.partner'])
     @http.route('/partner/data', type='json', auth='user')
     def res_partner_api(self, **params):
         try:
             msg = self._check_partner_values(**params)
             if msg:
-                return {
-                    'isSuccess': False,
-                    'message': msg,
-                    'code': requests.codes.bad_request,
-                }
+                return self._response_api(message=msg)
             self._create_update_partner(**params)
-            return {
-                'isSuccess': True,
-                'code': requests.codes.all_ok,
-            }
+            return self._response_api(isSuccess=True)
         except requests.HTTPError as http_err:
-            return {
-                'isSuccess': False,
-                'code': requests.codes.bad_request,
-                'message': str(http_err),
-            }
+            return self._response_api(message=str(http_err))
         except Exception as error:
-            return {
-                'isSuccess': False,
-                'code': requests.codes.bad_request,
-                'message': str(error),
-            }
+            return self._response_api(message=str(error))
 
     def _check_partner_values(self, **params):
         msg_list = []
