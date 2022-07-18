@@ -18,7 +18,7 @@ class PurchaseController(KBTApiBase):
         except Exception as error:
             return self._response_api(message=str(error))
 
-    def _prepare_order_line(self, order_line, account_analytic_id, po_type):
+    def _prepare_order_lines(self, order_line, account_analytic_id, po_type):
         product_id = request.env['product.product'].search([
             ('default_code', '=', order_line.get('product_code')),
         ])
@@ -104,7 +104,7 @@ class PurchaseController(KBTApiBase):
             'x_bill_ref': params.get('x_bill_ref'),
         }
 
-        order_line_vals_list = [(0, 0, self._prepare_order_line(
+        order_line_vals_list = [(0, 0, self._prepare_order_lines(
             order_line, account_analytic_id, po_type))
             for order_line in params.get('lineItems')
         ]
