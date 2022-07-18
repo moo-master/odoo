@@ -15,8 +15,5 @@ class KBTApiBase(APIBase):
             response_api.update({
                 'message': message
             })
-        for key, val in kwargs.items():
-            response_api.update({
-                key: val
-            })
+        response_api.update(kwargs)
         return response_api
