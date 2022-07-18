@@ -10,6 +10,3 @@ class AccountMove(models.Model):
         string='Partner Name',
         readonly=True,
     )
-
-    x_bill_ref = fields.Char('X Bill Ref')
-    x_bill_date = fields.Date('X Bill Date')
