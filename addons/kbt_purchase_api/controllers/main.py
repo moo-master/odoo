@@ -2,34 +2,23 @@ import requests
 
 from odoo import http
 from odoo.http import request
-from odoo.addons.rts_api_base.controllers.main import APIBase
+from odoo.addons.kbt_api_base.controllers.main import KBTApiBase
 
 
-class PurchaseController(http.Controller):
+class PurchaseController(KBTApiBase):
 
-    @APIBase.api_wrapper(['kbt.purchase_create'])
+    @KBTApiBase.api_wrapper(['kbt.purchase_create'])
     @http.route('/purchase/create', type='json', auth='user')
     def purchase_order_create_api(self, **params):
         try:
             self._create_purchase_order(**params)
-            return {
-                'isSuccess': True,
-                'code': requests.codes.no_content,
-            }
+            return self._response_api(isSuccess=True)
         except requests.HTTPError as http_err:
-            return {
-                'isSuccess': False,
-                'code': requests.codes.server_error,
-                'error': str(http_err),
-            }
+            return self._response_api(message=str(http_err))
         except Exception as error:
-            return {
-                'isSuccess': False,
-                'code': requests.codes.server_error,
-                'error': str(error),
-            }
+            return self._response_api(message=str(error))
 
-    def _prepare_order_line(self, order_line, account_analytic_id, po_type):
+    def _prepare_order_lines(self, order_line, account_analytic_id, po_type):
         product_id = request.env['product.product'].search([
             ('default_code', '=', order_line.get('product_code')),
         ])
@@ -87,7 +76,7 @@ class PurchaseController(http.Controller):
         account_analytic_id = Account.search(
             [('name', '=', params.get('analytic_account'))])
 
-        po_type = params.get('business_type_code').upper()
+        po_type = params.get('x_po_type_code').upper()
         po_type_id = Business.search([
             ('x_code', '=ilike', po_type)
         ])
@@ -108,11 +97,14 @@ class PurchaseController(http.Controller):
         vals = {
             'partner_id': partner_id.id,
             'name': purchase_ref,
-            'x_is_interface': params.get('x_is_interface'),
+            'x_is_interface': True,
             'date_planned': params.get('receipt_date'),
             'po_type_id': po_type_id.id,
+            'x_bill_date': params.get('x_bill_date'),
+            'x_bill_ref': params.get('x_bill_ref'),
         }
-        order_line_vals_list = [(0, 0, self._prepare_order_line(
+
+        order_line_vals_list = [(0, 0, self._prepare_order_lines(
             order_line, account_analytic_id, po_type))
             for order_line in params.get('lineItems')
         ]
@@ -126,30 +118,16 @@ class PurchaseController(http.Controller):
 
         return purchase_id.name
 
-    @APIBase.api_wrapper(['kbt.purchase_update'])
+    @KBTApiBase.api_wrapper(['kbt.purchase_update'])
     @http.route('/purchase/update', type='json', auth='user')
     def purchase_order_update_api(self, **params):
         try:
             res = self._update_purchase_order(**params)
-            return {
-                'isSuccess': True,
-                'code': requests.codes.no_content,
-                'invoice_number': res,
-            }
+            return self._response_api(isSuccess=True, x_purchase_ref=res)
         except requests.HTTPError as http_err:
-            return {
-                'isSuccess': False,
-                'code': requests.codes.server_error,
-                'message': str(http_err),
-                'invoice_number': params.get('x_purchase_ref') or "No Data"
-            }
+            return self._response_api(message=str(http_err))
         except Exception as error:
-            return {
-                'isSuccess': False,
-                'code': requests.codes.server_error,
-                'message': str(error),
-                'invoice_number': params.get('x_purchase_ref') or "No Data"
-            }
+            return self._response_api(message=str(error))
 
     def _update_purchase_order(self, **params):
         Purchase = request.env['purchase.order']
@@ -189,4 +167,5 @@ class PurchaseController(http.Controller):
             'order_line': update_line_lst
         })
         purchase_ref_id.action_create_invoice()
-        return purchase_ref_id.name
+
+        return purchase_ref

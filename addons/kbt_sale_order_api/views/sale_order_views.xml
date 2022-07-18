@@ -10,6 +10,9 @@
             <xpath expr="//field[@name='payment_term_id']" position="after">
                 <field name="x_is_interface"/>
             </xpath>
+            <xpath expr="//field[@name='partner_id']" position="after">
+                <field name="x_partner_name"/>
+            </xpath>
 
             <xpath expr="//field[@name='order_line']//tree//field[@name='sequence']" position="attributes">
                 <attribute name="attrs">{'column_invisible': [('parent.x_is_interface', '=', True)]}</attribute>

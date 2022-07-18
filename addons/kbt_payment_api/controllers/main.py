@@ -2,35 +2,24 @@ import requests
 
 from odoo import http
 from odoo.http import request
-from odoo.addons.rts_api_base.controllers.main import APIBase
+from odoo.addons.kbt_api_base.controllers.main import KBTApiBase
 
 
-class PaymentDataController(http.Controller):
+class PaymentDataController(KBTApiBase):
 
-    @APIBase.api_wrapper(['kbt.payment'])
-    @http.route('/create_payment', type='json', auth='user')
+    @KBTApiBase.api_wrapper(['kbt.payment'])
+    @http.route('/payment/create', type='json', auth='user')
     def payment_api(self, **params):
         try:
             msg = self._check_payment_values(**params)
             if msg:
-                return {
-                    'message': msg,
-                    'code': requests.codes.server_error,
-                }
+                return self._response_api(message=msg)
             self._create_update_payment(**params)
-            return {
-                'code': requests.codes.no_content,
-            }
+            return self._response_api(isSuccess=True)
         except requests.HTTPError as http_err:
-            return {
-                'code': requests.codes.server_error,
-                'message': str(http_err),
-            }
+            return self._response_api(message=str(http_err))
         except Exception as error:
-            return {
-                'code': requests.codes.server_error,
-                'message': str(error),
-            }
+            return self._response_api(message=str(error))
 
     def _check_payment_values(self, **params):
         msg_list = []

@@ -79,7 +79,8 @@ def business_type(env, account_payable, model_sequence):
         'x_type': 'purchase',
         'x_code': 1,
         'x_sequence_id': model_sequence.id,
-        'x_revenue_account_id': account_payable.id
+        'x_revenue_account_id': account_payable.id,
+        'default_gl_account_id': account_payable.id,
     })
 
 
