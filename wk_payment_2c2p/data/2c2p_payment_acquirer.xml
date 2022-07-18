@@ -1,0 +1,27 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!-- Copyright (c) 2015-Present Webkul Software Pvt. Ltd. (<https://webkul.com/>) -->
+<!-- See LICENSE file for full copyright and licensing details. -->
+<!-- "License URL : <https://store.webkul.com/license.html/>" -->
+
+<odoo>
+	<data noupdate="1">
+		<record id="wk_2c2p_payment_acquirer.payment_acquirer_2c2p" model="payment.acquirer">
+			<field name="name">2c2p</field>
+			<field name="state">disabled</field>
+			<field name="company_id" ref="base.main_company" />			
+            <field name="provider">2c2p</field>
+            <field name="redirect_form_view_id" ref="redirect_form"/>
+            <field name="support_authorization">False</field>
+            <field name="support_fees_computation">False</field>
+            <field name="support_refund"></field>
+            <field name="support_tokenization">True</field>
+            <field name="show_allow_tokenization">True</field>
+		</record>
+
+        <record id="payment_method_2c2p" model="account.payment.method">
+            <field name="name">2c2p</field>
+            <field name="code">2c2p</field>
+            <field name="payment_type">inbound</field>
+        </record>
+	</data>
+</odoo>

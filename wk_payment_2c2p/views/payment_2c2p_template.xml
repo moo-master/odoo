@@ -1,0 +1,37 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!-- Copyright (c) 2015-Present Webkul Software Pvt. Ltd. (<https://webkul.com/>) -->
+<!-- See LICENSE file for full copyright and licensing details. -->
+<!-- "License URL : <https://store.webkul.com/license.html/>" -->
+
+<odoo>
+    <template id="redirect_form">
+        <form t-att-action="api_url" method="POST">
+            <input type="hidden" name="invoiceNo" t-att-value="referenceCode"/>
+            <input type="hidden" name="description" t-att-value="description"/>
+            <input type="hidden" name="merchantID" t-att-value="merchantId"/>
+            <input type="hidden" name="secret_key" t-att-value="secret_key"/>
+            <input type="hidden" name="amount" t-att-value="amount"/>
+            <input type="hidden" name="currencyCode" t-att-value="currency"/>
+
+            <input type="hidden" name="buyerFullName" t-att-value="buyerFullName"/>
+            <input type="hidden" name="buyerEmail" t-att-value="buyerEmail"/>
+            <input type="hidden" name="buyerPhone" t-att-value="buyerPhone"/>
+            <input type="hidden" name="countryCode" t-att-value="countryCode"/>
+
+            <input type="hidden" name="responseUrl" t-att-value="responseUrl"/>
+            <input type="hidden" name="confirmationUrl" t-att-value="confirmationUrl"/>
+            
+            <input type="hidden" name="user" t-att-value="user"/>
+            <input type="hidden" name="test" t-att-value="test"/>
+        </form>
+    </template>
+
+
+    <template id="payment_init_status" inherit_id="payment.checkout" name="Payment Status">
+        <xpath expr="//div[hasclass('card')]" position="after">
+            <div class="alert alert-danger" t-if="error2c2p == '1'" role="alert">
+                <t t-esc="error_msg2c2p"/>
+            </div>
+        </xpath>
+    </template>
+</odoo>
