@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <record id="view_company_form_inherit_account_payment" model="ir.ui.view">
+        <field name="name">res.company.form.inherit.beecy.account.payment</field>
+        <field name="model">res.company</field>
+        <field name="inherit_id" ref="account.view_company_form"/>
+        <field name="arch" type="xml">
+            <xpath expr="//field[@name='currency_id']" position="after">
+                <field name="ap_wht_default_account_id" invisible="1"/>
+                <field name="ar_wht_default_account_id" invisible="1"/>
+            </xpath>
+        </field>
+    </record>
+</odoo>

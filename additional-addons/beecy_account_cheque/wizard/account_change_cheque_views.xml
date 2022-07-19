@@ -1,0 +1,37 @@
+<?xml version='1.0' encoding='utf-8'?>
+<odoo>
+    <record id="account_change_cheque_wizard_views" model="ir.ui.view">
+        <field name="name">account.change.cheque.wizard.views</field>
+        <field name="model">account.change.cheque.wizard</field>
+        <field name="arch" type="xml">
+            <form string="Cheque Wizard">
+                <group>
+                    <group name="cheque wizard">
+                        <field name="name" />
+                        <field name="cheque_date" />
+                        <field name="bank_id"
+                               invisible="context.get('default_move_type') != 'customer'"
+                               required="context.get('default_move_type') == 'customer'"/>
+                        <field name="partner_bank_id" string="Bank"
+                               invisible="context.get('default_move_type') != 'vendor'"
+                               required="context.get('default_move_type') == 'vendor'"/>
+                        <field name="reason" />
+                    </group>
+                </group>
+                <footer>
+                    <button string="Confirm" name="action_confirm" type="object" class="oe_highlight" data-hotkey="q"/>
+                    <button string="Cancel" class="oe_link" special="cancel"/>
+                </footer>
+            </form>
+        </field>
+    </record>
+
+    <record id="action_account_change_change_wizard_views" model="ir.actions.act_window">
+        <field name="name">Cheque Wizard</field>
+        <field name="res_model">account.change.cheque.wizard</field>
+        <field name="view_mode">form</field>
+        <field name="view_id" ref="account_change_cheque_wizard_views" />
+        <field name="target">new</field>
+    </record>
+
+</odoo>

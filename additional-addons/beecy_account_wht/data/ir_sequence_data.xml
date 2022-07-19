@@ -1,0 +1,27 @@
+<?xml version='1.0' encoding='utf-8'?>
+<odoo>
+    <data noupdate="1">
+        <record id="seq_account_wht_vendor" model="ir.sequence">
+            <field name="name">Sequence Account WHT Vendor</field>
+            <field name="code">seq.account.wht.vendor</field>
+            <field name="prefix">S%(range_y)s%(range_month)s</field>
+            <field name="number_increment">1</field>
+            <field name="number_next">1</field>
+            <field name="padding">4</field>
+            <field name="range">month</field>
+            <field name="implementation">standard</field>
+            <field name="use_date_range">true</field>
+        </record>
+        <record id="seq_account_wht_customer" model="ir.sequence">
+            <field name="name">Sequence Account WHT Customer</field>
+            <field name="code">seq.account.wht.customer</field>
+            <field name="prefix">C%(range_y)s%(range_month)s</field>
+            <field name="number_increment">1</field>
+            <field name="number_next">1</field>
+            <field name="padding">4</field>
+            <field name="range">month</field>
+            <field name="implementation">standard</field>
+            <field name="use_date_range">true</field>
+        </record>
+    </data>
+</odoo>

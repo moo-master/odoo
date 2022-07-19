@@ -1,0 +1,151 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <data>
+
+        <record id="account_billing_note_form_search" model="ir.ui.view">
+            <field name="name">account.billing.note.search</field>
+            <field name="model">account.billing.note</field>
+            <field name="arch" type="xml">
+                <search string="Billing Note">
+                    <field name="name" string="Billing Note" filter_domain="[
+                            '|', '|' ,
+                            ('name', 'ilike', self), ('partner_id', 'ilike', self),
+                            ('invoice_id', 'ilike', self)]" />
+                    <filter name="bill_date" string="Billing Date" date="bill_date" />
+                    <group expand="0" string="Group By">
+                        <filter string="State" name="state" context="{'group_by':'state'}" help="User" />
+                        <filter string="Partner" name="partner_id" context="{'group_by':'partner_id'}" help="Partner" />
+                    </group>
+                </search>
+            </field>
+        </record>
+
+        <record id="account_billing_note_view_form" model="ir.ui.view">
+            <field name="name">account.billing.note.view.form</field>
+            <field name="model">account.billing.note</field>
+            <field name="arch" type="xml">
+                <form>
+                    <header>
+                        <button name="action_validate" string="Validate" type="object" class="oe_highlight" states="draft" />
+                        <button name="button_customer_confirm" string="Customer Confirm" type="object" class="oe_highlight" states="bill" />
+                        <button name="action_cancel_reject_reason_wizard" class="oe_highlight" string="Cancel" type="object" attrs="{'invisible': [('state', 'in', ['paid', 'cancel'])]}" />
+                        <button name="action_paid" string="Action Paid" type="object" class="oe_highlight" attrs="{'invisible': [('state', 'not in', ['payment'])]}" />
+                        <field name="state" widget="statusbar" />
+                    </header>
+                    <sheet attrs="{'readonly': [('state', 'not in', ['draft'])]}">
+                        <div class="oe_button_box" name="button_box">
+                            <button name="%(action_billing_note_report)d" icon="fa-print" string="Billing Note" type="action" />
+                        </div>
+                        <div class="oe_title" name="head">
+                            <!-- Billing Note draft header -->
+                            <span class="o_form_label">Number</span>
+                            <h1 attrs="{'invisible': ['|', ('state', '!=', 'draft'), ('name', '!=', False)]}">
+                                <span>Draft</span>
+                            </h1>
+                            <!-- Number -->
+                            <h1 class="mt0" attrs="{'invisible':[('name', '=', False),]}">
+                                <field name="name" string="Number" force_save="1" readonly="1" />
+                            </h1>
+
+                        </div>
+                        <div name="detail">
+                            <group attrs="{'readonly': [('state', 'not in', ['draft'])]}">
+                                <group>
+                                    <label for="partner_id" string="Partner" />
+                                    <div name="partner">
+                                        <field name="partner_id" width="20px" nolabel="1" attrs="{'readonly': [('state', 'not in', ['draft'])]}" />
+                                        <div name="button">
+                                            <div name="partner_button" class="o_row">
+                                                <button name="action_filter" string="Filter" type="object" class="oe_highlight" states="draft" />
+                                                <button name="action_showall" string="Show All" type="object" class="oe_highlight" states="draft" />
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <field name="company_id" invisible="1" />
+                                </group>
+                                <group>
+                                    <field name="bill_date" attrs="{'readonly': [('state', 'not in', ['draft'])]}" />
+                                    <field name="payment_term_id" attrs="{'readonly': [('state', 'not in', ['draft'])]}" />
+                                    <field name="payment_date" attrs="{'readonly': [('state', 'not in', ['draft'])]}" />
+                                    <field name="receive_date" attrs="{
+                                        'invisible': [('state', '=', 'draft')],
+                                        'readonly': [('state', 'not in', ['draft', 'bill'])]}" />
+                                    <field name="cancel_reason" states="cancel" attrs="{'readonly': [('state', 'not in', ['draft'])]}" />
+                                </group>
+                            </group>
+                        </div>
+                        <notebook>
+                            <page name="invoice_detail" string="Invoice Detail">
+                                <field name="line_ids" nolabel="1" attrs="{'readonly': [('state', 'not in', ['draft'])]}">
+                                    <tree decoration-blood="is_billing==False"  editable="bottom" create="false">
+                                        <field name="invoice_id" domain="[('move_type', 'not in', ['entry'])]" required="1" readonly="1" force_save="1"/>
+                                        <field name="note" />
+                                        <field name="invoice_payment_term_id" />
+                                        <field name="invoice_date" />
+                                        <field name="invoice_due_date" />
+                                        <field name="amount" />
+                                        <field name="balance" />
+                                        <field name="wht_total" />
+                                        <field name="paid_amount" />
+                                        <field name="is_billing" invisible="1" />
+                                        <button name="button_unbill" type="object" string="" attrs="{'invisible':['|', ('parent.state', '!=', 'bill'), ('is_billing', '==', False)]}" style="color:red;" icon="fa-times" />
+                                    </tree>
+                                </field>
+                            </page>
+                        </notebook>
+                        <div name="footer">
+                            <group name="footer">
+                                <group name="remark">
+                                    <field name="remark" style="white-space: normal;word-break: break-word;" attrs="{'readonly': [('state', 'in', ['cancel', 'paid'])]}" />
+                                </group>
+                                <group name="total_amount" class="oe_subtotal_footer oe_right">
+                                    <div class="oe_right">
+                                        <label for="balance_amount" string="Balance Amount"/>
+                                    </div>
+                                    <field name="balance_amount" nolabel="1" force_save="1" readonly="1" />
+                                    <div class="oe_right">
+                                        <label for="total_amount" string="Paid amount" />
+                                    </div>
+                                    <field name="total_amount" nolabel="1" force_save="1" readonly="1" />
+                                    <div class="oe_right">
+                                        <label for="wht_amount" string="WHT Amount" />
+                                    </div>
+                                    <field name="wht_amount" nolabel="1" force_save="1" readonly="1" />
+                                </group>
+                            </group>
+                        </div>
+                    </sheet>
+
+                </form>
+            </field>
+        </record>
+
+        <record id="account_billing_note_view_tree" model="ir.ui.view">
+            <field name="name">account.billing.note.view.tree</field>
+            <field name="model">account.billing.note</field>
+            <field name="arch" type="xml">
+                <tree>
+                    <field name="name" string="Number" />
+                    <field name="partner_id" />
+                    <field name="bill_date" />
+                    <field name="payment_date" />
+                    <field name="total_amount" />
+                    <field name="state" />
+                </tree>
+            </field>
+        </record>
+
+        <record id="action_billing_note" model="ir.actions.act_window">
+            <field name="name">Billing Note</field>
+            <field name="res_model">account.billing.note</field>
+            <field name="view_mode">tree,form</field>
+            <field name="context">{}</field>
+            <field name="domain">[]</field>
+            <field name="help" type="html">
+                <p class="o_view_nocontent_smiling_face">
+                    Define a new Record
+                </p>
+            </field>
+        </record>
+    </data>
+</odoo>

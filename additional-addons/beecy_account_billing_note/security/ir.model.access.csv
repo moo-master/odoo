@@ -1,0 +1,4 @@
+id,name,model_id:id,group_id:id,perm_read,perm_write,perm_create,perm_unlink
+access_account_billing_note_user,access_account_billing_note,model_account_billing_note,base.group_user,1,1,1,1
+access_account_billing_note_line_user,access_account_billing_note_line,model_account_billing_note_line,base.group_user,1,1,1,1
+access_account_invoice_wizard_user,access_account_invoice_wizard,model_account_invoice_wizard,base.group_user,1,1,1,1

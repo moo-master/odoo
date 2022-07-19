@@ -1,0 +1,38 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <record id="view_cancel_reject_reason_form" model="ir.ui.view">
+        <field name="name">cancel.reject.reason.form</field>
+        <field name="model">cancel.reject.reason</field>
+        <field name="arch" type="xml">
+            <form string="Cancel Reject Reason">
+                <group>
+                    <group>
+                        <field name="reason_id"/>
+                        <field name="description"
+                               attrs="{'invisible': [('is_description', '=', False)],
+                               'required': [('is_description', '=', True)]}"/>
+                        <field name="is_description" invisible="1"/>
+                    </group>
+                </group>
+                <footer>
+                    <button name="button_confirm"
+                            string="Confirm"
+                            type="object"
+                            class="oe_highlight"/>
+                    <button special="cancel"
+                            string="Cancel"
+                            class="oe_link"/>
+                </footer>
+            </form>
+        </field>
+    </record>
+
+    <record id="action_cancel_reject_reason" model="ir.actions.act_window">
+        <field name="name">Cancel Reject Reason</field>
+        <field name="type">ir.actions.act_window</field>
+        <field name="res_model">cancel.reject.reason</field>
+        <field name="context">{}</field>
+        <field name="view_mode">form</field>
+        <field name="target">new</field>
+    </record>
+</odoo>

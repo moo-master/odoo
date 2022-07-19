@@ -1,0 +1,515 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <template id="external_layout_beecy_basic">
+        <t t-if="beecy_basic==1 or xmlid == 'web.report_invoice_wizard_preview'">
+            <t t-if="header==1 or xmlid == 'web.report_invoice_wizard_preview'">
+                <div name="beecy_basic_header" t-attf-class="o_company_#{company.id}_layout header font-th" t-att-style="report_header_style">
+                    <t t-call="beecy_web_report.beecy_basic_header_template"/>
+                    <t t-if="header_body == 1 or xmlid == 'web.report_invoice_wizard_preview'">
+                        <t t-call="beecy_web_report.beecy_basic_header_body"/>
+                    </t>
+                </div>
+            </t>
+            <t t-else="">
+                <t t-out="header"/>
+            </t>
+
+            <div>
+                <t t-if="xmlid == 'web.report_invoice_wizard_preview'">
+                    <div class="col-4" style="height: 250pt;" ><![CDATA[&nbsp;]]></div>
+                </t>
+                <t t-elif="beecy_basic">
+                    <t t-out="0"/>
+                </t>
+            </div>
+
+            <t t-if="footer == 1 or xmlid == 'web.report_invoice_wizard_preview'">
+                <div name="beecy_basic_footer" t-attf-class="o_company_#{company.id}_layout footer font-th o_background_footer">
+                    <t t-call="beecy_web_report.beecy_basic_footer_template"/>
+                </div>
+            </t>
+            <t t-else="">
+                <t t-out="footer"/>
+            </t>
+        </t>
+        <t t-else="else" t-call="web.external_layout_standard">
+            <t t-out="0"/>
+        </t>
+    </template>
+
+    <template id="beecy_basic_header_template">
+        <t t-if="beecy_basic == 1 or xmlid == 'web.report_invoice_wizard_preview'">
+            <div class="float-right">
+                <h3 class="mt0 text-right" t-field="company.report_header"/>
+            </div>
+            <div class="content" style="font-size: 12px;">
+                <div class="row">
+                    <div class="col-4"><![CDATA[&nbsp;]]></div>
+                    <div class="col-4"><![CDATA[&nbsp;]]></div>
+                    <div class="col-4"><![CDATA[&nbsp;]]></div>
+                </div>
+                <div class="row">
+                    <div class="col-2">
+                        <img t-if="company.logo" t-att-src="image_data_uri(company.logo)" class="float-left" style="max-height: 90px;width: 100px; margin-top: 15px" alt="Logo"/>
+                    </div>
+                    <div class="col-4">
+                        <div class="row">
+                            <div class="col-6"><![CDATA[&nbsp;]]></div>
+                            <div class="col-6"><![CDATA[&nbsp;]]></div>
+                        </div>
+                        <div class="row">
+                            <div class="col-12" style="color:#666666;">
+                                <div class="company_address" style="color:#666666;">
+                                    <span t-if="company.company_details" t-esc="company.company_details"></span>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-6">
+                        <div class="row">
+                            <div class="col-12 text-right" style="font-size:12px; color:#666666;">
+                                <t t-esc="name_type_bill"></t>
+                            </div>
+                        </div>
+                        <div class="col-12" style="font-size:21px; color:#3297ff;padding: 0px;">
+                            <div class="text-right">
+                                <b>
+                                    <t t-esc="name_bill"></t>
+                                </b>
+                            </div>
+                            <div class="text-right">
+                                <b>
+                                    <t t-esc="name_bill_en"></t>
+                                </b>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="content" style="font-size: 12px;">
+                <div class="row">
+                    <div class="col-2">
+                        <div class="row">
+                            <div class="col-6"><![CDATA[&nbsp;]]></div>
+                        </div>
+                        <div style="color:#434343;">
+                            <b>
+                                <span> ลูกค้า / Customer : </span>
+                            </b>
+                        </div>
+                        <div style="color:#434343;">
+                            <b>
+                                <span> ที่อยู่ / Address : </span>
+                            </b>
+                        </div>
+                        <div style="height: 40pt" class="col-6"><![CDATA[&nbsp;]]></div>
+                        <div style="color:#434343;">
+                            <b>
+                                <span> ผู้ติดต่อ / Contact : </span>
+                            </b>
+                        </div>
+                    </div>
+                    <div class="col-5">
+                        <div class="row">
+                            <div class="col-6"><![CDATA[&nbsp;]]></div>
+                            <div class="col-6"><![CDATA[&nbsp;]]></div>
+                        </div>
+                        <div class="row">
+                            <div class="col-12" style="color:#434343;">
+                                <b>
+                                    <span t-esc="display_name"/>
+                                </b>
+                            </div>
+                        </div>
+                        <div style="height: 73px; overflow: hidden;">
+                            <div class="row" style="color:#434343;">
+                                <div class="col-12">
+                                    <span t-esc="street"/>
+                                    <span t-esc="street2"/>
+                                </div>
+                            </div>
+                            <div class="row" style="color:#434343;">
+                                <div class="col-12">
+                                    <div>
+                                        <span t-esc="city"/>
+                                        <span t-esc="state_id_name"/>
+                                        <span t-esc="zip_partner"/>
+                                    </div>
+                                    <div>
+                                        <span class="fa-phone"/>
+                                        <span t-esc="phone"/>
+                                    </div>
+                                    <div>
+                                        <span>Tax ID :</span>
+                                        <span t-esc="vat"/>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <div>
+                            <span t-esc="contact_name"/>
+                        </div>
+                    </div>
+
+                    <div class="col-5">
+                        <div class="col-12" style="font-size:11px; background-color: #ebf5ff;">
+                            <div class="row">
+                                <div class="col-6"><![CDATA[&nbsp;]]></div>
+                                <div class="col-6"><![CDATA[&nbsp;]]></div>
+                            </div>
+
+                            <div class="row" style="color:#434343;" align="left">
+                                <div class="col-5">
+                                    <b>
+                                        <span>เลขที่ / Doc No. :</span>
+                                    </b>
+                                </div>
+                                <div class="col-7" style="padding: 0px; font-size:12px;">
+                                    <b>
+                                        <span t-esc="invoice_name"/>
+                                    </b>
+                                </div>
+                            </div>
+                            <div class="row" style="color:#434343;" align="left">
+                                <div class="col-5">
+                                    <b>
+                                        <span>วันที่ / Date :</span>
+                                    </b>
+                                </div>
+                                <div class="col-7" style="padding: 0px">
+                                    <span t-esc="invoice_date"/>
+                                </div>
+                            </div>
+
+                            <div class="row" style="color:#434343;" align="left">
+                                <div class="col-5">
+                                    <b>
+                                        <span>เงื่อนไขชำระ / </span>
+                                    </b>
+                                </div>
+                                <div class="col-7" style="padding: 0px">
+                                    <span t-esc="payment_day"/>
+                                    <span><![CDATA[&nbsp;]]>วัน</span>
+                                </div>
+                            </div>
+                            <div class="row" style="color:#434343;" align="left">
+                                <div class="col-5">
+                                    <b>
+                                        <span>Credit Term :</span>
+                                    </b>
+                                </div>
+
+                            </div>
+                            <div class="row" style="color:#434343;" align="left">
+                                <div class="col-5">
+                                    <b>
+                                        <span>วันที่ครบกำหนด / </span>
+                                    </b>
+                                </div>
+                                <div class="col-7" style="padding: 0px">
+                                    <span t-esc="invoice_date_due"/>
+                                </div>
+                            </div>
+                            <div class="row" style="color:#434343;" align="left">
+                                <div class="col-5">
+                                    <b>
+                                        <span>Due Date :</span>
+                                    </b>
+                                </div>
+                            </div>
+                            <div class="row" style="color:#434343;" align="left">
+                                <div class="col-5">
+                                    <b>อ้างอิง / Reference:</b>
+                                </div>
+                                <div class="col-7" style="padding: 0px">
+                                    <span t-esc="ref"/>
+                                </div>
+                            </div>
+                            <div>
+                                <div class="col-6"><![CDATA[&nbsp;]]></div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </t>
+    </template>
+
+    <template id="beecy_basic_footer_template">
+        <style>
+            .triangle {
+                    position: absolute;
+                    left: 0;
+                    bottom: 0;
+                    width: 0px;
+                    height: 0px;
+                    border-right: 50px solid transparent;
+                    border-bottom: 50px solid  #e6f2ff;
+                }
+        </style>
+        <t t-if="beecy_basic==1">
+            <div name="beecy_summary" class="content" style="font-size: 12px;">
+                <div style="border-top: 1px solid #cccccc;">
+                    <div style="height:10pt;"><![CDATA[&nbsp;]]></div>
+                </div>
+                <div class="row" style="paddding: 0px;">
+                    <div class="col-1" style="text-align: left;">
+                        <b>
+                            <span> สรุป </span>
+                        </b>
+                    </div>
+                    <div class="col-6 row">
+                        <div class="col-9">
+                            <div style="text-align: left;">
+                                <b> รวมราคาก่อนส่วนลดท้ายบิล / Subtotal </b>
+                            </div>
+                            <div style="text-align: left;">
+                                <b> ส่วนลดท้ายบิล (%) / Discount (%) </b>
+                            </div>
+                            <div style="text-align: left;">
+                                <b> ส่วนลด (บาท) / Discount </b>
+                            </div>
+                            <div style="text-align: left;">
+                                <b> มูลค่าหลังหักส่วนลด / Amount After Discount </b>
+                            </div>
+                            <div style="text-align: left;">
+                                <b> มูลค่าภาษี / Tax Amount (7%) </b>
+                            </div>
+                            <div style="text-align: left;">
+                                <b> จำนวนเงินทั้งสิ้น / Total Amount </b>
+                            </div>
+                        </div>
+                        <div class="col-3">
+                            <div style="text-align: right;">
+                                <t t-esc="price_subtotal"/>
+                            </div>
+                            <div style="text-align: right;">
+                                <t t-esc="formula_discount"/>
+                            </div>
+                            <div style="text-align: right;">
+                                <t t-esc="direct_discount"/>
+                            </div>
+                            <div style="text-align: right;">
+                                <t t-esc="amount_untaxed"/>
+                            </div>
+                            <div style="text-align: right;">
+                                <t t-esc="amount_tax"/>
+                            </div>
+                            <div style="text-align: right;">
+                                <t t-esc="amount_total_all"/>
+                            </div>
+                        </div>
+
+                    </div>
+
+                    <div class="col-5" style="margin: 16px; margin-top: 5px; font-size:12px; background-color: #e6f2ff;">
+                        <div class="col-12 row" style="margin: 0px;">
+                            <div style="color:#333333; text-align: left;" class="col-6">
+                                <div style="height:20pt;"><![CDATA[&nbsp;]]></div>
+                                <div style="margin-left: -20px;">
+                                    <b>จำนวนเงินทั้งสิ้น / </b>
+                                </div>
+                            </div>
+                            <div style="color:#333333; text-align: right;" class="col-6">
+                                <div style="height:20pt;"><![CDATA[&nbsp;]]></div>
+                                <div style="text-align: right; margin-left: 10px;">
+                                    <t t-if="amount_total == 0.00">
+                                        <b>-</b>
+                                    </t>
+                                    <t t-elif="amount_total &lt; 0">
+                                        <b>(<t t-esc="'{:,.2f}'.format(amount_total)"/>)&#160;</b>บาท
+                                    </t>
+                                    <t t-else="">
+                                        <b><t t-esc="'{:,.2f}'.format(amount_total)"/>&#160;</b>บาท
+                                    </t>
+                                </div>
+                            </div>
+                        </div>
+                        <div style="text-align: left;" class="col-6">
+                            <b>
+                                <span>Total Amount </span>
+                            </b>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div name="beecy_summary_amount_total" style="font-size: 12px; border-bottom: 1px solid #cccccc;">
+                <div style="text-align: right;">
+                    <t t-esc="amount_total_text"/>
+                </div>
+                <div style="height:5pt;"><![CDATA[&nbsp;]]></div>
+            </div>
+
+            <div style="height:10pt;"><![CDATA[&nbsp;]]></div>
+
+            <div name="beecy_basic_remarks" class="content" style="font-size: 12px;">
+                <div class="row">
+                    <div class="col-5">
+                        <div class="col-12">
+                            <div style="text-align: left; margin-left: -15px;">
+                                <b>หมายเหตุ/Remarks</b>
+                            </div>
+                            <div style="text-align: left; margin-left: -15px; height:90pt; overflow: hidden;">
+                                <t t-esc="remarks"/>
+                            </div>
+                            <div>
+                                <div class="triangle">
+                                </div>
+                                <div style="position: absolute; top: 119px; left: 20px;" class="row">
+                                    <div class="page"/>/<div class="topage"/>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div style="border-right: 1px solid #cccccc;">
+                        <div><![CDATA[&nbsp;]]></div>
+                    </div>
+                    <div class="col-7">
+                        <div class="row">
+                            <div class="col-4">
+                                <div style="text-align: center;">
+                                    <b>ผู้ออกเอกสาร </b>
+                                </div>
+                                <div style="text-align: center;">
+                                    <b>Responsible By</b>
+                                </div>
+                            </div>
+                            <div class="col-4">
+                                <div style="text-align: center;">
+                                    <b>ผู้อนุมัติเอกสาร</b>
+                                </div>
+                                <div style="text-align: center;">
+                                    <b>Approved By</b>
+                                </div>
+                            </div>
+                            <div class="col-4">
+                                <div style="text-align: center;">
+                                    <b>ผู้รับเอกสาร</b>
+                                </div>
+                                <div style="text-align: center;">
+                                    <b>Received By</b>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-6"><![CDATA[&nbsp;]]></div>
+                        <div class="row">
+                            <div class="col-4">
+                                <div style="text-align: center;position: absolute; top: -20px; left: 30px;">
+                                    <img t-if="o.create_uid.signature" t-att-src="image_data_uri(o.create_uid.signature)" style="max-height: 40px;width: 100px; margin-top: 15px" alt="Logo"/>
+                                </div>
+                            </div>
+                            <div class="col-4">
+                                <div style="text-align: center;position: absolute; top: -20px; left: 30px;">
+                                    <img t-if="approve_signature" t-att-src="image_data_uri(approve_signature)" style="max-height: 40px;width: 100px; margin-top: 15px" alt="Logo"/>
+                                </div>
+                            </div>
+                            <div class="col-4"></div>
+                        </div>
+                        <div class="row" style="padding-top: 50px;">
+                            <div class="col-4">
+                                <div style="text-align: center;">
+                                    (<t t-esc="o.create_uid.name"/>)
+                                </div>
+                                <div style="text-align: center;">
+                                    <span t-field="o.create_date" t-options="{'format': 'dd/MM/YYYY'}"/>
+                                </div>
+                            </div>
+                            <div class="col-4">
+                                <div style="text-align: center;">
+                                    (<t t-esc="o.create_uid.name"/>)
+                                </div>
+                                <div style="text-align: center;">
+                                    <span t-field="o.create_date" t-options="{'format': 'dd/MM/YYYY'}"/>
+                                </div>
+                            </div>
+                            <div class="col-4">
+                                <div class="row">
+                                    <div class="col-4" style="text-align: center;">(
+                                    </div>
+                                    <div class="col-4" style="text-align: center;">
+                                        <![CDATA[&nbsp;]]>
+                                    </div>
+                                    <div class="col-4" style="text-align: center;">)
+                                    </div>
+                                </div>
+                                <div class="row">
+                                    <div class="col-6" style="text-align: right;">/
+                                    </div>
+                                    <div class="col-6" style="text-align: left;">/
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </t>
+        <t t-else="">
+            <div style="border-top: 1px solid black;">
+                <ul class="list-inline mb4">
+                    <div t-field="company.report_footer"/>
+                </ul>
+
+                <div t-if="report_type == 'pdf'" class="text-muted">
+                    Page: <span class="page"/>/<span class="topage"/>
+                </div>
+            </div>
+        </t>
+    </template>
+
+    <template id="beecy_basic_header_body">
+        <div class="col-4" style="height: 10pt;" ><![CDATA[&nbsp;]]></div>
+        <t t-set="primary" t-value="company.primary_color or 'black'" />
+        <t t-set="secondary" t-value="company.secondary_color or 'black'" />
+        <style>
+            .primary_color {
+                color: <t t-esc='primary'/>;
+            }
+        </style>
+        <div class="content font-th">
+            <div class="col-12" style="width:100%; background-color: #c2e2ff; font-size: 14px;margin: 0px;">
+                <div class="row">
+                    <div style="width:5%;text-align: center;height: 50px;">
+                    </div>
+                    <div class="primary_color" style="width:29%;text-align: center;height: 50px;">
+                        <b>รายการ</b>
+                        <br></br>
+                        <b>Description</b>
+                    </div>
+                    <div class="primary_color" style="width:8%;text-align: right;height: 50px;">
+                        <b> จำนวน </b>
+                        <br></br>
+                        <b>Qty</b>
+                    </div>
+                    <div class="primary_color" style="width: 9%;text-align: right;height: 50px;">
+                        <b> หน่วย </b>
+                        <br></br>
+                        <b>UoM</b>
+                    </div>
+                    <div class="primary_color" style="width:10%;text-align: right;height: 50px;">
+                        <b> ราคา </b>
+                        <br></br>
+                        <b>Price</b>
+                    </div>
+                    <div class="primary_color" style="width:13%;text-align: right;height: 50px;">
+                        <b> ส่วนลด (%) </b>
+                        <br></br>
+                        <b>Discount (%)</b>
+                    </div>
+                    <div class="primary_color" style="width:10%;text-align: right;height: 50px;">
+                        <b> ส่วนลด </b>
+                        <br></br>
+                        <b>Discount</b>
+                    </div>
+                    <div class="primary_color" style="width:16%;text-align: right;height: 50px;">
+                        <b> มูลค่า </b>
+                        <br></br>
+                        <b>Amount</b>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </template>
+
+</odoo>

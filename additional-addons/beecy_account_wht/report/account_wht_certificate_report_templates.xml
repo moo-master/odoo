@@ -1,0 +1,7 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+
+    <template id="report_account_wht_certificate">
+        <t t-call="beecy_account_wht.report_account_wht"/>
+    </template>
+</odoo>

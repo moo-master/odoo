@@ -1,0 +1,98 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<odoo>
+
+    <record id="api_logs_search_view" model="ir.ui.view">
+        <field name="name">api.logs.search</field>
+        <field name="model">api.logs</field>
+        <field name="arch" type="xml">
+            <search string="API Logs">
+                <field name="service_id"/>
+                <field name="route_id"/>
+                <field name="requested_by"/>
+                <field name="requested_by_uid"/>
+                <field name="response_status_code"/>
+                <field name="status"/>
+            </search>
+        </field>
+    </record>
+
+    <record id="api_logs_form_view" model="ir.ui.view">
+        <field name="name">api.logs.form</field>
+        <field name="model">api.logs</field>
+        <field name="arch" type="xml">
+            <form string="API Logs" class="api-logs">
+                <sheet>
+                    <group>
+                        <field name="service_id"/>
+                        <field name="route_id"/>
+                        <field
+                            name="route_type"
+                            widget="badge"
+                            decoration-info="route_type == 'outgoing'"
+                            decoration-muted="route_type == 'incoming'"
+                        />
+                        <field name="route_method"/>
+                        <field name="requested_by"/>
+                        <field name="requested_by_uid" widget="many2one_avatar_user"/>
+                        <field
+                            name="status"
+                            widget="badge"
+                            decoration-primary="status == 'process'"
+                            decoration-success="status == 'success'"
+                            decoration-danger="status == 'fail'"
+                        />
+                    </group>
+                    <group name="request" string="Request">
+                        <field name="request_datetime"/>
+                        <field name="request_url"/>
+                        <field name="request_header" class="detail-overflow"/>
+                        <field name="request_query_string" class="detail-overflow"/>
+                        <field name="request_body" class="detail-overflow"/>
+                    </group>
+                    <group name="response" string="Response">
+                        <field name="response_datetime"/>
+                        <field name="response_status_code" decoration-bf="1"/>
+                        <field name="response_header" class="detail-overflow"/>
+                        <field name="response_body" class="detail-overflow"/>
+                    </group>
+                </sheet>
+            </form>
+        </field>
+    </record>
+
+    <record id="api_logs_tree_view" model="ir.ui.view">
+        <field name="name">api.logs.tree</field>
+        <field name="model">api.logs</field>
+        <field name="arch" type="xml">
+            <tree string="API Logs" class="api-logs" create="0" delete="0">
+                <field name="route_reference"/>
+                <field
+                    name="route_type"
+                    widget="badge"
+                    decoration-info="route_type == 'outgoing'"
+                    decoration-muted="route_type == 'incoming'"
+                />
+                <field name="requested_by"/>
+                <field name="request_datetime"/>
+                <field name="response_datetime"/>
+                <field name="response_status_code" decoration-bf="1"/>
+                <field name="response_body" class="detail-overflow"/>
+                <field
+                    name="status"
+                    widget="badge"
+                    decoration-primary="status == 'process'"
+                    decoration-success="status == 'success'"
+                    decoration-danger="status == 'fail'"
+                />
+            </tree>
+        </field>
+    </record>
+
+    <record id="action_api_logs" model="ir.actions.act_window">
+        <field name="name">API Logs</field>
+        <field name="type">ir.actions.act_window</field>
+        <field name="res_model">api.logs</field>
+        <field name="view_mode">tree,form</field>
+        <field name="search_view_id" ref="api_logs_search_view"/>
+    </record>
+</odoo>

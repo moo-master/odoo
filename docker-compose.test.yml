@@ -1,0 +1,42 @@
+version: '3.8'
+
+services:
+  test:
+    image: $DOCKER_IMAGE:$DOCKER_TAG
+    container_name: odoo-test-$DOCKER_TAG
+    user: root
+    depends_on:
+      - db
+    networks:
+      - odoo-network
+    environment:
+      - COMPOSE_CONVERT_WINDOWS_PATHS=1 # for windows
+    volumes:
+      - odoo-data:/var/lib/odoo
+      - odoo-addons:/mnt/extra-addons
+    logging:
+      options:
+        max-size: 10m
+    command: test $OPTIONS
+    tty: true
+
+  db:
+    image: postgres:12
+    networks:
+      - odoo-network
+    environment:
+      - POSTGRES_DB=postgres
+      - POSTGRES_USER=odoo
+      - POSTGRES_PASSWORD=odoo
+    volumes:
+      - db-data:/var/lib/postgresql/data
+    logging:
+      options:
+        max-size: 10m
+
+volumes:
+  odoo-data:
+  odoo-addons:
+  db-data:
+networks:
+  odoo-network:

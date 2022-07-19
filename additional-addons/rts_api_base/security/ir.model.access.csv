@@ -1,0 +1,7 @@
+id,name,model_id:id,group_id:id,perm_read,perm_write,perm_create,perm_unlink
+access_api_logs_user,access_api_logs,model_api_logs,base.group_user,1,0,0,0
+access_api_service_user,access_api_service_user,model_api_service,base.group_user,1,0,0,0
+access_api_service_manager,access_api_service_manager,model_api_service,base.group_user,1,1,1,1
+access_api_service_route_user,access_api_service_route_user,model_api_service_route,base.group_system,1,0,0,0
+access_api_service_route_manger,access_api_service_route_manger,model_api_service_route,base.group_system,1,1,1,1
+access_api_service_try_wizard_user,access_api_service_try_wizard_user,model_api_service_try_wizard,base.group_user,1,1,1,1
