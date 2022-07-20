@@ -94,13 +94,21 @@ class PurchaseController(KBTApiBase):
                 "Purchase %s already exists." % purchase_ref
             )
 
+        date_api = params.get('receipt_date').split('-')
+        date_planned = '{0}-{1}-{2}'.format(
+            date_api[2], date_api[1], date_api[0])
+
+        date_api = params.get('x_bill_date').split('-')
+        x_bill_date = '{0}-{1}-{2}'.format(
+            date_api[2], date_api[1], date_api[0])
+
         vals = {
             'partner_id': partner_id.id,
             'name': purchase_ref,
             'x_is_interface': True,
-            'date_planned': params.get('receipt_date'),
+            'date_planned': date_planned,
             'po_type_id': po_type_id.id,
-            'x_bill_date': params.get('x_bill_date'),
+            'x_bill_date': x_bill_date,
             'x_bill_ref': params.get('x_bill_ref'),
         }
 
