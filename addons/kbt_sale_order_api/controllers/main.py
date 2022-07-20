@@ -83,6 +83,7 @@ class SaleOrderDataController(KBTApiBase):
         account_term_id = account_term.search(
             [('name', '=', data.get('payment_term'))])
         vals['payment_term_id'] = account_term_id.id
+
         account_analytic = request.env['account.analytic.account']
         account_analytic_id = account_analytic.search(
             [('name', '=', data.get('analytic_account'))])
@@ -108,16 +109,19 @@ class SaleOrderDataController(KBTApiBase):
             for order_line in params.get('lineItems')
         ]
         vals['order_line'] = order_line_vals_list
+
         sale = Sale.new(vals)
         sale.onchange_partner_id()
         sale_values = sale._convert_to_write(sale._cache)
         sale_id = Sale.create(sale_values)
+
         sale_id.write({
-            'name': params.get('x_so_orderreference')
+            'name': params.get('x_so_orderreference'),
         })
         sale_id.action_confirm()
         sale_id.write({
-            'date_order': datetime_order
+            'date_order': datetime_order,
+            'payment_term_id': account_term_id.id,
         })
 
     @KBTApiBase.api_wrapper(['kbt.sale_order_update'])
