@@ -67,7 +67,7 @@ class ReceiptController(KBTApiBase):
             ('purchase_id', '=', purchase_order.id),
             ('state', 'in', ['assigned', 'confirmed']),
         ])
-        date_api = data.get('x_bill_date').split('/')
+        date_api = data.get('x_bill_date').split('-')
         x_bill_date = '{0}-{1}-{2}'.format(
             date_api[2], date_api[1], date_api[0])
         update_line_lst = []

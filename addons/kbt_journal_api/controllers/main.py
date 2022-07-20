@@ -29,9 +29,13 @@ class JournalController(KBTApiBase):
             ('code', '=', params['journal_code']),
             ('company_id', '=', User.company_id.id)])
 
+        date_api = params.get('account_date').split('-')
+        date_data = '{0}-{1}-{2}'.format(
+            date_api[2], date_api[1], date_api[0])
+
         vals = {
             'ref': params['x_so_orderreference'],
-            'date': params['account_date'],
+            'date': date_data,
             'move_type': 'entry',
             'currency_id': currency_id.id or False,
             'journal_id': journal_id.id or False,

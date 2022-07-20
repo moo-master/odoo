@@ -69,7 +69,7 @@ class PaymentDataController(KBTApiBase):
                 ('code', '=', data['journal_code']),
                 ('company_id', '=', User.company_id.id)])
 
-            date_api = data['date'].split('/')
+            date_api = data['date'].split('-')
             date_data = '{0}-{1}-{2}'.format(
                 date_api[0], date_api[1], date_api[2])
 
