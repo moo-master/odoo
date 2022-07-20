@@ -116,6 +116,9 @@ class SaleOrderDataController(KBTApiBase):
             'name': params.get('x_so_orderreference')
         })
         sale_id.action_confirm()
+        sale_id.write({
+            'date_order': datetime_order
+        })
 
     @KBTApiBase.api_wrapper(['kbt.sale_order_update'])
     @http.route('/sale/update', type='json', auth='user')
