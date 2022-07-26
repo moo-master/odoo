@@ -30,6 +30,7 @@ class PartnerDataController(KBTApiBase):
     def _create_update_partner(self, **params):
         Partner = request.env['res.partner']
         ResBank = request.env['res.bank']
+        ResBankAccount = request.env['res.partner.bank']
         data_params = params
 
         for data in data_params.get('data'):
@@ -84,15 +85,42 @@ class PartnerDataController(KBTApiBase):
                 ('bic', '=', data.get('bank_id'))
             ], limit=1).id
             partner_bank = partner_id.mapped('bank_ids').mapped('bank_id')
+
+            acc_number = partner_id.mapped('bank_ids').filtered(
+                lambda x: x.acc_number == data.get('bank_acc_number'))
+
             if bank_id in partner_bank.ids:
+
                 res_bank = partner_id.mapped(
                     'bank_ids').filtered(lambda x: x.bank_id.id == bank_id)
+                if res_bank:
+                    partner_id.write({
+                        'bank_ids': [(1, res_bank.id, {
+                            'acc_number': data.get('bank_acc_number'),
+                        })]
+                    })
+
+            elif acc_number:
                 partner_id.write({
-                    'bank_ids': [(1, res_bank.id, {
+                    'bank_ids': [(2, acc_number.id)]
+                })
+
+                partner_id.write({
+                    'bank_ids': [(0, 0, {
                         'acc_number': data.get('bank_acc_number'),
+                        'bank_id': bank_id
                     })]
                 })
+
             else:
+                res_acc_bank = ResBankAccount.search([
+                    ('acc_number', '=', data.get('bank_acc_number'))
+                ])
+                if res_acc_bank:
+                    raise ValueError(
+                        "Bank Account number is duplicate with other contact"
+                    )
+
                 partner_id.write({
                     'bank_ids': [(0, 0, {
                         'acc_number': data.get('bank_acc_number'),
