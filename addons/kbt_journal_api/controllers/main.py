@@ -25,9 +25,17 @@ class JournalController(KBTApiBase):
         User = request.env.user
 
         currency_id = ResCurrency.search([('name', '=', params['currency'])])
+        if not currency_id:
+            raise ValueError(
+                "currency_id not found."
+            )
         journal_id = AccountJour.search([
             ('code', '=', params['journal_code']),
             ('company_id', '=', User.company_id.id)])
+        if not journal_id:
+            raise ValueError(
+                "journal_id not found."
+            )
 
         date_api = params.get('account_date').split('-')
         date_data = '{0}-{1}-{2}'.format(
@@ -52,6 +60,10 @@ class JournalController(KBTApiBase):
             ('code', '=', line['account_code']),
             ('deprecated', '=', False),
             ('company_id', '=', user_id.company_id.id)])
+        if not account_id:
+            raise ValueError(
+                "account_id not found."
+            )
         return {
             'sequence': line['seq_line'],
             'account_id': account_id.id or False,
