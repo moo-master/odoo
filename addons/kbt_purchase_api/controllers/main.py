@@ -22,6 +22,10 @@ class PurchaseController(KBTApiBase):
         product_id = request.env['product.product'].search([
             ('default_code', '=', order_line.get('product_code')),
         ])
+        if not product_id:
+            raise ValueError(
+                "product_id not found."
+            )
 
         product_type = product_id.detailed_type
         if product_type == 'service' and po_type not in ['K-RENT', 'K-MATCH']:
@@ -49,6 +53,10 @@ class PurchaseController(KBTApiBase):
             wht_id = request.env['account.wht.type'].search([
                 ('sequence', '=', wht_seq),
             ])
+            if not wht_id:
+                raise ValueError(
+                    "wht_id not found."
+                )
 
             if order_line.get('x_wht_id') and not wht_id:
                 raise ValueError(
@@ -69,12 +77,16 @@ class PurchaseController(KBTApiBase):
             [('x_interface_id', '=', partner_ref)])
 
         if not partner_id:
-            partner_id = Partner.create({
-                'x_interface_id': partner_ref
-            })
+            raise ValueError(
+                "partner_id not found."
+            )
 
         account_analytic_id = Account.search(
             [('name', '=', params.get('analytic_account'))])
+        if not account_analytic_id:
+            raise ValueError(
+                "account_analytic_id not found."
+            )
 
         po_type = params.get('x_po_type_code').upper()
         po_type_id = Business.search([
@@ -155,6 +167,10 @@ class PurchaseController(KBTApiBase):
                 ('sequence', '=', order_line.get('seq_line')),
                 ('order_id', '=', purchase_ref_id.id)
             ])
+            if not seq_id:
+                raise ValueError(
+                    "seq_id not found."
+                )
             if order_line['qty_received'] + seq_id.qty_received >\
                     seq_id.product_qty:
                 name = seq_id.name

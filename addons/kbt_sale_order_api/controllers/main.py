@@ -32,6 +32,11 @@ class SaleOrderDataController(KBTApiBase):
     def _prepare_order_line(self, order_line, is_new_line, seq_id):
         product_id = request.env['product.product'].search(
             [('default_code', '=', order_line.get('product_id'))])
+        if not product_id:
+            raise ValueError(
+                "product_id not found."
+            )
+
         if is_new_line:
             return {
                 'product_id': product_id.id,
@@ -65,8 +70,9 @@ class SaleOrderDataController(KBTApiBase):
         partner_id = Partner.search(
             [('x_interface_id', '=', data.get('x_external_code'))])
         if not partner_id:
-            partner_id = Partner.create(
-                {'name': data.get('x_interface_id')})
+            raise ValueError(
+                "partner_id not found."
+            )
         vals['partner_id'] = partner_id.id
 
         date_order = data.get('date_order').split('-')
@@ -82,21 +88,37 @@ class SaleOrderDataController(KBTApiBase):
         account_term = request.env['account.payment.term']
         account_term_id = account_term.search(
             [('name', '=', data.get('payment_term'))])
+        if not account_term_id:
+            raise ValueError(
+                "account_term_id not found."
+            )
         vals['payment_term_id'] = account_term_id.id
 
         account_analytic = request.env['account.analytic.account']
         account_analytic_id = account_analytic.search(
             [('name', '=', data.get('analytic_account'))])
+        if not account_analytic_id:
+            raise ValueError(
+                "account_analytic_id not found."
+            )
         vals['analytic_account_id'] = account_analytic_id.id
 
         business_type = request.env['business.type'].search([
             ('x_code', '=', data['x_so_type_code'])])
+        if not business_type:
+            raise ValueError(
+                "business_type not found."
+            )
         vals['so_type_id'] = business_type.id
 
         so_type = params.get('x_so_type_code').upper()
         so_type_id = Business.search([
             ('x_code', '=ilike', so_type)
         ])
+        if not so_type_id:
+            raise ValueError(
+                "so_type_id not found."
+            )
         vals['so_type_id'] = so_type_id.id
 
         vals['x_so_orderreference'] = data.get('x_so_orderreference')
@@ -156,6 +178,10 @@ class SaleOrderDataController(KBTApiBase):
                 ('sequence', '=', order_line.get('seq_line')),
                 ('order_id', '=', so_orderreference.id)
             ])
+            if not seq_id:
+                raise ValueError(
+                    "seq_id not found."
+                )
             if order_line['qty_delivered'] + seq_id.qty_delivered >\
                     seq_id.product_uom_qty:
                 name = seq_id.name

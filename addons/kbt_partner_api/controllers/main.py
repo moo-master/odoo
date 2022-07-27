@@ -39,15 +39,27 @@ class PartnerDataController(KBTApiBase):
                  ('reconcile', '=', True),
                  ('company_id.company_code', '=', data.get('company_code'))
                  ])
+            if not account_receivable_id:
+                raise ValueError(
+                    "account_receivable_id not found."
+                )
 
             account_payable_id = request.env['account.account'].search(
                 [('code', '=', data.get('property_account_payable_id')),
                  ('reconcile', '=', True),
                  ('company_id.company_code', '=', data.get('company_code'))
                  ])
+            if not account_payable_id:
+                raise ValueError(
+                    "account_payable_id not found."
+                )
 
             partner_id = Partner.search(
                 [('x_interface_id', '=', data.get('x_external_code'))])
+            if not partner_id.x_interface_id:
+                raise ValueError(
+                    "partner_id not found."
+                )
 
             if data.get('company_type') not in ['person', 'company']:
                 raise ValueError(
@@ -84,6 +96,11 @@ class PartnerDataController(KBTApiBase):
             bank_id = ResBank.search([
                 ('bic', '=', data.get('bank_id'))
             ], limit=1).id
+            if not bank_id:
+                raise ValueError(
+                    "bank_id not found."
+                )
+
             partner_bank = partner_id.mapped('bank_ids').mapped('bank_id')
 
             acc_number = partner_id.mapped('bank_ids').filtered(
@@ -118,7 +135,7 @@ class PartnerDataController(KBTApiBase):
                 ])
                 if res_acc_bank:
                     raise ValueError(
-                        "Bank Account number is duplicate with other contact"
+                        "Bank Account number is duplicate with other contact."
                     )
 
                 partner_id.write({
