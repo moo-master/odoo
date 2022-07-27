@@ -18,24 +18,22 @@ class PurchaseController(KBTApiBase):
         except Exception as error:
             return self._response_api(message=str(error))
 
-    def _prepare_order_lines(self, order_line, account_analytic_id, po_type):
+    def _prepare_order_lines(self, order_line):
+        Account = request.env['account.analytic.account']
+
+        account_analytic_id = Account.search(
+            [('name', '=', order_line.get('analytic_account'))])
+        if not account_analytic_id:
+            raise ValueError(
+                "account_analytic_id not found."
+            )
+
         product_id = request.env['product.product'].search([
             ('default_code', '=', order_line.get('product_code')),
         ])
         if not product_id:
             raise ValueError(
                 "product_id not found."
-            )
-
-        product_type = product_id.detailed_type
-        if product_type == 'service' and po_type not in ['K-RENT', 'K-MATCH']:
-            raise ValueError("""
-                Product %s is Service, Business Code must be K-RENT or K-MATCH
-            """ % product_id.name)
-        if product_type != 'service' and po_type != 'K-STORE':
-            raise ValueError(
-                "Product %s is not a Service, Business Code must be K-STORE"
-                % product_id.name
             )
 
         vals = {
@@ -69,7 +67,7 @@ class PurchaseController(KBTApiBase):
     def _create_purchase_order(self, **params):
         Purchase = request.env['purchase.order']
         Partner = request.env['res.partner']
-        Account = request.env['account.analytic.account']
+
         Business = request.env['business.type']
 
         partner_ref = params.get('x_external_code')
@@ -79,13 +77,6 @@ class PurchaseController(KBTApiBase):
         if not partner_id:
             raise ValueError(
                 "partner_id not found."
-            )
-
-        account_analytic_id = Account.search(
-            [('name', '=', params.get('analytic_account'))])
-        if not account_analytic_id:
-            raise ValueError(
-                "account_analytic_id not found."
             )
 
         po_type = params.get('x_po_type_code').upper()
@@ -125,7 +116,7 @@ class PurchaseController(KBTApiBase):
         }
 
         order_line_vals_list = [(0, 0, self._prepare_order_lines(
-            order_line, account_analytic_id, po_type))
+            order_line))
             for order_line in params.get('lineItems')
         ]
         vals['order_line'] = order_line_vals_list
