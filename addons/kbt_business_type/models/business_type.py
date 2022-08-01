@@ -35,9 +35,8 @@ class BusinessType(models.Model):
     )
 
     default_gl_account_id = fields.Many2one(
-        string='Default GL Account',
+        string='Default Post Diff Code',
         comodel_name='account.account',
-        required=True,
     )
 
     active = fields.Boolean(

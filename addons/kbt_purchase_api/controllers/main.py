@@ -18,20 +18,22 @@ class PurchaseController(KBTApiBase):
         except Exception as error:
             return self._response_api(message=str(error))
 
-    def _prepare_order_lines(self, order_line, account_analytic_id, po_type):
+    def _prepare_order_lines(self, order_line):
+        Account = request.env['account.analytic.account']
+
+        account_analytic_id = Account.search(
+            [('name', '=', order_line.get('analytic_account'))])
+        if not account_analytic_id:
+            raise ValueError(
+                "account_analytic_id not found."
+            )
+
         product_id = request.env['product.product'].search([
             ('default_code', '=', order_line.get('product_code')),
         ])
-
-        product_type = product_id.detailed_type
-        if product_type == 'service' and po_type not in ['K-RENT', 'K-MATCH']:
-            raise ValueError("""
-                Product %s is Service, Business Code must be K-RENT or K-MATCH
-            """ % product_id.name)
-        if product_type != 'service' and po_type != 'K-STORE':
+        if not product_id:
             raise ValueError(
-                "Product %s is not a Service, Business Code must be K-STORE"
-                % product_id.name
+                "product_id not found."
             )
 
         vals = {
@@ -49,6 +51,10 @@ class PurchaseController(KBTApiBase):
             wht_id = request.env['account.wht.type'].search([
                 ('sequence', '=', wht_seq),
             ])
+            if not wht_id:
+                raise ValueError(
+                    "wht_id not found."
+                )
 
             if order_line.get('x_wht_id') and not wht_id:
                 raise ValueError(
@@ -61,7 +67,7 @@ class PurchaseController(KBTApiBase):
     def _create_purchase_order(self, **params):
         Purchase = request.env['purchase.order']
         Partner = request.env['res.partner']
-        Account = request.env['account.analytic.account']
+
         Business = request.env['business.type']
 
         partner_ref = params.get('x_external_code')
@@ -69,12 +75,9 @@ class PurchaseController(KBTApiBase):
             [('x_interface_id', '=', partner_ref)])
 
         if not partner_id:
-            partner_id = Partner.create({
-                'x_interface_id': partner_ref
-            })
-
-        account_analytic_id = Account.search(
-            [('name', '=', params.get('analytic_account'))])
+            raise ValueError(
+                "partner_id not found."
+            )
 
         po_type = params.get('x_po_type_code').upper()
         po_type_id = Business.search([
@@ -94,18 +97,26 @@ class PurchaseController(KBTApiBase):
                 "Purchase %s already exists." % purchase_ref
             )
 
+        date_api = params.get('receipt_date').split('-')
+        date_planned = '{0}-{1}-{2}'.format(
+            date_api[2], date_api[1], date_api[0])
+
+        date_api = params.get('x_bill_date').split('-')
+        x_bill_date = '{0}-{1}-{2}'.format(
+            date_api[2], date_api[1], date_api[0])
+
         vals = {
             'partner_id': partner_id.id,
             'name': purchase_ref,
             'x_is_interface': True,
-            'date_planned': params.get('receipt_date'),
+            'date_planned': date_planned,
             'po_type_id': po_type_id.id,
-            'x_bill_date': params.get('x_bill_date'),
+            'x_bill_date': x_bill_date,
             'x_bill_ref': params.get('x_bill_ref'),
         }
 
         order_line_vals_list = [(0, 0, self._prepare_order_lines(
-            order_line, account_analytic_id, po_type))
+            order_line))
             for order_line in params.get('lineItems')
         ]
         vals['order_line'] = order_line_vals_list
@@ -147,6 +158,10 @@ class PurchaseController(KBTApiBase):
                 ('sequence', '=', order_line.get('seq_line')),
                 ('order_id', '=', purchase_ref_id.id)
             ])
+            if not seq_id:
+                raise ValueError(
+                    "seq_id not found."
+                )
             if order_line['qty_received'] + seq_id.qty_received >\
                     seq_id.product_qty:
                 name = seq_id.name

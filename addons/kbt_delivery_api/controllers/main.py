@@ -63,20 +63,36 @@ class DeliveryController(KBTApiBase):
             ('sale_id', '=', sale_order.id),
             ('state', 'in', ['assigned', 'confirmed']),
         ])
+        if not stock:
+            raise ValueError(
+                "stock not found."
+            )
 
         for item in data['item']:
             product_id = Product.search([
                 ('default_code', '=', item['product_id']),
             ])
+            if not product_id:
+                raise ValueError(
+                    "product_id not found."
+                )
             sale_line = SaleOrderLine.search([
                 ('order_id', '=', sale_order.id),
                 ('sequence', '=', item['seq_line']),
                 ('product_id', '=', product_id.id),
             ])
+            if not sale_line:
+                raise ValueError(
+                    "sale_line not found."
+                )
             stock_line = StockMove.search([
                 ('sale_line_id', '=', sale_line.id),
                 ('picking_id', '=', stock.id)
             ])
+            if not stock_line:
+                raise ValueError(
+                    "stock_line not found."
+                )
             stock_line.write({
                 'quantity_done':
                     stock_line.quantity_done + item['qty_done']
@@ -106,6 +122,10 @@ class DeliveryController(KBTApiBase):
             acc_move = AccountMove.search(res['domain']).filtered(
                 lambda y: y.state == 'draft'
             )
+            if not acc_move:
+                raise ValueError(
+                    "acc_move not found."
+                )
         for inv in acc_move:
             inv.action_post()
             response_api.append(inv.name)
