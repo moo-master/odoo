@@ -56,10 +56,6 @@ class PartnerDataController(KBTApiBase):
 
             partner_id = Partner.search(
                 [('x_interface_id', '=', data.get('x_external_code'))])
-            if not partner_id.x_interface_id:
-                raise ValueError(
-                    "partner_id not found."
-                )
 
             if data.get('company_type') not in ['person', 'company']:
                 raise ValueError(
