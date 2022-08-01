@@ -59,17 +59,29 @@ class PaymentDataController(KBTApiBase):
             vals = {}
             Partner.search(
                 [('x_interface_id', '=', data['x_external_code'])])
+            if not Partner:
+                raise ValueError(
+                    "partner not found."
+                )
 
             partner_bank = PartnerBank.search([
                 ('acc_number', '=', data['partner_bank_code']),
                 ('bank_id.bic', '=', data['bank_code']),
             ])
+            if not partner_bank:
+                raise ValueError(
+                    "partner_bank not found."
+                )
 
             journal_code = AccountJournal.search([
                 ('code', '=', data['journal_code']),
                 ('company_id', '=', User.company_id.id)])
+            if not journal_code:
+                raise ValueError(
+                    "journal_code_id not found."
+                )
 
-            date_api = data['date'].split('/')
+            date_api = data['date'].split('-')
             date_data = '{0}-{1}-{2}'.format(
                 date_api[0], date_api[1], date_api[2])
 
@@ -77,6 +89,11 @@ class PaymentDataController(KBTApiBase):
                 ('name', '=', data['invoice_number']),
                 ('state', '=', 'posted'),
             ])
+            if not acc_move:
+                raise ValueError(
+                    "acc_move not found."
+                )
+
             res_action = acc_move.action_register_payment()
             ctx = res_action.get('context')
             vals = {

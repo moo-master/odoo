@@ -67,7 +67,11 @@ class ReceiptController(KBTApiBase):
             ('purchase_id', '=', purchase_order.id),
             ('state', 'in', ['assigned', 'confirmed']),
         ])
-        date_api = data.get('x_bill_date').split('/')
+        if not stock_id:
+            raise ValueError(
+                "stock_id not found."
+            )
+        date_api = data.get('x_bill_date').split('-')
         x_bill_date = '{0}-{1}-{2}'.format(
             date_api[2], date_api[1], date_api[0])
         update_line_lst = []
@@ -78,6 +82,10 @@ class ReceiptController(KBTApiBase):
                 ('picking_id', '=', stock_id.id),
                 ('purchase_line_id', '=', purchase_line.id),
             ])
+            if not stock_line:
+                raise ValueError(
+                    "stock_line not found."
+                )
             update_line_lst.append((1, stock_line.id, {
                 'quantity_done': item['qty_done']
             }))

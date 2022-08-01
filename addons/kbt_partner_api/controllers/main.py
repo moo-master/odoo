@@ -30,6 +30,7 @@ class PartnerDataController(KBTApiBase):
     def _create_update_partner(self, **params):
         Partner = request.env['res.partner']
         ResBank = request.env['res.bank']
+        ResBankAccount = request.env['res.partner.bank']
         data_params = params
 
         for data in data_params.get('data'):
@@ -38,15 +39,27 @@ class PartnerDataController(KBTApiBase):
                  ('reconcile', '=', True),
                  ('company_id.company_code', '=', data.get('company_code'))
                  ])
+            if not account_receivable_id:
+                raise ValueError(
+                    "account_receivable_id not found."
+                )
 
             account_payable_id = request.env['account.account'].search(
                 [('code', '=', data.get('property_account_payable_id')),
                  ('reconcile', '=', True),
                  ('company_id.company_code', '=', data.get('company_code'))
                  ])
+            if not account_payable_id:
+                raise ValueError(
+                    "account_payable_id not found."
+                )
 
             partner_id = Partner.search(
                 [('x_interface_id', '=', data.get('x_external_code'))])
+            if not partner_id.x_interface_id:
+                raise ValueError(
+                    "partner_id not found."
+                )
 
             if data.get('company_type') not in ['person', 'company']:
                 raise ValueError(
@@ -83,16 +96,48 @@ class PartnerDataController(KBTApiBase):
             bank_id = ResBank.search([
                 ('bic', '=', data.get('bank_id'))
             ], limit=1).id
+            if not bank_id:
+                raise ValueError(
+                    "bank_id not found."
+                )
+
             partner_bank = partner_id.mapped('bank_ids').mapped('bank_id')
+
+            acc_number = partner_id.mapped('bank_ids').filtered(
+                lambda x: x.acc_number == data.get('bank_acc_number'))
+
             if bank_id in partner_bank.ids:
+
                 res_bank = partner_id.mapped(
                     'bank_ids').filtered(lambda x: x.bank_id.id == bank_id)
+                if res_bank:
+                    partner_id.write({
+                        'bank_ids': [(1, res_bank.id, {
+                            'acc_number': data.get('bank_acc_number'),
+                        })]
+                    })
+
+            elif acc_number:
                 partner_id.write({
-                    'bank_ids': [(1, res_bank.id, {
+                    'bank_ids': [(2, acc_number.id)]
+                })
+
+                partner_id.write({
+                    'bank_ids': [(0, 0, {
                         'acc_number': data.get('bank_acc_number'),
+                        'bank_id': bank_id
                     })]
                 })
+
             else:
+                res_acc_bank = ResBankAccount.search([
+                    ('acc_number', '=', data.get('bank_acc_number'))
+                ])
+                if res_acc_bank:
+                    raise ValueError(
+                        "Bank Account number is duplicate with other contact."
+                    )
+
                 partner_id.write({
                     'bank_ids': [(0, 0, {
                         'acc_number': data.get('bank_acc_number'),
