@@ -64,9 +64,19 @@ class JournalController(KBTApiBase):
             raise ValueError(
                 "account_id not found."
             )
+
+        account_analytic = request.env['account.analytic.account']
+        account_analytic_id = account_analytic.search(
+            [('name', '=', line.get('analytic_account'))])
+        if not account_analytic_id:
+            raise ValueError(
+                "account_analytic_id not found."
+            )
+
         return {
             'sequence': line['seq_line'],
             'account_id': account_id.id or False,
+            'analytic_account_id': account_analytic_id.id,
             'debit': line['debit_amount'],
             'credit': line['credit_amount']
         }
