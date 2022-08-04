@@ -75,7 +75,7 @@ class PaymentDataController(KBTApiBase):
                 )
 
             date_api = data['date'].split('-')
-            date_data = '{0}-{1}-{2}'.format(
+            date_data = '{2}-{1}-{0}'.format(
                 date_api[0], date_api[1], date_api[2])
 
             acc_move = AccountMove.search([
