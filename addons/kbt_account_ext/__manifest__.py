@@ -13,5 +13,8 @@
     ],
     'depends': [
         'kbt_business_type',
+    ],
+    'data': [
+        'views/account_payment_term_views.xml'
     ]
 }
