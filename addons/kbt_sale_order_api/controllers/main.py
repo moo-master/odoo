@@ -130,7 +130,15 @@ class SaleOrderDataController(KBTApiBase):
             order_line, True, False))
             for order_line in params.get('lineItems')
         ]
-        vals['order_line'] = order_line_vals_list
+        order_line_vals_list_with_note = []
+        for each_line in order_line_vals_list:
+            this_note = (0, 0, {
+                'name': each_line[2].get('note'),
+                'display_type': 'line_note',
+                'sequence': each_line[2].get('sequence')})
+            order_line_vals_list_with_note.append(each_line)
+            order_line_vals_list_with_note.append(this_note)
+        vals['order_line'] = order_line_vals_list_with_note
 
         sale = Sale.new(vals)
         sale.onchange_partner_id()
