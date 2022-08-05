@@ -29,7 +29,8 @@ class AccountMove(models.Model):
                         'You cannot validate this document due limitation policy. Please contact employee {%s}\n ไม่สามารถดำเนินการได้เนื่องจากเกินวงเงินที่กำหนด กรุณาติดต่อพนักงาน {%s}',
                         em_level,
                         em_level))
-        super().action_post()
+        else:
+            super().action_post()
 
     def action_cancel_reject_reason_wizard(self):
         view = self.env.ref('beecy_reason.view_cancel_reject_reason_form')
