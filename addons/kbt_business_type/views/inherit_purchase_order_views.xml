@@ -7,7 +7,8 @@
         <field name="priority" eval="100"/>
         <field name="arch" type="xml">
             <xpath expr="//field[@name='partner_ref']" position="after">
-                <field name="po_type_id" string="Business Type"/>
+                <field name="x_is_interface" />
+                <field name="po_type_id" string="Business Type" attrs="{'required': [('x_is_interface','=', True)]}"/>
             </xpath>
         </field>
     </record>
