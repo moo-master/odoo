@@ -14,7 +14,7 @@
                 <attribute name="attrs">{'column_invisible': [('parent.x_is_interface', '=', True)]}</attribute>
             </xpath>
             <xpath expr="//field[@name='x_is_interface']" position="before">
-                <field name="so_type_id" string="Business Type"/>
+                <field name="so_type_id" string="Business Type" attrs="{'required': [('x_is_interface','=', True)]}"/>
             </xpath>
         </field>
     </record>
