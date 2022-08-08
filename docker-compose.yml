@@ -2,7 +2,7 @@ version: '3.8'
 
 services:
   odoo:
-    image: registry.3roots.live/skc
+    build: .
     container_name: odoo
     depends_on:
       - db
