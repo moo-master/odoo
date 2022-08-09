@@ -133,6 +133,7 @@ class SaleOrderDataController(KBTApiBase):
         order_line_vals_list_with_note = []
         for each_line in order_line_vals_list:
             this_note = (0, 0, {
+                'product_packaging_qty': 0,
                 'name': each_line[2].get('note'),
                 'display_type': 'line_note',
                 'sequence': each_line[2].get('sequence')})
