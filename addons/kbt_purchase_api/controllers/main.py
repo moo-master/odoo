@@ -101,18 +101,12 @@ class PurchaseController(KBTApiBase):
         date_planned = '{0}-{1}-{2}'.format(
             date_api[2], date_api[1], date_api[0])
 
-        date_api = params.get('x_bill_date').split('-')
-        x_bill_date = '{0}-{1}-{2}'.format(
-            date_api[2], date_api[1], date_api[0])
-
         vals = {
             'partner_id': partner_id.id,
             'name': purchase_ref,
             'x_is_interface': True,
             'date_planned': date_planned,
             'po_type_id': po_type_id.id,
-            'x_bill_date': x_bill_date,
-            'x_bill_ref': params.get('x_bill_ref'),
         }
 
         order_line_vals_list = [(0, 0, self._prepare_order_lines(
@@ -133,12 +127,24 @@ class PurchaseController(KBTApiBase):
     @http.route('/purchase/update', type='json', auth='user')
     def purchase_order_update_api(self, **params):
         try:
+            msg = self._check_purchase_order_update_values(**params)
+            if msg:
+                return self._response_api(message=msg)
             res = self._update_purchase_order(**params)
             return self._response_api(isSuccess=True, x_purchase_ref=res)
         except requests.HTTPError as http_err:
             return self._response_api(message=str(http_err))
         except Exception as error:
             return self._response_api(message=str(error))
+
+    def _check_purchase_order_update_values(self, **params):
+        msg_list = []
+        if params.get('x_bill_date'):
+            msg_list.append('Missing x_bill_date')
+        if params.get('x_bill_ref'):
+            msg_list.append('Missing x_bill_ref')
+
+        return msg_list
 
     def _update_purchase_order(self, **params):
         Purchase = request.env['purchase.order']
