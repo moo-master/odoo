@@ -39,7 +39,7 @@ class BusinessType(models.Model):
         comodel_name='account.account',
     )
 
-    active = fields.Boolean(
+    is_active = fields.Boolean(
         string='active',
         default=True,
     )
