@@ -85,10 +85,7 @@ class PartnerDataController(KBTApiBase):
 
             if not partner_id:
                 # Check acc_number is duplicate
-                is_new_acc = self._get_res_partner_bank_data(
-                    data.get('bank_acc_number'))
-                if is_new_acc:
-                    return self._raise_error_duplicate()
+                self._check_duplicate_number(data.get('bank_acc_number'))
 
                 vals_dict.update({
                     'bank_ids': [(0, 0, {
@@ -120,10 +117,7 @@ class PartnerDataController(KBTApiBase):
                     partner_id=partner_id, bank_id=bank_id)
                 if partner_bank_id:
                     # Same Bank But New acc_number
-                    is_new_acc = self._get_res_partner_bank_data(
-                        data.get('bank_acc_number'))
-                    if is_new_acc:
-                        return self._raise_error_duplicate()
+                    self._check_duplicate_number(data.get('bank_acc_number'))
                     vals_dict.update({
                         'bank_ids': [(1, partner_bank_id.id, {
                             'acc_number': data.get('bank_acc_number'),
@@ -131,6 +125,7 @@ class PartnerDataController(KBTApiBase):
                     })
                 else:
                     # Create New res.partner.bank
+                    self._check_duplicate_number(data.get('bank_acc_number'))
                     vals_dict.update({
                         'bank_ids': [(0, 0, {
                             'acc_number': data.get('bank_acc_number'),
@@ -156,7 +151,10 @@ class PartnerDataController(KBTApiBase):
             domain, limit=1)
         return partner_bank_id
 
-    def _raise_error_duplicate(self):
-        raise ValueError(
-            "Bank Account number is duplicate with other contact."
-        )
+    def _check_duplicate_number(self, acc_number):
+        partner_bank_id = self._get_res_partner_bank_data(acc_number)
+        if partner_bank_id:
+            raise ValueError(
+                "Bank Account number is duplicate with other contact."
+            )
+        return acc_number
