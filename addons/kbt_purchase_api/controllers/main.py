@@ -4,6 +4,8 @@ from odoo import http
 from odoo.http import request
 from odoo.addons.kbt_api_base.controllers.main import KBTApiBase
 
+from datetime import datetime
+
 
 class PurchaseController(KBTApiBase):
 
@@ -97,9 +99,8 @@ class PurchaseController(KBTApiBase):
                 "Purchase %s already exists." % purchase_ref
             )
 
-        date_api = params.get('receipt_date').split('-')
-        date_planned = '{0}-{1}-{2}'.format(
-            date_api[2], date_api[1], date_api[0])
+        date_planned = datetime.strptime(
+            params.get('receipt_date'), '%d-%m-%Y')
 
         vals = {
             'partner_id': partner_id.id,
@@ -139,15 +140,16 @@ class PurchaseController(KBTApiBase):
 
     def _check_purchase_order_update_values(self, **params):
         msg_list = []
-        if params.get('x_bill_date'):
+        if not params.get('x_bill_date'):
             msg_list.append('Missing x_bill_date')
-        if params.get('x_bill_ref'):
+        if not params.get('x_bill_ref'):
             msg_list.append('Missing x_bill_ref')
 
         return msg_list
 
     def _update_purchase_order(self, **params):
         Purchase = request.env['purchase.order']
+        # AccountMove = request.env['account.move']
 
         purchase_ref = params['x_purchase_ref']
         purchase_ref_id = Purchase.search([
@@ -184,9 +186,19 @@ class PurchaseController(KBTApiBase):
                     (1, seq_id.id, {
                         'qty_received': seq_id.qty_received + order_line['qty_received']}))
 
-        purchase_ref_id.update({
+        # x_bill_date = datetime.strptime(
+        #     params.get('x_bill_date'), '%d-%m-%Y')
+
+        purchase_ref_id.write({
             'order_line': update_line_lst
         })
         purchase_ref_id.action_create_invoice()
+        # print("\n\n apiiiii", res)
+
+        # acc_move = AccountMove.browse([res.get('res_id')])
+        # acc_move.write({
+        #     'invoice_date': x_bill_date,
+        #     'payment_reference': params.get('x_bill_ref'),
+        # })
 
         return purchase_ref
