@@ -149,7 +149,7 @@ class PurchaseController(KBTApiBase):
 
     def _update_purchase_order(self, **params):
         Purchase = request.env['purchase.order']
-        # AccountMove = request.env['account.move']
+        AccountMove = request.env['account.move']
 
         purchase_ref = params['x_purchase_ref']
         purchase_ref_id = Purchase.search([
@@ -157,9 +157,8 @@ class PurchaseController(KBTApiBase):
             ('x_is_interface', '=', True)
         ])
         if not purchase_ref_id:
-            raise ValueError(
-                "Purchase %s does not exist." % purchase_ref
-            )
+            raise ValueError("Purchase %s does not exist." % purchase_ref)
+
         update_line_lst = []
         for order_line in params['lineItems']:
             seq_id = request.env['purchase.order.line'].search([
@@ -186,19 +185,18 @@ class PurchaseController(KBTApiBase):
                     (1, seq_id.id, {
                         'qty_received': seq_id.qty_received + order_line['qty_received']}))
 
-        # x_bill_date = datetime.strptime(
-        #     params.get('x_bill_date'), '%d-%m-%Y')
+        x_bill_date = datetime.strptime(
+            params.get('x_bill_date'), '%d-%m-%Y')
 
         purchase_ref_id.write({
             'order_line': update_line_lst
         })
-        purchase_ref_id.action_create_invoice()
-        # print("\n\n apiiiii", res)
+        res = purchase_ref_id.action_create_invoice()
 
-        # acc_move = AccountMove.browse([res.get('res_id')])
-        # acc_move.write({
-        #     'invoice_date': x_bill_date,
-        #     'payment_reference': params.get('x_bill_ref'),
-        # })
+        acc_move = AccountMove.browse([res.get('res_id')])
+        acc_move.write({
+            'invoice_date': x_bill_date,
+            'payment_reference': params.get('x_bill_ref'),
+        })
 
         return purchase_ref
