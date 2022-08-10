@@ -79,13 +79,17 @@ class PurchaseController(KBTApiBase):
                 "partner_id not found."
             )
 
-        po_type = params.get('x_po_type_code').upper()
+        po_type = params.get('x_po_type_code')
         po_type_id = Business.search([
-            ('x_code', '=ilike', po_type)
+            ('x_code', '=', po_type)
         ])
         if not po_type_id:
             raise ValueError(
                 "Business Code: %s have no data." % po_type
+            )
+        if not po_type_id.is_active:
+            raise ValueError(
+                f"Business Type Code ({po_type}) is inactive."
             )
 
         purchase_ref = params.get('x_purchase_ref')

@@ -58,11 +58,14 @@ class JournalController(KBTApiBase):
     def _prepare_line_ids(self, line, user_id):
         account_id = request.env['account.account'].search([
             ('code', '=', line['account_code']),
-            ('deprecated', '=', False),
             ('company_id', '=', user_id.company_id.id)])
         if not account_id:
             raise ValueError(
-                "account_id not found."
+                f"Account code ({line['account_code']}) not found."
+            )
+        if account_id.deprecated:
+            raise ValueError(
+                f"Account code ({line['account_code']}) is deprecated."
             )
 
         account_analytic = request.env['account.analytic.account']
@@ -70,7 +73,7 @@ class JournalController(KBTApiBase):
             [('name', '=', line.get('analytic_account'))])
         if not account_analytic_id:
             raise ValueError(
-                "account_analytic_id not found."
+                f"Analytic Account ({line.get('analytic_account')}) not found."
             )
 
         return {
