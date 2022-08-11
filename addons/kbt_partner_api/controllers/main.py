@@ -40,15 +40,27 @@ class PartnerDataController(KBTApiBase):
                 ('company_id', '=', User.company_id.id),
             ])
             if not account_receivable_id:
-                raise ValueError("account_receivable_id not found.")
+                raise ValueError(
+                    f"Account code ({data.get('property_account_receivable_id')}) not found."
+                )
+            if account_receivable_id.deprecated:
+                raise ValueError(
+                    f"Account code ({data.get('property_account_receivable_id')}) is deprecated."
+                )
 
-            account_payable_id = request.env['account.account'].search([
-                ('code', '=', data.get('property_account_payable_id')),
-                ('reconcile', '=', True),
-                ('company_id', '=', User.company_id.id),
-            ])
+            account_payable_id = request.env['account.account'].search(
+                [('code', '=', data.get('property_account_payable_id')),
+                 ('reconcile', '=', True),
+                 ('company_id.company_code', '=', data.get('company_code'))
+                 ])
             if not account_payable_id:
-                raise ValueError("account_payable_id not found.")
+                raise ValueError(
+                    f"Account code ({data.get('property_account_payable_id')}) not found."
+                )
+            if account_payable_id.deprecated:
+                raise ValueError(
+                    f"Account code ({data.get('property_account_payable_id')}) is deprecated."
+                )
 
             partner_id = Partner.search(
                 [('x_interface_id', '=', data.get('x_external_code'))])

@@ -11,7 +11,7 @@
                 <field name="x_sequence_id"/>
                 <field name="x_revenue_account_id"/>
                 <field name="default_gl_account_id"/>
-                <field name="active"/>
+                <field name="is_active"/>
             </tree>
         </field>
     </record>

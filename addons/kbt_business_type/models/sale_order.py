@@ -13,5 +13,5 @@ class SaleOrder(models.Model):
     so_type_id = fields.Many2one(
         comodel_name='business.type',
         string='Sale Order Type',
-        domain="[('x_type', '=', 'sale'), ('active', '=', True)]",
+        domain="[('x_type', '=', 'sale'), ('is_active', '=', True)]",
     )

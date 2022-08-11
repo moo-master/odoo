@@ -109,6 +109,11 @@ class SaleOrderDataController(KBTApiBase):
             raise ValueError(
                 "business_type not found."
             )
+        if not business_type.is_active:
+            raise ValueError(
+                f"Business Type Code ({data['x_so_type_code']}) is inactive."
+            )
+
         vals['so_type_id'] = business_type.id
 
         so_type = params.get('x_so_type_code').upper()
@@ -133,6 +138,7 @@ class SaleOrderDataController(KBTApiBase):
         order_line_vals_list_with_note = []
         for each_line in order_line_vals_list:
             this_note = (0, 0, {
+                'product_packaging_qty': 0,
                 'name': each_line[2].get('note'),
                 'display_type': 'line_note',
                 'sequence': each_line[2].get('sequence')})
