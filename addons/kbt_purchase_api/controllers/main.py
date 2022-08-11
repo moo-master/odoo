@@ -23,30 +23,43 @@ class PurchaseController(KBTApiBase):
     def _prepare_order_lines(self, order_line):
         Account = request.env['account.analytic.account']
 
-        account_analytic_id = Account.search(
-            [('name', '=', order_line.get('analytic_account'))])
-        if not account_analytic_id:
-            raise ValueError(
-                "account_analytic_id not found."
-            )
+        if (not order_line.get('product_code')) and order_line.get('note'):
+            vals = {
+                'sequence': order_line.get('seq_line'),
+                'name': order_line.get('note'),
+                'display_type': "line_note",
+                'product_qty': 0,
+            }
+        elif order_line.get('product_code'):
+            account_analytic_id = Account.search(
+                [('name', '=', order_line.get('analytic_account'))])
+            if not account_analytic_id:
+                raise ValueError(
+                    "account_analytic_id not found."
+                )
 
-        product_id = request.env['product.product'].search([
-            ('default_code', '=', order_line.get('product_code')),
-        ])
-        if not product_id:
-            raise ValueError(
-                "product_id not found."
-            )
+            product_id = request.env['product.product'].search([
+                ('default_code', '=', order_line.get('product_code')),
+            ])
+            if not product_id:
+                raise ValueError(
+                    "product_id not found"
+                )
 
-        vals = {
-            'account_analytic_id': account_analytic_id.id,
-            'product_id': product_id.id,
-            'name': order_line.get('name'),
-            'qty_received': 0,
-            'product_qty': order_line.get('product_uom_qty'),
-            'price_unit': order_line.get('price_unit'),
-            'sequence': order_line.get('seq_line'),
-        }
+            vals = {
+                'account_analytic_id': account_analytic_id.id,
+                'product_id': product_id.id,
+                'name': order_line.get('name'),
+                'qty_received': 0,
+                'product_qty': order_line.get('product_uom_qty'),
+                'price_unit': order_line.get('price_unit'),
+                'sequence': order_line.get('seq_line'),
+                'note': order_line.get('note'),
+            }
+        else:
+            raise ValueError(
+                "This item is neither 'product' nor 'note'."
+            )
 
         if 'x_wht_id' in order_line:
             wht_seq = order_line.get('x_wht_id')
