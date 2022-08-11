@@ -97,6 +97,16 @@ class DeliveryController(KBTApiBase):
                 raise ValueError(
                     "stock_line not found."
                 )
+            if item['qty_done'] + \
+                    sale_line.qty_delivered > sale_line.product_uom_qty:
+                name = sale_line.name
+                prod_qty = sale_line.product_uom_qty
+                qty_deli = item['qty_done']
+                raise ValueError(
+                    f"Your ordered quantity of {name} is "
+                    f"{prod_qty} and current delivered "
+                    f"quantity is {qty_deli} your order "
+                    f"quantity can’t more than {prod_qty - sale_line.qty_delivered}")
             stock_line.write({
                 'quantity_done':
                     stock_line.quantity_done + item['qty_done']

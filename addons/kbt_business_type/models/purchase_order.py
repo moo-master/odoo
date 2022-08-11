@@ -13,5 +13,5 @@ class PurchaseOrder(models.Model):
     po_type_id = fields.Many2one(
         comodel_name='business.type',
         string='Purchase Order Type',
-        domain="[('x_type', '=', 'purchase'), ('active', '=', True)]",
+        domain="[('x_type', '=', 'purchase'), ('is_active', '=', True)]",
     )
