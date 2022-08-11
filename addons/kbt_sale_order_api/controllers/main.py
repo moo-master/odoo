@@ -188,14 +188,15 @@ class SaleOrderDataController(KBTApiBase):
 
         update_line_lst = []
         for order_line in params['lineItems']:
+
             seq_id = request.env['sale.order.line'].search([
                 ('sequence', '=', order_line.get('seq_line')),
-                ('order_id', '=', so_orderreference.id)
+                ('order_id', '=', so_orderreference.id),
+                ('display_type', '=', False),
             ])
             if not seq_id:
                 raise ValueError(
-                    "seq_id not found."
-                )
+                    f"Sale Order Line seq_line({order_line.get('seq_line')}) not found.")
             if order_line['qty_delivered'] + seq_id.qty_delivered >\
                     seq_id.product_uom_qty:
                 name = seq_id.name
@@ -206,10 +207,12 @@ class SaleOrderDataController(KBTApiBase):
                     f"{prod_qty} and current delivered "
                     f"quantity is {qty_deli} your order "
                     f"quantity can’t more than {prod_qty - seq_id.qty_delivered}")
-            else:
-                update_line_lst.append(
-                    (1, seq_id.id,
-                     self._prepare_order_line(order_line, False, seq_id)))
+            elif seq_id.product_id.detailed_type != 'service':
+                raise ValueError(
+                    "Can not update Consume product by using Service API.")
+            update_line_lst.append(
+                (1, seq_id.id,
+                    self._prepare_order_line(order_line, False, seq_id)))
         so_orderreference.update({
             'order_line': update_line_lst,
             'x_address': params['x_address'],
