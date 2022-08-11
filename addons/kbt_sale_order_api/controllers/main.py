@@ -1,4 +1,5 @@
 import requests
+from datetime import datetime
 
 from odoo import http
 from odoo.http import request
@@ -75,9 +76,7 @@ class SaleOrderDataController(KBTApiBase):
             )
         vals['partner_id'] = partner_id.id
 
-        date_order = data.get('date_order').split('-')
-        datetime_order = '{0}-{1}-{2}'.format(
-            date_order[2], date_order[1], date_order[0])
+        datetime_order = datetime.strptime(data.get('date_order'), '%d-%m-%Y')
         vals['date_order'] = datetime_order
 
         delivery_date = data.get('effective_date').split('-')
@@ -153,12 +152,10 @@ class SaleOrderDataController(KBTApiBase):
 
         sale_id.write({
             'name': params.get('x_so_orderreference'),
-        })
-        sale_id.action_confirm()
-        sale_id.write({
             'date_order': datetime_order,
             'payment_term_id': account_term_id.id,
         })
+        sale_id.action_confirm()
 
     @KBTApiBase.api_wrapper(['kbt.sale_order_update'])
     @http.route('/sale/update', type='json', auth='user')
