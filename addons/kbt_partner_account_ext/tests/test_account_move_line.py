@@ -8,6 +8,13 @@ def model(env):
 
 
 @pytest.fixture
+def product(env):
+    return env['product.product'].create({
+        'name': 'Mini Fan'
+    })
+
+
+@pytest.fixture
 def currency(env):
     return env['res.currency'].create({
         'name': 'THR',
@@ -89,3 +96,17 @@ def test_create_model_with_x_offset(model, env, test_input, currency, partner):
             'quantity': 1}
     res = model.new(vals)
     assert res.x_offset == res.move_id.partner_id.x_offset
+
+
+def test_create_with_note(env, partner, account_payable):
+    model = env['account.move']
+    acc_move = model.create({
+        "partner_id": partner.id,
+        "move_type": "out_invoice",
+        "invoice_line_ids": [(0, 0, {
+            'name': 'string',
+            'display_type': 'line_note',
+            'account_id': account_payable.id
+        })],
+    })
+    assert not acc_move.invoice_line_ids.account_id
