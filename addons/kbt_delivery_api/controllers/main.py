@@ -68,14 +68,15 @@ class DeliveryController(KBTApiBase):
                 "stock not found."
             )
 
+        stock_move_lst = []
         for item in data['item']:
             product_id = Product.search([
                 ('default_code', '=', item['product_id']),
             ])
             if not product_id:
                 raise ValueError(
-                    "product_id not found."
-                )
+                    f"Product code({item.get('product_id')}) not found.")
+
             sale_line = SaleOrderLine.search([
                 ('order_id', '=', sale_order.id),
                 ('sequence', '=', item['seq_line']),
@@ -83,8 +84,11 @@ class DeliveryController(KBTApiBase):
             ])
             if not sale_line:
                 raise ValueError(
-                    "sale_line not found."
+                    f"Sale Order Line seq_line({item.get('seq_line')}) not found."
                 )
+            elif sale_line.product_id.detailed_type == 'service':
+                raise ValueError(
+                    "Can not update Service product by using Consume API.")
             stock_line = StockMove.search([
                 ('sale_line_id', '=', sale_line.id),
                 ('picking_id', '=', stock.id)
@@ -98,17 +102,20 @@ class DeliveryController(KBTApiBase):
                 name = sale_line.name
                 prod_qty = sale_line.product_uom_qty
                 qty_deli = item['qty_done']
+                total_qty = prod_qty - sale_line.qty_delivered
                 raise ValueError(
                     f"Your ordered quantity of {name} is "
                     f"{prod_qty} and current delivered "
                     f"quantity is {qty_deli} your order "
-                    f"quantity can’t more than {prod_qty - sale_line.qty_delivered}")
-            stock_line.write({
+                    f"quantity can’t more than {total_qty}")
+            stock_move_lst.append((1, stock_line.id, {
                 'quantity_done':
-                    stock_line.quantity_done + item['qty_done']
-            })
+                    stock_line.quantity_done + item.get('qty_done')
+            }))
+
         stock.write({
             'x_is_interface': True,
+            'move_ids_without_package': stock_move_lst
         })
         res = stock._pre_action_done_hook()
         if res is True:
