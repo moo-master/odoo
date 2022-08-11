@@ -17,6 +17,5 @@
     'data': [
         'views/view_order_form_inherit_views.xml',
         'views/view_move_form_inherit_views.xml',
-        'views/purchase_order_form_inherit_views.xml',
     ]
 }

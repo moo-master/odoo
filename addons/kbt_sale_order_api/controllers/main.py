@@ -109,6 +109,11 @@ class SaleOrderDataController(KBTApiBase):
             raise ValueError(
                 "business_type not found."
             )
+        if not business_type.is_active:
+            raise ValueError(
+                f"Business Type Code ({data['x_so_type_code']}) is inactive."
+            )
+
         vals['so_type_id'] = business_type.id
 
         so_type = params.get('x_so_type_code').upper()
