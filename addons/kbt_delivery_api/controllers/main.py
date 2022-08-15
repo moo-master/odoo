@@ -85,6 +85,10 @@ class DeliveryController(KBTApiBase):
                 raise ValueError(
                     "sale_line not found."
                 )
+            if sale_line.product_id.detailed_type == 'service':
+                raise ValueError(
+                    "Can not update Service product by using Consume API."
+                )
             stock_line = StockMove.search([
                 ('sale_line_id', '=', sale_line.id),
                 ('picking_id', '=', stock.id)

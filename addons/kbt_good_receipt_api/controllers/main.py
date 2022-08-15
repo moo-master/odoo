@@ -1,4 +1,5 @@
 import requests
+from datetime import datetime
 
 from odoo import http
 from odoo.http import request
@@ -22,29 +23,22 @@ class ReceiptController(KBTApiBase):
             return self._response_api(message=str(error))
 
     def _check_api_values(self, **params):
-        msg_list = []
         data = params
-        if not data.get('purchase_ref'):
-            msg_list.append('purchase_ref: No Data')
-        if not data.get('x_bill_date'):
-            msg_list.append('x_bill_date: No Data')
-        if not data.get('x_bill_reference'):
-            msg_list.append('x_bill_reference: No Data')
-        if not data.get('Items'):
-            msg_list.append('Items: No Data')
-        else:
-            for line in data.get('Items'):
-                if not line.get('product_id'):
-                    msg_list.append('Items product_id: No Data')
-                if not line.get('name'):
-                    msg_list.append('Items name: No Data')
-                if not line.get('qty_done'):
-                    msg_list.append('Items qty_done: No Data')
+        check_lst = {
+            'purchase_ref',
+            'x_bill_date',
+            'x_bill_reference',
+            'Items',
+        }
+        missing_vals = check_lst - set(data.keys())
+        msg_list = [f'{val}: Missing' for val in missing_vals]
         return msg_list
 
     def _create_goods_receipt(self, **params):
         data = params
         Purchase = request.env['purchase.order']
+        AccountMove = request.env['account.move']
+        Product = request.env['product.product']
         StockMove = request.env['stock.move']
         StockPick = request.env['stock.picking']
         StockBack = request.env['stock.backorder.confirmation']
@@ -69,15 +63,17 @@ class ReceiptController(KBTApiBase):
         ])
         if not stock_id:
             raise ValueError(
-                "stock_id not found."
+                "Stock not found in Purchase Order %s." % data['purchase_ref']
             )
-        date_api = data.get('x_bill_date').split('-')
-        x_bill_date = '{0}-{1}-{2}'.format(
-            date_api[2], date_api[1], date_api[0])
+        x_bill_date = datetime.strptime(params.get('x_bill_date'), '%d-%m-%Y')
+
         update_line_lst = []
         for item in data['Items']:
+            product_id = Product.search([
+                ('default_code', '=', item.get('product_id'))])
             purchase_line = purchase_order.order_line.filtered(
-                lambda x: x.sequence == item['seq_line'])
+                lambda x: x.sequence == item.get('seq_line')
+                and x.product_id.id == product_id.id)
             stock_line = StockMove.search([
                 ('picking_id', '=', stock_id.id),
                 ('purchase_line_id', '=', purchase_line.id),
@@ -90,12 +86,16 @@ class ReceiptController(KBTApiBase):
                 'quantity_done': item['qty_done']
             }))
 
+        ref = data.get('x_bill_reference')
+        self._check_duplicate_ref([AccountMove, StockPick], ref)
+
         vals = {
             'x_bill_date': x_bill_date,
-            'x_bill_reference': data.get('x_bill_reference'),
+            'x_bill_reference': ref,
             'x_is_interface': True,
             'move_ids_without_package': update_line_lst,
         }
+
         stock_id.write(vals)
         res = stock_id._pre_action_done_hook()
         if res is True:
@@ -121,3 +121,11 @@ class ReceiptController(KBTApiBase):
             inv.action_post()
             response_api.append(inv.name)
         return response_api
+
+    def _check_duplicate_ref(self, Models, data_ref):
+        ref_lst = ['ref', 'x_bill_reference']
+        for Model, ref in zip(Models, ref_lst):
+            is_duplicate = Model.search([(ref, '=', data_ref)])
+            if is_duplicate:
+                raise ValueError(
+                    f"x_bill_reference '{data_ref}' already exists.")

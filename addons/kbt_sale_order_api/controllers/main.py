@@ -201,6 +201,11 @@ class SaleOrderDataController(KBTApiBase):
                 raise ValueError(
                     "seq_id not found."
                 )
+            if seq_id.product_id.detailed_type != 'service':
+                raise ValueError(
+                    "Can not update Consume product by using Service API."
+                )
+
             if order_line['qty_delivered'] + seq_id.qty_delivered >\
                     seq_id.product_uom_qty:
                 name = seq_id.name
