@@ -1,4 +1,5 @@
 import requests
+from datetime import datetime
 
 from odoo import http
 from odoo.http import request
@@ -89,9 +90,7 @@ class SaleOrderDataController(KBTApiBase):
             )
         vals['partner_id'] = partner_id.id
 
-        date_order = data.get('date_order').split('-')
-        datetime_order = '{0}-{1}-{2}'.format(
-            date_order[2], date_order[1], date_order[0])
+        datetime_order = datetime.strptime(data.get('date_order'), '%d-%m-%Y')
         vals['date_order'] = datetime_order
 
         delivery_date = data.get('effective_date').split('-')
@@ -158,12 +157,10 @@ class SaleOrderDataController(KBTApiBase):
 
         sale_id.write({
             'name': params.get('x_so_orderreference'),
-        })
-        sale_id.action_confirm()
-        sale_id.write({
             'date_order': datetime_order,
             'payment_term_id': account_term_id.id,
         })
+        sale_id.action_confirm()
 
     @KBTApiBase.api_wrapper(['kbt.sale_order_update'])
     @http.route('/sale/update', type='json', auth='user')
@@ -193,14 +190,15 @@ class SaleOrderDataController(KBTApiBase):
 
         update_line_lst = []
         for order_line in params['lineItems']:
+
             seq_id = request.env['sale.order.line'].search([
                 ('sequence', '=', order_line.get('seq_line')),
-                ('order_id', '=', so_orderreference.id)
+                ('order_id', '=', so_orderreference.id),
+                ('display_type', '=', False),
             ])
             if not seq_id:
                 raise ValueError(
-                    "seq_id not found."
-                )
+                    f"Sale Order Line seq_line({order_line.get('seq_line')}) not found.")
             if seq_id.product_id.detailed_type != 'service':
                 raise ValueError(
                     "Can not update Consume product by using Service API."
@@ -216,10 +214,12 @@ class SaleOrderDataController(KBTApiBase):
                     f"{prod_qty} and current delivered "
                     f"quantity is {qty_deli} your order "
                     f"quantity can’t more than {prod_qty - seq_id.qty_delivered}")
-            else:
-                update_line_lst.append(
-                    (1, seq_id.id,
-                     self._prepare_order_line(order_line, False, seq_id)))
+            elif seq_id.product_id.detailed_type != 'service':
+                raise ValueError(
+                    "Can not update Consume product by using Service API.")
+            update_line_lst.append(
+                (1, seq_id.id,
+                    self._prepare_order_line(order_line, False, seq_id)))
         so_orderreference.update({
             'order_line': update_line_lst,
             'x_address': params['x_address'],
