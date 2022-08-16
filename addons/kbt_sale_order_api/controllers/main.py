@@ -31,15 +31,22 @@ class SaleOrderDataController(KBTApiBase):
         return msg_list
 
     def _prepare_order_line(self, order_line, is_new_line, seq_id):
-        product_id = request.env['product.product'].search(
-            [('default_code', '=', order_line.get('product_id'))])
-        if not product_id:
-            raise ValueError(
-                "product_id not found."
-            )
+        vals = {}
+        if (not order_line.get('product_id')) and order_line.get('note'):
+            vals = {
+                'sequence': order_line.get('seq_line'),
+                'name': order_line.get('note'),
+                'display_type': "line_note",
+            }
+        elif order_line.get('product_id'):
+            product_id = request.env['product.product'].search(
+                [('default_code', '=', order_line.get('product_id'))])
+            if not product_id:
+                raise ValueError(
+                    "product_id not found."
+                )
 
-        if is_new_line:
-            return {
+            vals = {
                 'product_id': product_id.id,
                 'name': order_line.get('name'),
                 'product_uom_qty': order_line.get('product_uom_qty'),
@@ -48,6 +55,13 @@ class SaleOrderDataController(KBTApiBase):
                 'sequence': order_line.get('seq_line'),
                 'note': order_line.get('note')
             }
+        else:
+            raise ValueError(
+                "This item is neither 'product' nor 'note'."
+            )
+
+        if is_new_line:
+            return vals
 
         return {
             'qty_delivered': seq_id.qty_delivered + order_line['qty_delivered']
@@ -134,16 +148,7 @@ class SaleOrderDataController(KBTApiBase):
             order_line, True, False))
             for order_line in params.get('lineItems')
         ]
-        order_line_vals_list_with_note = []
-        for each_line in order_line_vals_list:
-            this_note = (0, 0, {
-                'product_packaging_qty': 0,
-                'name': each_line[2].get('note'),
-                'display_type': 'line_note',
-                'sequence': each_line[2].get('sequence')})
-            order_line_vals_list_with_note.append(each_line)
-            order_line_vals_list_with_note.append(this_note)
-        vals['order_line'] = order_line_vals_list_with_note
+        vals['order_line'] = order_line_vals_list
 
         sale = Sale.new(vals)
         sale.onchange_partner_id()

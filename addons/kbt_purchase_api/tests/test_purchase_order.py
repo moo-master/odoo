@@ -87,6 +87,13 @@ def business_type(env, account_payable, model_sequence):
 def test_create(model, env, partner, business_type):
     vals = {'partner_id': partner.id,
             'po_type_id': business_type.id,
-            'x_is_interface': False}
+            'x_is_interface': False,
+            'order_line': [(0, 0, {
+                'name': 'string',
+                'display_type': 'line_note',
+                'product_qty': 0,
+                'note': 'abc'
+            })],
+            }
     res = model.create(vals)
-    assert res.name == '1'
+    assert res.order_line.note
