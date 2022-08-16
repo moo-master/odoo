@@ -35,7 +35,11 @@ class BusinessType(models.Model):
     )
 
     default_gl_account_id = fields.Many2one(
-        string='Default Post Diff Code',
+        string='Default Post Difference Account (Gain)',
+        comodel_name='account.account',
+    )
+    default_gl_loss_account_id = fields.Many2one(
+        string='Default Post Difference Account (Loss)',
         comodel_name='account.account',
     )
 
