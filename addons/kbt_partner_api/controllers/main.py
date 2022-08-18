@@ -88,6 +88,7 @@ class PartnerDataController(KBTApiBase):
                 'property_account_receivable_id': account_receivable_id.id,
                 'property_account_payable_id': account_payable_id.id,
                 'x_is_interface': True,
+                'x_offset': data.get('x_offset'),
             }
             bank_id = ResBank.search([
                 ('bic', '=', data.get('bank_id'))
