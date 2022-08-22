@@ -114,8 +114,15 @@ class PaymentDataController(KBTApiBase):
             business_type = so_id.so_type_id \
                 if acc_move.move_type == 'out_invoice' \
                 else po_id.po_type_id
+            business_name = business_type.x_name.upper()
+            if business_name == 'K-RENT' and \
+                    data['amount'] > acc_move.amount_residual:
+                raise ValueError(
+                    "Amount of K-Rent Business Type Must equal to invoice amount."
+                )
+
             if data['amount'] > acc_move.amount_residual \
-                    and business_type.x_name != 'K-RENT':
+                    and business_name != 'K-RENT':
                 vals.update({
                     'payment_difference_handling': 'reconcile',
                     'writeoff_account_id':
