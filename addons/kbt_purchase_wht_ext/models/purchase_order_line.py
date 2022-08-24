@@ -1,4 +1,4 @@
-from odoo import models, fields
+from odoo import models, fields, api
 
 
 class PurchaseOrderLine(models.Model):
@@ -7,5 +7,9 @@ class PurchaseOrderLine(models.Model):
     wht_type_id = fields.Many2one(
         string='WHT',
         comodel_name='account.wht.type',
-        default='product_id.purchase_wht_type_id'
+        # default=lambda self: self.product_id.product_tmpl_id.purchase_wht_type_id.id
     )
+
+    @api.onchange('product_id')
+    def _onchange_product_id(self):
+        self.wht_type_id = self.product_id.product_tmpl_id.purchase_wht_type_id.id

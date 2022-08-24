@@ -13,5 +13,9 @@
     ],
     'depends': [
         'beecy_account_wht',
+        'sale'
+    ],
+    'data': [
+        'views/account_wht_type_view.xml'
     ]
 }

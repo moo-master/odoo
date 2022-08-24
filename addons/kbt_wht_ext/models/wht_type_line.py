@@ -29,6 +29,6 @@ class WhtTypeLine(models.Model):
         comodel_name='purchase.order'
     )
 
-    # sale_id = fields.Many2one(
-    #     comodel_name = 'sale.order'
-    # )
+    sale_id = fields.Many2one(
+        comodel_name='sale.order'
+    )

@@ -13,5 +13,8 @@
     ],
     'depends': [
         'kbt_wht_ext',
+    ],
+    'data': [
+        'views/purchase_order_views.xml'
     ]
 }

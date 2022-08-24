@@ -5,10 +5,9 @@
         <field name="name">inherit.sale.order.view.form</field>
         <field name="model">sale.order</field>
         <field name="inherit_id" ref="sale.view_order_form"/>
-        <field name="priority" eval="100"/>
         <field name="arch" type="xml">
 
-            <xpath expr="//field[@name='price_unit']" position="after">
+            <xpath expr="//page[@name='order_lines']/field[@name='order_line']/tree/field[@name='price_unit']" position="after">
                 <field name="wht_type_id"/>
             </xpath>
 

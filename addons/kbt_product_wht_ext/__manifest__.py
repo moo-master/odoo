@@ -13,5 +13,8 @@
     ],
     'depends': [
         'kbt_wht_ext',
+    ],
+    'data': [
+        'views/product_template_only_form_view.xml'
     ]
 }
