@@ -1,4 +1,4 @@
-from odoo import models, fields, api
+from odoo import models, fields
 
 
 class AccountMove(models.Model):
@@ -10,9 +10,9 @@ class AccountMove(models.Model):
         readonly=True
     )
 
-    @api.model_create_multi
-    def create(self, vals_list):
-        super().create(vals_list)
+    # @api.model_create_multi
+    # def create(self, vals_list):
+    #     super().create(vals_list)
 
-    def write(self, vals):
-        super().write(vals)
+    # def write(self, vals):
+    #     super().write(vals)

@@ -9,9 +9,26 @@ class PurchaseOrder(models.Model):
         readonly=True
     )
 
-    @api.model_create_multi
-    def create(self, vals_list):
-        return super().create(vals_list)
+    amount_wht = fields.Float(
+        string="WHT Amount",
+        store=True,
+        compute='_compute_wht_amount'
+    )
 
-    def write(self, vals):
-        return super().write(vals)
+    @api.depends('order_line.price_unit', 'order_line.wht_type_id')
+    def _compute_wht_amount(self):
+        for po in self:
+            all_wht_in_lines = po.order_line.mapped(
+                lambda x: x.price_unit * (x.wht_type_id.percent / 100))
+            wht_2_decimal_digits = [round(each_element, 2)
+                                    for each_element in all_wht_in_lines]
+            po.amount_wht = format(round(sum(wht_2_decimal_digits), 2), '.2f')
+
+    # def action_create_invoice(self):
+    #     res = super().action_create_invoice()
+    #     print("------------------------------------------------------------------------------------------------------")
+    #     wht_data = self.env['account.move'].search([
+    #         ('id', '=', res.get('res_id'))
+    #     ])
+    #     print(wht_data.invoice_line_ids.wht_type_id)
+    #     return res
