@@ -24,11 +24,10 @@ class PurchaseOrder(models.Model):
                                     for each_element in all_wht_in_lines]
             po.amount_wht = format(round(sum(wht_2_decimal_digits), 2), '.2f')
 
-    # def action_create_invoice(self):
-    #     res = super().action_create_invoice()
-    #     print("------------------------------------------------------------------------------------------------------")
-    #     wht_data = self.env['account.move'].search([
-    #         ('id', '=', res.get('res_id'))
-    #     ])
-    #     print(wht_data.invoice_line_ids.wht_type_id)
-    #     return res
+    def action_create_invoice(self):
+        res = super().action_create_invoice()
+        wht_data = self.env['account.move'].search([
+            ('id', '=', res.get('res_id'))
+        ])
+        wht_data.invoice_line_ids.wht_type_id = wht_data.invoice_line_ids.purchase_line_id.wht_type_id
+        return res
