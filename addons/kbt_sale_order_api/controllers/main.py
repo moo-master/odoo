@@ -56,9 +56,10 @@ class SaleOrderDataController(KBTApiBase):
                 'note': order_line.get('note')
             }
         else:
-            raise ValueError(
-                "This item is neither 'product' nor 'note'."
-            )
+            if is_new_line:
+                raise ValueError(
+                    "This item is neither 'product' nor 'note'."
+                )
 
         if is_new_line:
             return vals
