@@ -114,6 +114,7 @@ class PaymentDataController(KBTApiBase):
             business_type = so_id.so_type_id \
                 if acc_move.move_type == 'out_invoice' \
                 else po_id.po_type_id
+
             business_name = business_type.x_name.upper()
             if business_name == 'K-RENT' and \
                     data['amount'] > acc_move.amount_residual:
@@ -121,12 +122,44 @@ class PaymentDataController(KBTApiBase):
                     "Amount of K-Rent Business Type Must equal to invoice amount."
                 )
 
+            if business_name == 'K-RENT' and \
+                    data['amount'] < acc_move.amount_residual:
+                raise ValueError(
+                    "Amount of K-Rent Business Type must equal to invoice amount."
+                )
+
+            if data['amount'] < acc_move.amount_residual \
+                    and business_name != 'K-RENT':
+
+                if not data.get('difference_handling'):
+                    raise ValueError(
+                        "Missing Difference Handling Parameter."
+                    )
+
+                if not business_type.default_gl_loss_account_id:
+                    raise ValueError(
+                        "Default Post Difference Loss Account of %s does not set." %
+                        business_type.x_name)
+
+                vals.update(
+                    {
+                        'payment_difference_handling': data.get('difference_handling'),
+                        'writeoff_account_id': business_type.default_gl_loss_account_id.id,
+                        'writeoff_label': business_type.default_gl_loss_account_id.code + " " + business_type.default_gl_loss_account_id.name,
+                    })
+
             if data['amount'] > acc_move.amount_residual \
                     and business_name != 'K-RENT':
+
+                if not business_type.default_gl_account_id:
+                    raise ValueError(
+                        "Default Post Difference Gain Account of %s does not set." %
+                        business_type.x_name)
+
                 vals.update({
                     'payment_difference_handling': 'reconcile',
                     'writeoff_account_id':
-                        business_type.default_gl_account_id.id or False,
+                        business_type.default_gl_account_id.id,
                     'writeoff_label': 'Post-Difference',
                 })
 
