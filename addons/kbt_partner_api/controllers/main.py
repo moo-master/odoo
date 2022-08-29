@@ -68,6 +68,25 @@ class PartnerDataController(KBTApiBase):
             if data.get('company_type') not in ['person', 'company']:
                 raise ValueError("company_type must be 'person' or 'company'")
 
+            country_id = request.env['res.country'].search([
+                ('code', '=', data.get('country_id'))
+            ], limit=1)
+            if not country_id:
+                raise ValueError("country_id not found.")
+
+            state_id = request.env['res.country.state'].search([
+                ('country_id', '=', country_id.id),
+                ('code', '=', data.get('state_id'))
+            ], limit=1)
+            if not state_id:
+                raise ValueError("state_id not found.")
+
+            city_id = request.env['res.city'].search([
+                ('code', '=', data.get('city'))
+            ], limit=1)
+            if not city_id:
+                raise ValueError("city_id not found.")
+
             vals_dict = {
                 'x_interface_id': data.get('x_external_code'),
                 'name': data.get('name'),
@@ -76,9 +95,9 @@ class PartnerDataController(KBTApiBase):
                 'street': data.get('street'),
                 'street2': data.get('street2'),
                 'zip': data.get('zip'),
-                'city': data.get('city'),
-                'state_id': data.get('state_id'),
-                'country_id': data.get('country_id'),
+                'city': city_id.name,
+                'state_id': state_id.id,
+                'country_id': country_id.id,
                 'vat': data.get('vat'),
                 'phone': data.get('phone'),
                 'mobile': data.get('mobile'),

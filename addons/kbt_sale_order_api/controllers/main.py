@@ -100,7 +100,7 @@ class SaleOrderDataController(KBTApiBase):
 
         account_term = request.env['account.payment.term']
         account_term_id = account_term.search(
-            [('name', '=', data.get('payment_term'))])
+            [('payment_term_code', '=', data.get('payment_term'))])
         if not account_term_id:
             raise ValueError(
                 "account_term_id not found."
@@ -109,7 +109,7 @@ class SaleOrderDataController(KBTApiBase):
 
         account_analytic = request.env['account.analytic.account']
         account_analytic_id = account_analytic.search(
-            [('name', '=', data.get('analytic_account'))])
+            [('code', '=', data.get('analytic_account'))])
         if not account_analytic_id:
             raise ValueError(
                 "account_analytic_id not found."
