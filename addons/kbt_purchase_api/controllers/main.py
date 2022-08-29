@@ -4,6 +4,8 @@ from odoo import http
 from odoo.http import request
 from odoo.addons.kbt_api_base.controllers.main import KBTApiBase
 
+from datetime import datetime
+
 
 class PurchaseController(KBTApiBase):
 
@@ -21,30 +23,43 @@ class PurchaseController(KBTApiBase):
     def _prepare_order_lines(self, order_line):
         Account = request.env['account.analytic.account']
 
-        account_analytic_id = Account.search(
-            [('name', '=', order_line.get('analytic_account'))])
-        if not account_analytic_id:
-            raise ValueError(
-                "account_analytic_id not found."
-            )
+        if (not order_line.get('product_code')) and order_line.get('note'):
+            vals = {
+                'sequence': order_line.get('seq_line'),
+                'name': order_line.get('note'),
+                'display_type': "line_note",
+                'product_qty': 0,
+            }
+        elif order_line.get('product_code'):
+            account_analytic_id = Account.search(
+                [('name', '=', order_line.get('analytic_account'))])
+            if not account_analytic_id:
+                raise ValueError(
+                    "account_analytic_id not found."
+                )
 
-        product_id = request.env['product.product'].search([
-            ('default_code', '=', order_line.get('product_code')),
-        ])
-        if not product_id:
-            raise ValueError(
-                "product_id not found."
-            )
+            product_id = request.env['product.product'].search([
+                ('default_code', '=', order_line.get('product_code')),
+            ])
+            if not product_id:
+                raise ValueError(
+                    "product_id not found"
+                )
 
-        vals = {
-            'account_analytic_id': account_analytic_id.id,
-            'product_id': product_id.id,
-            'name': order_line.get('name'),
-            'qty_received': 0,
-            'product_qty': order_line.get('product_uom_qty'),
-            'price_unit': order_line.get('price_unit'),
-            'sequence': order_line.get('seq_line'),
-        }
+            vals = {
+                'account_analytic_id': account_analytic_id.id,
+                'product_id': product_id.id,
+                'name': order_line.get('name'),
+                'qty_received': 0,
+                'product_qty': order_line.get('product_uom_qty'),
+                'price_unit': order_line.get('price_unit'),
+                'sequence': order_line.get('seq_line'),
+                'note': order_line.get('note'),
+            }
+        else:
+            raise ValueError(
+                "This item is neither 'product' nor 'note'."
+            )
 
         if 'x_wht_id' in order_line:
             wht_seq = order_line.get('x_wht_id')
@@ -79,13 +94,17 @@ class PurchaseController(KBTApiBase):
                 "partner_id not found."
             )
 
-        po_type = params.get('x_po_type_code').upper()
+        po_type = params.get('x_po_type_code')
         po_type_id = Business.search([
-            ('x_code', '=ilike', po_type)
+            ('x_code', '=', po_type)
         ])
         if not po_type_id:
             raise ValueError(
                 "Business Code: %s have no data." % po_type
+            )
+        if not po_type_id.is_active:
+            raise ValueError(
+                f"Business Type Code ({po_type}) is inactive."
             )
 
         purchase_ref = params.get('x_purchase_ref')
@@ -97,13 +116,8 @@ class PurchaseController(KBTApiBase):
                 "Purchase %s already exists." % purchase_ref
             )
 
-        date_api = params.get('receipt_date').split('-')
-        date_planned = '{0}-{1}-{2}'.format(
-            date_api[2], date_api[1], date_api[0])
-
-        date_api = params.get('x_bill_date').split('-')
-        x_bill_date = '{0}-{1}-{2}'.format(
-            date_api[2], date_api[1], date_api[0])
+        date_planned = datetime.strptime(
+            params.get('receipt_date'), '%d-%m-%Y')
 
         vals = {
             'partner_id': partner_id.id,
@@ -111,8 +125,6 @@ class PurchaseController(KBTApiBase):
             'x_is_interface': True,
             'date_planned': date_planned,
             'po_type_id': po_type_id.id,
-            'x_bill_date': x_bill_date,
-            'x_bill_ref': params.get('x_bill_ref'),
         }
 
         order_line_vals_list = [(0, 0, self._prepare_order_lines(
@@ -133,6 +145,9 @@ class PurchaseController(KBTApiBase):
     @http.route('/purchase/update', type='json', auth='user')
     def purchase_order_update_api(self, **params):
         try:
+            msg = self._check_purchase_order_update_values(**params)
+            if msg:
+                return self._response_api(message=msg)
             res = self._update_purchase_order(**params)
             return self._response_api(isSuccess=True, x_purchase_ref=res)
         except requests.HTTPError as http_err:
@@ -140,8 +155,18 @@ class PurchaseController(KBTApiBase):
         except Exception as error:
             return self._response_api(message=str(error))
 
+    def _check_purchase_order_update_values(self, **params):
+        msg_list = []
+        if not params.get('x_bill_date'):
+            msg_list.append('Missing x_bill_date')
+        if not params.get('x_bill_ref'):
+            msg_list.append('Missing x_bill_ref')
+
+        return msg_list
+
     def _update_purchase_order(self, **params):
         Purchase = request.env['purchase.order']
+        AccountMove = request.env['account.move']
 
         purchase_ref = params['x_purchase_ref']
         purchase_ref_id = Purchase.search([
@@ -149,9 +174,8 @@ class PurchaseController(KBTApiBase):
             ('x_is_interface', '=', True)
         ])
         if not purchase_ref_id:
-            raise ValueError(
-                "Purchase %s does not exist." % purchase_ref
-            )
+            raise ValueError("Purchase %s does not exist." % purchase_ref)
+
         update_line_lst = []
         for order_line in params['lineItems']:
             seq_id = request.env['purchase.order.line'].search([
@@ -178,9 +202,18 @@ class PurchaseController(KBTApiBase):
                     (1, seq_id.id, {
                         'qty_received': seq_id.qty_received + order_line['qty_received']}))
 
-        purchase_ref_id.update({
+        x_bill_date = datetime.strptime(
+            params.get('x_bill_date'), '%d-%m-%Y')
+
+        purchase_ref_id.write({
             'order_line': update_line_lst
         })
-        purchase_ref_id.action_create_invoice()
+        res = purchase_ref_id.action_create_invoice()
+
+        acc_move = AccountMove.browse([res.get('res_id')])
+        acc_move.write({
+            'invoice_date': x_bill_date,
+            'payment_reference': params.get('x_bill_ref'),
+        })
 
         return purchase_ref

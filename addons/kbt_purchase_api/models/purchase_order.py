@@ -9,3 +9,7 @@ class PurchaseOderLine(models.Model):
         comodel_name='account.wht.type',
         ondelete='restrict',
     )
+
+    note = fields.Char(
+        string='Note',
+    )
