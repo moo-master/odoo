@@ -13,6 +13,7 @@
     ],
     'depends': [
         'kbt_res_company',
+        'kbt_partner_ext',
         'web',
     ],
     'data': [

@@ -30,19 +30,28 @@ class PaymentDataController(KBTApiBase):
         return msg_list
 
     def _check_payment_line_values(self, data, idx):
-        ckeck_lst = {
+        check_lst = {
             'payment_type',
             'invoice_number',
             'x_external_code',
             'journal_code',
-            'partner_bank_code',
-            'bank_code',
             'amount',
             'date',
             'ref'
         }
+        if data.get('payment_type') == 'inbound' \
+                and (data.get('partner_bank_code') or data.get('bank_code')):
+            raise ValueError(
+                "No need to send data 'partner_bank_code' and 'bank_code'."
+            )
+        if data.get('payment_type') == 'outbound':
+            check_lst.update({
+                'partner_bank_code',
+                'bank_code',
+            })
+
         data_key = set(data.keys())
-        missing_value = ckeck_lst - data_key
+        missing_value = check_lst - data_key
         res = [f'Line {idx + 1} {val}: No Data' for val in missing_value]
         return res
 
@@ -57,14 +66,15 @@ class PaymentDataController(KBTApiBase):
         for data in data_params_lst:
             vals = {}
 
-            partner_bank = PartnerBank.search([
-                ('acc_number', '=', data['partner_bank_code']),
-                ('bank_id.bic', '=', data['bank_code']),
-            ])
-            if not partner_bank:
-                raise ValueError(
-                    "partner_bank not found."
-                )
+            if data.get('payment_type') == 'outbound':
+                partner_bank = PartnerBank.search([
+                    ('acc_number', '=', data['partner_bank_code']),
+                    ('bank_id.bic', '=', data['bank_code']),
+                ])
+                if not partner_bank:
+                    raise ValueError(
+                        "partner_bank not found."
+                    )
 
             journal_code = AccountJournal.search([
                 ('code', '=', data['journal_code']),
@@ -75,7 +85,7 @@ class PaymentDataController(KBTApiBase):
                 )
 
             date_api = data['date'].split('-')
-            date_data = '{0}-{1}-{2}'.format(
+            date_data = '{2}-{1}-{0}'.format(
                 date_api[0], date_api[1], date_api[2])
 
             acc_move = AccountMove.search([
@@ -94,7 +104,7 @@ class PaymentDataController(KBTApiBase):
                 'journal_id': journal_code.id,
                 'amount': data['amount'],
                 'payment_date': date_data,
-                'partner_bank_id': partner_bank.id,
+                'partner_bank_id': partner_bank.id or False,
             }
             so_id = acc_move.mapped(
                 'invoice_line_ids.sale_line_ids.order_id')
@@ -104,12 +114,52 @@ class PaymentDataController(KBTApiBase):
             business_type = so_id.so_type_id \
                 if acc_move.move_type == 'out_invoice' \
                 else po_id.po_type_id
+
+            business_name = business_type.x_name.upper()
+            if business_name == 'K-RENT' and \
+                    data['amount'] > acc_move.amount_residual:
+                raise ValueError(
+                    "Amount of K-Rent Business Type Must equal to invoice amount."
+                )
+
+            if business_name == 'K-RENT' and \
+                    data['amount'] < acc_move.amount_residual:
+                raise ValueError(
+                    "Amount of K-Rent Business Type must equal to invoice amount."
+                )
+
+            if data['amount'] < acc_move.amount_residual \
+                    and business_name != 'K-RENT':
+
+                if not data.get('difference_handling'):
+                    raise ValueError(
+                        "Missing Difference Handling Parameter."
+                    )
+
+                if not business_type.default_gl_loss_account_id:
+                    raise ValueError(
+                        "Default Post Difference Loss Account of %s does not set." %
+                        business_type.x_name)
+
+                vals.update(
+                    {
+                        'payment_difference_handling': data.get('difference_handling'),
+                        'writeoff_account_id': business_type.default_gl_loss_account_id.id,
+                        'writeoff_label': business_type.default_gl_loss_account_id.code + " " + business_type.default_gl_loss_account_id.name,
+                    })
+
             if data['amount'] > acc_move.amount_residual \
-                    and business_type.x_name != 'K-RENT':
+                    and business_name != 'K-RENT':
+
+                if not business_type.default_gl_account_id:
+                    raise ValueError(
+                        "Default Post Difference Gain Account of %s does not set." %
+                        business_type.x_name)
+
                 vals.update({
                     'payment_difference_handling': 'reconcile',
                     'writeoff_account_id':
-                    business_type.default_gl_account_id.id,
+                        business_type.default_gl_account_id.id,
                     'writeoff_label': 'Post-Difference',
                 })
 

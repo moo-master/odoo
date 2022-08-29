@@ -1,4 +1,5 @@
 import requests
+from datetime import datetime
 
 from odoo import http
 from odoo.http import request
@@ -30,15 +31,22 @@ class SaleOrderDataController(KBTApiBase):
         return msg_list
 
     def _prepare_order_line(self, order_line, is_new_line, seq_id):
-        product_id = request.env['product.product'].search(
-            [('default_code', '=', order_line.get('product_id'))])
-        if not product_id:
-            raise ValueError(
-                "product_id not found."
-            )
+        vals = {}
+        if (not order_line.get('product_id')) and order_line.get('note'):
+            vals = {
+                'sequence': order_line.get('seq_line'),
+                'name': order_line.get('note'),
+                'display_type': "line_note",
+            }
+        elif order_line.get('product_id'):
+            product_id = request.env['product.product'].search(
+                [('default_code', '=', order_line.get('product_id'))])
+            if not product_id:
+                raise ValueError(
+                    "product_id not found."
+                )
 
-        if is_new_line:
-            return {
+            vals = {
                 'product_id': product_id.id,
                 'name': order_line.get('name'),
                 'product_uom_qty': order_line.get('product_uom_qty'),
@@ -47,6 +55,13 @@ class SaleOrderDataController(KBTApiBase):
                 'sequence': order_line.get('seq_line'),
                 'note': order_line.get('note')
             }
+        else:
+            raise ValueError(
+                "This item is neither 'product' nor 'note'."
+            )
+
+        if is_new_line:
+            return vals
 
         return {
             'qty_delivered': seq_id.qty_delivered + order_line['qty_delivered']
@@ -75,9 +90,7 @@ class SaleOrderDataController(KBTApiBase):
             )
         vals['partner_id'] = partner_id.id
 
-        date_order = data.get('date_order').split('-')
-        datetime_order = '{0}-{1}-{2}'.format(
-            date_order[2], date_order[1], date_order[0])
+        datetime_order = datetime.strptime(data.get('date_order'), '%d-%m-%Y')
         vals['date_order'] = datetime_order
 
         delivery_date = data.get('effective_date').split('-')
@@ -109,6 +122,11 @@ class SaleOrderDataController(KBTApiBase):
             raise ValueError(
                 "business_type not found."
             )
+        if not business_type.is_active:
+            raise ValueError(
+                f"Business Type Code ({data['x_so_type_code']}) is inactive."
+            )
+
         vals['so_type_id'] = business_type.id
 
         so_type = params.get('x_so_type_code').upper()
@@ -139,12 +157,10 @@ class SaleOrderDataController(KBTApiBase):
 
         sale_id.write({
             'name': params.get('x_so_orderreference'),
-        })
-        sale_id.action_confirm()
-        sale_id.write({
             'date_order': datetime_order,
             'payment_term_id': account_term_id.id,
         })
+        sale_id.action_confirm()
 
     @KBTApiBase.api_wrapper(['kbt.sale_order_update'])
     @http.route('/sale/update', type='json', auth='user')
@@ -174,14 +190,20 @@ class SaleOrderDataController(KBTApiBase):
 
         update_line_lst = []
         for order_line in params['lineItems']:
+
             seq_id = request.env['sale.order.line'].search([
                 ('sequence', '=', order_line.get('seq_line')),
-                ('order_id', '=', so_orderreference.id)
+                ('order_id', '=', so_orderreference.id),
+                ('display_type', '=', False),
             ])
             if not seq_id:
                 raise ValueError(
-                    "seq_id not found."
+                    f"Sale Order Line seq_line({order_line.get('seq_line')}) not found.")
+            if seq_id.product_id.detailed_type != 'service':
+                raise ValueError(
+                    "Can not update Consume product by using Service API."
                 )
+
             if order_line['qty_delivered'] + seq_id.qty_delivered >\
                     seq_id.product_uom_qty:
                 name = seq_id.name
@@ -192,10 +214,12 @@ class SaleOrderDataController(KBTApiBase):
                     f"{prod_qty} and current delivered "
                     f"quantity is {qty_deli} your order "
                     f"quantity can’t more than {prod_qty - seq_id.qty_delivered}")
-            else:
-                update_line_lst.append(
-                    (1, seq_id.id,
-                     self._prepare_order_line(order_line, False, seq_id)))
+            elif seq_id.product_id.detailed_type != 'service':
+                raise ValueError(
+                    "Can not update Consume product by using Service API.")
+            update_line_lst.append(
+                (1, seq_id.id,
+                    self._prepare_order_line(order_line, False, seq_id)))
         so_orderreference.update({
             'order_line': update_line_lst,
             'x_address': params['x_address'],

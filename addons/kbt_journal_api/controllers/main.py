@@ -4,6 +4,8 @@ from odoo import http
 from odoo.http import request
 from odoo.addons.kbt_api_base.controllers.main import KBTApiBase
 
+from datetime import datetime
+
 
 class JournalController(KBTApiBase):
 
@@ -36,10 +38,7 @@ class JournalController(KBTApiBase):
             raise ValueError(
                 "journal_id not found."
             )
-
-        date_api = params.get('account_date').split('-')
-        date_data = '{0}-{1}-{2}'.format(
-            date_api[2], date_api[1], date_api[0])
+        date_data = datetime.strptime(params.get('account_date'), '%d-%m-%Y')
 
         vals = {
             'ref': params['x_so_orderreference'],
@@ -49,6 +48,7 @@ class JournalController(KBTApiBase):
             'journal_id': journal_id.id or False,
             'x_is_interface': True,
         }
+        self._check_balance_debit_credit(params.get('lineItems'))
         line_vals_lst = [(0, 0, self._prepare_line_ids(order_line, User))
                          for order_line in params.get('lineItems')]
         vals['line_ids'] = line_vals_lst
@@ -58,15 +58,38 @@ class JournalController(KBTApiBase):
     def _prepare_line_ids(self, line, user_id):
         account_id = request.env['account.account'].search([
             ('code', '=', line['account_code']),
-            ('deprecated', '=', False),
             ('company_id', '=', user_id.company_id.id)])
         if not account_id:
             raise ValueError(
-                "account_id not found."
+                f"Account code ({line['account_code']}) not found."
             )
+        if account_id.deprecated:
+            raise ValueError(
+                f"Account code ({line['account_code']}) is deprecated."
+            )
+
+        account_analytic = request.env['account.analytic.account']
+        account_analytic_id = account_analytic.search(
+            [('name', '=', line.get('analytic_account'))])
+        if not account_analytic_id:
+            raise ValueError(
+                f"Analytic Account ({line.get('analytic_account')}) not found."
+            )
+
         return {
             'sequence': line['seq_line'],
             'account_id': account_id.id or False,
+            'analytic_account_id': account_analytic_id.id,
             'debit': line['debit_amount'],
             'credit': line['credit_amount']
         }
+
+    def _check_balance_debit_credit(self, line_items):
+        debit = sum([line.get('debit_amount') for line in line_items])
+        credit = sum([line.get('credit_amount') for line in line_items])
+        if debit != credit:
+            raise ValueError(
+                f"Cannot create unbalanced journal entry. "
+                f"Differences debit - credit: [{debit - credit}]"
+            )
+        return True

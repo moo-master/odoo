@@ -11,7 +11,7 @@
                 <field name="x_is_interface" invisible="1" />
             </xpath>
             <xpath expr="//field[@name='ref']" position="attributes">
-                <attribute name="attrs">{'invisible': [('x_is_interface', '=', True)]}</attribute>
+                <attribute name="attrs">{'readonly': [('x_is_interface', '=', True)]}</attribute>
             </xpath>
         </field>
     </record>
