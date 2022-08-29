@@ -18,3 +18,11 @@ class SaleOrder(models.Model):
             wht_2_decimal_digits = [round(each_element, 2)
                                     for each_element in all_wht_in_lines]
             so.amount_wht = format(round(sum(wht_2_decimal_digits), 2), '.2f')
+
+    # def _create_invoices(self, grouped=False, final=False, date=None):
+    #     true = True
+    #     res = super()._create_invoices(final=true)
+    #     print("----------------------------------------------------------------------------------------------------------------------------")
+    #     print(res)
+
+    #     return res
