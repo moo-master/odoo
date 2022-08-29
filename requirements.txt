@@ -7,10 +7,8 @@
 
 -i https://pypi.org/simple
 --extra-index-url https://${PYPI_NEXUS_ROOTS_AUTH}@nexus.3roots.live/repository/pypi/simple
-bahttext
-html2text
 xlsxwriter
 xlrd
-zeep
+requests
 validators
 pyjwt==2.3.0
