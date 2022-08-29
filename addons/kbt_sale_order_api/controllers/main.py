@@ -30,9 +30,9 @@ class SaleOrderDataController(KBTApiBase):
         msg_list = []
         return msg_list
 
-    def _prepare_order_line(self, order_line, is_new_line, seq_id):
+    def _prepare_order_line(self, order_line, is_new_line):
         vals = {}
-        if (not order_line.get('product_id')) and order_line.get('note'):
+        if not order_line.get('product_id') and order_line.get('note'):
             vals = {
                 'sequence': order_line.get('seq_line'),
                 'name': order_line.get('note'),
@@ -61,12 +61,7 @@ class SaleOrderDataController(KBTApiBase):
                     "This item is neither 'product' nor 'note'."
                 )
 
-        if is_new_line:
-            return vals
-
-        return {
-            'qty_delivered': seq_id.qty_delivered + order_line['qty_delivered']
-        }
+        return vals
 
     def _create_sale_order(self, **params):
         data = params
@@ -142,11 +137,10 @@ class SaleOrderDataController(KBTApiBase):
 
         vals['x_so_orderreference'] = data.get('x_so_orderreference')
         vals['x_is_interface'] = True
-        vals['x_partner_name'] = data.get('x_partner_name')
         vals['x_address'] = data.get('x_address')
 
         order_line_vals_list = [(0, 0, self._prepare_order_line(
-            order_line, True, False))
+            order_line, True))
             for order_line in params.get('lineItems')
         ]
         vals['order_line'] = order_line_vals_list
@@ -192,11 +186,9 @@ class SaleOrderDataController(KBTApiBase):
         update_line_lst = []
         for order_line in params['lineItems']:
 
-            seq_id = request.env['sale.order.line'].search([
-                ('sequence', '=', order_line.get('seq_line')),
-                ('order_id', '=', so_orderreference.id),
-                ('display_type', '=', False),
-            ])
+            seq_id = so_orderreference.order_line.filtered(
+                lambda x: x.sequence == order_line.get('seq_line')
+                and not x.display_type)
             if not seq_id:
                 raise ValueError(
                     f"Sale Order Line seq_line({order_line.get('seq_line')}) not found.")
@@ -219,15 +211,14 @@ class SaleOrderDataController(KBTApiBase):
                 raise ValueError(
                     "Can not update Consume product by using Service API.")
             update_line_lst.append(
-                (1, seq_id.id,
-                    self._prepare_order_line(order_line, False, seq_id)))
+                (1, seq_id.id, {
+                    'qty_delivered':
+                        seq_id.qty_delivered + order_line['qty_delivered']
+                }))
         so_orderreference.update({
             'order_line': update_line_lst,
             'x_address': params['x_address'],
         })
         move_id = so_orderreference._create_invoices()
-        move_id.write({
-            'x_partner_name': so_orderreference.x_partner_name,
-        })
         move_id.action_post()
         return move_id.name

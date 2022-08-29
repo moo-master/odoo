@@ -30,7 +30,7 @@ class PurchaseOrder(models.Model):
                         em_level,
                         em_level))
         else:
-            super().button_confirm()
+            return super().button_confirm()
 
     def action_cancel_reject_reason_wizard(self):
         view = self.env.ref('beecy_reason.view_cancel_reject_reason_form')

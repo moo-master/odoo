@@ -12,11 +12,11 @@ class SaleOrder(models.Model):
     )
 
     def _create_invoices(self, grouped=False, final=False, date=None):
-        res = super(SaleOrder, self)._create_invoices()
-        res.write({
+        moves = super()._create_invoices(grouped=grouped, final=final, date=date)
+        moves.write({
             'x_address': self.x_address
         })
-        return res
+        return moves
 
     @api.onchange('partner_id')
     def _onchange_partner_id(self):
