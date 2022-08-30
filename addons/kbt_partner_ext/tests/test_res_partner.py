@@ -60,3 +60,7 @@ def partner(env, payment_term, account_receivable, account_payable):
         'property_account_receivable_id': account_receivable.id,
         'property_account_payable_id': account_payable.id,
     })
+
+
+def test_name(partner):
+    assert partner.name
