@@ -70,7 +70,7 @@ class JournalController(KBTApiBase):
 
         account_analytic = request.env['account.analytic.account']
         account_analytic_id = account_analytic.search(
-            [('name', '=', line.get('analytic_account'))])
+            [('code', '=', line.get('analytic_account'))])
         if not account_analytic_id:
             raise ValueError(
                 f"Analytic Account ({line.get('analytic_account')}) not found."

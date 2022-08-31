@@ -32,7 +32,7 @@ class PurchaseController(KBTApiBase):
             }
         elif order_line.get('product_code'):
             account_analytic_id = Account.search(
-                [('name', '=', order_line.get('analytic_account'))])
+                [('code', '=', order_line.get('analytic_account'))])
             if not account_analytic_id:
                 raise ValueError(
                     "account_analytic_id not found."
