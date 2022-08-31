@@ -213,7 +213,7 @@ class PurchaseController(KBTApiBase):
         acc_move = AccountMove.browse([res.get('res_id')])
         acc_move.write({
             'invoice_date': x_bill_date,
-            'payment_reference': params.get('x_bill_ref'),
+            'ref': params.get('x_bill_ref'),
         })
 
         return purchase_ref
