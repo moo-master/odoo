@@ -19,7 +19,7 @@ class PurchaseOrder(models.Model):
     def _compute_wht_amount(self):
         for po in self:
             all_wht_in_lines = po.order_line.mapped(
-                lambda x: x.price_unit * (x.wht_type_id.percent / 100))
+                lambda x: (x.price_subtotal) * (x.wht_type_id.percent / 100))
             wht_2_decimal_digits = [round(each_element, 2)
                                     for each_element in all_wht_in_lines]
             po.amount_wht = format(round(sum(wht_2_decimal_digits), 2), '.2f')
@@ -29,5 +29,8 @@ class PurchaseOrder(models.Model):
         wht_data = self.env['account.move'].search([
             ('id', '=', res.get('res_id'))
         ])
-        wht_data.invoice_line_ids.wht_type_id = wht_data.invoice_line_ids.purchase_line_id.wht_type_id
+
+        for po in wht_data.invoice_line_ids:
+            po.wht_type_id = po.purchase_line_id.wht_type_id
+
         return res
