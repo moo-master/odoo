@@ -37,7 +37,6 @@ class ReceiptController(KBTApiBase):
     def _create_goods_receipt(self, **params):
         data = params
         Purchase = request.env['purchase.order']
-        AccountMove = request.env['account.move']
         Product = request.env['product.product']
         StockMove = request.env['stock.move']
         StockPick = request.env['stock.picking']
@@ -87,8 +86,6 @@ class ReceiptController(KBTApiBase):
             }))
 
         ref = data.get('x_bill_reference')
-        self._check_duplicate_ref([AccountMove, StockPick], ref)
-
         vals = {
             'x_bill_date': x_bill_date,
             'x_bill_reference': ref,
@@ -121,11 +118,3 @@ class ReceiptController(KBTApiBase):
             inv.action_post()
             response_api.append(inv.name)
         return response_api
-
-    def _check_duplicate_ref(self, Models, data_ref):
-        ref_lst = ['ref', 'x_bill_reference']
-        for Model, ref in zip(Models, ref_lst):
-            is_duplicate = Model.search([(ref, '=', data_ref)])
-            if is_duplicate:
-                raise ValueError(
-                    f"x_bill_reference '{data_ref}' already exists.")
