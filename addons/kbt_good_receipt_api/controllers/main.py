@@ -81,6 +81,17 @@ class ReceiptController(KBTApiBase):
                 raise ValueError(
                     "stock_line not found."
                 )
+            if item['qty_done'] + \
+                    purchase_line.qty_received > purchase_line.product_qty:
+                name = purchase_line.name
+                prod_qty = purchase_line.product_qty
+                qty_done = item['qty_done']
+                total_qty = prod_qty - purchase_line.qty_received
+                raise ValueError(
+                    f"Your ordered quantity of {name} is "
+                    f"{prod_qty} and current received "
+                    f"quantity is {qty_done} your order "
+                    f"quantity can’t more than {total_qty}")
             update_line_lst.append((1, stock_line.id, {
                 'quantity_done': item['qty_done']
             }))
