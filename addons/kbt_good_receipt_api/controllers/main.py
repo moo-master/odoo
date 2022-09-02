@@ -16,7 +16,7 @@ class ReceiptController(KBTApiBase):
             if msg:
                 return self._response_api(message=msg)
             res = self._create_goods_receipt(**params)
-            return self._response_api(isSuccess=True, invoice_number=res)
+            return self._response_api(isSuccess=True, purchase_ref=res)
         except requests.HTTPError as http_err:
             return self._response_api(message=str(http_err))
         except Exception as error:
@@ -109,12 +109,10 @@ class ReceiptController(KBTApiBase):
 
         purchase_order.action_create_invoice()
         inv_ids = purchase_order.invoice_ids
-        response_api = []
         for inv in inv_ids.filtered(lambda z: z.state == 'draft'):
             inv.write({
                 'ref': data.get('x_bill_reference'),
                 'invoice_date': x_bill_date,
             })
-            inv.action_post()
-            response_api.append(inv.name)
-        return response_api
+
+        return data.get('purchase_ref')
