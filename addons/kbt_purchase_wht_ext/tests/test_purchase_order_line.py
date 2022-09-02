@@ -106,12 +106,28 @@ def acc_wht(env, account_id):
     })
 
 
+# @pytest.fixture
+# def product(env):
+#     return env.ref('product.expense_product')
+
 @pytest.fixture
 def product(env):
-    return env.ref('product.expense_product')
+    return env['product.template'].create({
+        'name': 'Test onchange',
+        'detailed_type': 'service',
+        'invoice_policy': 'delivery',
+    })
 
 
-def test_onchange_product_id(model, vendor, currency, product, acc_wht):
+def test_onchang_product_id(model, vendor, currency, product, acc_wht):
+    product.write({
+        'wht_type_id': acc_wht.id,
+    })
+
+    product.product_tmpl_id.write({
+        'purchase_wht_type_id': acc_wht.id
+    })
+
     po = model.create({
         'partner_id': vendor.id,
         'currency_id': currency.id,
@@ -125,26 +141,10 @@ def test_onchange_product_id(model, vendor, currency, product, acc_wht):
             'product_uom': 1,
             'price_unit': 100,
             'product_qty': 10,
-            'wht_type_id': acc_wht.id
         })],
     })
 
-    po.order_line._onchange_product_id()
-    assert po.order_line[0].wht_type_id
-
-    # @pytest.mark.parametrize('test_input,expected', [
-    # ({'have_tax': True}, 'TEST'),
-    # ({'have_tax': False}, False),
-    # ])
-    # def test_onchange_tax_id(env, test_input, expected, tax_test):
-    #     tax_id = test_input.get('have_tax') and tax_test
-    #     move_id = env['account.move'].create({
-    #         'name': 'Test Invoice',
-    #         'move_type': 'out_invoice',
-    #         'invoice_line_ids': [(0, 0, {'name': 'test line'})]
-    #     })
-
-    #     move_id.tax_id = tax_id
-    #     move_id._onchange_tax_id()
-    #     line_tax_id = move_id.mapped('invoice_line_ids.tax_ids')
-    #     assert line_tax_id.name == expected
+    pol = env['purchase.order.line']
+    pol.order_id = po.id
+    pol._onchang_product_id()
+    assert po.order_line.wht_type_id == acc_wht.id
