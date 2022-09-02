@@ -26,8 +26,6 @@ class ReceiptController(KBTApiBase):
         data = params
         check_lst = {
             'purchase_ref',
-            'x_bill_date',
-            'x_bill_reference',
             'Items',
         }
         missing_vals = check_lst - set(data.keys())
@@ -64,7 +62,6 @@ class ReceiptController(KBTApiBase):
             raise ValueError(
                 "Stock not found in Purchase Order %s." % data['purchase_ref']
             )
-        x_bill_date = datetime.strptime(params.get('x_bill_date'), '%d-%m-%Y')
 
         update_line_lst = []
         for item in data['Items']:
@@ -85,13 +82,17 @@ class ReceiptController(KBTApiBase):
                 'quantity_done': item['qty_done']
             }))
 
-        ref = data.get('x_bill_reference')
         vals = {
-            'x_bill_date': x_bill_date,
-            'x_bill_reference': ref,
+            'x_bill_reference': data.get('x_bill_reference'),
             'x_is_interface': True,
             'move_ids_without_package': update_line_lst,
         }
+        if params.get('x_bill_date'):
+            x_bill_date = datetime.strptime(
+                params.get('x_bill_date'), '%d-%m-%Y')
+            vals.update({
+                'x_bill_date': x_bill_date,
+            })
 
         stock_id.write(vals)
         res = stock_id._pre_action_done_hook()
@@ -112,7 +113,8 @@ class ReceiptController(KBTApiBase):
         for inv in inv_ids.filtered(lambda z: z.state == 'draft'):
             inv.write({
                 'ref': data.get('x_bill_reference'),
-                'invoice_date': x_bill_date,
+                'invoice_date': x_bill_date
+                if params.get('x_bill_date') else False,
             })
 
         return data.get('purchase_ref')
