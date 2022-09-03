@@ -157,11 +157,6 @@ class PurchaseController(KBTApiBase):
 
     def _check_purchase_order_update_values(self, **params):
         msg_list = []
-        if not params.get('x_bill_date'):
-            msg_list.append('Missing x_bill_date')
-        if not params.get('x_bill_ref'):
-            msg_list.append('Missing x_bill_ref')
-
         return msg_list
 
     def _update_purchase_order(self, **params):
@@ -202,8 +197,15 @@ class PurchaseController(KBTApiBase):
                     (1, seq_id.id, {
                         'qty_received': seq_id.qty_received + order_line['qty_received']}))
 
-        x_bill_date = datetime.strptime(
-            params.get('x_bill_date'), '%d-%m-%Y')
+        acc_vals = {
+            'ref': params.get('x_bill_ref'),
+        }
+        if params.get('x_bill_date'):
+            x_bill_date = datetime.strptime(
+                params.get('x_bill_date'), '%d-%m-%Y')
+            acc_vals.update({
+                'invoice_date': x_bill_date
+            })
 
         purchase_ref_id.write({
             'order_line': update_line_lst
@@ -211,9 +213,6 @@ class PurchaseController(KBTApiBase):
         res = purchase_ref_id.action_create_invoice()
 
         acc_move = AccountMove.browse([res.get('res_id')])
-        acc_move.write({
-            'invoice_date': x_bill_date,
-            'ref': params.get('x_bill_ref'),
-        })
+        acc_move.write(acc_vals)
 
         return purchase_ref
