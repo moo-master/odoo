@@ -87,11 +87,17 @@ class ReceiptController(KBTApiBase):
             'x_is_interface': True,
             'move_ids_without_package': update_line_lst,
         }
+        inv_vals = {
+            'ref': data.get('x_bill_reference'),
+        }
         if params.get('x_bill_date'):
             x_bill_date = datetime.strptime(
                 params.get('x_bill_date'), '%d-%m-%Y')
             vals.update({
                 'x_bill_date': x_bill_date,
+            })
+            inv_vals.update({
+                'invoice_date': x_bill_date,
             })
 
         stock_id.write(vals)
@@ -111,10 +117,6 @@ class ReceiptController(KBTApiBase):
         purchase_order.action_create_invoice()
         inv_ids = purchase_order.invoice_ids
         for inv in inv_ids.filtered(lambda z: z.state == 'draft'):
-            inv.write({
-                'ref': data.get('x_bill_reference'),
-                'invoice_date': x_bill_date
-                if params.get('x_bill_date') else False,
-            })
+            inv.write(inv_vals)
 
         return data.get('purchase_ref')
