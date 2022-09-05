@@ -14,6 +14,7 @@
     'depends': [
         'base',
         'account',
+        'base_address_city',
     ],
     'data': [
         'views/view_partner_form.xml',

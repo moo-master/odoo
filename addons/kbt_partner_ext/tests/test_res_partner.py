@@ -59,9 +59,8 @@ def partner(env, payment_term, account_receivable, account_payable):
         'property_payment_term_id': payment_term.id,
         'property_account_receivable_id': account_receivable.id,
         'property_account_payable_id': account_payable.id,
-        'x_offset': True,
     })
 
 
-def test_x_offset(partner):
-    assert partner.x_offset
+def test_name(partner):
+    assert partner.name

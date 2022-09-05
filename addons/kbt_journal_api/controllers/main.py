@@ -68,18 +68,22 @@ class JournalController(KBTApiBase):
                 f"Account code ({line['account_code']}) is deprecated."
             )
 
-        account_analytic = request.env['account.analytic.account']
-        account_analytic_id = account_analytic.search(
-            [('name', '=', line.get('analytic_account'))])
-        if not account_analytic_id:
-            raise ValueError(
-                f"Analytic Account ({line.get('analytic_account')}) not found."
-            )
+        if line.get('analytic_account'):
+            account_analytic = request.env['account.analytic.account']
+            account_analytic_id = account_analytic.search(
+                [('code', '=', line.get('analytic_account'))])
+            if not account_analytic_id:
+                raise ValueError(
+                    f"Analytic Account ({line.get('analytic_account')}) not found."
+                )
+            account_analytic_id = account_analytic_id.id
+        else:
+            account_analytic_id = None
 
         return {
             'sequence': line['seq_line'],
             'account_id': account_id.id or False,
-            'analytic_account_id': account_analytic_id.id,
+            'analytic_account_id': account_analytic_id,
             'debit': line['debit_amount'],
             'credit': line['credit_amount']
         }

@@ -4,6 +4,8 @@ from odoo import http
 from odoo.http import request
 from odoo.addons.kbt_api_base.controllers.main import KBTApiBase
 
+from datetime import datetime
+
 
 class PaymentDataController(KBTApiBase):
 
@@ -88,6 +90,10 @@ class PaymentDataController(KBTApiBase):
             date_data = '{2}-{1}-{0}'.format(
                 date_api[0], date_api[1], date_api[2])
 
+            new_date_data = datetime.strptime(
+                date_data, '%Y-%m-%d'
+            )
+
             acc_move = AccountMove.search([
                 ('name', '=', data['invoice_number']),
                 ('state', '=', 'posted'),
@@ -96,6 +102,19 @@ class PaymentDataController(KBTApiBase):
                 raise ValueError(
                     "acc_move not found."
                 )
+
+            old_only_date = str(acc_move.invoice_date).split(' ')
+            temp_date = old_only_date[0].split('-')
+            new_only_date = '{0}-{1}-{2}'.format(
+                temp_date[2], temp_date[1], temp_date[0])
+            only_date = datetime.strptime(
+                new_only_date, '%d-%m-%Y'
+            )
+
+            if only_date > new_date_data:
+                raise ValueError(
+                    "Date %s is back date of order date/accounting date." %
+                    date_data)
 
             res_action = acc_move.action_register_payment()
             ctx = res_action.get('context')
