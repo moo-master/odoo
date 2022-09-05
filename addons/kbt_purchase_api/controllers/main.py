@@ -184,7 +184,7 @@ class PurchaseController(KBTApiBase):
             ])
             if not seq_id:
                 raise ValueError(
-                    "seq_id not found."
+                    "seq_id not found. %s" % purchase_ref_id.id
                 )
             if order_line['qty_received'] + seq_id.qty_received >\
                     seq_id.product_qty:
@@ -204,6 +204,19 @@ class PurchaseController(KBTApiBase):
 
         x_bill_date = datetime.strptime(
             params.get('x_bill_date'), '%d-%m-%Y')
+
+        old_only_date = str(purchase_ref_id.date_order).split(' ')
+        temp_date = old_only_date[0].split('-')
+        new_only_date = '{0}-{1}-{2}'.format(
+            temp_date[2], temp_date[1], temp_date[0])
+        purchase_only_date = datetime.strptime(
+            new_only_date, '%d-%m-%Y'
+        )
+
+        if purchase_only_date > x_bill_date:
+            raise ValueError(
+                "Date %s is back date of order date/accounting date." %
+                x_bill_date)
 
         purchase_ref_id.write({
             'order_line': update_line_lst
