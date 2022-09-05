@@ -26,8 +26,6 @@ class ReceiptController(KBTApiBase):
         data = params
         check_lst = {
             'purchase_ref',
-            'x_bill_date',
-            'x_bill_reference',
             'Items',
         }
         missing_vals = check_lst - set(data.keys())
@@ -64,7 +62,6 @@ class ReceiptController(KBTApiBase):
             raise ValueError(
                 "Stock not found in Purchase Order %s." % data['purchase_ref']
             )
-        x_bill_date = datetime.strptime(params.get('x_bill_date'), '%d-%m-%Y')
 
         update_line_lst = []
         for item in data['Items']:
@@ -81,31 +78,51 @@ class ReceiptController(KBTApiBase):
                 raise ValueError(
                     "stock_line not found."
                 )
+            if item['qty_done'] + \
+                    purchase_line.qty_received > purchase_line.product_qty:
+                name = purchase_line.name
+                prod_qty = purchase_line.product_qty
+                qty_done = item['qty_done']
+                total_qty = prod_qty - purchase_line.qty_received
+                raise ValueError(
+                    f"Your ordered quantity of {name} is "
+                    f"{prod_qty} and current received "
+                    f"quantity is {qty_done} your order "
+                    f"quantity can’t more than {total_qty}")
             update_line_lst.append((1, stock_line.id, {
                 'quantity_done': item['qty_done']
             }))
 
-        ref = data.get('x_bill_reference')
-
-        old_only_date = str(purchase_order.date_approve).split(' ')
-        temp_date = old_only_date[0].split('-')
-        new_only_date = '{0}-{1}-{2}'.format(
-            temp_date[2], temp_date[1], temp_date[0])
-        purchase_only_date = datetime.strptime(
-            new_only_date, '%d-%m-%Y'
-        )
-
-        if purchase_only_date > x_bill_date:
-            raise ValueError(
-                "Date %s is back date of order date/accounting date." %
-                x_bill_date)
-
         vals = {
-            'x_bill_date': x_bill_date,
-            'x_bill_reference': ref,
+            'x_bill_reference': data.get('x_bill_reference'),
             'x_is_interface': True,
             'move_ids_without_package': update_line_lst,
         }
+        inv_vals = {
+            'ref': data.get('x_bill_reference'),
+        }
+        if params.get('x_bill_date'):
+            old_only_date = str(purchase_order.date_approve).split(' ')
+            temp_date = old_only_date[0].split('-')
+            new_only_date = '{0}-{1}-{2}'.format(
+                temp_date[2], temp_date[1], temp_date[0])
+            purchase_only_date = datetime.strptime(
+                new_only_date, '%d-%m-%Y'
+            )
+            x_bill_date = datetime.strptime(
+                params.get('x_bill_date'), '%d-%m-%Y')
+
+            if purchase_only_date > x_bill_date:
+                raise ValueError(
+                    "Date %s is back date of order date/accounting date." %
+                    x_bill_date)
+
+            vals.update({
+                'x_bill_date': x_bill_date,
+            })
+            inv_vals.update({
+                'invoice_date': x_bill_date,
+            })
 
         stock_id.write(vals)
         res = stock_id._pre_action_done_hook()
@@ -124,9 +141,6 @@ class ReceiptController(KBTApiBase):
         purchase_order.action_create_invoice()
         inv_ids = purchase_order.invoice_ids
         for inv in inv_ids.filtered(lambda z: z.state == 'draft'):
-            inv.write({
-                'ref': data.get('x_bill_reference'),
-                'invoice_date': x_bill_date,
-            })
+            inv.write(inv_vals)
 
         return data.get('purchase_ref')
