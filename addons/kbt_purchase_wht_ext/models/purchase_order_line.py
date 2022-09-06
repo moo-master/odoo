@@ -11,4 +11,6 @@ class PurchaseOrderLine(models.Model):
 
     @api.onchange('product_id')
     def _onchange_product_id(self):
-        self.wht_type_id = self.product_id.product_tmpl_id.purchase_wht_type_id.id
+        self.write({
+            'wht_type_id': self.product_id.product_tmpl_id.purchase_wht_type_id.id
+        })

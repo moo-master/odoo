@@ -7,9 +7,10 @@ class SaleOrderLine(models.Model):
     wht_type_id = fields.Many2one(
         string='WHT',
         comodel_name='account.wht.type',
-        # default=lambda self: self.product_id.product_tmpl_id.wht_type_id
     )
 
     @api.onchange('product_id')
     def _onchange_product_id(self):
-        self.wht_type_id = self.product_id.product_tmpl_id.wht_type_id.id
+        self.write({
+            'wht_type_id': self.product_id.product_tmpl_id.wht_type_id.id
+        })

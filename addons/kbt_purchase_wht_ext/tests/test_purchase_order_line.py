@@ -106,25 +106,18 @@ def acc_wht(env, account_id):
     })
 
 
-# @pytest.fixture
-# def product(env):
-#     return env.ref('product.expense_product')
-
 @pytest.fixture
 def product(env):
-    return env['product.template'].create({
+    return env['product.product'].create({
         'name': 'Test onchange',
+    })
+
+
+def test_onchange_product_id(model, vendor, currency, product, acc_wht):
+    product.product_tmpl_id.write({
         'detailed_type': 'service',
         'invoice_policy': 'delivery',
-    })
-
-
-def test_onchang_product_id(model, vendor, currency, product, acc_wht):
-    product.write({
         'wht_type_id': acc_wht.id,
-    })
-
-    product.product_tmpl_id.write({
         'purchase_wht_type_id': acc_wht.id
     })
 
@@ -144,7 +137,5 @@ def test_onchang_product_id(model, vendor, currency, product, acc_wht):
         })],
     })
 
-    pol = env['purchase.order.line']
-    pol.order_id = po.id
-    pol._onchang_product_id()
-    assert po.order_line.wht_type_id == acc_wht.id
+    po.order_line._onchange_product_id()
+    assert po.order_line.wht_type_id.id == acc_wht.id
