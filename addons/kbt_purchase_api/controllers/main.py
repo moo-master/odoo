@@ -32,7 +32,7 @@ class PurchaseController(KBTApiBase):
             }
         elif order_line.get('product_code'):
             account_analytic_id = Account.search(
-                [('name', '=', order_line.get('analytic_account'))])
+                [('code', '=', order_line.get('analytic_account'))])
             if not account_analytic_id:
                 raise ValueError(
                     "account_analytic_id not found."
@@ -157,11 +157,6 @@ class PurchaseController(KBTApiBase):
 
     def _check_purchase_order_update_values(self, **params):
         msg_list = []
-        if not params.get('x_bill_date'):
-            msg_list.append('Missing x_bill_date')
-        if not params.get('x_bill_ref'):
-            msg_list.append('Missing x_bill_ref')
-
         return msg_list
 
     def _update_purchase_order(self, **params):
@@ -184,7 +179,7 @@ class PurchaseController(KBTApiBase):
             ])
             if not seq_id:
                 raise ValueError(
-                    "seq_id not found."
+                    "seq_id not found. %s" % purchase_ref_id.id
                 )
             if order_line['qty_received'] + seq_id.qty_received >\
                     seq_id.product_qty:
@@ -202,8 +197,28 @@ class PurchaseController(KBTApiBase):
                     (1, seq_id.id, {
                         'qty_received': seq_id.qty_received + order_line['qty_received']}))
 
-        x_bill_date = datetime.strptime(
-            params.get('x_bill_date'), '%d-%m-%Y')
+        acc_vals = {
+            'ref': params.get('x_bill_ref'),
+        }
+        if params.get('x_bill_date'):
+            x_bill_date = datetime.strptime(
+                params.get('x_bill_date'), '%d-%m-%Y')
+            acc_vals.update({
+                'invoice_date': x_bill_date
+            })
+
+        old_only_date = str(purchase_ref_id.date_order).split(' ')
+        temp_date = old_only_date[0].split('-')
+        new_only_date = '{0}-{1}-{2}'.format(
+            temp_date[2], temp_date[1], temp_date[0])
+        purchase_only_date = datetime.strptime(
+            new_only_date, '%d-%m-%Y'
+        )
+
+        if purchase_only_date > x_bill_date:
+            raise ValueError(
+                "Date %s is back date of order date/accounting date." %
+                x_bill_date)
 
         purchase_ref_id.write({
             'order_line': update_line_lst
@@ -211,9 +226,6 @@ class PurchaseController(KBTApiBase):
         res = purchase_ref_id.action_create_invoice()
 
         acc_move = AccountMove.browse([res.get('res_id')])
-        acc_move.write({
-            'invoice_date': x_bill_date,
-            'payment_reference': params.get('x_bill_ref'),
-        })
+        acc_move.write(acc_vals)
 
         return purchase_ref
