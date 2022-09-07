@@ -13,8 +13,13 @@
     ],
     'depends': [
         'kbt_business_type',
+        'kbt_partner_ext',
     ],
     'data': [
+        'data/paper_format.xml',
+        'data/report_data.xml',
+        'report/kbt_invoice_templates.xml',
+        'report/kbt_report_template.xml',
         'views/account_payment_term_views.xml'
     ]
 }

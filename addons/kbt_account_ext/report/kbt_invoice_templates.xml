@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+
+    <template id="report_kbt_invoice_form">
+        <t t-call="web.basic_layout">
+            <t t-set="name_bill" t-value='"ใบแจ้งหนี้"'/>
+            <t t-set="name_bill_en" t-value='"Invoice"'/>
+            <t t-foreach="docs" t-as="o">
+                <t t-call="kbt_account_ext.report_account_document_template"/>
+                <div style="page-break-after:always;"></div>
+            </t>
+        </t>
+    </template>
+
+</odoo>
