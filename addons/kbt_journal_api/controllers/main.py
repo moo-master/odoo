@@ -74,7 +74,7 @@ class JournalController(KBTApiBase):
                 [('code', '=', line.get('analytic_account'))])
             if not account_analytic_id:
                 raise ValueError(
-                    f"Analytic Account ({line.get('analytic_account')}) not found."
+                    "Analytic Account Code Not Found."
                 )
             account_analytic_id = account_analytic_id.id
         else:
