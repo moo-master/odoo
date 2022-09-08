@@ -35,7 +35,7 @@ class PurchaseController(KBTApiBase):
                 [('code', '=', order_line.get('analytic_account'))])
             if not account_analytic_id:
                 raise ValueError(
-                    "account_analytic_id not found."
+                    "Analytic Account Code Not Found."
                 )
 
             product_id = request.env['product.product'].search([
