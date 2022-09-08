@@ -206,19 +206,10 @@ class PurchaseController(KBTApiBase):
             acc_vals.update({
                 'invoice_date': x_bill_date
             })
-
-        old_only_date = str(purchase_ref_id.date_order).split(' ')
-        temp_date = old_only_date[0].split('-')
-        new_only_date = '{0}-{1}-{2}'.format(
-            temp_date[2], temp_date[1], temp_date[0])
-        purchase_only_date = datetime.strptime(
-            new_only_date, '%d-%m-%Y'
-        )
-
-        if purchase_only_date > x_bill_date:
-            raise ValueError(
-                "Date %s is back date of order date/accounting date." %
-                x_bill_date)
+            if purchase_ref_id.date_order.date() > x_bill_date.date():
+                raise ValueError(
+                    "Date %s is back date of order date/accounting date." %
+                    x_bill_date.strftime('%d-%m-%Y'))
 
         purchase_ref_id.write({
             'order_line': update_line_lst
