@@ -46,7 +46,12 @@ class JournalController(KBTApiBase):
             raise ValueError(
                 "Journal Not found."
             )
+
         date_data = datetime.strptime(params.get('account_date'), '%d-%m-%Y')
+        if move_id.invoice_date > date_data.date():
+            raise ValueError(
+                "Date %s is back date of order date/accounting date." %
+                date_data.strftime('%d-%m-%Y'))
 
         vals = {
             'ref': params['x_so_orderreference'],
