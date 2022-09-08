@@ -94,7 +94,7 @@
             <t t-set="payment_day" t-value="o.invoice_payment_term_id.name"/>
         </t>
         <!-- Header -->
-        <div class="header" style="font-size: 16px;">
+        <div class="header" style="font-size: 14px;">
             <div class="content">
                 <div class="row" name="company-logo">
                     <div class="col" style="margin-top: 16px;">
@@ -134,6 +134,71 @@
                         </div>
                     </div>
                 </div>
+            </div>
+
+            <div class="content w-100" name="partner-address">
+                <table class="border-bottom-0 border-dark" style="font-size: 14px; width: 100%; border: 1px solid;">
+                    <tr>
+                        <th style="width: 20%;">ชื่อ / Name</th>
+                        <td style="width: 50%;"><t t-out="o.partner_id.name"/></td>
+                        <th style="width: 15%;">เลขที่ / No.</th>
+                        <td style="width: 15%;"><t t-out="invoice_name"/></td>
+                    </tr>
+                    <tr>
+                        <th>สาขา / Branch</th>
+                        <td>Branchhhhhh</td>
+                        <th>วันที่ / Date</th>
+                        <td><t t-out="invoice_date"/></td>
+                    </tr>
+                    <tr>
+                        <th>ที่อยู่ / Address</th>
+                        <td><t t-out="address_line_1"/></td>
+                        <th>อ้างถึงใบกำกับภาษี</th>
+                        <td>0000000000</td>
+                    </tr>
+                    <tr>
+                        <th>เลขที่ประจำตัวผู้เสียภาษี</th>
+                        <td><t t-out="address_line_4"/></td>
+                        <th>วันที่กำกับภาษี</th>
+                        <td>dateeee</td>
+                    </tr>
+                </table>
+                <table class="" style="font-size: 14px; width: 100%;">
+                    <tr class="text-center">
+                        <th class="border border-dark" style="width: 20%;">
+                            <b><span>รหัสลูกค้า/Customer No.</span></b>
+                            <br/>
+                            <span>00000000000</span>
+                        </th>
+                        <th class="border border-dark" style="width: 30%;">
+                            <b><span>ระยะเวลาชำระเงิน/Credit Term</span></b>
+                            <br/>
+                            <span>***Immediatly***</span>
+                        </th>
+                        <th class="border border-dark" style="width: 15%;">
+                            <b><span>Offset Payment</span></b>
+                            <br/>
+                            <t t-if="o.partner_id.x_offset">
+                                <span>True</span>
+                            </t>
+                            <t t-else="">
+                                <span>False</span>
+                            </t>
+                        </th>
+                        <th class="border border-dark" style="width: 20%;">
+                            <b><span>วันครบกำหนด/Due Date</span></b>
+                            <br/>
+                            <t t-set="invoice_date" t-value="o.invoice_date"/>
+                            <span><t t-out="invoice_date"/></span>
+                        </th>
+                        <th class="border border-dark" style="width: 15%;">
+                            <b><span>สกุลเงิน/Currency</span></b>
+                            <br/>
+                            <span><t t-out="o.company_id.currency_id.name"/></span>
+                        </th>
+                    </tr>
+                </table>
+
             </div>
         </div>
     </template>
@@ -270,55 +335,42 @@
         <t t-call="kbt_account_ext.internal_layout_header"/>
         <!-- Body -->
         <div class="article">
+            <t t-call="kbt_account_ext.internal_layout_body"/>
             <t t-out="0"/>
         </div>
         <t t-call="kbt_account_ext.internal_layout_footer"/>
     </template>
 
-    <template id="report_account_document_template">
-        <t t-call="kbt_account_ext.internal_layout">
-            <t t-set="o" t-value="o.with_context(lang=lang)"/>
+    <template id="kbt_account_ext.internal_layout_body">
+        <div class="main">
+            <table class="table" style="font-size: 14px;">
+                <thead class="" style="width: 100%;">
+                    <tr class="text-center">
+                        <th>
+                            <span>รายการที่ Item No.</span>
+                        </th>
+                        <th colspan="2">
+                            <span>รายการสินค้า/บริการ Goods/Service</span>
+                        </th>
+                        <th>
+                            <span>จำนวนสินค้า Quantity</span>
+                        </th>
+                        <th>
+                            <span>จำนวนเงิน Amount</span>
+                        </th>
+                    </tr>
+                </thead>
+            </table>
+        </div>
+    </template>
 
-            <div class="page">
-                <table class="table" style="font-size: 14px;">
-                    <thead class="table-bordered" style="width: 100%;">
-                        <tr class="text-center">
-                            <th style="width: 20%;">
-                                <b><span>รหัสลูกค้า/Customer No.</span></b>
-                                <br/>
-                                <span>00000000000</span>
-                            </th>
-                            <th style="width: 20%;">
-                                <b><span>ระยะเวลาชำระเงิน/Credit Term</span></b>
-                                <br/>
-                                <span>***Immediatly***</span>
-                            </th>
-                            <th style="width: 20%;">
-                                <b><span>Offset Payment</span></b>
-                                <br/>
-                                <t t-if="o.partner_id.x_offset">
-                                    <span>True</span>
-                                </t>
-                                <t t-else="">
-                                    <span>False</span>
-                                </t>
-                            </th>
-                            <th style="width: 20%;">
-                                <b><span>วันครบกำหนด/Due Date</span></b>
-                                <br/>
-                                <t t-set="invoice_date" t-value="o.invoice_date"/>
-                                <span><t t-out="invoice_date"/></span>
-                            </th>
-                            <th style="width: 20%;">
-                                <b><span>สกุลเงิน/Currency</span></b>
-                                <br/>
-                                <span><t t-out="o.company_id.currency_id.name"/></span>
-                            </th>
-                        </tr>
-                    </thead>
-                </table>
-            </div>
-        </t>
+    <template id="report_account_document_template">
+        <t t-call="kbt_account_ext.internal_layout"/>
+        <!-- <t t-call="kbt_account_ext.internal_layout_header"/> -->
+        <!-- <t t-set="o" t-value="o.with_context(lang=lang)"/> -->
+        <!-- <t t-call="kbt_account_ext.internal_layout_body"/> -->
+
+        <!-- <t t-call="kbt_account_ext.internal_layout_footer"/> -->
     </template>
 
 </odoo>

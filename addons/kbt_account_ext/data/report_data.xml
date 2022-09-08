@@ -2,7 +2,7 @@
 <odoo>
 
     <record id="action_kbt_invoice_report" model="ir.actions.report">
-        <field name="name">Invoice KBT</field>
+        <field name="name">ใบแจ้งหนี้</field>
         <field name="model">account.move</field>
         <field name="report_type">qweb-pdf</field>
         <field name="report_name">kbt_account_ext.report_kbt_invoice_form</field>
