@@ -99,7 +99,7 @@ class SaleOrderDataController(KBTApiBase):
             [('payment_term_code', '=', data.get('payment_term'))])
         if not account_term_id:
             raise ValueError(
-                "account_term_id not found."
+                "Payment Term Code Not Found."
             )
         vals['payment_term_id'] = account_term_id.id
 
@@ -108,7 +108,7 @@ class SaleOrderDataController(KBTApiBase):
             [('code', '=', data.get('analytic_account'))])
         if not account_analytic_id:
             raise ValueError(
-                "account_analytic_id not found."
+                "Analytic Account Code Not Found."
             )
         vals['analytic_account_id'] = account_analytic_id.id
 
