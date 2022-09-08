@@ -116,13 +116,15 @@ class ReceiptController(KBTApiBase):
                 raise ValueError(
                     "Date %s is back date of order date/accounting date." %
                     x_bill_date)
+        else:
+            x_bill_date = datetime.today()
 
-            vals.update({
-                'x_bill_date': x_bill_date,
-            })
-            inv_vals.update({
-                'invoice_date': x_bill_date,
-            })
+        vals.update({
+            'x_bill_date': x_bill_date,
+        })
+        inv_vals.update({
+            'invoice_date': x_bill_date,
+        })
 
         stock_id.write(vals)
         res = stock_id._pre_action_done_hook()
