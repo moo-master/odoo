@@ -15,6 +15,8 @@
         'kbt_business_type',
     ],
     'data': [
-        'views/account_payment_term_views.xml'
+        'report/receipt_tax_invoice_report.xml',
+        'views/account_payment_term_views.xml',
+
     ]
 }
