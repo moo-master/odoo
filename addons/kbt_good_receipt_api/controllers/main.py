@@ -34,6 +34,7 @@ class ReceiptController(KBTApiBase):
 
     def _create_goods_receipt(self, **params):
         data = params
+        Move = request.env['account.move']
         Purchase = request.env['purchase.order']
         Product = request.env['product.product']
         StockMove = request.env['stock.move']
@@ -93,29 +94,24 @@ class ReceiptController(KBTApiBase):
                 'quantity_done': item['qty_done']
             }))
 
+        x_bill_date = datetime.strptime(params.get('x_bill_date'), '%d-%m-%Y')\
+            if params.get('x_bill_date') else datetime.today()
+
+        if purchase_order.date_approve.date() > x_bill_date.date():
+            raise ValueError(
+                "Date %s is back date of order date/accounting date." %
+                x_bill_date.strftime('%d-%m-%Y'))
+
         vals = {
             'x_bill_reference': data.get('x_bill_reference'),
             'x_is_interface': True,
             'move_ids_without_package': update_line_lst,
+            'x_bill_date': x_bill_date,
         }
         inv_vals = {
             'ref': data.get('x_bill_reference'),
-        }
-        if params.get('x_bill_date'):
-            x_bill_date = datetime.strptime(
-                params.get('x_bill_date'), '%d-%m-%Y')
-
-            if purchase_order.date_approve.date() > x_bill_date.date():
-                raise ValueError(
-                    "Date %s is back date of order date/accounting date." %
-                    x_bill_date.strftime('%d-%m-%Y'))
-
-        vals.update({
-            'x_bill_date': x_bill_date,
-        })
-        inv_vals.update({
             'invoice_date': x_bill_date,
-        })
+        }
 
         stock_id.write(vals)
         res = stock_id._pre_action_done_hook()
@@ -131,9 +127,8 @@ class ReceiptController(KBTApiBase):
                 button_validate_picking_ids=ctx['button_validate_picking_ids'])
             wiz.process()
 
-        purchase_order.action_create_invoice()
-        inv_ids = purchase_order.invoice_ids
-        for inv in inv_ids.filtered(lambda z: z.state == 'draft'):
-            inv.write(inv_vals)
+        res = purchase_order.action_create_invoice()
+        move_id = Move.browse([res.get('res_id')])
+        move_id.write(inv_vals)
 
         return data.get('purchase_ref')
