@@ -26,19 +26,32 @@ class JournalController(KBTApiBase):
         ResCurrency = request.env['res.currency']
         User = request.env.user
 
+        move_id = AccountMove.search([
+            ('name', '=', params['x_so_orderreference'])
+        ])
+        if not move_id:
+            raise ValueError(
+                "x_so_orderreference Not Found."
+            )
+
         currency_id = ResCurrency.search([('name', '=', params['currency'])])
         if not currency_id:
             raise ValueError(
-                "currency_id not found."
+                "Currency Not Found."
             )
         journal_id = AccountJour.search([
             ('code', '=', params['journal_code']),
             ('company_id', '=', User.company_id.id)])
         if not journal_id:
             raise ValueError(
-                "journal_id not found."
+                "Journal Not found."
             )
+
         date_data = datetime.strptime(params.get('account_date'), '%d-%m-%Y')
+        if move_id.invoice_date > date_data.date():
+            raise ValueError(
+                "Date %s is back date of order date/accounting date." %
+                date_data.strftime('%d-%m-%Y'))
 
         vals = {
             'ref': params['x_so_orderreference'],
