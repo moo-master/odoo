@@ -1,7 +1,7 @@
 {
-    'name': 'KBT Journal Api',
+    'name': 'KBT Sale WHT Ext',
     'summary': '''
-        KBT Journal Api
+        KBT Sale WHT Ext
     ''',
     'author': 'Roots',
     'category': 'Company',
@@ -12,7 +12,9 @@
         'Pachara P.',
     ],
     'depends': [
-        'kbt_journal_ext',
-        'kbt_api_base',
+        'kbt_wht_ext',
+    ],
+    'data': [
+        'views/sale_order_views.xml'
     ]
 }
