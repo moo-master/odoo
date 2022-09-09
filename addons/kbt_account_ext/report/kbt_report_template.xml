@@ -290,8 +290,8 @@
                 </div>
             </div>
 
-            <div style="text-align: center; position: relative;">
-                <div class="row">
+            <div class="" style="text-align: center;">
+                <div class="row pb-5">
                     <div class="border border-dark col-4">
                         <div>
                             <span><b>ผู้ออกเอกสาร</b> (Issued by)</span>
@@ -308,26 +308,20 @@
                         </div>
                     </div>
                 </div>
-                <div class="row">
-                    <div class="border border-dark col-4">
-                        <div>
-                            <span>XXXXXXX</span>
-                            <br/>
-                            <span>data</span>
+                <div class="border border-dark row align-text-bottom">
+                    <div class="col-4">
+                        <div style="">
+                            <span t-out="o.invoice_date.strftime('%d/%m/%Y')"/>
                         </div>
                     </div>
-                    <div class="border border-dark col-4">
+                    <div class="col-4">
                         <div>
-                            <span>XXXXXX</span>
-                            <br/>
-                            <span>data</span>
+                            <span t-out="o.invoice_date.strftime('%d/%m/%Y')"/>
                         </div>
                     </div>
-                    <div class="border border-dark col-4">
+                    <div class="col-4">
                         <div>
-                            <span>XXXX</span>
-                            <br/>
-                            <span>data</span>
+                            <span t-out="o.invoice_date.strftime('%d/%m/%Y')"/>
                         </div>
                     </div>
                 </div>
@@ -345,10 +339,10 @@
     </template>
 
     <template id="kbt_account_ext.internal_layout_body">
-        <div class="pt-2">
-            <table class="table" style="font-size: 13px; width: 100%; margin-top: 10px;">
+        <div class="pt-2 mt-auto">
+            <table class="table border" style="font-size: 13px; width: 100%; margin-top: 10px; height:100%;">
                 <thead class="" style="">
-                    <tr class="text-center border border-dark">
+                    <tr class="text-center">
                         <th class="border border-dark" style="width: 21%;">
                             <span>รายการที่ Item No.</span>
                         </th>
@@ -367,16 +361,16 @@
                     <t t-set="counter" t-value="1"/>
                     <t t-foreach="o.invoice_line_ids" t-as="line">
                         <tr class="border-right border-left">
-                            <td class="text-center border-right border-left border-dark" style="padding-top: 0.75rem; padding-bottom: 0.75rem;">
+                            <td class="text-center">
                                 <span t-out="counter"/>
                             </td>
-                            <td class="text-left border-right border-dark" style="padding-top: 0.75rem; padding-bottom: 0.75rem;">
+                            <td class="text-left">
                                 <span t-out="line.name"/>
                             </td>
-                            <td class="text-right border-right border-dark" style="padding-top: 0.75rem; padding-bottom: 0.75rem;">
+                            <td class="text-right">
                                 <span t-out="'{:,.2f}'.format(line.quantity) + ' ' + line.product_uom_id.name"/>
                             </td>
-                            <td class="text-right border-right border-dark" style="padding-top: 0.75rem; padding-bottom: 0.75rem;">
+                            <td class="text-right">
                                 <span t-out="'{:,.2f}'.format(line.price_subtotal)"/>
                             </td>
                             <t t-set="counter" t-value="counter+1"/>
