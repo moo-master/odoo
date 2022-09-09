@@ -1,7 +1,7 @@
 {
-    'name': 'KBT Journal Api',
+    'name': 'KBT Journal Ext',
     'summary': '''
-        KBT Journal Api
+        KBT Journal Extension
     ''',
     'author': 'Roots',
     'category': 'Company',
@@ -12,7 +12,9 @@
         'Pachara P.',
     ],
     'depends': [
-        'kbt_journal_ext',
-        'kbt_api_base',
+        'kbt_business_type',
+    ],
+    'data': [
+        'views/account_move_view.xml',
     ]
 }

@@ -19,6 +19,7 @@
         'kbt_delivery_api',
         'kbt_good_receipt_api',
         'kbt_journal_api',
+        'kbt_journal_ext',
         'kbt_partner_account_ext',
         'kbt_partner_api',
         'kbt_partner_ext',
