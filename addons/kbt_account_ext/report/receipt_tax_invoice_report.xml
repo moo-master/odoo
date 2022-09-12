@@ -11,11 +11,11 @@
                 />
             </div>
             <div class="row" style="font-size: 14px;">
-                <div class="col-6">
+                <div class="col-7">
                     <strong>ชื่อบริษัทภาษาไทย</strong>
                 </div>
-                <div class="col-6">
-                    <strong><t t-esc="'ใบเสร็จนับเงิน/ใบกำกับภาษี (Receipt/Tax Invoice)'"/></strong>
+                <div class="col-5" style="padding-left: 32px">
+                    <strong><t t-esc="'ใบเสร็จรับเงิน/ใบกำกับภาษี (Receipt/Tax Invoice)'"/></strong>
                 </div>
             </div>
             <div style="font-size: 12px">
@@ -26,15 +26,32 @@
                 <t t-esc="o.company_id.street2"/>
                 <t t-esc="o.company_id.zip"/>
             </div>
-            <div class="row" style="padding-left: 15px; font-size: 12px; width: 100%;">
+            <div class="row" style="padding-left: 15px; font-size: 12px; width: 100%; padding-bottom: 15px;">
                 <span>
                     โทร <t t-esc="o.company_id.phone"/>
                     เลขประจำตัวผู้เสียภาษีอากร <t t-esc="o.company_id.vat"/>
                     สาขาที่ (เลขสาขาหาจากไหน) <t t-esc="o.company_id.phone"/>
                 </span>
             </div>
+
+            <div style="border: 1px solid #000000; width: 100%; height: 120px; font-size: 12px;">
+                <div class="row">
+                    <div class="col-2" style="padding-left: 20px; padding-top: 5px;">
+                        <strong>ชื่อ/Name</strong>
+                    </div>
+                    <div class="col-6">
+                        <t t-esc="account_payment.reconcile_invoice_ids.account_move_id.partner_id.name"/>
+                    </div>
+                    <div class="col-2" style="padding-top: 5px;">
+                        <strong>เลขที่/No.</strong>
+                    </div>
+                    <div class="col-2">
+                        <t t-esc="account_payment.reconcile_invoice_ids.account_move_id.partner_id.x_branch_name"/>
+                    </div>
+                </div>
+            </div>
         </div>
-        <div class="page">
+        <div class="page" style="padding-top: 150px;">
 
             <t t-set="txt_style" t-value="'font-size:25px; text-align:center;top:0px; left:15px; position:absolute; z-index:99;'"/>
             <t t-if="body_txt_position == 'tr'">
