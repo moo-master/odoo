@@ -441,7 +441,7 @@
     </template>
 
     <template id="kbt_account_ext.internal_layout_body">
-        <div class="main" style="height: 600px;" t-attf-class="page {{font_fam}} page_body_set" data_body_set="205.1">
+        <div class="main" style="height: 600px;" t-attf-class="page {{font_fam}} page_body_set" data-body-set="155">
             <table class="table border border-dark" style="font-size: 13px;">
                 <!-- <tr class="text-center">
                     <th class="" style="width: 21%;">
@@ -476,8 +476,8 @@
                     </tr>
                 </t>
             </table>
-            <div class="new-page" data_page_size="18312" data_page_size_detail="12140" />
-            <div id="data-page"></div>
+            <div class="new-page" data_page_size="2050" data_page_size_detail="1000" />
+            <!-- <div id="data-page"></div> -->
         </div>
         <t t-call="kbt_account_ext.internal_layout_footer"/>
     </template>
