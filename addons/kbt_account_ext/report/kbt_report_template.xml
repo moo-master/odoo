@@ -93,6 +93,7 @@
         <t t-if="o.invoice_payment_term_id">
             <t t-set="payment_day" t-value="o.invoice_payment_term_id.name"/>
         </t>
+        <t t-set="last_page" t-value="topage"/>
         <!-- Header -->
         <div class="header" style="font-size: 14px;">
             <div class="content">
@@ -183,7 +184,7 @@
                         </t>
                     </tr>
                 </table>
-                <table class="border border-dark" style="font-size: 14px; width: 100%; border: 1px solid;">
+                <table class="border border-dark" style="font-size: 14px; width: 100%;">
                     <tr class="text-center">
                         <th class="border border-dark" style="width: 21%;">
                             <b><span>รหัสลูกค้า/Customer No.</span></b>
@@ -222,6 +223,22 @@
                         </th>
                     </tr>
                 </table>
+                <table class="table border-left border-bottom border-dark" style="font-size: 13px;">
+                    <tr class="text-center">
+                        <th class="border-right border-dark" style="width: 21%;">
+                            <span>รายการที่ Item No.</span>
+                        </th>
+                        <th class="border-right border-dark" style="width: 40%;">
+                            <span>รายการสินค้า/บริการ Goods/Service</span>
+                        </th>
+                        <th class="border-right border-dark" style="width: 23%;">
+                            <span>จำนวนสินค้าQuantity</span>
+                        </th>
+                        <th class="border-right border-dark" style="width: 16%;">
+                            <span>จำนวนเงินAmount</span>
+                        </th>
+                    </tr>
+                </table>
             </div>
         </div>
     </template>
@@ -233,7 +250,8 @@
             <t t-set="invoice_date" t-value="o.invoice_date.strftime('%d/%m/%Y')"/>
         </t>
         <!-- Footer -->
-        <div class="footer" style="font-size: 14px;">
+        <div class="footer" t-attf-class="{{font_fam}} last_footer" style="font-size: 14px;">
+        <script type="text/javascript" src="/kbt_account_ext/static/src/js/force_new_page.js"/>
             <style>
                 #dummy-row {
                     visibility: hidden;
@@ -423,9 +441,9 @@
     </template>
 
     <template id="kbt_account_ext.internal_layout_body">
-        <div class="main border border-dark" style="height: 600px;">
-            <table class="table pt-3" style="font-size: 13px;">
-                <tr class="text-center">
+        <div class="main" style="height: 600px;" t-attf-class="page {{font_fam}} page_body_set" data_body_set="205.1">
+            <table class="table border border-dark" style="font-size: 13px;">
+                <!-- <tr class="text-center">
                     <th class="" style="width: 21%;">
                         <span>รายการที่ Item No.</span>
                     </th>
@@ -438,27 +456,30 @@
                     <th class="" style="width: 16%;">
                         <span>จำนวนเงินAmount</span>
                     </th>
-                </tr>
+                </tr> -->
                 <t t-set="counter" t-value="1"/>
                 <t t-foreach="o.invoice_line_ids" t-as="line">
-                    <tr class="">
-                        <td class="text-center">
+                    <tr style="">
+                        <td class="text-center" style="width: 21%;">
                             <span t-out="counter"/>
                         </td>
-                        <td class="text-left">
+                        <td class="text-left" style="width: 40%;">
                             <span t-out="line.name"/>
                         </td>
-                        <td class="text-right">
+                        <td class="text-right" style="width: 23%;">
                             <span t-out="'{:,.2f}'.format(line.quantity) + ' ' + line.product_uom_id.name"/>
                         </td>
-                        <td class="text-right">
+                        <td class="text-right" style="width: 16%;">
                             <span t-out="'{:,.2f}'.format(line.price_subtotal)"/>
                         </td>
                         <t t-set="counter" t-value="counter+1"/>
                     </tr>
                 </t>
             </table>
+            <div class="new-page" data_page_size="18312" data_page_size_detail="12140" />
+            <div id="data-page"></div>
         </div>
+        <t t-call="kbt_account_ext.internal_layout_footer"/>
     </template>
 
     <template id="report_account_document_template">
@@ -468,7 +489,7 @@
         <!-- Body -->
         <t t-call="kbt_account_ext.internal_layout_body"/>
         <!-- Footer -->
-        <t t-call="kbt_account_ext.internal_layout_footer"/>
+        <!-- <t t-call="kbt_account_ext.internal_layout_footer"/> -->
     </template>
 
 </odoo>
