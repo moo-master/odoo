@@ -1,26 +1,29 @@
-function subst() {
-    var vars = {};
-    var x = document.location.search.substring(1).split('&');
-    for (var i in x) {
-        var z = x[i].split('=', 2);
-        vars[z[0]] = decodeURI(z[1]);
-    }
-    var x=['frompage', 'topage', 'page', 'webpage', 'section', 'subsection', 'subsubsection'];
-    for (var i in x) {
-        var y = document.getElementsByClassName(x[i]);
-        for (var j=0; j<y.length; ++j)
-            y[j].textContent = vars[x[i]];
-    }
+const elem = document.getElementsByClassName("new-page");
+const rect = elem[0].getBoundingClientRect();
 
-    var operations = {
-        'last-page': function (elt) {
-            elt.style.visibility = (vars.page === vars.topage) ? "visible" : "hidden";
-        },
-    };
+const data_page_size = elem[0].getAttribute("data_page_size");
+const data_page_size_detail = elem[0].getAttribute("data_page_size_detail");
 
-    for (var klass in operations) {
-        var y = document.getElementsByClassName(klass);
-        for (var j=0; j<y.length; ++j)
-            operations[klass](y[j]);
-    }
+const page_body = document.getElementsByClassName("page_body_set");
+const page_size_body = page_body[0].getAttribute("data_body_set");
+
+const page_last = document.getElementsByClassName("last-footer");
+
+// Find data page
+const page_data = document.getElementById("data-page")
+page_data.innerHTML = elem[0].offset().top
+elem.innerHTML = elem.offset().top
+
+if ((rect.top % data_page_size) >= data_page_size_detail) {
+    var newdiv = document.getElementsByClassName("new_page");
+    newdiv[0].setAttribute('style', 'page-break-after:always');
+    size_relative = (Math.ceil(rect.top / data_page_size) + 1) * page_size_body
 }
+else {
+    size_relative = (Math.ceil(rect.top / data_page_size)) * page_size_body
+}
+page_body[0].style.position = 'relative';
+page_body[0].style.height = size_relative + 'mm';
+page_last[0].style.position = 'absolute';
+page_last[0].style.bottom = '0mm';
+page_last[0].style.width = '100%';
