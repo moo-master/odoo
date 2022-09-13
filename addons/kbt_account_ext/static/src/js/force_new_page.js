@@ -1,3 +1,7 @@
+// data_page_size full page without footer
+// data_page_size_detail full page with footer
+// page_body_set data page check by last line bottom AND top footer
+
 const elem = document.getElementsByClassName("new-page");
 const rect = elem[0].getBoundingClientRect();
 
@@ -10,9 +14,9 @@ const page_size_body = page_body[0].getAttribute("data_body_set");
 const page_last = document.getElementsByClassName("last-footer");
 
 // Find data page
-const page_data = document.getElementById("data-page")
-page_data.innerHTML = elem[0].offset().top
-elem.innerHTML = elem.offset().top
+// const page_data = document.getElementById("data-page")
+// page_data.innerHTML = elem.getBoundingClientRect().top
+
 
 if ((rect.top % data_page_size) >= data_page_size_detail) {
     var newdiv = document.getElementsByClassName("new_page");
