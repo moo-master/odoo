@@ -6,11 +6,11 @@
         <field name="default" eval="True"/>
         <field name="format">A4</field>
         <field name="orientation">Portrait</field>
-        <field name="margin_top">63</field>
+        <field name="margin_top">79</field>
         <field name="margin_bottom">88</field>
         <field name="margin_left">5</field>
         <field name="margin_right">5</field>
-        <field name="header_spacing">59</field>
+        <field name="header_spacing">73</field>
         <field name="dpi">90</field>
     </record>
 
