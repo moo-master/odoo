@@ -5,9 +5,12 @@
         <t t-call="web.basic_layout">
             <t t-set="name_bill" t-value='"ใบแจ้งหนี้"'/>
             <t t-set="name_bill_en" t-value='"Invoice"'/>
+            <t t-set="is_tax_report" t-value="0"/>
+            <t t-set="page_number" t-value="1"/>
             <t t-foreach="docs" t-as="o">
                 <t t-call="kbt_account_ext.report_account_document_template"/>
                 <div style="page-break-after:always;"></div>
+                <t t-set="page_number" t-value="page_number+1"/>
             </t>
         </t>
     </template>
@@ -16,6 +19,31 @@
         <t t-call="web.basic_layout">
             <t t-set="name_bill" t-value='"ใบแจ้งหนี้/ใบกำกับภาษี"'/>
             <t t-set="name_bill_en" t-value='"Invoice/Tax Invoice"'/>
+            <t t-set="is_tax_report" t-value="0"/>
+            <t t-foreach="docs" t-as="o">
+                <t t-call="kbt_account_ext.report_account_document_template"/>
+                <div style="page-break-after:always;"></div>
+            </t>
+        </t>
+    </template>
+
+    <template id="report_kbt_debit_note_form">
+        <t t-call="web.basic_layout">
+            <t t-set="name_bill" t-value='"ใบลดหนี้/ใบกำกับภาษี"'/>
+            <t t-set="name_bill_en" t-value='"Invoice/Tax Invoice"'/>
+            <t t-set="is_tax_report" t-value="1"/>
+            <t t-foreach="docs" t-as="o">
+                <t t-call="kbt_account_ext.report_account_document_template"/>
+                <div style="page-break-after:always;"></div>
+            </t>
+        </t>
+    </template>
+
+    <template id="report_kbt_credit_note_form">
+        <t t-call="web.basic_layout">
+            <t t-set="name_bill" t-value='"ใบเพิ่มหนี้/ใบกำกับภาษี"'/>
+            <t t-set="name_bill_en" t-value='"Invoice/Tax Invoice"'/>
+            <t t-set="is_tax_report" t-value="1"/>
             <t t-foreach="docs" t-as="o">
                 <t t-call="kbt_account_ext.report_account_document_template"/>
                 <div style="page-break-after:always;"></div>
