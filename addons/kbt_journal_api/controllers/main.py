@@ -21,24 +21,45 @@ class JournalController(KBTApiBase):
             return self._response_api(message=str(error))
 
     def _create_journal(self, **params):
-        AccountMove = request.env['account.move']
+        Sale = request.env['sale.order']
+        Move = request.env['account.move']
         AccountJour = request.env['account.journal']
         ResCurrency = request.env['res.currency']
         User = request.env.user
 
+        sale_id = Sale.search([
+            ('x_so_orderreference', '=', params['x_so_orderreference'])
+        ])
+        if not sale_id:
+            raise ValueError(
+                "Sale Order Reference %s does not exist."
+                % params['x_so_orderreference']
+            )
+        if not sale_id.invoice_ids:
+            raise ValueError(
+                "Sale Order Reference %s does not have Invoice."
+                % params['x_so_orderreference']
+            )
+        move_id = sale_id.invoice_ids.sorted(lambda x: x.invoice_date)[0]
+
         currency_id = ResCurrency.search([('name', '=', params['currency'])])
         if not currency_id:
             raise ValueError(
-                "currency_id not found."
+                "Currency Not Found."
             )
         journal_id = AccountJour.search([
             ('code', '=', params['journal_code']),
             ('company_id', '=', User.company_id.id)])
         if not journal_id:
             raise ValueError(
-                "journal_id not found."
+                "Journal Not found."
             )
+
         date_data = datetime.strptime(params.get('account_date'), '%d-%m-%Y')
+        if move_id.invoice_date > date_data.date():
+            raise ValueError(
+                "Date %s is back date of order date/accounting date." %
+                date_data.strftime('%d-%m-%Y'))
 
         vals = {
             'ref': params['x_so_orderreference'],
@@ -52,7 +73,7 @@ class JournalController(KBTApiBase):
         line_vals_lst = [(0, 0, self._prepare_line_ids(order_line, User))
                          for order_line in params.get('lineItems')]
         vals['line_ids'] = line_vals_lst
-        journal_entry = AccountMove.create(vals)
+        journal_entry = Move.create(vals)
         journal_entry.action_post()
 
     def _prepare_line_ids(self, line, user_id):
@@ -89,11 +110,10 @@ class JournalController(KBTApiBase):
         }
 
     def _check_balance_debit_credit(self, line_items):
-        debit = sum([line.get('debit_amount') for line in line_items])
-        credit = sum([line.get('credit_amount') for line in line_items])
+        debit = sum(line.get('debit_amount') for line in line_items)
+        credit = sum(line.get('credit_amount') for line in line_items)
         if debit != credit:
             raise ValueError(
                 f"Cannot create unbalanced journal entry. "
                 f"Differences debit - credit: [{debit - credit}]"
             )
-        return True
