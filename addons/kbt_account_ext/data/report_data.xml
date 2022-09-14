@@ -1,0 +1,52 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+
+    <record id="action_kbt_invoice_report" model="ir.actions.report">
+        <field name="name">ใบแจ้งหนี้</field>
+        <field name="model">account.move</field>
+        <field name="report_type">qweb-pdf</field>
+        <field name="report_name">kbt_account_ext.report_kbt_invoice_form</field>
+        <field name="report_file">kbt_account_ext.report_kbt_invoice_form</field>
+        <field name="print_report_name">'ใบแจ้งหนี้'</field>
+        <field name="paperformat_id" ref="kbt_account_ext.kbt_account_paperformat"/>
+        <field name="binding_model_id" ref="account.model_account_move"/>
+        <field name="binding_type">report</field>
+    </record>
+
+    <record id="action_kbt_invoice_tax_report" model="ir.actions.report">
+        <field name="name">ใบแจ้งหนี้/ใบกำกับภาษี</field>
+        <field name="model">account.move</field>
+        <field name="report_type">qweb-pdf</field>
+        <field name="report_name">kbt_account_ext.report_kbt_invoice_tax_form</field>
+        <field name="report_file">kbt_account_ext.report_kbt_invoice_tax_form</field>
+        <field name="print_report_name">'ใบแจ้งหนี้/ใบกำกับภาษี'</field>
+        <field name="paperformat_id" ref="kbt_account_ext.kbt_account_paperformat"/>
+        <field name="binding_model_id" ref="account.model_account_move"/>
+        <field name="binding_type">report</field>
+    </record>
+
+    <record id="action_kbt_debit_note_report" model="ir.actions.report">
+        <field name="name">ใบลดหนี้/ใบกำกับภาษี</field>
+        <field name="model">account.move</field>
+        <field name="report_type">qweb-pdf</field>
+        <field name="report_name">kbt_account_ext.report_kbt_debit_note_form</field>
+        <field name="report_file">kbt_account_ext.report_kbt_debit_note_form</field>
+        <field name="print_report_name">'ใบลดหนี้/ใบกำกับภาษี'</field>
+        <field name="paperformat_id" ref="kbt_account_ext.kbt_account_paperformat"/>
+        <field name="binding_model_id" ref="account.model_account_move"/>
+        <field name="binding_type">report</field>
+    </record>
+
+    <record id="action_kbt_credit_note_report" model="ir.actions.report">
+        <field name="name">ใบเพิ่มหนี้/ใบกำกับภาษี</field>
+        <field name="model">account.move</field>
+        <field name="report_type">qweb-pdf</field>
+        <field name="report_name">kbt_account_ext.report_kbt_credit_note_form</field>
+        <field name="report_file">kbt_account_ext.report_kbt_credit_note_form</field>
+        <field name="print_report_name">'ใบเพิ่มหนี้/ใบกำกับภาษี'</field>
+        <field name="paperformat_id" ref="kbt_account_ext.kbt_account_paperformat"/>
+        <field name="binding_model_id" ref="account.model_account_move"/>
+        <field name="binding_type">report</field>
+    </record>
+
+</odoo>
