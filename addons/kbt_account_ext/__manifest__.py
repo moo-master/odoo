@@ -17,6 +17,7 @@
         'Pachara P.',
     ],
     'depends': [
+        'kbt_business_type',
         'kbt_partner_ext',
         'kbt_account_wht_ext',
     ],
