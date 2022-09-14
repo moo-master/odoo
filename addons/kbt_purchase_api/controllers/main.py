@@ -202,12 +202,13 @@ class PurchaseController(KBTApiBase):
                         'qty_received': seq_id.qty_received + order_line['qty_received']}))
 
         x_bill_date = datetime.strptime(params.get('x_bill_date'), '%d-%m-%Y')\
-            if params.get('x_bill_date') else datetime.today()
+            if params.get('x_bill_date') else False
 
-        if purchase_ref_id.date_approve.date() > x_bill_date.date():
-            raise ValueError(
-                "Date %s is back date of order date/accounting date." %
-                x_bill_date.strftime('%d-%m-%Y'))
+        if x_bill_date:
+            if purchase_ref_id.date_approve.date() > x_bill_date.date():
+                raise ValueError(
+                    "Date %s is back date of order date/accounting date." %
+                    x_bill_date.strftime('%d-%m-%Y'))
 
         acc_vals = {
             'ref': params.get('x_bill_ref'),

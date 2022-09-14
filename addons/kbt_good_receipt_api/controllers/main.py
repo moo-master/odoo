@@ -95,12 +95,13 @@ class ReceiptController(KBTApiBase):
             }))
 
         x_bill_date = datetime.strptime(params.get('x_bill_date'), '%d-%m-%Y')\
-            if params.get('x_bill_date') else datetime.today()
+            if params.get('x_bill_date') else False
 
-        if purchase_order.date_approve.date() > x_bill_date.date():
-            raise ValueError(
-                "Date %s is back date of order date/accounting date." %
-                x_bill_date.strftime('%d-%m-%Y'))
+        if x_bill_date:
+            if purchase_order.date_approve.date() > x_bill_date.date():
+                raise ValueError(
+                    "Date %s is back date of order date/accounting date." %
+                    x_bill_date.strftime('%d-%m-%Y'))
 
         vals = {
             'x_bill_reference': data.get('x_bill_reference'),
