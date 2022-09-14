@@ -8,7 +8,3 @@ class ResPartnerInherit(models.Model):
     x_offset = fields.Boolean(
         string='Offset Payment',
     )
-
-    x_branch_name = fields.Char(
-        string='X Branch Name',
-    )
