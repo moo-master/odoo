@@ -150,12 +150,13 @@ class SaleOrderDataController(KBTApiBase):
         sale_values = sale._convert_to_write(sale._cache)
         sale_id = Sale.create(sale_values)
 
+        sale_id.action_confirm()
         sale_id.write({
             'name': params.get('x_so_orderreference'),
-            'date_order': datetime_order,
             'payment_term_id': account_term_id.id,
+            'date_order': sale_id.date_order.replace(
+                datetime_order.year, datetime_order.month, datetime_order.day),
         })
-        sale_id.action_confirm()
 
     @KBTApiBase.api_wrapper(['kbt.sale_order_update'])
     @http.route('/sale/update', type='json', auth='user')

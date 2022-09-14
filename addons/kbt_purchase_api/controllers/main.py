@@ -138,6 +138,10 @@ class PurchaseController(KBTApiBase):
         purchase_values = purchase._convert_to_write(purchase._cache)
         purchase_id = Purchase.create(purchase_values)
         purchase_id.button_confirm()
+        purchase_id.write({
+            'date_approve': purchase_id.date_approve.replace(
+                date_planned.year, date_planned.month, date_planned.day)
+        })
 
         return purchase_id.name
 
