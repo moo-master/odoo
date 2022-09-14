@@ -85,15 +85,21 @@
         <t t-if="o.invoice_date">
             <t t-set="invoice_date" t-value="o.invoice_date.strftime('%d/%m/%Y')"/>
         </t>
+        <t t-set="payment_name" t-value="'-'"/>
+        <t t-set="payment_day" t-value="0"/>
+        <t t-if="o.invoice_payment_term_id">
+            <t t-set="payment_name" t-value="o.invoice_payment_term_id.name"/>
+            <t t-set="payment_day" t-value="o.invoice_payment_term_id.line_ids.days"/>
+        </t>
         <t t-set="invoice_date_due" t-value="'-'"/>
-        <t t-if="o.invoice_date_due">
+        <t t-if="payment_day">
             <t t-set="invoice_date_due" t-value="o.invoice_date_due.strftime('%d/%m/%Y')"/>
         </t>
-        <t t-set="payment_day" t-value="'-'"/>
-        <t t-if="o.invoice_payment_term_id">
-            <t t-set="payment_day" t-value="o.invoice_payment_term_id.name"/>
+        <t t-set="x_branch_name" t-value="'-'"/>
+        <t t-if="o.partner_id.x_branch_name">
+            <t t-set="x_branch_name" t-value="o.partner_id.x_branch_name"/>
         </t>
-        <t t-set="last_page" t-value="topage"/>
+
         <!-- Header -->
         <div class="header" style="font-size: 14px;">
             <div class="content">
@@ -155,7 +161,7 @@
                     </tr>
                     <tr>
                         <th>สาขา / Branch</th>
-                        <td>Branchhhhhh</td>
+                        <td><t t-out="x_branch_name"/></td>
                         <th>วันที่ / Date</th>
                         <td><t t-out="invoice_date"/></td>
                     </tr>
@@ -164,7 +170,7 @@
                         <td><t t-out="address_line_1"/></td>
                         <t t-if="is_tax_report">
                             <th>อ้างถึงใบกำกับภาษี</th>
-                            <td>0000000000</td>
+                            <td>x_invoice_id.name</td>
                         </t>
                         <t t-else="">
                             <th id="dummy-row">dummy-row</th>
@@ -176,7 +182,7 @@
                         <td><t t-out="address_line_4"/></td>
                         <t t-if="is_tax_report">
                             <th>วันที่กำกับภาษี</th>
-                            <td>dateeee</td>
+                            <td>x_invoice_id.invoice_date</td>
                         </t>
                         <t t-else="">
                             <th id="dummy-row">dummy-row</th>
@@ -199,7 +205,7 @@
                         <th class="border border-dark" style="width: 25%;">
                             <b><span>ระยะเวลาชำระเงิน/Credit Term</span></b>
                             <br/>
-                            <span t-out="o.invoice_payment_term_id.name"/>
+                            <span t-out="payment_name"/>
                         </th>
                         <th class="border border-dark" style="width: 15%;">
                             <b><span>Offset Payment</span></b>
@@ -250,7 +256,7 @@
             <t t-set="invoice_date" t-value="o.invoice_date.strftime('%d/%m/%Y')"/>
         </t>
         <!-- Footer -->
-        <div class="footer" t-attf-class="{{font_fam}} last_footer" style="font-size: 14px;">
+        <div class="footer" t-attf-class="{{font_fam}} last-footer" style="font-size: 14px;">
         <script type="text/javascript" src="/kbt_account_ext/static/src/js/force_new_page.js"/>
             <style>
                 #dummy-row {
@@ -441,22 +447,8 @@
     </template>
 
     <template id="kbt_account_ext.internal_layout_body">
-        <div class="main" style="height: 600px;" t-attf-class="page {{font_fam}} page_body_set" data-body-set="155">
+        <div class="main" style="height: 600px;" t-attf-class="page {{font_fam}} page-body-set" data-body-set="300">
             <table class="table border border-dark" style="font-size: 13px;">
-                <!-- <tr class="text-center">
-                    <th class="" style="width: 21%;">
-                        <span>รายการที่ Item No.</span>
-                    </th>
-                    <th class="" style="width: 40%;">
-                        <span>รายการสินค้า/บริการ Goods/Service</span>
-                    </th>
-                    <th class="" style="width: 23%;">
-                        <span>จำนวนสินค้าQuantity</span>
-                    </th>
-                    <th class="" style="width: 16%;">
-                        <span>จำนวนเงินAmount</span>
-                    </th>
-                </tr> -->
                 <t t-set="counter" t-value="1"/>
                 <t t-foreach="o.invoice_line_ids" t-as="line">
                     <tr style="">
@@ -476,20 +468,18 @@
                     </tr>
                 </t>
             </table>
-            <div class="new-page" data_page_size="2050" data_page_size_detail="1000" />
-            <!-- <div id="data-page"></div> -->
+            <div class="new-page" data-page-size="2050" data-page-size-detail="1000" />
+            <!-- <div id="data-page">For check Data Page</div> -->
         </div>
         <t t-call="kbt_account_ext.internal_layout_footer"/>
     </template>
 
     <template id="report_account_document_template">
-        <script type="text/javascript" src="/kbt_account_ext/static/src/js/force_new_page.js"/>
         <!-- Header -->
         <t t-call="kbt_account_ext.internal_layout_header"/>
         <!-- Body -->
         <t t-call="kbt_account_ext.internal_layout_body"/>
-        <!-- Footer -->
-        <!-- <t t-call="kbt_account_ext.internal_layout_footer"/> -->
+        <!-- Footer Inside Body-->
     </template>
 
 </odoo>
