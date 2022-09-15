@@ -18,5 +18,7 @@
     ],
     'data': [
         'views/view_partner_form.xml',
+        'views/view_city_tree.xml',
+        'views/view_city_form.xml',
     ]
 }
