@@ -31,6 +31,7 @@
         'data/report_data.xml',
         'report/kbt_invoice_templates.xml',
         'report/kbt_report_template.xml',
+        'report/receipt_tax_invoice_report.xml',
         'views/account_payment_term_views.xml'
     ]
 }
