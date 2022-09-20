@@ -13,18 +13,22 @@ const page_size_body = page_body[0].getAttribute("data-body-set");
 
 const page_last = document.getElementsByClassName("last-footer");
 
+// const counter = parseInt(document.getElementById("data-page").textContent());
+
+const counter = elem[0].getAttribute("count-row");
+
 // Find data page
 // const page_data = document.getElementById("data-page")
-// page_data.innerHTML = elem[0].getBoundingClientRect().top
+// page_data.innerHTML = elem[0].getBoundingClientRect().bottom
 
 
-if ((rect.top % data_page_size) >= data_page_size_detail) {
+if ((counter % data_page_size) >= data_page_size_detail) {
     var newdiv = document.getElementsByClassName("new-page");
     newdiv[0].setAttribute('style', 'page-break-after:always');
-    size_relative = (Math.ceil(rect.top / data_page_size) + 1) * page_size_body
+    size_relative = (Math.ceil(counter / data_page_size) + 1) * page_size_body
 }
 else {
-    size_relative = (Math.ceil(rect.top / data_page_size)) * page_size_body
+    size_relative = (Math.ceil(counter / data_page_size)) * page_size_body
 }
 page_body[0].style.position = 'relative';
 page_body[0].style.height = size_relative + 'mm';

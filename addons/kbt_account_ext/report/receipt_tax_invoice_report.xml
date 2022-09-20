@@ -128,7 +128,7 @@
                 </div>
             </div>
         </div>
-        <div class="article page-body-set page" data-body-set="200.25">
+        <div class="article page-body-set page" data-body-set="202">
             <table class="table table-sm o_main_table" style="font-size: 12px;">
                 <thead style="width: 100%; border-bottom: 1px solid #000000;">
                     <tr>
@@ -140,6 +140,8 @@
                     </tr>
                 </thead>
                 <tbody>
+                    <t t-set="counter" t-value="0"/>
+                    <t t-set="row" t-value="0"/>
                     <t t-foreach="o.reconciled_invoice_ids.invoice_line_ids" t-as="invoice">
                         <tr>
                             <td class="border-top-0 border-right border-left border-dark" style="width: 20%; text-align: center;"><span t-esc="o.reconciled_invoice_ids.invoice_date.strftime('%d/%m/%Y')"/></td>
@@ -147,12 +149,39 @@
                             <td class="border-top-0 border-right border-dark" style="width: 32.5%; text-align: left;"><span t-esc="invoice.name"/></td>
                             <td class="border-top-0 border-right border-dark" style="width: 13.5%; text-align: center;"><span t-esc="o.reconciled_invoice_ids.invoice_payment_term_id.name"/></td>
                             <td class="border-top-0 border-right border-dark" style="width: 20%; text-align: right;"><span t-esc="invoice.price_subtotal"/></td>
+                            <t t-if="len(invoice.name) > 40">
+                                <t t-set="counter" t-value="counter+91"/>
+                                <t t-set="row" t-value="row+1.6875"/>
+                            </t>
+                            <t t-else="">
+                                <t t-set="counter" t-value="counter+53.5"/>
+                                <t t-set="row" t-value="row+1"/>
+                            </t>
                         </tr>
+                        <t t-if="ceil(row) % 27 == 0">
+                            <tr>
+                                <td style="border-top: 1px solid #000000" />
+                                <td style="border-top: 1px solid #000000" />
+                                <td style="border-top: 1px solid #000000" />
+                                <td style="border-top: 1px solid #000000" />
+                                <td style="border-top: 1px solid #000000" />
+                            </tr>
+                        </t>
                     </t>
+                        <t t-if="ceil(row) % 27 != 0">
+                            <tr>
+                                <td style="border-top: 1px solid #000000" />
+                                <td style="border-top: 1px solid #000000" />
+                                <td style="border-top: 1px solid #000000" />
+                                <td style="border-top: 1px solid #000000" />
+                                <td style="border-top: 1px solid #000000" />
+                            </tr>
+                        </t>
                 </tbody>
             </table>
-            <div class="new-page" data-page-size="1100" data-page-size-detail="800" />
-            <!-- <div id="data-page"></div> -->
+            <!-- <div id="data-page" style="display: none;"><t t-esc="counter" /></div> -->
+            <div class="new-page" data-page-size="1457" data-page-size-detail="911" count-row="" t-attf-count-row="{{counter}}"/>
+            <!-- <div id="data-page"><t t-esc="counter" /></div> -->
             <div class="last-footer">
                 <script type="text/javascript" src="/kbt_account_ext/static/src/js/force_new_page.js"/>
                 <div style="border: 1px solid #000000; width: 100%; font-size: 12px;">
