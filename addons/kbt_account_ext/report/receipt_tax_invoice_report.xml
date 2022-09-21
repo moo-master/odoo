@@ -1,0 +1,349 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <template id="receipt_tax_invoice_report_template_new">
+        <t t-set="o" t-value="o.with_context(lang=lang)" />
+        <div class="header">
+            <div class="row">
+                <img t-if="o.company_id.logo"
+                    t-att-src="image_data_uri(o.company_id.logo)"
+                    style="absolute: left; left: 0; max-height: 60px;"
+                    alt="Logo"
+                />
+            </div>
+            <div class="row" style="font-size: 14px; padding-top: 5px;">
+                <div class="col-7">
+                    <strong>บริษัทเกษตรอินโน จำกัด</strong><br />
+                </div>
+                <div class="col-5" style="padding-left: 32px; text-align: right;">
+                    <t t-if="is_tax_report">
+                        <strong><t t-esc="'ใบเสร็จรับเงิน/ใบกำกับภาษี (Receipt/Tax Invoice)'"/></strong><br />
+                    </t>
+                    <t t-else="">
+                        <strong><t t-esc="'ใบเสร็จรับเงิน (Receipt)'"/></strong><br />
+                    </t>
+                </div>
+            </div>
+            <div style="font-size: 12px; padding-top: 5px;">
+                <t t-esc="o.company_id.name"/><br />
+            </div>
+            <div class="row" style="padding-left: 15px; font-size: 12px; padding-top: 5px;">
+                <t t-esc="o.company_id.street"/>
+                <t t-esc="o.company_id.street2"/>
+                <t t-esc="o.company_id.zip"/><br />
+            </div>
+            <div class="row" style="font-size: 12px; width: 100%; padding-bottom: 15px; padding-top: 5px;">
+                <div class="col">
+                    <span>
+                        โทร <t t-esc="o.company_id.phone"/> เลขประจำตัวผู้เสียภาษีอากร <t t-esc="o.company_id.vat"/> สาขาที่ <t t-esc="o.partner_id.x_branch_name"/>
+                    </span>
+                </div>
+            </div>
+
+            <div style="border: 1px solid #000000; width: 100%; height: 145px; font-size: 12px;">
+                <div class="row">
+                    <div class="col-3" style="padding-left: 20px; padding-top: 5px;">
+                        <strong>ชื่อ/Name</strong>
+                    </div>
+                    <div class="col-4" style="padding-top: 5px;">
+                        <t t-esc="o.reconciled_invoice_ids.partner_id.name"/>
+                    </div>
+                    <div class="col-2" style="padding-top: 5px;">
+                        <strong>เลขที่/No.</strong>
+                    </div>
+                    <div class="col-3" style="padding-top: 5px;">
+                        <t t-esc="o.reconciled_invoice_ids.name"/>
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="col-7" style="padding-left: 20px; padding-top: 5px;" />
+                    <div class="col-2" style="padding-top: 5px;">
+                        <strong>วันที่/Date</strong>
+                    </div>
+                    <div class="col-3" style="padding-top: 5px;">
+                        <t t-esc="o.reconciled_invoice_ids.invoice_date.strftime('%d/%m/%Y')"/>
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="col-3" style="padding-left: 20px; padding-top: 5px;">
+                        <strong>สาขา/Branch</strong>
+                    </div>
+                    <div class="col-5" style="padding-top: 5px;">
+                        <t t-esc="o.reconciled_invoice_ids.partner_id.x_branch_name"/>
+                    </div>
+                </div>
+                <div class="row" style="height: 40px;">
+                    <div class="col-3" style="padding-left: 20px; padding-top: 5px;">
+                        <strong>ที่อยู่/Address</strong>
+                    </div>
+                    <div class="col-5" style="padding-top: 5px;">
+                        <!-- <t t-esc="o.reconciled_invoice_ids.partner_id.shipping_id"/> -->
+                        shipping_id
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="col-3" style="padding-left: 20px; padding-top: 5px;">
+                        <strong>เลขที่ประจำตัวผู้เสียภาษี</strong>
+                    </div>
+                    <div class="col-5" style="padding-top: 5px;">
+                        <t t-esc="o.reconciled_invoice_ids.partner_id.vat"/>
+                    </div>
+                </div>
+            </div>
+            <div style="border-left: 1px solid #000000; border-bottom: 1px solid #000000; border-right: 1px solid #000000; width: 100%; height: 45px; font-size: 10px;">
+                <div style="display: inline-block; width: 20%; padding-top: 5px; text-align: center; border-right: 1px solid #000000; height: 45px;">
+                    <div>
+                        <strong>รหัสลูกค้า (Customer No.)</strong>
+                    </div>
+                    <div style="padding-top: 5px;">
+                        <t t-set="partner_ref" t-value="'00000'"/>
+                        <t t-if="o.reconciled_invoice_ids.partner_id.ref">
+                            <t t-set="partner_ref" t-value="str(o.reconciled_invoice_ids.partner_id.ref)"/>
+                        </t>
+                        <t t-esc="partner_ref" />
+                    </div>
+                </div>
+                <div style="display: inline-block; width: 29.75%; padding-top: 5px; text-align: center; border-right: 1px solid #000000; height: 45px;">
+                    <div>
+                        <strong>วันที่รับชำระเงิน (Payment Date)</strong>
+                    </div>
+                    <div style="padding-top: 5px;">
+                        <t t-esc="o.date.strftime('%d/%m/%Y')"/>
+                    </div>
+                </div>
+                <div style="display: inline-block; width: 29.75%; padding-top: 5px; text-align: center; border-right: 1px solid #000000; height: 45px;">
+                    <div>
+                        <strong>สกุลเงิน (Currency)</strong>
+                    </div>
+                    <div style="padding-top: 5px;">
+                        <t t-esc="o.reconciled_invoice_ids.currency_id.name"/>
+                    </div>
+                </div>
+                <div style="display: inline-block; width: 20%; padding-top: 5px; text-align: center; height: 45px;">
+                    <div>
+                        <strong>หน้า</strong>
+                    </div>
+                    <div style="padding-top: 5px;">
+                        <span class="page" /> / <span class="topage" />
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="article page-body-set page" data-body-set="202">
+            <table class="table table-sm o_main_table" style="font-size: 12px;">
+                <thead style="width: 100%; border-bottom: 1px solid #000000;">
+                    <tr>
+                        <th class="border border-dark" style="width: 20%; text-align: center;">วันที่เอกสาร<br />Doc. Date</th>
+                        <th class="border border-dark" style="width: 13.5%; text-align: center;">ใบกำกับภาษี<br />Tax Invoice</th>
+                        <th class="border border-dark" style="width: 32.5%; text-align: center;">รายการสินค้า/บริการ<br />Goods/Service</th>
+                        <th class="border border-dark" style="width: 13.5%; text-align: center;">วันครบกำหนด<br />Due Date</th>
+                        <th class="border border-dark" style="width: 20%; text-align: center;">จำนวนเงิน<br />Amount</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <t t-set="counter" t-value="0"/>
+                    <t t-set="row" t-value="0"/>
+                    <t t-foreach="o.reconciled_invoice_ids.invoice_line_ids" t-as="invoice">
+                        <tr>
+                            <td class="border-top-0 border-right border-left border-dark" style="width: 20%; text-align: center;"><span t-esc="o.reconciled_invoice_ids.invoice_date.strftime('%d/%m/%Y')"/></td>
+                            <td class="border-top-0 border-right border-dark" style="width: 13.5%; text-align: center;"><span t-esc="o.reconciled_invoice_ids.name"/></td>
+                            <td class="border-top-0 border-right border-dark" style="width: 32.5%; text-align: left;"><span t-esc="invoice.name"/></td>
+                            <td class="border-top-0 border-right border-dark" style="width: 13.5%; text-align: center;"><span t-esc="o.reconciled_invoice_ids.invoice_payment_term_id.name"/></td>
+                            <td class="border-top-0 border-right border-dark" style="width: 20%; text-align: right;"><span t-esc="invoice.price_subtotal"/></td>
+                            <t t-if="len(invoice.name) > 40">
+                                <t t-set="counter" t-value="counter+91"/>
+                                <t t-set="row" t-value="row+1.6875"/>
+                            </t>
+                            <t t-else="">
+                                <t t-set="counter" t-value="counter+53.5"/>
+                                <t t-set="row" t-value="row+1"/>
+                            </t>
+                        </tr>
+                        <t t-if="ceil(row) % 27 == 0">
+                            <tr>
+                                <td style="border-top: 1px solid #000000" />
+                                <td style="border-top: 1px solid #000000" />
+                                <td style="border-top: 1px solid #000000" />
+                                <td style="border-top: 1px solid #000000" />
+                                <td style="border-top: 1px solid #000000" />
+                            </tr>
+                        </t>
+                    </t>
+                        <t t-if="ceil(row) % 27 != 0">
+                            <tr>
+                                <td style="border-top: 1px solid #000000" />
+                                <td style="border-top: 1px solid #000000" />
+                                <td style="border-top: 1px solid #000000" />
+                                <td style="border-top: 1px solid #000000" />
+                                <td style="border-top: 1px solid #000000" />
+                            </tr>
+                        </t>
+                </tbody>
+            </table>
+            <!-- <div id="data-page" style="display: none;"><t t-esc="counter" /></div> -->
+            <div class="new-page" data-page-size="1457" data-page-size-detail="911" count-row="" t-attf-count-row="{{counter}}"/>
+            <!-- <div id="data-page"><t t-esc="counter" /></div> -->
+            <div class="last-footer">
+                <script type="text/javascript" src="/kbt_account_ext/static/src/js/force_new_page.js"/>
+                <div style="border: 1px solid #000000; width: 100%; font-size: 12px;">
+                    <t t-if="is_tax_report">
+                        <div class="row">
+                            <div class="col-10" style="padding-left: 20px; padding-top: 5px; text-align: left;">
+                                ยอดรวมสินค้า/บริการ (Goods/Service Amount)
+                            </div>
+                            <div class="col-2" style="padding-right: 20px; padding-top: 5px; text-align: right;">
+                                <t t-out="'{:,.2f}'.format(o.reconciled_invoice_ids.amount_untaxed)"/>
+                            </div>
+                        </div>
+                        <div class="row">
+                            <div class="col-10" style="padding-left: 20px; padding-top: 5px; text-align: left;">
+                                ภาษีมูลค่าเพิ่ม (VAT Amount)
+                            </div>
+                            <div class="col-2" style="padding-right: 20px; padding-top: 5px; text-align: right;">
+                                <t t-out="'{:,.2f}'.format(o.reconciled_invoice_ids.amount_tax)"/>
+                            </div>
+                        </div>
+                    </t>
+                    <div class="row">
+                        <div class="col-4" style="padding-left: 20px; padding-top: 5px; text-align: left;">
+                            <strong>จำนวนเงินรวมทั้งสิ้น (Total Amount)</strong>
+                        </div>
+                        <div class="col-6" style="padding-left: 15px; padding-top: 5px; text-align: left;">
+                            <strong><t t-out="o._amount_total_text(o.reconciled_invoice_ids.amount_total)"/></strong>
+                        </div>
+                        <div class="col-2" style="padding-right: 20px; padding-top: 5px; text-align: right;">
+                            <strong><t t-out="'{:,.2f}'.format(o.reconciled_invoice_ids.amount_total)"/></strong>
+
+                        </div>
+                    </div>
+                </div>
+                <div style="border-left: 1px solid #000000; border-bottom: 1px solid #000000; border-right: 1px solid #000000; width: 100%; height: 160px; font-size: 11px;">
+                    <div class="row">
+                        <div class="col-2" style="padding-left: 20px; padding-top: 5px; text-align: left;">
+                            รับชำระเงิน
+                        </div>
+                        <div class="col-2" style="padding-left: 50px; padding-top: 5px; text-align: center;">
+                            □
+                        </div>
+                        <div class="col-8" style="padding-top: 5px; text-align: left;">
+                            เงินโอนธนาคาร (Bank Remittance) ..................................................................................................................................................
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="col-2" style="padding-left: 20px; padding-top: 5px; text-align: left;">
+                            Payment Method
+                        </div>
+                        <div class="col-2" style="padding-left: 50px; padding-top: 5px; text-align: center;">
+                            □
+                        </div>
+                        <div class="col-8" style="padding-top: 5px; text-align: left;">
+                            เช็คธนาคาร (Chq. Bank) ...................... เลขที่เช็ค (Chq. No.)............................ วันทีสั่งจ่าย (Due On).....................................
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="col-2" style="padding-left: 20px; padding-top: 5px;" />
+                        <div class="col-2" style="padding-left: 50px; padding-top: 5px; text-align: center;">
+                            □
+                        </div>
+                        <div class="col-8" style="padding-top: 5px; text-align: left;">
+                            เงินสด (Cash)
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="col-2" style="padding-left: 20px; padding-top: 5px;" />
+                        <div class="col-2" style="padding-left: 50px; padding-top: 5px; text-align: center;">
+                            □
+                        </div>
+                        <div class="col-8" style="padding-top: 5px; text-align: left;">
+                            ค่าธรรมเนียม (Fee) .................................................................................................................................................................................
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="col-2" style="padding-left: 20px; padding-top: 5px;" />
+                        <div class="col-2" style="padding-left: 50px; padding-top: 5px; text-align: center;">
+                            □
+                        </div>
+                        <div class="col-8" style="padding-top: 5px; text-align: left;">
+                            อื่นๆ (Other) ............................................................................................................................................................................................
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="col-8" style="padding-top: 5px;" />
+                        <div class="col-3" style="padding-top: 5px; text-align: center;">
+                            ..............................................................................
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="col-8" style="padding-top: 5px;" />
+                        <div class="col-3" style="padding-top: 5px; text-align: center;">
+                            ผู้รับเงิน (Received by)
+                        </div>
+                    </div>
+                </div>
+                <div style="border-left: 1px solid #000000; border-bottom: 1px solid #000000; border-right: 1px solid #000000; width: 100%; height: 40px; font-size: 10px; text-align: center;">
+                    <div style="wight: 100%; padding-top: 5px;">
+                        การชำระเงินด้วยเช็คหรือดร๊าฟจะสมบูรณ์ เมื่อบริษัทได้รับเงินตามเช็คหรือดร๊าฟเรียบร้อยแล้ว
+                    </div>
+                    <div style="wight: 100%;">
+                        Payment by cheque or draft shall complete when Company get paid by cheque or draft
+                    </div>
+                </div>
+            </div>
+        </div>
+    </template>
+
+    <template id="receipt_tax_invoice_report_template">
+        <t t-call="web.html_container">
+            <t t-foreach="docs" t-as="o">
+                <t t-set="lang" t-value="o.invoice_user_id.sudo().lang if o.move_type in ('in_invoice', 'in_refund') else o.partner_id.lang"/>
+                <t t-set="is_tax_report" t-value="1"/>
+                <t t-call="kbt_account_ext.receipt_tax_invoice_report_template_new" t-lang="lang"/>
+            </t>
+        </t>
+    </template>
+
+    <template id="receipt_report_template">
+        <t t-call="web.html_container">
+            <t t-foreach="docs" t-as="o">
+                <t t-set="lang" t-value="o.invoice_user_id.sudo().lang if o.move_type in ('in_invoice', 'in_refund') else o.partner_id.lang"/>
+                <t t-set="is_tax_report" t-value="0"/>
+                <t t-call="kbt_account_ext.receipt_tax_invoice_report_template_new" t-lang="lang"/>
+            </t>
+        </t>
+    </template>
+
+    <record id="receipt_tax_invoice_report_format" model="report.paperformat">
+        <field name="name">Receipt / Tax Invoice</field>
+        <field name="default" eval="True"/>
+        <field name="format">A4</field>
+        <field name="orientation">Portrait</field>
+        <field name="margin_top">93</field>
+        <field name="margin_bottom">10</field>
+        <field name="margin_left">0</field>
+        <field name="margin_right">0</field>
+        <field name="header_spacing">93</field>
+        <field name="dpi">80</field>
+    </record>
+
+    <record id="receipt_tax_invoice_report_template_copies" model="ir.actions.report">
+        <field name="name">Receipt / Tax Invoice</field>
+        <field name="model">account.payment</field>
+        <field name="report_type">qweb-pdf</field>
+        <field name="report_name">kbt_account_ext.receipt_tax_invoice_report_template</field>
+        <field name="report_file">kbt_account_ext.receipt_tax_invoice_report_template</field>
+        <field name="paperformat_id" ref="kbt_account_ext.receipt_tax_invoice_report_format"/>
+        <field name="binding_model_id" ref="account.model_account_payment"/>
+        <field name="binding_type">report</field>
+    </record>
+
+    <record id="receipt_tax_invoice_report_template_copies_2" model="ir.actions.report">
+        <field name="name">Receipt</field>
+        <field name="model">account.payment</field>
+        <field name="report_type">qweb-pdf</field>
+        <field name="report_name">kbt_account_ext.receipt_report_template</field>
+        <field name="report_file">kbt_account_ext.receipt_report_template</field>
+        <field name="paperformat_id" ref="kbt_account_ext.receipt_tax_invoice_report_format"/>
+        <field name="binding_model_id" ref="account.model_account_payment"/>
+        <field name="binding_type">report</field>
+    </record>
+
+</odoo>
