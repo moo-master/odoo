@@ -19,4 +19,28 @@
             </xpath>
         </field>
     </record>
+
+
+    <record id="sale_subscription_form_inherited" model="ir.ui.view">
+        <field name="name">sale.subscription.form.inherited</field>
+        <field name="model">sale.subscription</field>
+        <field name="inherit_id" ref="sale_subscription.sale_subscription_view_form"/>
+        <field name="arch" type="xml">
+            <xpath expr='//notebook//page[@id="other_info"]' position='after'>
+                <page string="2C2P Responses" id="2c2p_resp">
+                    <group>
+                        <field name="twoctwop_recurring_unique_id" />
+                    </group>
+                    <group>
+                        <field name="response_ids" readonly="1">
+                            <tree create="0">
+                                <field name="name"/>
+                                <field name="state"/>
+                            </tree>
+                        </field>
+                    </group>
+                </page>
+            </xpath>
+        </field>
+    </record>
 </odoo>

@@ -5,16 +5,25 @@
 # License URL : <https://store.webkul.com/license.html/>
 ##############################################################################
 
+from email.policy import default
+from urllib import response
 from odoo import api, fields, models, _
 from odoo.exceptions import ValidationError, UserError
 from ..controller.api_2c2p import TwoCTwoPAPI
+import datetime
+import json
+from ast import literal_eval
+
+import logging
+_logger = logging.getLogger(__name__)
 
 class SubscriptionSale(models.Model):
     _inherit = "sale.subscription"
 
 
-    recurring_unique_id = fields.Char(string="Recurring Unique ID");
+    twoctwop_recurring_unique_id = fields.Char(string="2C2P Recurring Unique ID");
     acquirer_id = fields.Many2one("payment.acquirer");
+    response_ids = fields.One2many("twoctwop.transaction", "subscription_id", string="2C2P Payments")
 
 
     # def _cron_recurring_create_invoice(self):
@@ -27,27 +36,27 @@ class SubscriptionSale(models.Model):
 
 
 
-    # def _prepare_api_obj(self, test, main):
-    #     return TwoCTwoPAPI(
-    #             self.acquirer_id.twoctwop_merchant_id,
-    #             self.acquirer_id.twoctwop_secret_key,
-    #             test if self.acquirer_id.state == 'test' else main
-    #         )
+    def _prepare_api_obj(self, test, main):
+        return TwoCTwoPAPI(
+                self.acquirer_id.twoctwop_merchant_id,
+                self.acquirer_id.twoctwop_secret_key,
+                test if self.acquirer_id.state == 'test' else main
+            )
 
-    # def set_close(self):
-    #     res = super(SubscriptionSale, self).set_close()
+    def set_close(self):
+        res = super(SubscriptionSale, self).set_close()
 
-    #     #api call
-    #     print("+++++++++++++++++resaaaaaaaa",res)
-    #     obj = self._prepare_api_obj('RECURRING_CANCEL_SANDBOX', 'RECURRING_CANCEL')
-    #     print("+++++++++++++++++++++++",obj)
-    #     obj.recurring_payment_cancel({
-    #             "version": 2.1,
-    #             "merchantID": self.acquirer_id.twoctwop_merchant_id,
-    #             "recurringUniqueID": self.recurring_unique_id,
-    #             "processType": "C",
-    #         });
-    #     return res;
+        #api call
+        print("+++++++++++++++++resaaaaaaaa",res)
+        obj = self._prepare_api_obj('RECURRING_CANCEL_SANDBOX', 'RECURRING_CANCEL')
+        print("+++++++++++++++++++++++",obj)
+        obj.recurring_payment_cancel({
+                "version": 2.1,
+                "merchantID": self.acquirer_id.twoctwop_merchant_id,
+                "recurringUniqueID": self.twoctwop_recurring_unique_id,
+                "processType": "C",
+            });
+        return res;
 
 
 
@@ -55,7 +64,7 @@ class SaleOrderInherit(models.Model):
     _inherit = "sale.order"
 
     
-    recurring_unique_id = fields.Char(string="Recurring Unique ID");
+    twoctwop_recurring_unique_id = fields.Char(string="2C2P Recurring Unique ID");
     acquirer_id = fields.Many2one("payment.acquirer");
 
 
@@ -63,7 +72,7 @@ class SaleOrderInherit(models.Model):
         res = super(SaleOrderInherit, self)._prepare_subscription_data(template);
 
         res.update({
-                "recurring_unique_id": self.recurring_unique_id,
+                "twoctwop_recurring_unique_id": self.twoctwop_recurring_unique_id,
                 "acquirer_id": self.acquirer_id.id,
             })
         return res;
@@ -74,8 +83,10 @@ class SaleOrderInherit(models.Model):
     #     res = super(SaleOrderInherit, self)._action_confirm()
 
     #     subscription = self.order_line.mapped('subscription_id');
-    #     if subscription and len(self.recurring_unique_id or ""):
+    #     if subscription and len(self.twoctwop_recurring_unique_id or ""):
     #          #self._create_invoices();
     #     return res
+
+
 
 

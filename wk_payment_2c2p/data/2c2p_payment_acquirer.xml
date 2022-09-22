@@ -23,5 +23,31 @@
             <field name="code">2c2p</field>
             <field name="payment_type">inbound</field>
         </record>
+
+        <template id="message_origin_link">
+            <p t-if="message == 'done'">
+                Payment is successfully created for <span class="font-weight-bold"><t t-esc="origin"/></span> response.<br/>
+                Details :<br/> 
+                Payment :- <a href="#" t-att-data-oe-model="payment._name" t-att-data-oe-id="payment.id"> <t t-esc="payment.display_name"/></a><br/>
+                Sale Order :- <a href="#" t-att-data-oe-model="so._name" t-att-data-oe-id="so.id"> <t t-esc="so.display_name"/></a><br/>
+                Subscription :- <a href="#" t-att-data-oe-model="sub._name" t-att-data-oe-id="sub.id"> <t t-esc="sub.display_name"/></a><br/>
+                Customer :- <a href="#" t-att-data-oe-model="cust._name" t-att-data-oe-id="cust.id"> <t t-esc="cust.display_name"/></a><br/>
+                Amount :- <t t-esc="amount"/><br/>
+            </p>
+            <p t-if="message == 'cancel'">
+                For response <t t-esc="origin"/> Payment is already created. <br/>
+                <t t-esc="origin"/> => <a href="#" t-att-data-oe-model="payment._name" t-att-data-oe-id="payment.id"> <t t-esc="payment.display_name"/></a><br/>
+            </p>
+            <p t-if="message == 'error'">
+                Error: Subscription record not found for this Recurring ID <span class="font-weight-bold"><t t-esc="recurringID"/></span>.<br/>
+            </p>
+            <p t-if="message == 'error1'">
+                Error: Invaild Response, Recurring ID not found for <span class="font-weight-bold"><t t-esc="origin"/></span> response.<br/>
+            </p>
+            <p t-if="message == 'error2'">
+                Error occurred while posting <span class="font-weight-bold"><t t-esc="origin"/></span> 2C2P Transcation.<br/>
+            </p>
+            <br/><br/>
+        </template>
 	</data>
 </odoo>
