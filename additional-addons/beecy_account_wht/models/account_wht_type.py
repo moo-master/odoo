@@ -5,7 +5,7 @@ class AccountWhtType(models.Model):
     _name = 'account.wht.type'
     _description = 'Account Wht Type'
     _rec_name = 'display_name'
-    _order = 'display_name'
+    _order = 'sequence'
 
     sequence = fields.Integer(
         'Sequence'
@@ -35,6 +35,18 @@ class AccountWhtType(models.Model):
     parent_id = fields.Many2one(
         'account.wht.type',
         string='Parent',
+    )
+    other_type = fields.Selection(
+        selection=[
+            ('425', '4 (2.5) อื่นๆ'),
+            ('600', '6 อื่นๆ (ระบุ)'),
+        ],
+        string='WHT Other Type',
+        default=False
+    )
+    is_required_note = fields.Boolean(
+        string='Require Note',
+        default=False,
     )
 
     @api.depends('parent_id')

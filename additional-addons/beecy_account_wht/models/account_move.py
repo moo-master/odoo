@@ -11,14 +11,26 @@ class AccountMove(models.Model):
         compute='_compute_wht_amount',
     )
 
-    @api.depends('invoice_line_ids.amount_wht')
+    amount_wht_signed = fields.Float(
+        string='Amount WHT Signed',
+        store=True,
+        compute='_compute_wht_amount',
+    )
+
+    @api.depends('invoice_line_ids.amount_wht',
+                 'amount_total_signed', 'amount_wht')
     def _compute_wht_amount(self):
         for rec in self:
-            rec.amount_wht = 0
-            rec.amount_wht = sum(map(
-                rec.currency_id.round,
-                rec.invoice_line_ids.mapped('amount_wht')
-            ))
+            total_wht = 0 if hasattr(
+                rec, 'beecy_payment_id') and rec.beecy_payment_id.state == "paid" else sum(
+                rec.invoice_line_ids.mapped(
+                    lambda v: rec.currency_id.round(
+                        v.amount_wht)))
+            rec.write({
+                'amount_wht': total_wht,
+                'amount_wht_signed': -total_wht if rec.amount_total_signed < 0
+                else total_wht,
+            })
 
     @api.model_create_multi
     def create(self, vals_list):
