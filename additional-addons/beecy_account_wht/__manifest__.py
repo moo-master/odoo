@@ -19,9 +19,7 @@
     },
     'depends': [
         'beecy_date_range_sequence',
-        'account',
-        'beecy_partner_ext',
-        'partner_firstname'
+        'account'
     ],
     'data': [
         'security/ir.model.access.csv',
@@ -41,7 +39,7 @@
         'views/product_template_view.xml',
         'views/account_move_views.xml',
         'views/account_wht_view.xml',
-        'views/account_wht_pnd_view.xml',
+        'views/account_wht_pnd_view.xml'
     ],
     'assets': {
         'web.report_assets_common': [
