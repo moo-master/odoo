@@ -1,0 +1,928 @@
+# Translation of Odoo Server.
+# This file contains the translation of the following modules:
+# 	* beecy_account_wht
+#
+msgid ""
+msgstr ""
+"Project-Id-Version: Odoo Server 15.0-20220506\n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2022-07-07 05:43+0000\n"
+"PO-Revision-Date: 2022-07-19 11:44+0700\n"
+"Last-Translator: \n"
+"Language-Team: \n"
+"Language: th\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"Plural-Forms: \n"
+"X-Generator: Poedit 3.1.1\n"
+
+#. module: beecy_account_wht
+#: model:ir.actions.report,print_report_name:beecy_account_wht.action_pnd3_report
+msgid "'PND3 - %s' % (object.name)"
+msgstr ""
+
+#. module: beecy_account_wht
+#: model:ir.actions.report,print_report_name:beecy_account_wht.action_pnd53_report
+msgid "'PND53 - %s' % (object.name)"
+msgstr ""
+
+#. module: beecy_account_wht
+#: model:ir.actions.report,print_report_name:beecy_account_wht.action_acc_move_wht_certificate
+msgid "'WHT Certificate - %s' % (object.name)"
+msgstr ""
+
+#. module: beecy_account_wht
+#: model:ir.actions.report,print_report_name:beecy_account_wht.action_acc_move_wht_substitute
+msgid "'WHT Substitute - %s' % (object.name)"
+msgstr ""
+
+#. module: beecy_account_wht
+#: model:ir.actions.report,print_report_name:beecy_account_wht.action_acc_move_wht
+msgid "'หนังสือรับรอง - %s' % (object.name)"
+msgstr ""
+
+#. module: beecy_account_wht
+#: model:ir.model.fields.selection,name:beecy_account_wht.selection__account_wht__wht_kind__pnd1k
+msgid "(1) P.N.D.1 K"
+msgstr "(1) ภ.ง.ด.1ก"
+
+#. module: beecy_account_wht
+#: model:ir.model.fields.selection,name:beecy_account_wht.selection__account_wht__wht_payment__wht
+msgid "(1) With holding tax"
+msgstr "(1) หัก ณ ที่จ่าย"
+
+#. module: beecy_account_wht
+#: model:ir.model.fields.selection,name:beecy_account_wht.selection__account_wht__wht_payment__forever
+msgid "(2) Forever"
+msgstr "(2) ออกให้ตลอดไป"
+
+#. module: beecy_account_wht
+#: model:ir.model.fields.selection,name:beecy_account_wht.selection__account_wht__wht_kind__pnd1ks
+msgid "(2) P.N.D.1 K Special"
+msgstr "(2) ภ.ง.ด.1ก พิเศษ"
+
+#. module: beecy_account_wht
+#: model:ir.model.fields.selection,name:beecy_account_wht.selection__account_wht__wht_payment__once
+msgid "(3) Once"
+msgstr "(3) ออกให้ครั้งเดียว"
+
+#. module: beecy_account_wht
+#: model:ir.model.fields.selection,name:beecy_account_wht.selection__account_wht__wht_kind__pnd2
+msgid "(3) P.N.D.2"
+msgstr "(3) ภ.ง.ด.2"
+
+#. module: beecy_account_wht
+#: model:ir.model.fields.selection,name:beecy_account_wht.selection__account_wht__wht_payment__other
+msgid "(4) Other"
+msgstr "(4) อื่นๆ"
+
+#. module: beecy_account_wht
+#: model:ir.model.fields.selection,name:beecy_account_wht.selection__account_wht__wht_kind__pnd3
+msgid "(4) P.N.D.3"
+msgstr "(4) ภ.ง.ด.3"
+
+#. module: beecy_account_wht
+#: model:ir.model.fields.selection,name:beecy_account_wht.selection__account_wht_pnd__pnd_type__pnd3
+msgid "(4) PND3"
+msgstr "(4) ภ.ง.ด.3"
+
+#. module: beecy_account_wht
+#: model:ir.model.fields.selection,name:beecy_account_wht.selection__account_wht__wht_kind__pnd2k
+msgid "(5) P.N.D.2 K"
+msgstr "(5) ภ.ง.ด.2ก"
+
+#. module: beecy_account_wht
+#: model:ir.model.fields.selection,name:beecy_account_wht.selection__account_wht__wht_kind__pnd3k
+msgid "(6) P.N.D.3 K"
+msgstr "(6) ภ.ง.ด.3ก"
+
+#. module: beecy_account_wht
+#: model:ir.model.fields.selection,name:beecy_account_wht.selection__account_wht__wht_kind__pnd53
+msgid "(7) P.N.D.53"
+msgstr "(7) ภ.ง.ด.53"
+
+#. module: beecy_account_wht
+#: model:ir.model.fields.selection,name:beecy_account_wht.selection__account_wht_pnd__pnd_type__pnd53
+msgid "(7) PND53"
+msgstr "(7) ภ.ง.ด.53"
+
+#. module: beecy_account_wht
+#: model_terms:ir.ui.view,arch_db:beecy_account_wht.report_account_wht
+msgid "<b>ใบแทน</b>"
+msgstr ""
+
+#. module: beecy_account_wht
+#: model_terms:ir.ui.view,arch_db:beecy_account_wht.report_account_wht
+msgid "<span> ✓</span>"
+msgstr ""
+
+#. module: beecy_account_wht
+#: model_terms:ir.ui.view,arch_db:beecy_account_wht.account_pnd53_template_id
+msgid "<span>&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;</span>"
+msgstr ""
+
+#. module: beecy_account_wht
+#: model_terms:ir.ui.view,arch_db:beecy_account_wht.account_pnd3_template_id
+msgid "<span>&amp;nbsp;&amp;nbsp;&amp;nbsp;</span>"
+msgstr ""
+
+#. module: beecy_account_wht
+#: model_terms:ir.ui.view,arch_db:beecy_account_wht.account_pnd3_template_id
+#: model_terms:ir.ui.view,arch_db:beecy_account_wht.account_pnd53_template_id
+msgid "<span>&amp;nbsp;</span>"
+msgstr ""
+
+#. module: beecy_account_wht
+#: model_terms:ir.ui.view,arch_db:beecy_account_wht.account_wht_pnd_view_form
+msgid "<span>Draft</span>"
+msgstr ""
+
+#. module: beecy_account_wht
+#: model_terms:ir.ui.view,arch_db:beecy_account_wht.account_pnd3_template_id
+#: model_terms:ir.ui.view,arch_db:beecy_account_wht.account_pnd53_template_id
+msgid "<span>✓</span>"
+msgstr ""
+
+#. module: beecy_account_wht
+#: model:ir.model.fields,field_description:beecy_account_wht.field_account_wht__account_id
+msgid "Account"
+msgstr "บัญชี"
+
+#. module: beecy_account_wht
+#: model:ir.model,name:beecy_account_wht.model_account_wht
+#: model_terms:ir.ui.view,arch_db:beecy_account_wht.account_wht_view_search
+msgid "Account WHT"
+msgstr "บัญชีหัก ณ ที่จ่าย"
+
+#. module: beecy_account_wht
+#: model:ir.model,name:beecy_account_wht.model_account_wht_line
+msgid "Account WHT Lines"
+msgstr "รายการหัก ณ ที่จ่าย"
+
+#. module: beecy_account_wht
+#: model:ir.actions.act_window,name:beecy_account_wht.action_account_wht_type_view
+msgid "Account WHT Type View"
+msgstr ""
+
+#. module: beecy_account_wht
+#: model:ir.model,name:beecy_account_wht.model_account_wht_type
+msgid "Account Wht Type"
+msgstr "ประเภทหัก ณ ที่จ่าย"
+
+#. module: beecy_account_wht
+#: model:ir.model.fields,field_description:beecy_account_wht.field_account_wht__message_needaction
+#: model:ir.model.fields,field_description:beecy_account_wht.field_account_wht_pnd__message_needaction
+msgid "Action Needed"
+msgstr "โปรดตรวจสอบ"
+
+#. module: beecy_account_wht
+#: model:ir.model.fields,field_description:beecy_account_wht.field_account_wht__activity_ids
+#: model:ir.model.fields,field_description:beecy_account_wht.field_account_wht_pnd__activity_ids
+msgid "Activities"
+msgstr "กิจกรรม"
+
+#. module: beecy_account_wht
+#: model:ir.model.fields,field_description:beecy_account_wht.field_account_wht__activity_exception_decoration
+#: model:ir.model.fields,field_description:beecy_account_wht.field_account_wht_pnd__activity_exception_decoration
+msgid "Activity Exception Decoration"
+msgstr "ข้อยกเว้น"
+
+#. module: beecy_account_wht
+#: model:ir.model.fields,field_description:beecy_account_wht.field_account_wht__activity_state
+#: model:ir.model.fields,field_description:beecy_account_wht.field_account_wht_pnd__activity_state
+msgid "Activity State"
+msgstr "สถานะกิจกรรม"
+
+#. module: beecy_account_wht
+#: model:ir.model.fields,field_description:beecy_account_wht.field_account_wht__activity_type_icon
+#: model:ir.model.fields,field_description:beecy_account_wht.field_account_wht_pnd__activity_type_icon
+msgid "Activity Type Icon"
+msgstr "ไอคอนประเภทกิจกรรม"
+
+#. module: beecy_account_wht
+#: model:ir.model.fields,field_description:beecy_account_wht.field_account_wht_pnd__add_amount
+msgid "Add Amount"
+msgstr "เงินเพิ่ม"
+
+#. module: beecy_account_wht
+#: model:ir.model.fields,field_description:beecy_account_wht.field_account_wht_pnd__additional_fill
+#: model:ir.model.fields.selection,name:beecy_account_wht.selection__account_wht_pnd__fill_type__additional
+msgid "Additional Filing"
+msgstr "ยื่นเพิ่มเติม"
+
+#. module: beecy_account_wht
+#: model_terms:ir.ui.view,arch_db:beecy_account_wht.account_wht_view_search
+#: model_terms:ir.ui.view,arch_db:beecy_account_wht.view_account_wht_pnd3_vender_filter
+msgid "All"
+msgstr "ทั้งหมด"
+
+#. module: beecy_account_wht
+#: model:ir.model.fields,field_description:beecy_account_wht.field_account_bank_statement_line__amount_wht
+#: model:ir.model.fields,field_description:beecy_account_wht.field_account_move__amount_wht
+#: model:ir.model.fields,field_description:beecy_account_wht.field_account_move_line__amount_wht
+#: model:ir.model.fields,field_description:beecy_account_wht.field_account_payment__amount_wht
+msgid "Amount WHT"
+msgstr "ยอดหัก ณ ที่จ่าย"
+
+#. module: beecy_account_wht
+#: model:ir.model.fields,field_description:beecy_account_wht.field_account_bank_statement_line__amount_wht_signed
+#: model:ir.model.fields,field_description:beecy_account_wht.field_account_move__amount_wht_signed
+#: model:ir.model.fields,field_description:beecy_account_wht.field_account_payment__amount_wht_signed
+msgid "Amount WHT Signed"
+msgstr "ยอดหัก ณ ที่จ่าย"
+
+#. module: beecy_account_wht
+#: model:ir.model.fields,field_description:beecy_account_wht.field_account_wht_pnd__attach_count
+msgid "Attach Count"
+msgstr "จำนวนใบแนบ"
+
+#. module: beecy_account_wht
+#: model:ir.model.fields,field_description:beecy_account_wht.field_account_wht_pnd__attach_no
+msgid "Attach No"
+msgstr "เลขที่ใบแนบ"
+
+#. module: beecy_account_wht
+#: model:ir.model.fields,field_description:beecy_account_wht.field_account_wht_pnd__is_attach_pnd
+msgid "Attach PND"
+msgstr "ใบแนบ"
+
+#. module: beecy_account_wht
+#: model_terms:ir.ui.view,arch_db:beecy_account_wht.account_wht_pnd_view_form
+msgid "Attachment"
+msgstr "เอกสารแนบ"
+
+#. module: beecy_account_wht
+#: model:ir.model.fields,field_description:beecy_account_wht.field_account_wht__message_attachment_count
+#: model:ir.model.fields,field_description:beecy_account_wht.field_account_wht_pnd__message_attachment_count
+msgid "Attachment Count"
+msgstr "จำนวนเอกสารแนบ"
+
+#. module: beecy_account_wht
+#: model:ir.model.fields,field_description:beecy_account_wht.field_account_wht_pnd__attachment_type
+msgid "Attachment Type"
+msgstr "ประเภทเอกสารแนบ"
+
+#. module: beecy_account_wht
+#: model:ir.model.fields,field_description:beecy_account_wht.field_account_wht__base_amount
+#: model:ir.model.fields,field_description:beecy_account_wht.field_account_wht_line__base_amount
+msgid "Base Amount"
+msgstr "มูลค่าพื้นฐาน"
+
+#. module: beecy_account_wht
+#: model:ir.model.fields,field_description:beecy_account_wht.field_account_wht_pnd__company_id
+msgid "Company"
+msgstr "บริษัท"
+
+#. module: beecy_account_wht
+#: model_terms:ir.ui.view,arch_db:beecy_account_wht.account_wht_view_form
+msgid "Confirm"
+msgstr "ยืนยัน"
+
+#. module: beecy_account_wht
+#: model_terms:ir.actions.act_window,help:beecy_account_wht.action_account_wht_pnd3_vender
+msgid "Create a new PND 3 in your WHT PND"
+msgstr "สร้างรายการ ภงด 3"
+
+#. module: beecy_account_wht
+#: model_terms:ir.actions.act_window,help:beecy_account_wht.action_account_wht_pnd53_vender
+msgid "Create a new PND 53 in your WHT PND"
+msgstr "สร้างรายการ ภงด 53"
+
+#. module: beecy_account_wht
+#: model:ir.model.fields,field_description:beecy_account_wht.field_account_wht__create_uid
+#: model:ir.model.fields,field_description:beecy_account_wht.field_account_wht_line__create_uid
+#: model:ir.model.fields,field_description:beecy_account_wht.field_account_wht_pnd__create_uid
+#: model:ir.model.fields,field_description:beecy_account_wht.field_account_wht_type__create_uid
+msgid "Created by"
+msgstr "สร้างโดย"
+
+#. module: beecy_account_wht
+#: model:ir.model.fields,field_description:beecy_account_wht.field_account_wht__create_date
+#: model:ir.model.fields,field_description:beecy_account_wht.field_account_wht_line__create_date
+#: model:ir.model.fields,field_description:beecy_account_wht.field_account_wht_pnd__create_date
+#: model:ir.model.fields,field_description:beecy_account_wht.field_account_wht_type__create_date
+msgid "Created on"
+msgstr "สร้างเมื่อ"
+
+#. module: beecy_account_wht
+#: model:ir.model.fields,field_description:beecy_account_wht.field_account_wht_pnd__pnd_date
+msgid "Date"
+msgstr "วันที่"
+
+#. module: beecy_account_wht
+#: model:ir.model.fields,field_description:beecy_account_wht.field_account_wht_pnd__name
+#: model:ir.model.fields,field_description:beecy_account_wht.field_account_wht_type__display_name
+msgid "Description"
+msgstr "รายละเอียด"
+
+#. module: beecy_account_wht
+#: model_terms:ir.ui.view,arch_db:beecy_account_wht.account_wht_view_form
+msgid "Detail"
+msgstr "รายละเอียด"
+
+#. module: beecy_account_wht
+#: model:ir.model.fields,field_description:beecy_account_wht.field_account_wht__display_name
+#: model:ir.model.fields,field_description:beecy_account_wht.field_account_wht_line__display_name
+#: model:ir.model.fields,field_description:beecy_account_wht.field_account_wht_pnd__display_name
+msgid "Display Name"
+msgstr "ชื่อ"
+
+#. module: beecy_account_wht
+#: model:ir.model.fields,field_description:beecy_account_wht.field_account_wht__document_date
+msgid "Document Date"
+msgstr "วันที่เอกสาร"
+
+#. module: beecy_account_wht
+#: model:ir.model.fields.selection,name:beecy_account_wht.selection__account_wht__status__done
+msgid "Done"
+msgstr "เสร็จสิ้น"
+
+#. module: beecy_account_wht
+#: model:ir.model.fields.selection,name:beecy_account_wht.selection__account_wht__status__draft
+msgid "Draft"
+msgstr "ร่าง"
+
+#. module: beecy_account_wht
+#: model:ir.model.fields.selection,name:beecy_account_wht.selection__account_wht_pnd__attachment_type__electronic
+msgid "Electronic Attachment"
+msgstr "สื่อบันทึกในระบบคอมพิวเตอร์"
+
+#. module: beecy_account_wht
+#: model:ir.model.fields,field_description:beecy_account_wht.field_account_wht_pnd__section
+msgid "Filing According to"
+msgstr "นำส่งภาษีตาม"
+
+#. module: beecy_account_wht
+#: model:ir.model.fields,field_description:beecy_account_wht.field_account_wht_pnd__fill_type
+#: model_terms:ir.ui.view,arch_db:beecy_account_wht.view_account_wht_pnd3_vender_filter
+msgid "Filing Type"
+msgstr "ประเภทการยื่น"
+
+#. module: beecy_account_wht
+#: model:ir.model.fields,field_description:beecy_account_wht.field_account_wht__message_follower_ids
+#: model:ir.model.fields,field_description:beecy_account_wht.field_account_wht_pnd__message_follower_ids
+msgid "Followers"
+msgstr "ผู้ติดตาม"
+
+#. module: beecy_account_wht
+#: model:ir.model.fields,field_description:beecy_account_wht.field_account_wht__message_partner_ids
+#: model:ir.model.fields,field_description:beecy_account_wht.field_account_wht_pnd__message_partner_ids
+msgid "Followers (Partners)"
+msgstr "ผู้ติดตาม"
+
+#. module: beecy_account_wht
+#: model:ir.model.fields,help:beecy_account_wht.field_account_wht__activity_type_icon
+#: model:ir.model.fields,help:beecy_account_wht.field_account_wht_pnd__activity_type_icon
+msgid "Font awesome icon e.g. fa-tasks"
+msgstr ""
+
+#. module: beecy_account_wht
+#: model_terms:ir.ui.view,arch_db:beecy_account_wht.account_wht_view_search
+#: model_terms:ir.ui.view,arch_db:beecy_account_wht.view_account_wht_pnd3_vender_filter
+msgid "Group By"
+msgstr "จัดกลุ่มโดย"
+
+#. module: beecy_account_wht
+#: model:ir.model.fields,field_description:beecy_account_wht.field_account_wht__has_message
+#: model:ir.model.fields,field_description:beecy_account_wht.field_account_wht_pnd__has_message
+msgid "Has Message"
+msgstr "มีข้อความ"
+
+#. module: beecy_account_wht
+#: model:ir.model.fields,field_description:beecy_account_wht.field_account_wht__id
+#: model:ir.model.fields,field_description:beecy_account_wht.field_account_wht_line__id
+#: model:ir.model.fields,field_description:beecy_account_wht.field_account_wht_pnd__id
+#: model:ir.model.fields,field_description:beecy_account_wht.field_account_wht_type__id
+msgid "ID"
+msgstr "รหัส"
+
+#. module: beecy_account_wht
+#: model:ir.model.fields,field_description:beecy_account_wht.field_account_wht__activity_exception_icon
+#: model:ir.model.fields,field_description:beecy_account_wht.field_account_wht_pnd__activity_exception_icon
+msgid "Icon"
+msgstr "ไอคอน"
+
+#. module: beecy_account_wht
+#: model:ir.model.fields,help:beecy_account_wht.field_account_wht__activity_exception_icon
+#: model:ir.model.fields,help:beecy_account_wht.field_account_wht_pnd__activity_exception_icon
+msgid "Icon to indicate an exception activity."
+msgstr ""
+
+#. module: beecy_account_wht
+#: model:ir.model.fields,help:beecy_account_wht.field_account_wht__message_needaction
+#: model:ir.model.fields,help:beecy_account_wht.field_account_wht__message_unread
+#: model:ir.model.fields,help:beecy_account_wht.field_account_wht_pnd__message_needaction
+#: model:ir.model.fields,help:beecy_account_wht.field_account_wht_pnd__message_unread
+msgid "If checked, new messages require your attention."
+msgstr ""
+
+#. module: beecy_account_wht
+#: model:ir.model.fields,help:beecy_account_wht.field_account_wht__message_has_error
+#: model:ir.model.fields,help:beecy_account_wht.field_account_wht__message_has_sms_error
+#: model:ir.model.fields,help:beecy_account_wht.field_account_wht_pnd__message_has_error
+#: model:ir.model.fields,help:beecy_account_wht.field_account_wht_pnd__message_has_sms_error
+msgid "If checked, some messages have a delivery error."
+msgstr ""
+
+#. module: beecy_account_wht
+#: model:ir.model.fields,field_description:beecy_account_wht.field_account_wht_line__invoice_line_id
+msgid "Invoice"
+msgstr "ใบแจ้งหนี้/ใบกำกับ"
+
+#. module: beecy_account_wht
+#: model:ir.model.fields,field_description:beecy_account_wht.field_account_wht__invoice_line_ids
+msgid "Invoice IDS"
+msgstr ""
+
+#. module: beecy_account_wht
+#: model_terms:ir.ui.view,arch_db:beecy_account_wht.account_wht_view_search
+msgid "Invoice No"
+msgstr "เลขที่ใบแจ้งหนี้ / ใบกำกับ"
+
+#. module: beecy_account_wht
+#: model:ir.model.fields,field_description:beecy_account_wht.field_account_wht__message_is_follower
+#: model:ir.model.fields,field_description:beecy_account_wht.field_account_wht_pnd__message_is_follower
+msgid "Is Follower"
+msgstr ""
+
+#. module: beecy_account_wht
+#: model:ir.model.fields,field_description:beecy_account_wht.field_account_wht_type__is_parent
+msgid "Is Parent"
+msgstr ""
+
+#. module: beecy_account_wht
+#: model:ir.model,name:beecy_account_wht.model_account_move
+msgid "Journal Entry"
+msgstr "รายการบันทึกบัญชี"
+
+#. module: beecy_account_wht
+#: model:ir.model,name:beecy_account_wht.model_account_move_line
+msgid "Journal Item"
+msgstr "รายการสมุดบัญชีรายวัน"
+
+#. module: beecy_account_wht
+#: model:ir.model.fields,field_description:beecy_account_wht.field_account_wht__wht_kind
+msgid "Kind of WHT"
+msgstr "ประเภทหัก ณ ที่จ่าย"
+
+#. module: beecy_account_wht
+#: model:ir.model.fields,field_description:beecy_account_wht.field_account_wht____last_update
+#: model:ir.model.fields,field_description:beecy_account_wht.field_account_wht_line____last_update
+#: model:ir.model.fields,field_description:beecy_account_wht.field_account_wht_pnd____last_update
+#: model:ir.model.fields,field_description:beecy_account_wht.field_account_wht_type____last_update
+msgid "Last Modified on"
+msgstr "แก้ไขล่าสุดเมื่อ"
+
+#. module: beecy_account_wht
+#: model:ir.model.fields,field_description:beecy_account_wht.field_account_wht__write_uid
+#: model:ir.model.fields,field_description:beecy_account_wht.field_account_wht_line__write_uid
+#: model:ir.model.fields,field_description:beecy_account_wht.field_account_wht_pnd__write_uid
+#: model:ir.model.fields,field_description:beecy_account_wht.field_account_wht_type__write_uid
+msgid "Last Updated by"
+msgstr "แก้ไขล่าสุดโดย"
+
+#. module: beecy_account_wht
+#: model:ir.model.fields,field_description:beecy_account_wht.field_account_wht__write_date
+#: model:ir.model.fields,field_description:beecy_account_wht.field_account_wht_line__write_date
+#: model:ir.model.fields,field_description:beecy_account_wht.field_account_wht_pnd__write_date
+#: model:ir.model.fields,field_description:beecy_account_wht.field_account_wht_type__write_date
+msgid "Last Updated on"
+msgstr "แก้ไขล่าสุดเมื่อ"
+
+#. module: beecy_account_wht
+#: model:ir.model.fields,field_description:beecy_account_wht.field_account_wht__line_ids
+msgid "Line"
+msgstr "รายการ"
+
+#. module: beecy_account_wht
+#: model:ir.model.fields,field_description:beecy_account_wht.field_account_wht__message_main_attachment_id
+#: model:ir.model.fields,field_description:beecy_account_wht.field_account_wht_pnd__message_main_attachment_id
+msgid "Main Attachment"
+msgstr "เอกสารแนบหลัก"
+
+#. module: beecy_account_wht
+#: model:ir.model.fields,field_description:beecy_account_wht.field_account_wht__message_has_error
+#: model:ir.model.fields,field_description:beecy_account_wht.field_account_wht_pnd__message_has_error
+msgid "Message Delivery error"
+msgstr "การส่งข้อความผิดพลาด"
+
+#. module: beecy_account_wht
+#: model:ir.model.fields,field_description:beecy_account_wht.field_account_wht__message_ids
+#: model:ir.model.fields,field_description:beecy_account_wht.field_account_wht_pnd__message_ids
+msgid "Messages"
+msgstr "ข้อความ"
+
+#. module: beecy_account_wht
+#: model:ir.model.fields,field_description:beecy_account_wht.field_account_wht_pnd__select_month
+#: model_terms:ir.ui.view,arch_db:beecy_account_wht.account_wht_pnd_view_form
+msgid "Month"
+msgstr "เดือน"
+
+#. module: beecy_account_wht
+#: model:ir.model.fields,field_description:beecy_account_wht.field_account_wht_pnd__period_pnd_date
+msgid "Month PND"
+msgstr "เดือนภงด"
+
+#. module: beecy_account_wht
+#: model_terms:ir.ui.view,arch_db:beecy_account_wht.view_account_wht_pnd3_vender_filter
+msgid "Month Year"
+msgstr "เดือน-ปี"
+
+#. module: beecy_account_wht
+#: model:ir.model.fields,field_description:beecy_account_wht.field_account_wht__my_activity_date_deadline
+#: model:ir.model.fields,field_description:beecy_account_wht.field_account_wht_pnd__my_activity_date_deadline
+msgid "My Activity Deadline"
+msgstr "กิจกรรมที่ต้องทำให้เสร็จของฉัน"
+
+#. module: beecy_account_wht
+#: model:ir.model.fields,field_description:beecy_account_wht.field_account_wht_type__name
+msgid "Name"
+msgstr "ชื่อ"
+
+#. module: beecy_account_wht
+#: model:ir.model.fields,field_description:beecy_account_wht.field_account_wht__activity_date_deadline
+#: model:ir.model.fields,field_description:beecy_account_wht.field_account_wht_pnd__activity_date_deadline
+msgid "Next Activity Deadline"
+msgstr "ต้องทำให้กิจกรรมต่อไปภายใน"
+
+#. module: beecy_account_wht
+#: model:ir.model.fields,field_description:beecy_account_wht.field_account_wht__activity_summary
+#: model:ir.model.fields,field_description:beecy_account_wht.field_account_wht_pnd__activity_summary
+msgid "Next Activity Summary"
+msgstr "สรุปกิจกรรมที่จะทำต่อไป"
+
+#. module: beecy_account_wht
+#: model:ir.model.fields,field_description:beecy_account_wht.field_account_wht__activity_type_id
+#: model:ir.model.fields,field_description:beecy_account_wht.field_account_wht_pnd__activity_type_id
+msgid "Next Activity Type"
+msgstr "ประเภทกิจกรรมต่อไป"
+
+#. module: beecy_account_wht
+#: model:ir.model.fields,field_description:beecy_account_wht.field_account_wht__name
+msgid "No."
+msgstr "เลขที่"
+
+#. module: beecy_account_wht
+#: model:ir.model.fields,field_description:beecy_account_wht.field_account_wht__note
+#: model:ir.model.fields,field_description:beecy_account_wht.field_account_wht_line__note
+#: model:ir.model.fields,field_description:beecy_account_wht.field_account_wht_pnd__note
+msgid "Note"
+msgstr "บันทึกเพิ่มเติม"
+
+#. module: beecy_account_wht
+#: model:ir.model.fields,field_description:beecy_account_wht.field_account_wht_line__invoice_no
+msgid "Number"
+msgstr "เลขที่"
+
+#. module: beecy_account_wht
+#: model:ir.model.fields,field_description:beecy_account_wht.field_account_wht__message_needaction_counter
+#: model:ir.model.fields,field_description:beecy_account_wht.field_account_wht_pnd__message_needaction_counter
+msgid "Number of Actions"
+msgstr "จำนวนการดำเนินการ"
+
+#. module: beecy_account_wht
+#: model:ir.model.fields,field_description:beecy_account_wht.field_account_wht__message_has_error_counter
+#: model:ir.model.fields,field_description:beecy_account_wht.field_account_wht_pnd__message_has_error_counter
+msgid "Number of errors"
+msgstr "จำนวนข้อผิดพลาด"
+
+#. module: beecy_account_wht
+#: model:ir.model.fields,help:beecy_account_wht.field_account_wht__message_needaction_counter
+#: model:ir.model.fields,help:beecy_account_wht.field_account_wht_pnd__message_needaction_counter
+msgid "Number of messages which requires an action"
+msgstr "จำนวนข้อความที่ต้องตรวจสอบ"
+
+#. module: beecy_account_wht
+#: model:ir.model.fields,help:beecy_account_wht.field_account_wht__message_has_error_counter
+#: model:ir.model.fields,help:beecy_account_wht.field_account_wht_pnd__message_has_error_counter
+msgid "Number of messages with delivery error"
+msgstr "จำนวนข้อความที่ไม่สามารถส่งได้"
+
+#. module: beecy_account_wht
+#: model:ir.model.fields,help:beecy_account_wht.field_account_wht__message_unread_counter
+#: model:ir.model.fields,help:beecy_account_wht.field_account_wht_pnd__message_unread_counter
+msgid "Number of unread messages"
+msgstr "จำนวนข้อความที่ไม่ได้อ่าน"
+
+#. module: beecy_account_wht
+#: model_terms:ir.actions.act_window,help:beecy_account_wht.action_account_wht_pnd3_vender
+#: model_terms:ir.actions.act_window,help:beecy_account_wht.action_account_wht_pnd53_vender
+msgid "Odoo helps you easily track all activities related to a vender."
+msgstr "เราช่วยให้คุณสามารถตรวจสอบกิจกรรมที่เกิดขึ้นทั้งหมดได้"
+
+#. module: beecy_account_wht
+#: model:ir.model.fields.selection,name:beecy_account_wht.selection__account_wht_pnd__fill_type__ordinary
+msgid "Ordinary Filing"
+msgstr "ยื่นปกติ"
+
+#. module: beecy_account_wht
+#: model:ir.actions.act_window,name:beecy_account_wht.action_account_wht_pnd3_vender
+#: model:ir.ui.menu,name:beecy_account_wht.menu_sub_account_wht_pnd3_vender
+#: model_terms:ir.ui.view,arch_db:beecy_account_wht.account_wht_pnd_view_form
+msgid "PND 3"
+msgstr "ภ.ง.ด.3"
+
+#. module: beecy_account_wht
+#: model:ir.actions.act_window,name:beecy_account_wht.action_account_wht_pnd53_vender
+#: model:ir.ui.menu,name:beecy_account_wht.menu_sub_account_wht_pnd53_vender
+#: model_terms:ir.ui.view,arch_db:beecy_account_wht.account_wht_pnd_view_form
+msgid "PND 53"
+msgstr "ภ.ง.ด.53"
+
+#. module: beecy_account_wht
+#: model_terms:ir.ui.view,arch_db:beecy_account_wht.view_account_wht_pnd3_vender_filter
+msgid "PND Date"
+msgstr "วันที่ยื่น"
+
+#. module: beecy_account_wht
+#: model:ir.model.fields,field_description:beecy_account_wht.field_account_wht_pnd__pnd_type
+msgid "PND Type"
+msgstr "ประเภท ภ.ง.ด."
+
+#. module: beecy_account_wht
+#: model:ir.actions.report,name:beecy_account_wht.action_pnd3_report
+msgid "PND3 Report"
+msgstr "ภ.ง.ด.3"
+
+#. module: beecy_account_wht
+#: model:ir.actions.report,name:beecy_account_wht.action_pnd53_report
+msgid "PND53 Report"
+msgstr "ภ.ง.ด.53"
+
+#. module: beecy_account_wht
+#: model:ir.model.fields.selection,name:beecy_account_wht.selection__account_wht_pnd__attachment_type__paper
+msgid "Paper Attachment"
+msgstr "ใบแนบ"
+
+#. module: beecy_account_wht
+#: model:ir.model.fields,field_description:beecy_account_wht.field_account_wht_type__parent_id
+msgid "Parent"
+msgstr ""
+
+#. module: beecy_account_wht
+#: model:ir.model.fields,field_description:beecy_account_wht.field_account_wht__partner_id
+msgid "Partner"
+msgstr ""
+
+#. module: beecy_account_wht
+#: model:ir.model.fields,field_description:beecy_account_wht.field_account_wht_line__percent
+#: model:ir.model.fields,field_description:beecy_account_wht.field_account_wht_type__percent
+msgid "Percent"
+msgstr "เปอร์เซ็นต์"
+
+#. module: beecy_account_wht
+#: model_terms:ir.ui.view,arch_db:beecy_account_wht.account_wht_type_view_form
+msgid "Percentage"
+msgstr "เปอร์เซ็นต์"
+
+#. module: beecy_account_wht
+#: model_terms:ir.ui.view,arch_db:beecy_account_wht.account_wht_view_form
+msgid "Print"
+msgstr "พิมพ์"
+
+#. module: beecy_account_wht
+#: model:ir.model.fields,field_description:beecy_account_wht.field_account_wht_type__printed
+msgid "Printed"
+msgstr "พิมพ์แล้ว"
+
+#. module: beecy_account_wht
+#: model:ir.model,name:beecy_account_wht.model_product_template
+msgid "Product Template"
+msgstr "รูปแบบสินค้า"
+
+#. module: beecy_account_wht
+#: model:ir.model.fields.selection,name:beecy_account_wht.selection__account_wht__wht_type__purchase
+msgid "Purchase"
+msgstr "ซื้อ"
+
+#. module: beecy_account_wht
+#: model:ir.model.fields,field_description:beecy_account_wht.field_account_wht__activity_user_id
+#: model:ir.model.fields,field_description:beecy_account_wht.field_account_wht_pnd__activity_user_id
+msgid "Responsible User"
+msgstr "ผู้รับผิดชอบ"
+
+#. module: beecy_account_wht
+#: model:ir.model.fields,field_description:beecy_account_wht.field_account_wht__message_has_sms_error
+#: model:ir.model.fields,field_description:beecy_account_wht.field_account_wht_pnd__message_has_sms_error
+msgid "SMS Delivery error"
+msgstr "การส่ง SMS ผิดพลาด"
+
+#. module: beecy_account_wht
+#: model:ir.model.fields.selection,name:beecy_account_wht.selection__account_wht__wht_type__sale
+msgid "Sale"
+msgstr "ขาย"
+
+#. module: beecy_account_wht
+#: model_terms:ir.ui.view,arch_db:beecy_account_wht.view_account_wht_pnd3_vender_filter
+msgid "Search PND3"
+msgstr "ค้นหา ภ.ง.ด.3"
+
+#. module: beecy_account_wht
+#: model:ir.model.fields,field_description:beecy_account_wht.field_account_wht_pnd__select_month_date
+msgid "Select Month"
+msgstr "เลือกเดือน"
+
+#. module: beecy_account_wht
+#: model:ir.model.fields,field_description:beecy_account_wht.field_account_wht_type__sequence
+msgid "Sequence"
+msgstr "ลำดับ"
+
+#. module: beecy_account_wht
+#: model_terms:ir.ui.view,arch_db:beecy_account_wht.account_wht_view_form
+msgid "Set to Draft"
+msgstr "ปรับสถานะเป็นร่าง"
+
+#. module: beecy_account_wht
+#: model:ir.model.fields,field_description:beecy_account_wht.field_account_wht_type__short_name
+msgid "Short Name"
+msgstr "ชื่อย่อ"
+
+#. module: beecy_account_wht
+#: model:ir.model.fields,field_description:beecy_account_wht.field_account_wht__status
+msgid "Status"
+msgstr "สถานะ"
+
+#. module: beecy_account_wht
+#: model:ir.model.fields,help:beecy_account_wht.field_account_wht__activity_state
+#: model:ir.model.fields,help:beecy_account_wht.field_account_wht_pnd__activity_state
+msgid ""
+"Status based on activities\n"
+"Overdue: Due date is already passed\n"
+"Today: Activity date is today\n"
+"Planned: Future activities."
+msgstr ""
+"สถานะขึ้นกับกิจกรรม\n"
+"เลยกำหนด: เลยวันที่กำหนดไว้\n"
+"วันนี้: ควรดำเนินการในวันนี้\n"
+"วางแผนไว้: กิจกรรมที่วางไว้ในอนาคต."
+
+#. module: beecy_account_wht
+#: model:ir.model.fields,field_description:beecy_account_wht.field_account_wht__tax
+msgid "Tax"
+msgstr "ภาษี"
+
+#. module: beecy_account_wht
+#: model:ir.model.fields,field_description:beecy_account_wht.field_account_wht_line__tax
+msgid "Tax Amount"
+msgstr "มูลค่าภาษี"
+
+#. module: beecy_account_wht
+#: model_terms:ir.ui.view,arch_db:beecy_account_wht.inherit_view_move_form
+msgid "Tax:"
+msgstr "ภาษี:"
+
+#. module: beecy_account_wht
+#: model_terms:ir.ui.view,arch_db:beecy_account_wht.account_wht_pnd_view_form
+msgid "Text File"
+msgstr "ไฟล์ txt (RD Prep)"
+
+#. module: beecy_account_wht
+#: model:ir.model.fields,field_description:beecy_account_wht.field_account_wht_pnd__total_amount
+msgid "Total Amount"
+msgstr "รวมยอดเงินได้ทั้งสิ้น"
+
+#. module: beecy_account_wht
+#: model:ir.model.fields,field_description:beecy_account_wht.field_account_wht_pnd__total_tax
+msgid "Total Tax"
+msgstr "รวมยอดภาษี"
+
+#. module: beecy_account_wht
+#: model:ir.model.fields,field_description:beecy_account_wht.field_account_wht_pnd__total_tax_send
+msgid "Total Tax Send"
+msgstr "รวมยอดภาษีที่นำส่ง"
+
+#. module: beecy_account_wht
+#: model:ir.model.fields,field_description:beecy_account_wht.field_account_wht_pnd__type_no
+msgid "Type No."
+msgstr "ประเภท"
+
+#. module: beecy_account_wht
+#: model:ir.model.fields,field_description:beecy_account_wht.field_account_wht__wht_type
+msgid "Type of WHT"
+msgstr "ประเภท หัก ณ ที่จ่าย"
+
+#. module: beecy_account_wht
+#: model:ir.model.fields,help:beecy_account_wht.field_account_wht__activity_exception_decoration
+#: model:ir.model.fields,help:beecy_account_wht.field_account_wht_pnd__activity_exception_decoration
+msgid "Type of the exception activity on record."
+msgstr "ข้อยกเว้น"
+
+#. module: beecy_account_wht
+#: model:ir.model.fields,field_description:beecy_account_wht.field_account_wht__message_unread
+#: model:ir.model.fields,field_description:beecy_account_wht.field_account_wht_pnd__message_unread
+msgid "Unread Messages"
+msgstr "ข้อความที่ไม่ได้อ่าน"
+
+#. module: beecy_account_wht
+#: model:ir.model.fields,field_description:beecy_account_wht.field_account_wht__message_unread_counter
+#: model:ir.model.fields,field_description:beecy_account_wht.field_account_wht_pnd__message_unread_counter
+msgid "Unread Messages Counter"
+msgstr "จำนวนข้อความที่ไม่ได้อ่าน"
+
+#. module: beecy_account_wht
+#: model_terms:ir.ui.view,arch_db:beecy_account_wht.inherit_view_move_form
+msgid "Untaxed Amount:"
+msgstr "มูลค่าก่อนภาษี:"
+
+#. module: beecy_account_wht
+#: model:ir.actions.act_window,name:beecy_account_wht.action_account_wht_customer
+#: model:ir.actions.act_window,name:beecy_account_wht.action_account_wht_vender
+#: model:ir.model.fields,field_description:beecy_account_wht.field_account_move_line__wht_type_id
+#: model:ir.ui.menu,name:beecy_account_wht.menu_account_wht_customer
+#: model:ir.ui.menu,name:beecy_account_wht.menu_account_wht_vender
+#: model:ir.ui.menu,name:beecy_account_wht.menu_sub_account_wht_vender
+msgid "WHT"
+msgstr "หัก ณ ที่จ่าย"
+
+#. module: beecy_account_wht
+#: model:ir.model.fields,field_description:beecy_account_wht.field_account_wht__wht_amount
+#: model:ir.model.fields,field_description:beecy_account_wht.field_account_wht_line__wht_amount
+msgid "WHT Amount"
+msgstr "มูลค่า หัก ณ ที่จ่าย"
+
+#. module: beecy_account_wht
+#: model:ir.actions.report,name:beecy_account_wht.action_acc_move_wht_certificate
+#: model_terms:ir.ui.view,arch_db:beecy_account_wht.account_wht_view_form
+msgid "WHT Certificate"
+msgstr "หนังสือรับรองหักฯ"
+
+#. module: beecy_account_wht
+#: model_terms:ir.ui.view,arch_db:beecy_account_wht.account_wht_view_search
+msgid "WHT Date"
+msgstr "วันที่หักฯ"
+
+#. module: beecy_account_wht
+#: model:ir.model,name:beecy_account_wht.model_account_wht_pnd
+msgid "WHT PND"
+msgstr ""
+
+#. module: beecy_account_wht
+#: model_terms:ir.ui.view,arch_db:beecy_account_wht.account_wht_view_search
+msgid "WHT Partner"
+msgstr "คู่ค้า"
+
+#. module: beecy_account_wht
+#: model:ir.model.fields,field_description:beecy_account_wht.field_account_wht__wht_payment
+msgid "WHT Payment"
+msgstr "การชำระเงิน"
+
+#. module: beecy_account_wht
+#: model_terms:ir.ui.view,arch_db:beecy_account_wht.account_wht_view_search
+msgid "WHT Status"
+msgstr "สถานะ"
+
+#. module: beecy_account_wht
+#: model:ir.actions.report,name:beecy_account_wht.action_acc_move_wht_substitute
+#: model_terms:ir.ui.view,arch_db:beecy_account_wht.account_wht_view_form
+msgid "WHT Substitute"
+msgstr "ใบแทน"
+
+#. module: beecy_account_wht
+#: model:ir.model.fields,field_description:beecy_account_wht.field_account_wht_line__wht_type_id
+msgid "WHT Type"
+msgstr "ประเภทหัก ณ ที่จ่าย"
+
+#. module: beecy_account_wht
+#: model:ir.model.fields,field_description:beecy_account_wht.field_account_wht__website_message_ids
+#: model:ir.model.fields,field_description:beecy_account_wht.field_account_wht_pnd__website_message_ids
+msgid "Website Messages"
+msgstr "ข้อความ"
+
+#. module: beecy_account_wht
+#: model:ir.model.fields,help:beecy_account_wht.field_account_wht__website_message_ids
+#: model:ir.model.fields,help:beecy_account_wht.field_account_wht_pnd__website_message_ids
+msgid "Website communication history"
+msgstr ""
+
+#. module: beecy_account_wht
+#: model:ir.model.fields,field_description:beecy_account_wht.field_account_wht_line__wht_id
+msgid "Wht"
+msgstr "หัก ณ ที่จ่าย"
+
+#. module: beecy_account_wht
+#: model:ir.model.fields,field_description:beecy_account_wht.field_account_wht_pnd__wht_ids
+msgid "With holding tax"
+msgstr "(1) หัก ณ ที่จ่าย"
+
+#. module: beecy_account_wht
+#: model:ir.model.fields,field_description:beecy_account_wht.field_product_product__wht_type_id
+#: model:ir.model.fields,field_description:beecy_account_wht.field_product_template__wht_type_id
+#: model:ir.ui.menu,name:beecy_account_wht.account_wht_typw_menu
+msgid "Withholding Tax"
+msgstr "หัก ณ ที่จ่าย"
+
+#. module: beecy_account_wht
+#: code:addons/beecy_account_wht/models/account_move.py:0
+#, python-format
+msgid ""
+"You can not select different WHT under the same category. Right now your "
+"section 5 or section 6 are under the same category."
+msgstr ""
+"คุณไม่สามารถเลือกประเภทการหัก ณ ที่จ่ายที่อยู่ในหมวด 5, 6 ที่ไม่เหมือนกันได้ "
+"(กรณีที่อยู่ในหมวด 5, 6 สามารถเลือกหมวดย่อยเดียวกันได้เท่านั้น)"
+
+#. module: beecy_account_wht
+#: model:ir.actions.report,name:beecy_account_wht.action_acc_move_wht
+msgid "หนังสือรับรอง"
+msgstr ""
