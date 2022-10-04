@@ -36,11 +36,11 @@ class AccountMove(models.Model):
     @api.depends('x_real_amount')
     def _compute_old_invoice_amount(self):
         for move in self:
-            move_id = move.reversed_entry_id
+            invoice_id = move.reversed_entry_id
             move.write({
-                'x_old_invoice_amount': move_id.amount_untaxed,
-                'x_diff_amount': move.x_old_invoice_amount - move.x_real_amount,
-                'x_wht_amount': move_id.amount_wht,
+                'x_old_invoice_amount': invoice_id.amount_untaxed,
+                'x_diff_amount': invoice_id.amount_untaxed - move.x_real_amount,
+                'x_wht_amount': invoice_id.amount_wht,
             })
 
     @api.onchange('x_real_amount')
