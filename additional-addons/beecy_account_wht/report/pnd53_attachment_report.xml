@@ -1,0 +1,137 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <template id="report_pnd53_attach_body">
+        <t t-call="web.basic_layout">
+            <div class="page height_background_landscape" style="font-size: 15px; background: url(/beecy_account_wht/static/src/img/pnd53-attach.png) no-repeat center; background-size:contain; margin-left: -10px;">
+                <div class='id-card-pnd53-attach'>
+                    <t t-set="vat_split_list" t-value="o.split_id_card()"/>
+                    <t t-if="vat_split_list">
+                        <span t-out="vat_split_list[0]"/>
+                        <span class="spacing-7" style="padding-left: 8px; letter-spacing: 7px;" t-out="vat_split_list[1]"/>
+                        <span class="spacing-7" style="padding-left: 6px;" t-out="vat_split_list[2]"/>
+                        <span class="spacing-7" style="padding-left: 3px;" t-out="vat_split_list[3]"/>
+                        <span style="padding-left: 8px;" t-out="vat_split_list[4]"/>
+                    </t>
+                </div>
+
+                <div class="branch-pnd53-attach" style="letter-spacing: 7px;">
+                    <t t-out="o.company_id.branch_code"/>
+                </div>
+
+                <div class="page-pnd53-attach">
+                    <t t-out="count_page + 1"/>
+                </div>
+
+                <div class="to-page-pnd53-attach">
+                    <t t-out="total_page"/>
+                </div>
+
+                <t t-set="results" t-value="report_model._get_report_data(data_list, count_page + 1)"/>
+                <t t-foreach="results" t-as="data">
+                    <t t-set="seq_no" t-value="data.get('sequence') % 6 or 6"/>
+                    <div t-attf-class="pnd53-box-#{seq_no}-line-2" style="left: 34px; width: 43px; text-align: center;">
+                        <t t-out="data.get('sequence')"/>
+                    </div>
+
+                    <div t-attf-class="pnd53-box-#{seq_no}-line-1" style="left: 88px;">
+                        <t t-set="partner_id_list" t-value="data.get('id_card_list')"/>
+                        <t t-if="partner_id_list">
+                            <span t-out="partner_id_list[0]"/>
+                            <span class="spacing-7" style="padding-left: 10px;" t-out="partner_id_list[1]"/>
+                            <span class="spacing-7" style="padding-left: 3px;" t-out="partner_id_list[2]"/>
+                            <span class="spacing-7" style="padding-left: 3px;" t-out="partner_id_list[3]"/>
+                            <span class="spacing-7" style="padding-left: 5px;" t-out="partner_id_list[4]"/>
+                            <span style="padding-left: 6px;" t-out="partner_id_list[5]"/>
+                        </t>
+                    </div>
+
+                    <div t-attf-class="pnd53-box-#{seq_no}-line-1" style="letter-spacing: 7px; left: 457px;">
+                        <t t-out="data.get('branch_code')"/>
+                    </div>
+
+                    <div t-attf-class="pnd53-box-#{seq_no}-line-2" style="left: 100px; font-size: 11px; width: 348px;">
+                        <t t-out="data.get('prefix')"/>
+                        <t t-out="data.get('company_name')"/>
+                        <t t-out="data.get('suffix')"/>
+                    </div>
+
+                    <div t-attf-class="pnd53-box-#{seq_no}-line-3" style="font-size: 11px; width: 348px; left: 104px; line-height: 14px; margin-top: 3px;">
+                        <t t-out="data.get('address')"/>
+                    </div>
+
+                    <t t-foreach="data.get('line_list')" t-as="rec">
+                        <t t-set="line_no" t-value="rec.get('line_no')"/>
+                        <t t-set="summary_base_amount" t-value="summary_base_amount + rec.get('base_amount')"/>
+                        <t t-set="summary_wht_amount" t-value="summary_wht_amount + rec.get('wht_amount')"/>
+                        <t t-set="base_amount" t-value="o.split_amount(rec.get('base_amount'))"/>
+                        <t t-set="wht_amount" t-value="o.split_amount(rec.get('wht_amount'))"/>
+                        <div style="font-size: 12px;">
+                            <div t-attf-class="pnd53-box-#{seq_no}-wht-#{line_no}" style="left: 544px;">
+                                <t t-out="rec.get('document_date')"/>
+                            </div>
+
+                            <div t-attf-class="pnd53-box-#{seq_no}-wht-#{line_no}" style="left: 620px; width: 147px; font-size: 10px; margin-top: 2px">
+                                <t t-out="rec.get('wht_type')"/>
+                            </div>
+
+                            <div t-attf-class="pnd53-box-#{seq_no}-wht-#{line_no}" style="left: 768px; width: 31px; text-align: center;">
+                                <t t-out="rec.get('percent')"/>
+                            </div>
+
+                            <div t-attf-class="pnd53-box-#{seq_no}-wht-#{line_no}" style="left: 801px; width: 103px; text-align: right;">
+                                <t t-esc="'{:,}'.format(int(base_amount[1]))"/>
+                            </div>
+
+                            <div t-attf-class="pnd53-box-#{seq_no}-wht-#{line_no}" style="left: 906px; width: 27px; text-align: center;">
+                                <t t-esc="'%s' % o.get_decimal_amount(base_amount[0])"/>
+                            </div>
+
+                            <div t-attf-class="pnd53-box-#{seq_no}-wht-#{line_no}" style="left: 933px; width: 99px; text-align: right;">
+                                <t t-esc="'{:,}'.format(int(wht_amount[1]))"/>
+                            </div>
+
+                            <div t-attf-class="pnd53-box-#{seq_no}-wht-#{line_no}" style="left: 1034px; width: 25px; text-align: center;">
+                                <t t-esc="'%s' % o.get_decimal_amount(wht_amount[0])"/>
+                            </div>
+
+                            <div t-attf-class="pnd53-box-#{seq_no}-wht-#{line_no}" style="left: 1068px;">
+                                <t t-out="rec.get('wht_payment')"/>
+                            </div>
+                        </div>
+                    </t>
+                </t>
+
+                <t t-set="summary_base_amount" t-value="o.split_amount(summary_base_amount)"/>
+                <t t-set="summary_wht_amount" t-value="o.split_amount(summary_wht_amount)"/>
+                <div class="pnd53-summary" style="left: 801px; width: 103px; text-align: right; font-size: 12px;">
+                    <t t-esc="'{:,}'.format(int(summary_base_amount[1]))"/>
+                </div>
+
+                <div class="pnd53-summary" style="left: 906px; width: 27px; text-align: center; font-size: 12px;">
+                    <t t-esc="'%s' % o.get_decimal_amount(summary_base_amount[0])"/>
+                </div>
+
+                <div class="pnd53-summary" style="left: 933px; width: 99px; text-align: right; font-size: 12px;">
+                    <t t-esc="'{:,}'.format(int(summary_wht_amount[1]))"/>
+                </div>
+
+                <div class="pnd53-summary" style="left: 1034px; width: 25px; text-align: center; font-size: 12px;">
+                    <t t-esc="'%s' % o.get_decimal_amount(summary_wht_amount[0])"/>
+                </div>
+            </div>
+        </t>
+    </template>
+
+    <template id="report_pnd53_attach_pdf">
+        <t t-call="web.html_container">
+            <t t-foreach="docs" t-as="o">
+                <t t-foreach="range(total_page)" t-as="count_page">
+                    <t t-set="summary_base_amount" t-value="0"/>
+                    <t t-set="summary_wht_amount" t-value="0"/>
+                    <t t-call="beecy_account_wht.report_pnd53_attach_body"/>
+                    <div style="page-break-before:always;"/>
+                </t>
+            </t>
+        </t>
+    </template>
+</odoo>
