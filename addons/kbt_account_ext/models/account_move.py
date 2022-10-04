@@ -13,8 +13,8 @@ class AccountMove(models.Model):
         ],
         ondelete={'in_refund': 'set default', 'out_refund': 'set default'}
     )
-    x_old_tax_inv_amount = fields.Float(
-        string='Old Tax Invoice Amount',
+    x_old_invoice_amount = fields.Float(
+        string='Old Invoice Amount',
         compute='_compute_old_invoice_amount',
         store=True,
     )
@@ -36,17 +36,15 @@ class AccountMove(models.Model):
     @api.depends('x_real_amount')
     def _compute_old_invoice_amount(self):
         for move in self:
-            invoice = self
+            move_id = move.reversed_entry_id
             move.write({
-                'x_old_invoice_amount': invoice.amount_untaxed,
-                'x_diff_amount': move.x_old_tax_inv_amount - move.x_real_amount,
-                'x_wht_amount': invoice.amount_wht,
+                'x_old_invoice_amount': move_id.amount_untaxed,
+                'x_diff_amount': move.x_old_invoice_amount - move.x_real_amount,
+                'x_wht_amount': move_id.amount_wht,
             })
-
-        return
 
     @api.onchange('x_real_amount')
     def _onchange_x_real_amount(self):
         self.write({
-            'x_diff_amount': self.x_old_tax_inv_amount - self.x_real_amount
+            'x_diff_amount': self.x_old_invoice_amount - self.x_real_amount
         })
