@@ -14,7 +14,7 @@
     'depends': [
         'kbt_wht_ext',
     ],
-    # 'data': [
-    #     'views/res_config_settings_views.xml'
-    # ]
+    'data': [
+        'views/res_config_settings_views.xml'
+    ]
 }
