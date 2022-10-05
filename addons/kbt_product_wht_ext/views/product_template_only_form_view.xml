@@ -1,17 +1,17 @@
 <?xml version="1.0" encoding="utf-8"?>
 <odoo>
-
     <record id="inherit_product_template_only_form_view_ext" model="ir.ui.view">
         <field name="name">inherit.product.template.only.form.view</field>
         <field name="model">product.template</field>
         <field name="inherit_id" ref="product.product_template_only_form_view"/>
         <field name="arch" type="xml">
-
-            <xpath expr="//field[@name='purchase_method']" position="after">
+            <xpath expr="//field[@name='wht_type_id']" position="replace"/>
+            <xpath expr="//field[@name='description_sale']" position="after">
+                <field name="wht_type_id"/>
+            </xpath>
+            <xpath expr="//field[@name='description_purchase']" position="after">
                 <field name="purchase_wht_type_id"/>
             </xpath>
-
         </field>
     </record>
-
 </odoo>

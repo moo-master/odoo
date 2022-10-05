@@ -12,7 +12,9 @@
         'Pachara P.',
     ],
     'depends': [
-        'kbt_product_wht_ext'
+        'kbt_core_update',
+        'kbt_product_wht_ext',
+        'kbt_wht_ext'
     ],
     'data': [
         'views/purchase_order_views.xml'
