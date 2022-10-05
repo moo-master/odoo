@@ -10,5 +10,5 @@ class ResPartnerInherit(models.Model):
     )
 
     x_branch_name = fields.Char(
-        string='X Branch Name',
+        string='Branch Name',
     )
