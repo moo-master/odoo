@@ -6,6 +6,8 @@ from bahttext import bahttext
 class AccountWht(models.Model):
     _name = 'account.wht'
     _description = 'Account WHT'
+    _inherit = ['mail.thread', 'mail.activity.mixin']
+    _order = 'document_date desc, name desc'
 
     @api.depends('line_ids', 'base_amount')
     def _compute_tax(self):
@@ -32,7 +34,8 @@ class AccountWht(models.Model):
         string='Partner',)
     document_date = fields.Date(
         'Document Date',
-        required=True,)
+        required=True,
+        tracking=True)
     wht_type = fields.Selection([
         ('sale', 'Sale'),
         ('purchase', 'Purchase')
@@ -40,18 +43,18 @@ class AccountWht(models.Model):
         string='Type of WHT',
         required=True,)
     wht_kind = fields.Selection([
-        ('pnd1k', '(1) P.N.D.1 K'),
-        ('pnd1ks', '(2) P.N.D.1 K Special'),
-        ('pnd2', '(3) P.N.D.2'),
-        ('pnd3', '(4) P.N.D.3'),
-        ('pnd2k', '(5) P.N.D.2 K'),
-        ('pnd3k', '(6) P.N.D.3 K'),
-        ('pnd53', '(7) P.N.D.53')
+        # ('pnd1k', '(1) P.N.D.1 K'),
+        # ('pnd1ks', '(2) P.N.D.1 K Special'),
+        # ('pnd2', '(3) P.N.D.2'),
+        ('pnd3', '(1) P.N.D.3'),
+        # ('pnd2k', '(5) P.N.D.2 K'),
+        # ('pnd3k', '(6) P.N.D.3 K'),
+        ('pnd53', '(2) P.N.D.53')
     ],
         string='Kind of WHT',
         required=True,)
     wht_payment = fields.Selection([
-        ('wht', '(1) With holding tax'),
+        ('wht', '(1) Withholding Tax'),
         ('forever', '(2) Forever'),
         ('once', '(3) Once'),
         ('other', '(4) Other')
@@ -65,19 +68,20 @@ class AccountWht(models.Model):
         required=True,)
     base_amount = fields.Float(
         'Base Amount',
-        compute='_compute_base_amount',)
+        compute='_compute_base_amount',
+        tracking=True,)
     wht_amount = fields.Float(
         'WHT Amount',
-        compute='_compute_wht_amount',)
+        compute='_compute_wht_amount',
+        tracking=True,)
     status = fields.Selection([
         ('draft', 'Draft'),
         ('done', 'Done'),
     ],
         copy=False,
         default='draft',
-        string='Status',)
-    note = fields.Html(
-        'Note',)
+        string='Status',
+        tracking=True,)
     line_ids = fields.One2many(
         'account.wht.line',
         'wht_id',)
@@ -122,12 +126,12 @@ class AccountWht(models.Model):
     @api.depends('line_ids')
     def _compute_base_amount(self):
         for rec in self:
-            rec.base_amount = sum(rec.line_ids.mapped('base_amount'))
+            rec.base_amount = round(sum(rec.line_ids.mapped('base_amount')), 2)
 
     @api.depends('line_ids')
     def _compute_wht_amount(self):
         for rec in self:
-            rec.wht_amount = sum(rec.line_ids.mapped('wht_amount'))
+            rec.wht_amount = round(sum(rec.line_ids.mapped('wht_amount')), 2)
 
     def action_set_to_draft(self):
         self.update({
@@ -147,14 +151,23 @@ class AccountWht(models.Model):
             })
         return True
 
-    def split_id_card(self):
+    def split_id_card(self, pnd_type=False):
         if self.partner_id.vat and len(self.partner_id.vat) == 13:
-            card_1 = self.partner_id.vat[0]
-            card_2 = self.partner_id.vat[1:5]
-            card_3 = self.partner_id.vat[5:10]
-            card_4 = self.partner_id.vat[10:12]
-            card_5 = self.partner_id.vat[12]
-            return card_1, card_2, card_3, card_4, card_5
+            if pnd_type == '53':
+                card_1 = self.partner_id.vat[0]
+                card_2 = self.partner_id.vat[1:3]
+                card_3 = self.partner_id.vat[3]
+                card_4 = self.partner_id.vat[4:7]
+                card_5 = self.partner_id.vat[7:12]
+                card_6 = self.partner_id.vat[12]
+                return card_1, card_2, card_3, card_4, card_5, card_6
+            else:
+                card_1 = self.partner_id.vat[0]
+                card_2 = self.partner_id.vat[1:5]
+                card_3 = self.partner_id.vat[5:10]
+                card_4 = self.partner_id.vat[10:12]
+                card_5 = self.partner_id.vat[12]
+                return card_1, card_2, card_3, card_4, card_5
         return False
 
     def split_company_id_card(self):
@@ -186,6 +199,7 @@ class AccountWht(models.Model):
         lines_wht = self._create_lines_wht()
         for line in self.line_ids:
             wht = line.wht_type_id.name
+            printed = line.wht_type_id.printed
             if wht:
                 wht_1 = re.search(r'40\s\S+(1)\S+', wht)
                 wht_2 = re.search(r'40\s\S+(2)\S+', wht)
@@ -210,13 +224,15 @@ class AccountWht(models.Model):
                 wht_5_3 = re.search(r'5.3', wht)
                 wht_5_4 = re.search(r'5.4', wht)
                 wht_5_5 = re.search(r'5.5', wht)
+                wht_5_6 = re.search(r'5.6', wht)
                 list_wht_5 = [
                     wht_5,
                     wht_5_1,
                     wht_5_2,
                     wht_5_3,
                     wht_5_4,
-                    wht_5_5]
+                    wht_5_5,
+                    wht_5_6]
                 # wht 6
                 wht_6 = re.search(r'6 อื่นๆ', wht)
                 wht_6_1 = re.search(r'6.1', wht)
@@ -253,9 +269,11 @@ class AccountWht(models.Model):
                     wht_4_2_5,
                     list_wht_5,
                     list_wht_6)
+        wht_note_4_2_5_txt = ", ".join(lines_wht['list_wht_note_4_2_5'])
+        wht_note_6_txt = ", ".join(lines_wht['list_wht_note_6'])
         lines_wht.update({
-            'wht_note_4_2_5': ", ".join(lines_wht['list_wht_note_4_2_5']),
-            'wht_note_6': ", ".join(lines_wht['list_wht_note_6'])
+            'wht_note_4_2_5': wht_note_4_2_5_txt if wht_note_4_2_5_txt != '' else printed,
+            'wht_note_6': wht_note_6_txt if wht_note_6_txt != '' else printed
         })
         return lines_wht
 
