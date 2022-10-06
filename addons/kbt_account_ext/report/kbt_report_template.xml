@@ -96,7 +96,10 @@
             <t t-set="invoice_date_due" t-value="o.invoice_date_due.strftime('%d/%m/%Y')"/>
         </t>
         <t t-set="x_branch_name" t-value="'-'"/>
-        <t t-if="o.partner_id.x_branch_name">
+        <t t-if="o.partner_id.x_branch_name == '00000'">
+            <t t-set="x_branch_name" t-value="'สำนักงานใหญ่'"/>
+        </t>
+        <t t-else="">
             <t t-set="x_branch_name" t-value="o.partner_id.x_branch_name"/>
         </t>
 
@@ -289,13 +292,13 @@
                         </div>
                         <div class="col-4" style="text-align: right;">
                             <div>
-                                account_move.x_old_tax_inv_amount
+                                <t t-out="'{:,.2f}'.format(o.x_old_invoice_amount)"/>
                             </div>
                             <div>
-                                account_move.x_real_amount
+                                <t t-out="'{:,.2f}'.format(o.x_real_amount)"/>
                             </div>
                             <div>
-                                account_move.x_diff_amount
+                                <t t-out="'{:,.2f}'.format(o.x_diff_amount)"/>
                             </div>
                             <div>
                                 <t t-out="'{:,.2f}'.format(o.amount_tax)"/>
