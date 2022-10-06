@@ -7,20 +7,22 @@ class AccountPaymentRegister(models.TransientModel):
     def _create_payments(self):
         payments = super()._create_payments()
 
-        moves = payments.reconciled_invoice_ids.filtered(
-            'invoice_line_ids.wht_type_id')
+        move_type = payments.reconciled_bill_ids \
+            or payments.reconciled_invoice_ids
+
+        moves = move_type.filtered('invoice_line_ids.wht_type_id')
 
         for move in moves:
             account_id = move.company_id.ar_wht_default_account_id
-            if move.move_type != 'out_invoice' \
-                    and move.partner_id.company_type == 'person':
-                account_id = move.company_id.ap_wht_default_account_pnd3_id
-            elif move.move_type != 'out_invoice' \
-                    and move.partner_id.company_type == 'company':
-                account_id = move.company_id.ap_wht_default_account_pnd53_id
+            if move.move_type != 'out_invoice':
+                account_id = move.company_id.ap_wht_default_account_pnd3_id \
+                    if move.partner_id.company_type == 'person' \
+                    else move.company_id.ap_wht_default_account_pnd53_id
 
-            line_ids_lst = [(0, 0, self._prepare_wht_line_ids(line))
-                            for line in move.invoice_line_ids.filtered('wht_type_id')]
+            line_ids_lst = [
+                (0, 0, self._prepare_wht_line_ids(line))
+                for line in move.invoice_line_ids.filtered('wht_type_id')
+            ]
 
             wht = self.env['account.wht'].create({
                 'partner_id': move.partner_id.id,
