@@ -45,14 +45,6 @@ class SaleOrderDataController(KBTApiBase):
                 raise ValueError(
                     "product_id not found."
                 )
-            if order_line.get('wht_code'):
-                wht_type_id = request.env['account.wht.type'].search(
-                    [('sequence', '=', order_line.get('wht_code'))],
-                    limit=1
-                )
-                vals.update({
-                    'wht_type_id': wht_type_id.id
-                })
 
             vals.update({
                 'product_id': product_id.id,
@@ -61,7 +53,8 @@ class SaleOrderDataController(KBTApiBase):
                 'price_unit': order_line.get('price_unit'),
                 'discount': order_line.get('discount'),
                 'sequence': order_line.get('seq_line'),
-                'note': order_line.get('note')
+                'note': order_line.get('note'),
+                'wht_type_id': product_id.wht_type_id.id
             })
         else:
             if is_new_line:

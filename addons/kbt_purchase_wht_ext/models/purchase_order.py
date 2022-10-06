@@ -26,6 +26,6 @@ class PurchaseOrder(models.Model):
         ])
 
         for po in wht_data.invoice_line_ids:
-            po.wht_type_id = po.purchase_line_id.wht_type_id
+            po.wht_type_id = po.purchase_line_id.wht_type_id.id
 
         return res

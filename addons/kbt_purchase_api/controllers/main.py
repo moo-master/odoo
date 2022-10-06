@@ -51,15 +51,6 @@ class PurchaseController(KBTApiBase):
                     "product_id not found"
                 )
 
-            if order_line.get('wht_code'):
-                wht_type_id = request.env['account.wht.type'].search(
-                    [('sequence', '=', order_line.get('wht_code'))],
-                    limit=1
-                )
-                vals.update({
-                    'wht_type_id': wht_type_id.id
-                })
-
             vals.update({
                 'product_id': product_id.id,
                 'name': order_line.get('name'),
@@ -67,7 +58,8 @@ class PurchaseController(KBTApiBase):
                 'product_qty': order_line.get('product_uom_qty'),
                 'price_unit': order_line.get('price_unit'),
                 'sequence': order_line.get('seq_line'),
-                'note': order_line.get('note')
+                'note': order_line.get('note'),
+                'wht_type_id': product_id.purchase_wht_type_id.id
 
             })
         else:
