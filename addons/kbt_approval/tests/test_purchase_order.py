@@ -25,13 +25,10 @@ def model_org_level(env, model):
         ]
     })
 
-    employee = env.ref('hr.employee_chs')
-    model.partner_id.write({
-        'employee_ids': [employee.id]
-    })
-
+    employee = env.ref('hr.employee_qdp')
     employee.write({
-        'level_id': model_org_level.id
+        'level_id': model_org_level.id,
+        'user_id': env.uid
     })
 
     return model_org_level
@@ -53,6 +50,14 @@ def test_button_confirm_false_purchase_order(model, model_org_level):
 def test_button_confirm_true_purchase_order(model, model_org_level):
     model_org_level.line_ids.write({
         'limit': 50000000
+    })
+    model.button_confirm()
+    assert model.state == 'purchase'
+
+
+def test_button_confirm_interface_purchase_order(model, model_org_level):
+    model.write({
+        'x_is_interface': True
     })
     model.button_confirm()
     assert model.state == 'purchase'
