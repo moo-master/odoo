@@ -12,7 +12,6 @@
         'Pachara P.',
     ],
     'depends': [
-        'kbt_core_update',
         'kbt_wht_ext'
     ],
     'data': [
