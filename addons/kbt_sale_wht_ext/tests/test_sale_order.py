@@ -77,9 +77,9 @@ def account_payable(env, account_type):
 @pytest.fixture
 def journal(env, currency, partner):
     return env['account.journal'].create({
-        'name': 'Purchase',
-        'type': 'purchase',
-        'code': 'PO',
+        'name': 'Sale',
+        'type': 'sale',
+        'code': 'SO',
         'company_id': partner.company_id.id,
         'currency_id': currency.id,
     })

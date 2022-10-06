@@ -5,7 +5,7 @@
         <t t-foreach="docs" t-as="o">
             <t t-call="web.basic_layout">
                 <div data-name="wh3" style="background-image: url(/beecy_account_wht/static/src/img/wh3.png); background-repeat: no-repeat; background-size: 210mm 297mm; ">
-                    <div class="page height_background">
+                    <div class="page height_background_portrait">
                         <t t-if="substitute">
                             <t t-if="o.wht_type == 'purchase'">
                                 <div class="substitute">
@@ -27,14 +27,28 @@
                             </t>
                         </div>
                         <div class="taxpayer">
-                           <span t-esc="o.env.company.partner_id.title.name"/> <span t-field="o.env.company.name" />
+                           <span t-field="o.env.company.title_id.prefix" /> <span t-field="o.env.company.name" /> <span t-field="o.env.company.title_id.suffix" />
                         </div>
                         <div class="taxpayer-address">
-                            <span t-field="o.env.company.street" />
-                            <span t-field="o.env.company.street2" />
-                            <span t-field="o.env.company.country_id.code" />
-                            <span t-field="o.env.company.city" />
-                             <span t-field="o.env.company.zip" />
+                            <t t-if="'address_company_line1' in o.env.company.fields_get()">
+                                <span t-esc="o.env.company.address_company_line1"/><br />
+                                <span t-esc="o.env.company.address_company_line2"/>
+                            </t>
+                            <t t-else="">
+                                <span t-field="o.env.company.house_number" />
+                                <span t-field="o.env.company.village_number" />
+                                <span t-field="o.env.company.village" />
+                                <span t-field="o.env.company.building" />
+                                <span t-field="o.env.company.floor" />
+                                <span t-field="o.env.company.room_number" />
+                                <span t-field="o.env.company.alley" />
+                                <span t-field="o.env.company.sub_alley" />
+                                <span t-field="o.env.company.street" />
+                                <span t-field="o.env.company.street2" />
+                                <span t-field="o.env.company.city" />
+                                <span t-field="o.env.company.state_id.name" />
+                                <span t-field="o.env.company.zip" />
+                            </t>
                         </div>
                         <!-- ผู้ถูกหักภาษี -->
                         <div class='id-card-2'>
@@ -47,14 +61,28 @@
                             </t>
                         </div>
                         <div class="taxpayer-2">
-                            <span t-field="o.partner_id.title.name" /> <span t-field="o.partner_id.name" />
+                            <span t-field="o.partner_id.prefix" /> <span t-field="o.partner_id.name" /> <span t-field="o.partner_id.suffix" />
                         </div>
                         <div class="taxpayer-address-2">
-                            <span t-field="o.partner_id.street" />
-                            <span t-field="o.partner_id.street2" />
-                            <span t-field="o.partner_id.country_id.code" />
-                            <span t-field="o.partner_id.zip" />
-                            <span t-field="o.partner_id.city" />
+                            <t t-if="'address_partner_line1' in o.partner_id.fields_get()">
+                                <span t-esc="o.partner_id.address_partner_line1" /><br />
+                                <span t-esc="o.partner_id.address_partner_line2" />
+                            </t>
+                            <t t-else="">
+                                <span t-field="o.partner_id.house_number" />
+                                <span t-field="o.partner_id.village_number" />
+                                <span t-field="o.partner_id.village" />
+                                <span t-field="o.partner_id.building" />
+                                <span t-field="o.partner_id.floor" />
+                                <span t-field="o.partner_id.room_number" />
+                                <span t-field="o.partner_id.alley" />
+                                <span t-field="o.partner_id.sub_alley" />
+                                <span t-field="o.partner_id.street" />
+                                <span t-field="o.partner_id.street2" />
+                                <span t-field="o.partner_id.city" />
+                                <span t-field="o.partner_id.state_id.name" />
+                                <span t-field="o.partner_id.zip" />
+                            </t>
                         </div>
                         <t t-if="o.wht_kind=='pnd1k'">
                             <div class="pnd1k">

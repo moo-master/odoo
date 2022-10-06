@@ -1,5 +1,9 @@
-.height_background {
+.height_background_portrait {
   height: 297mm;
+}
+
+.height_background_landscape {
+  height: 210mm;
 }
 
 div.substitute {
@@ -21,7 +25,7 @@ div.id-card {
   position: absolute;
   top: 29.5mm;
   left: 137mm;
-  font-size: 3.7mm;
+  font-size: 14px;
 }
 
 div.taxpayer {
@@ -42,7 +46,7 @@ div.vat-1 {
   position: absolute;
   top: 35.5mm;
   left: 152.5mm;
-  font-size: 3.7mm;
+  font-size: 14px;
 }
 
 /* ผู้ถูกหักภาษี  */
@@ -51,7 +55,7 @@ div.id-card-2 {
   position: absolute;
   top: 53.5mm;
   left: 137mm;
-  font-size: 3.7mm;
+  font-size: 14px;
 }
 
 div.taxpayer-2 {
@@ -72,7 +76,7 @@ div.vat-2 {
   position: absolute;
   top: 60.5mm;
   left: 152.5mm;
-  font-size: 3.7mm;
+  font-size: 14px;
 }
 
 /* king of wht */
@@ -80,28 +84,28 @@ div.pnd1k {
   position: absolute;
   top: 79mm;
   left: 78mm;
-  font-size: 5mm;
+  font-size: 19px;
 }
 
 div.pnd1ks {
   position: absolute;
   top: 79mm;
   left: 105.5mm;
-  font-size: 5mm;
+  font-size: 19px;
 }
 
 div.pnd2 {
   position: absolute;
   top: 79mm;
   left: 143.5mm;
-  font-size: 5mm;
+  font-size: 19px;
 }
 
 div.pnd3 {
   position: absolute;
   top: 79mm;
   left: 171mm;
-  font-size: 5mm;
+  font-size: 19px;
 }
 
 /* row 2 pnd */
@@ -109,303 +113,805 @@ div.pnd2k {
   position: absolute;
   top: 85.5mm;
   left: 78mm;
-  font-size: 5mm;
+  font-size: 19px;
 }
 
 div.pnd3k {
   position: absolute;
   top: 85.5mm;
   left: 105.5mm;
-  font-size: 5mm;
+  font-size: 19px;
 }
 
 div.pnd53 {
   position: absolute;
   top: 85.5mm;
   left: 143.5mm;
-  font-size: 5mm;
-}
-
-span.spacing-9 {
-  letter-spacing: 9px;
-}
-
-/* pnd */
-div.id-card-pnd53 {
-  position: absolute;
-  top: 34.5mm;
-  left: 62mm;
-  font-size: 3.7mm;
+  font-size: 19px;
 }
 
 span.spacing-7 {
   letter-spacing: 7px;
 }
 
-div.department-pnd53 {
+span.spacing-9 {
+  letter-spacing: 9px;
+}
+
+/* PND 3 */
+div.id-card-pnd3 {
   position: absolute;
-  top: 51mm;
-  left: 22mm;
-  font-size: 3.7mm;
+  top: 130px;
+  left: 218px;
+  font-size: 14px;
+}
+
+div.branch-pnd3 {
+  position: absolute;
+  top: 171px;
+  left: 372px;
+  font-size: 14px;
+  letter-spacing: 7px;
+}
+
+div.department-pnd3 {
+  position: absolute;
+  top: 192px;
+  left: 63px;
+  font-size: 14px;
+}
+
+div.address-pnd3-1 {
+  position: absolute;
+  top: 218px;
+  left: 120px;
+  font-size: 11px;
+  line-height: 11px;
+}
+
+div.address-pnd3-2 {
+  position: absolute;
+  top: 239px;
+  left: 82px;
+  font-size: 11px;
+  line-height: 11px;
+}
+
+div.address-pnd3-3 {
+  position: absolute;
+  top: 261px;
+  left: 80px;
+  font-size: 11px;
+  line-height: 11px;
+}
+
+div.address-pnd3-4 {
+  position: absolute;
+  top: 281px;
+  left: 109px;
+  font-size: 11px;
+}
+div.address-pnd3-5 {
+  position: absolute;
+  top: 299px;
+  left: 125px;
+  font-size: 14px;
+  letter-spacing: 6.5px;
 }
 
 div.pnd3-section3 {
   position: absolute;
-  top: 108mm;
-  left: 49mm;
-  font-size: 5mm;
+  top: 407px;
+  left: 171px;
+  font-size: 19px;
 }
 
 div.pnd3-section48 {
   position: absolute;
-  top: 108mm;
-  left: 90mm;
-  font-size: 5mm;
+  top: 407px;
+  left: 326px;
+  font-size: 19px;
 }
 
 div.pnd3-section50 {
   position: absolute;
-  top: 108mm;
-  left: 131mm;
-  font-size: 5mm;
+  top: 407px;
+  left: 481px;
+  font-size: 19px;
 }
 
-div.pnd3-month1-pos {
+div.pnd3-month-1 {
   position: absolute;
-  top: 48mm;
-  left: 123mm;
-  font-size: 5mm;
+  top: 184px;
+  left: 451px;
+  font-size: 19px;
 }
 
-div.pnd3-month2-pos {
+div.pnd3-month-2 {
   position: absolute;
-  top: 57mm;
-  left: 123mm;
-  font-size: 5mm;
+  top: 215px;
+  left: 451px;
+  font-size: 19px;
 }
 
-div.pnd3-month3-pos {
+div.pnd3-month-3 {
   position: absolute;
-  top: 66mm;
-  left: 123mm;
-  font-size: 5mm;
+  top: 247.5px;
+  left: 451px;
+  font-size: 19px;
 }
 
-div.pnd3-month4-pos {
+div.pnd3-month-4 {
   position: absolute;
-  top: 48mm;
-  left: 143mm;
-  font-size: 5mm;
+  top: 184px;
+  left: 527px;
+  font-size: 19px;
 }
 
-div.pnd3-month5-pos {
+div.pnd3-month-5 {
   position: absolute;
-  top: 57mm;
-  left: 143mm;
-  font-size: 5mm;
+  top: 215px;
+  left: 527px;
+  font-size: 19px;
 }
 
-div.pnd3-month6-pos {
+div.pnd3-month-6 {
   position: absolute;
-  top: 66mm;
-  left: 143mm;
-  font-size: 5mm;
+  top: 247.5px;
+  left: 527px;
+  font-size: 19px;
 }
 
-div.pnd3-month7-pos {
+div.pnd3-month-7 {
   position: absolute;
-  top: 49mm;
-  left: 164mm;
-  font-size: 5mm;
+  top: 184px;
+  left: 604px;
+  font-size: 19px;
 }
 
-div.pnd3-month8-pos {
+div.pnd3-month-8 {
   position: absolute;
-  top: 57mm;
-  left: 164mm;
-  font-size: 5mm;
+  top: 215px;
+  left: 604px;
+  font-size: 19px;
 }
 
-div.pnd3-month9-pos {
+div.pnd3-month-9 {
   position: absolute;
-  top: 66mm;
-  left: 164mm;
-  font-size: 5mm;
+  top: 247.5px;
+  left: 604px;
+  font-size: 19px;
 }
 
-div.pnd3-month10-pos {
+div.pnd3-month-10 {
   position: absolute;
-  top: 49mm;
-  left: 183mm;
-  font-size: 5mm;
+  top: 184px;
+  left: 677px;
+  font-size: 19px;
 }
 
-div.pnd3-month11-pos {
+div.pnd3-month-11 {
   position: absolute;
-  top: 57mm;
-  left: 183mm;
-  font-size: 5mm;
+  top: 215px;
+  left: 677px;
+  font-size: 19px;
 }
 
-div.pnd3-month12-pos {
+div.pnd3-month-12 {
   position: absolute;
-  top: 66mm;
-  left: 183mm;
-  font-size: 5mm;
+  top: 247.5px;
+  left: 677px;
+  font-size: 19px;
+}
+
+div.pnd3-fill-1 {
+  position: absolute;
+  top: 350px;
+  left: 110px;
+  font-size: 19px;
+}
+
+div.pnd3-fill-2 {
+  position: absolute;
+  top: 350px;
+  left: 238px;
+  font-size: 19px;
 }
 
 div.pnd3-year-pos {
   position: absolute;
-  top: 42mm;
-  left: 190mm;
-  font-size: 8pt;
+  top: 156px;
+  left: 704px;
+  font-size: 12px;
 }
 
 div.total-pnd3 {
   position: absolute;
-  top: 176mm;
-  left: 165mm;
-  font-size: 8pt;
+  top: 663px;
+  width: 675px;
+  font-size: 12px;
+  text-align: right;
 }
 
 div.tax-pnd3 {
   position: absolute;
-  top: 182mm;
-  left: 165mm;
-  font-size: 8pt;
+  top: 687px;
+  width: 675px;
+  font-size: 12px;
+  text-align: right;
 }
 
-div.pnd53-section53 {
+div.add-amount-pnd3 {
   position: absolute;
-  top: 43mm;
-  left: 135mm;
-  font-size: 12pt;
+  top: 712px;
+  width: 675px;
+  font-size: 12px;
+  text-align: right;
+}
+
+div.summary-pnd3 {
+  position: absolute;
+  top: 735px;
+  width: 675px;
+  font-size: 12px;
+  text-align: right;
+}
+
+/* PND 3 Attachment */
+div.page-pnd3-attach {
+  position: absolute;
+  top: 46px;
+  left: 933px;
+  width: 38px;
+  text-align: center;
+}
+
+div.to-page-pnd3-attach {
+  position: absolute;
+  top: 46px;
+  left: 1016px;
+  width: 53px;
+  text-align: center;
+}
+
+div.id-card-pnd3-attach {
+  position: absolute;
+  top: 26px;
+  left: 503px;
+}
+
+div.branch-pnd3-attach {
+  position: absolute;
+  top: 23px;
+  left: 1013px;
+}
+
+div.pnd3-box-1-line-1 {
+  position: absolute;
+  top: 152px;
+}
+
+div.pnd3-box-1-line-2 {
+  position: absolute;
+  top: 175px;
+}
+
+div.pnd3-box-1-line-3 {
+  position: absolute;
+  top: 197px;
+}
+
+div.pnd3-box-2-line-1 {
+  position: absolute;
+  top: 226px;
+}
+
+div.pnd3-box-2-line-2 {
+  position: absolute;
+  top: 248px;
+}
+
+div.pnd3-box-2-line-3 {
+  position: absolute;
+  top: 270px;
+}
+
+div.pnd3-box-3-line-1 {
+  position: absolute;
+  top: 299px;
+}
+
+div.pnd3-box-3-line-2 {
+  position: absolute;
+  top: 321px;
+}
+
+div.pnd3-box-3-line-3 {
+  position: absolute;
+  top: 343px;
+}
+
+div.pnd3-box-4-line-1 {
+  position: absolute;
+  top: 371px;
+}
+
+div.pnd3-box-4-line-2 {
+  position: absolute;
+  top: 393px;
+}
+
+div.pnd3-box-4-line-3 {
+  position: absolute;
+  top: 416px;
+}
+
+div.pnd3-box-5-line-1 {
+  position: absolute;
+  top: 444px;
+}
+
+div.pnd3-box-5-line-2 {
+  position: absolute;
+  top: 466px;
+}
+
+div.pnd3-box-5-line-3 {
+  position: absolute;
+  top: 489px;
+}
+
+div.pnd3-box-6-line-1 {
+  position: absolute;
+  top: 516px;
+}
+
+div.pnd3-box-6-line-2 {
+  position: absolute;
+  top: 539px;
+}
+
+div.pnd3-box-6-line-3 {
+  position: absolute;
+  top: 561px;
+}
+
+div.pnd3-summary {
+  position: absolute;
+  top: 588px;
+}
+
+/* PND 53 */
+div.id-card-pnd53 {
+  position: absolute;
+  top: 130px;
+  left: 223px;
+  font-size: 14px;
+}
+
+div.branch-pnd53 {
+  position: absolute;
+  top: 172px;
+  left: 373px;
+  font-size: 14px;
+  letter-spacing: 6px;
+}
+
+div.department-pnd53 {
+  position: absolute;
+  top: 192px;
+  left: 69px;
+  font-size: 14px;
+}
+
+div.address-pnd53-1 {
+  position: absolute;
+  top: 218px;
+  left: 125px;
+  font-size: 11px;
+  line-height: 11px;
+}
+
+div.address-pnd53-2 {
+  position: absolute;
+  top: 239px;
+  left: 88px;
+  font-size: 11px;
+  line-height: 11px;
+}
+
+div.address-pnd53-3 {
+  position: absolute;
+  top: 260px;
+  left: 85px;
+  font-size: 11px;
+  line-height: 11px;
+}
+
+div.address-pnd53-4 {
+  position: absolute;
+  top: 280px;
+  left: 112px;
+  font-size: 11px;
+}
+div.address-pnd53-5 {
+  position: absolute;
+  top: 297px;
+  left: 131px;
+  font-size: 14px;
+  letter-spacing: 7px;
+}
+
+div.pnd53-section3 {
+  position: absolute;
+  top: 159px;
+  left: 493px;
+  font-size: 19px;
 }
 
 div.pnd53-section65 {
   position: absolute;
-  top: 49mm;
-  left: 135mm;
-  font-size: 12pt;
+  top: 183px;
+  left: 493px;
+  font-size: 19px;
 }
 
 div.pnd53-section69 {
   position: absolute;
-  top: 56mm;
-  left: 135mm;
-  font-size: 12pt;
-}
-
-div.pnd53-month1-pos {
-  position: absolute;
-  top: 66mm;
-  left: 143mm;
-  font-size: 5mm;
+  top: 210px;
+  left: 493px;
+  font-size: 19px;
 }
 
 div.pnd53-year-pos {
   position: absolute;
-  top: 89.5mm;
-  left: 113mm;
-  font-size: 8pt;
+  top: 336px;
+  left: 410px;
+  font-size: 12px;
 }
 
-div.pnd53-month1-pos {
+div.pnd53-month-1 {
   position: absolute;
-  top: 94mm;
-  left: 20mm;
-  font-size: 10pt;
+  top: 350px;
+  left: 57.5px;
+  font-size: 19px;
 }
 
-div.pnd53-month2-pos {
+div.pnd53-month-2 {
   position: absolute;
-  top: 99mm;
-  left: 20mm;
-  font-size: 10pt;
+  top: 369px;
+  left: 57.5px;
+  font-size: 19px;
 }
 
-div.pnd53-month3-pos {
+div.pnd53-month-3 {
   position: absolute;
-  top: 104mm;
-  left: 20mm;
-  font-size: 10pt;
+  top: 387px;
+  left: 57.5px;
+  font-size: 19px;
 }
 
-div.pnd53-month4-pos {
+div.pnd53-month-4 {
   position: absolute;
-  top: 94mm;
-  left: 46.5mm;
-  font-size: 10pt;
+  top: 350px;
+  left: 157.5px;
+  font-size: 19px;
 }
 
-div.pnd53-month5-pos {
+div.pnd53-month-5 {
   position: absolute;
-  top: 99mm;
-  left: 46.5mm;
-  font-size: 10pt;
+  top: 369px;
+  left: 157.5px;
+  font-size: 19px;
 }
 
-div.pnd53-month6-pos {
+div.pnd53-month-6 {
   position: absolute;
-  top: 104mm;
-  left: 46.5mm;
-  font-size: 10pt;
+  top: 387px;
+  left: 157.5px;
+  font-size: 19px;
 }
 
-div.pnd53-month7-pos {
+div.pnd53-month-7 {
   position: absolute;
-  top: 94mm;
-  left: 73mm;
-  font-size: 10pt;
+  top: 350px;
+  left: 258.5px;
+  font-size: 19px;
 }
 
-div.pnd53-month8-pos {
+div.pnd53-month-8 {
   position: absolute;
-  top: 99mm;
-  left: 73mm;
-  font-size: 10pt;
+  top: 369px;
+  left: 258.5px;
+  font-size: 19px;
 }
 
-div.pnd53-month9-pos {
+div.pnd53-month-9 {
   position: absolute;
-  top: 104mm;
-  left: 73mm;
-  font-size: 10pt;
+  top: 387px;
+  left: 258.5px;
+  font-size: 19px;
 }
 
-div.pnd53-month10-pos {
+div.pnd53-month-10 {
   position: absolute;
-  top: 94mm;
-  left: 99mm;
-  font-size: 10pt;
+  top: 350px;
+  left: 355.5px;
+  font-size: 19px;
 }
 
-div.pnd53-month11-pos {
+div.pnd53-month-11 {
   position: absolute;
-  top: 99mm;
-  left: 99mm;
-  font-size: 10pt;
+  top: 369px;
+  left: 355.5px;
+  font-size: 19px;
 }
 
-div.pnd53-month12-pos {
+div.pnd53-month-12 {
   position: absolute;
-  top: 104mm;
-  left: 99mm;
-  font-size: 10pt;
+  top: 387px;
+  left: 355.5px;
+  font-size: 19px;
+}
+
+div.pnd53-fill-1 {
+  position: absolute;
+  top: 264px;
+  left: 479px;
+  font-size: 19px;
+}
+
+div.pnd53-fill-2 {
+  position: absolute;
+  top: 264px;
+  left: 604px;
+  font-size: 19px;
 }
 
 div.total-pnd53 {
   position: absolute;
-  top: 169mm;
-  left: 152mm;
-  font-size: 8pt;
+  top: 639px;
+  width: 640px;
+  font-size: 12px;
+  text-align: right;
 }
 
 div.tax-pnd53 {
   position: absolute;
-  top: 176mm;
-  left: 152mm;
-  font-size: 8pt;
+  top: 663px;
+  width: 640px;
+  font-size: 12px;
+  text-align: right;
+}
+
+div.add-amount-pnd53 {
+  position: absolute;
+  top: 689px;
+  width: 640px;
+  font-size: 12px;
+  text-align: right;
+}
+
+div.summary-pnd53 {
+  position: absolute;
+  top: 716px;
+  width: 640px;
+  font-size: 12px;
+  text-align: right;
+}
+
+/* PND 53 Attachment */
+div.page-pnd53-attach {
+  position: absolute;
+  top: 45px;
+  left: 928px;
+  width: 38px;
+  text-align: center;
+}
+
+div.to-page-pnd53-attach {
+  position: absolute;
+  top: 45px;
+  left: 1008px;
+  width: 53px;
+  text-align: center;
+}
+
+div.id-card-pnd53-attach {
+  position: absolute;
+  top: 24px;
+  left: 504px;
+}
+
+div.branch-pnd53-attach {
+  position: absolute;
+  top: 23px;
+  left: 784px;
+}
+
+div.pnd53-box-1-line-1 {
+  position: absolute;
+  top: 152px;
+}
+
+div.pnd53-box-1-line-2 {
+  position: absolute;
+  top: 174px;
+}
+
+div.pnd53-box-1-line-3 {
+  position: absolute;
+  top: 187px;
+}
+
+div.pnd53-box-2-line-1 {
+  position: absolute;
+  top: 220px;
+}
+
+div.pnd53-box-2-line-2 {
+  position: absolute;
+  top: 242px;
+}
+
+div.pnd53-box-2-line-3 {
+  position: absolute;
+  top: 254px;
+}
+
+div.pnd53-box-3-line-1 {
+  position: absolute;
+  top: 289px;
+}
+
+div.pnd53-box-3-line-2 {
+  position: absolute;
+  top: 311px;
+}
+
+div.pnd53-box-3-line-3 {
+  position: absolute;
+  top: 324px;
+}
+
+div.pnd53-box-4-line-1 {
+  position: absolute;
+  top: 358px;
+}
+
+div.pnd53-box-4-line-2 {
+  position: absolute;
+  top: 380px;
+}
+
+div.pnd53-box-4-line-3 {
+  position: absolute;
+  top: 393px;
+}
+
+div.pnd53-box-5-line-1 {
+  position: absolute;
+  top: 427px;
+}
+
+div.pnd53-box-5-line-2 {
+  position: absolute;
+  top: 449px;
+}
+
+div.pnd53-box-5-line-3 {
+  position: absolute;
+  top: 462px;
+}
+
+div.pnd53-box-6-line-1 {
+  position: absolute;
+  top: 497px;
+}
+
+div.pnd53-box-6-line-2 {
+  position: absolute;
+  top: 518px;
+}
+
+div.pnd53-box-6-line-3 {
+  position: absolute;
+  top: 531px;
+}
+
+div.pnd53-box-1-wht-1 {
+  position: absolute;
+  top: 173px;
+}
+
+div.pnd53-box-1-wht-2 {
+  position: absolute;
+  top: 188px;
+}
+
+div.pnd53-box-1-wht-3 {
+  position: absolute;
+  top: 201px;
+}
+
+div.pnd53-box-2-wht-1 {
+  position: absolute;
+  top: 241px;
+}
+
+div.pnd53-box-2-wht-2 {
+  position: absolute;
+  top: 255px;
+}
+
+div.pnd53-box-2-wht-3 {
+  position: absolute;
+  top: 269px;
+}
+
+div.pnd53-box-3-wht-1 {
+  position: absolute;
+  top: 310px;
+}
+
+div.pnd53-box-3-wht-2 {
+  position: absolute;
+  top: 325px;
+}
+
+div.pnd53-box-3-wht-3 {
+  position: absolute;
+  top: 339px;
+}
+
+div.pnd53-box-4-wht-1 {
+  position: absolute;
+  top: 379px;
+}
+
+div.pnd53-box-4-wht-2 {
+  position: absolute;
+  top: 394px;
+}
+
+div.pnd53-box-4-wht-3 {
+  position: absolute;
+  top: 407px;
+}
+
+div.pnd53-box-5-wht-1 {
+  position: absolute;
+  top: 448px;
+}
+
+div.pnd53-box-5-wht-2 {
+  position: absolute;
+  top: 463px;
+}
+
+div.pnd53-box-5-wht-3 {
+  position: absolute;
+  top: 477px;
+}
+
+div.pnd53-box-6-wht-1 {
+  position: absolute;
+  top: 517px;
+}
+
+div.pnd53-box-6-wht-2 {
+  position: absolute;
+  top: 532px;
+}
+
+div.pnd53-box-6-wht-3 {
+  position: absolute;
+  top: 546px;
+}
+
+div.pnd53-summary {
+  position: absolute;
+  top: 570px;
 }
 
 /* wht_payment */
@@ -414,28 +920,28 @@ div.wht-payment-wht {
   position: absolute;
   top: 249mm;
   left: 33.5mm;
-  font-size: 5mm;
+  font-size: 19px;
 }
 
 div.wht-payment-forever {
   position: absolute;
   top: 249mm;
   left: 66.5mm;
-  font-size: 5mm;
+  font-size: 19px;
 }
 
 div.wht-payment-once {
   position: absolute;
   top: 249mm;
   left: 104.5mm;
-  font-size: 5mm;
+  font-size: 19px;
 }
 
 div.wht-payment-other {
   position: absolute;
   top: 249mm;
   left: 143.5mm;
-  font-size: 5mm;
+  font-size: 19px;
 }
 
 div.wht-note {
@@ -456,7 +962,7 @@ div.wht-document-datetime-days {
 div.wht-document-datetime-month {
   position: absolute;
   top: 267mm;
-  left: 143mm;
+  left: 540px;
   font-size: 2.67mm;
 }
 

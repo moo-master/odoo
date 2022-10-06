@@ -24,6 +24,8 @@
                         <field name="printed" />
                         <field name="percent" string="Percentage"/>
                         <field name="sequence" />
+                        <field name="other_type"/>
+                        <field name="is_required_note"/>
                     </group>
                 </sheet>
             </form>
