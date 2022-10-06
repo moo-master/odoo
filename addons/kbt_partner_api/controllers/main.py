@@ -78,8 +78,6 @@ class PartnerDataController(KBTApiBase):
                 ('country_id', '=', country_id.id),
                 ('code', '=', data.get('state_id'))
             ], limit=1)
-            if not state_id:
-                raise ValueError("state_id not found.")
 
             city_id = request.env['res.city'].search([
                 ('code', '=', data.get('city'))

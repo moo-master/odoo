@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+
+    <template id="report_pnd_3n53_text">
+        <t t-foreach="docs" t-as="o">
+            <t t-out="text"/>
+        </t>
+    </template>
+
+</odoo>

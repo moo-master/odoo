@@ -15,12 +15,27 @@ def currency_tax(env):
 
 
 @pytest.fixture
+def company(env):
+    return env['res.company'].create({
+        'name': 'Limited',
+    })
+
+
+@pytest.fixture
 def partner_tax(env):
+    state_id = env['res.country.state'].search([], limit=1)
     return env['res.partner'].create({
         'name': 'partner AAS',
         'email': 'kaka@other.company.com',
         'supplier_rank': 10,
         'company_id': 1,
+        'house_number': '1',
+        'alley': 'alley',
+        'sub_alley': 'sub_alley',
+        'street': 'street1',
+        'street2': 'street2',
+        'city': 'city',
+        'state_id': state_id.id or False
     })
 
 
@@ -68,7 +83,7 @@ def account_id(env, account_type):
 
 @pytest.mark.parametrize('test_input', [
     ({'pnd_type': 'pnd3', 'wht_type_name': 'AW'}),
-    ({'pnd_type': 'pnd53', 'wht_type_name': 'AQ'}),
+    ({'pnd_type': 'pnd3', 'wht_type_name': 'AQ'}),
 ])
 def test_compute_tax(env, account_move_tax, test_input, account_id):
     wht_type = env['account.wht.type'].create({
@@ -138,58 +153,104 @@ def test__compute_wht_line_partner(env, test_input, account_id):
         })
         pnd._compute_wht_line_partner()
         partner_count = len(pnd.wht_ids.mapped('partner_id')) or 0
-        expected = f'{len(pnd.wht_ids) or 0} Records From {partner_count} Partner'
+        expected = f'''
+                    {len(pnd.wht_ids) or 0}
+                    Records From {partner_count} Partner'''
         assert pnd.wht_ids_count_str == expected
 
 
-def test_action_print_pnd3(env):
-    pnd = env['account.wht.pnd'].create({
-        'pnd_type': 'pnd3',
-    })
-    result = pnd.action_print_pnd3()
-    assert result
-
-
-def test_action_print_pnd53(env):
-    pnd = env['account.wht.pnd'].create({
-        'pnd_type': 'pnd53',
-    })
-    result = pnd.action_print_pnd53()
-    assert result
-
-
-def test_action_files_docs(env):
-    pnd = env['account.wht.pnd'].create({
-        'pnd_type': 'pnd3',
-    })
-    result = pnd.action_files_docs()
-    assert result
-
-
-def test_action_file(env):
-    pnd = env['account.wht.pnd'].create({
-        'pnd_type': 'pnd3',
-    })
-    result = pnd.action_file()
-    assert result
-
-
-def test__compute_pickup_time_formated(env):
+def test__compute_pickup_time_formatted(env):
     pnd = env['account.wht.pnd'].create({
         'pnd_type': 'pnd3',
         'pnd_date': '2022-03-31',
         'select_month_date': '2022-03-31',
     })
-    pnd._compute_pickup_time_formated()
+    pnd._compute_pickup_time_formatted()
     assert pnd.name == '03/2022'
 
 
-@pytest.mark.parametrize('test_input,expected', [
-    ({'move_type': 'pnd3'}, 'section3'),
-    ({'move_type': 'pnd53'}, 'section53'), ])
-def test__default_get_pnd(env, test_input, expected):
-    pnd = env['account.wht.pnd'].with_context({"default_pnd_type": test_input['move_type']}).create({
-        'pnd_type': test_input['move_type'], })
-    pnd.with_context(
-        {"default_pnd_type": test_input['move_type']})._default_get_pnd()
-    assert pnd.section == expected
+@ pytest.mark.parametrize('test_input,expected', [
+    ({'vat': '1111111111115'},
+     ['1', '1111', '11111', '11', '5']),
+])
+def test_split_id_card(env, company, test_input, expected):
+    pnd = env['account.wht.pnd'].create(
+        {
+            'pnd_type': 'pnd3',
+            'company_id': company.id
+        })
+    pnd.company_id.update({
+        'vat': test_input['vat']
+    })
+    res = pnd.split_id_card()
+    assert res == expected
+
+
+@pytest.mark.parametrize('test_input', [
+    ({'pnd_type': 'pnd3'}),
+    ({'pnd_type': 'pnd53'})
+])
+def test__report_pnd3_attchment(env, account_id, partner_tax, test_input):
+    wht_type = env['account.wht.type'].create({
+        'display_name': 'Test Type',
+        'percent': 10,
+    })
+    pnd = env['account.wht.pnd'].create({'pnd_type': 'pnd3'})
+    wht = env['account.wht'].create({
+        'document_date': fields.Datetime.now(),
+        'wht_type': 'sale',
+        'wht_kind': test_input['pnd_type'],
+        'wht_payment': 'wht',
+        'account_id': account_id.id,
+        'partner_id': partner_tax.id,
+        'line_ids': [(0, 0, {
+            'wht_type_id': wht_type.id,
+        })]
+    })
+    pnd.write({
+        'wht_ids': [(6, 0, [wht.id])],
+    })
+    report_pnd = env['report.beecy_account_wht.report_%s_attach_pdf' %
+                     test_input['pnd_type']]
+    report_pnd._get_report_values(pnd.ids)
+    report_pnd._get_report_data(list(), 1)
+
+
+def test__report_pnd_text_file(env, account_id, partner_tax):
+    wht_type = env['account.wht.type'].create({
+        'display_name': 'Test Type',
+        'percent': 10,
+    })
+    pnd = env['account.wht.pnd'].create({'pnd_type': 'pnd3'})
+    wht = env['account.wht'].create({
+        'document_date': fields.Datetime.now(),
+        'wht_type': 'sale',
+        'wht_kind': 'pnd3',
+        'wht_payment': 'wht',
+        'account_id': account_id.id,
+        'partner_id': partner_tax.id,
+        'line_ids': [(0, 0, {
+            'wht_type_id': wht_type.id,
+        })]
+    })
+    pnd.write({
+        'wht_ids': [(6, 0, [wht.id])],
+    })
+    report_pnd = env['report.beecy_account_wht.report_pnd_3n53_text']
+    report_pnd._get_report_values(pnd.ids)
+
+
+def test_get_attach_count(env):
+    pnd = env['account.wht.pnd'].create({'pnd_type': 'pnd3'})
+    res = pnd.get_attach_count()
+    assert res == [0, 0]
+
+
+def test_split_amount(env):
+    res = env['account.wht.pnd'].split_amount(100)
+    assert res == (0.0, 100.0)
+
+
+def test_get_decimal_amount(env):
+    res = env['account.wht.pnd'].get_decimal_amount(0.23)
+    assert res == '23'

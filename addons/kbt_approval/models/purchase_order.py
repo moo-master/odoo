@@ -16,17 +16,18 @@ class PurchaseOrder(models.Model):
 
     def button_confirm(self):
         employee = self.env['hr.employee'].search(
-            [('id', '=', self.partner_id.employee_ids.id)])
+            [('user_id', '=', self.env.uid)], limit=1).sudo()
         if not self.x_is_interface:
             if employee.level_id.approval_validation(
                     'purchase.order', self.amount_total, False):
                 super().button_confirm()
             else:
                 self.is_approve_send = True
-                em_level = employee.level_id._rec_name if employee.level_id else "no level_id"
+                em_level = employee.level_id._compute_new_display_name(
+                ) if employee.level_id else "no level_id"
                 raise ValidationError(
                     _(
-                        'You cannot validate this document due limitation policy. Please contact employee {%s}\n ไม่สามารถดำเนินการได้เนื่องจากเกินวงเงินที่กำหนด กรุณาติดต่อพนักงาน {%s}',
+                        'You cannot validate this document due limitation policy. Please contact employee %s\n ไม่สามารถดำเนินการได้เนื่องจากเกินวงเงินที่กำหนด กรุณาติดต่อพนักงาน %s',
                         em_level,
                         em_level))
         else:
