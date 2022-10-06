@@ -54,17 +54,23 @@ class AccountMove(models.Model):
                         line[2][field] = invoice_line[2][field]
         return vals_list
 
+    def section_check(self, sequence):
+        if(int(sequence / 500) == 1 and (sequence % 500) < 100):
+            return 5
+        if(int(sequence / 600) == 1 and (sequence % 600) < 100):
+            return 6
+
     def action_post(self):
         res = super(AccountMove, self).action_post()
         for rec in self:
             section_5_list = []
             section_6_list = []
             for line in rec.invoice_line_ids:
-                if (line.wht_type_id.sequence in [
-                        5, 500] and line.wht_type_id.id not in section_5_list):
+                if (self.section_check(line.wht_type_id.sequence) == 5
+                        and line.wht_type_id.id not in section_5_list):
                     section_5_list.append(line.wht_type_id.id)
-                if (line.wht_type_id.sequence in [
-                        6, 600] and line.wht_type_id.id not in section_6_list):
+                if (self.section_check(line.wht_type_id.sequence) == 6
+                        and line.wht_type_id.id not in section_6_list):
                     section_6_list.append(line.wht_type_id.id)
             if 1 < len(section_5_list) or 1 < len(section_6_list):
                 raise ValidationError(
