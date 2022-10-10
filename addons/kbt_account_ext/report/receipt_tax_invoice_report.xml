@@ -183,7 +183,7 @@
             <div class="new-page" data-page-size="1457" data-page-size-detail="911" count-row="" t-attf-count-row="{{counter}}"/>
             <!-- <div id="data-page"><t t-esc="counter" /></div> -->
             <div class="last-footer">
-                <script type="text/javascript" src="/kbt_account_ext/static/src/js/force_new_page.js"/>
+                <script type="text/javascript" src="/kbt_account_ext/static/src/js/force_new_page_payment.js"/>
                 <div style="border: 1px solid #000000; width: 100%; font-size: 12px;">
                     <t t-if="is_tax_report">
                         <div class="row">

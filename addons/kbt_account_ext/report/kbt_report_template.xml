@@ -113,7 +113,7 @@
                 </div>
             </div>
 
-            <div class="content" name="company-info" style="padding-top: 1rem;">
+            <div class="content" name="company-info">
                 <div class="row">
                     <div class="col-9">
                         <div>
@@ -181,7 +181,7 @@
                         <th>เลขที่ประจำตัวผู้เสียภาษี</th>
                         <td><t t-out="address_line_4"/></td>
                         <t t-if="is_tax_report">
-                            <th>วันที่กำกับภาษี</th>
+                            <th>วันที่ใบกำกับภาษี</th>
                             <td>x_invoice_id.invoice_date</td>
                         </t>
                         <t t-else="">
@@ -211,10 +211,10 @@
                             <b><span>Offset Payment</span></b>
                             <br/>
                             <t t-if="o.partner_id.x_offset">
-                                <span>True</span>
+                                <span>x</span>
                             </t>
                             <t t-else="">
-                                <span>False</span>
+                                <span> </span>
                             </t>
                         </th>
                         <th class="border border-dark" style="width: 23%;">
@@ -232,16 +232,16 @@
                 <table class="table border-left border-bottom border-dark" style="font-size: 13px;">
                     <tr class="text-center">
                         <th class="border-right border-dark" style="width: 21%;">
-                            <span>รายการที่ Item No.</span>
+                            <span>รายการที่<br /> (Item No.)</span>
                         </th>
                         <th class="border-right border-dark" style="width: 40%;">
-                            <span>รายการสินค้า/บริการ Goods/Service</span>
+                            <span>รายการสินค้า/บริการ<br /> (Goods/Service)</span>
                         </th>
                         <th class="border-right border-dark" style="width: 23%;">
-                            <span>จำนวนสินค้าQuantity</span>
+                            <span>จำนวนสินค้า<br /> (Quantity)</span>
                         </th>
                         <th class="border-right border-dark" style="width: 16%;">
-                            <span>จำนวนเงินAmount</span>
+                            <span>จำนวนเงิน<br /> (Amount)</span>
                         </th>
                     </tr>
                 </table>
@@ -275,7 +275,7 @@
                                 มูลค่าของสินค้าหรือบริการที่ถูกต้อง (Correct Amount)
                             </div>
                             <div>
-                                ผลต่างของสินค้าหรือบริการ/มูลค่าที่ลดหนี้ (Amount of Invoice differnt/Amount of Credit)
+                                ผลต่างของสินค้าหรือบริการ/มูลค่าที่ลดหนี้ (Amount of Invoice different/Amount of Credit)
                             </div>
                             <div>
                                 ภาษีมูลค่าเพิ่ม (Vat Amount)
@@ -401,7 +401,7 @@
                             คำเตือน: ถ้าไม่มีการทักท้วงรายการข้างต้นประการใดภายใน 14 วัน บริษัทๆ จะถือว่ารายการข้างต้นนี้ถูกต้องแล้ว บริษัทๆ จะคิดค่าล่าช้าในอัตราไม่เกิน
                         </div>
                         <div>
-                            2.00% ต่อเดือนสำหรับบิลที่ไม่ชำระตามที่กำหนด / Delay payment fee up to 2.00% per month will be charged on all orverdue bill
+                            2.00% ต่อเดือนสำหรับบิลที่ไม่ชำระตามที่กำหนด / Delay payment fee up to 2.00% per month will be charged on all overdue bill
                         </div>
                     </div>
                 </div>
@@ -447,9 +447,14 @@
     </template>
 
     <template id="kbt_account_ext.internal_layout_body">
-        <div class="main" style="height: 600px;" t-attf-class="page {{font_fam}} page-body-set" data-body-set="300">
+        <div class="main" t-attf-class="page {{font_fam}} page-body-set">
             <table class="table border border-dark" style="font-size: 13px;">
                 <t t-set="counter" t-value="1"/>
+                <t t-set="count" t-value="0"/>
+                <t t-set="add" t-value="0"/>
+                <t t-set="push" t-value="155"/>
+                <t t-set="check" t-value="0"/>
+                <t t-set="row" t-value="0"/>
                 <t t-foreach="o.invoice_line_ids" t-as="line">
                     <tr style="">
                         <td class="text-center" style="width: 21%;">
@@ -464,12 +469,58 @@
                         <td class="text-right" style="width: 16%;">
                             <span t-out="'{:,.2f}'.format(line.price_subtotal)"/>
                         </td>
+
+                        <t t-if="len(line.name) > 51">
+                            <t t-set="count" t-value="count+196"/>
+                            <t t-set="row" t-value="row+1.444"/>
+                        </t>
+                        <t t-else="">
+                            <t t-set="count" t-value="count+140"/>
+                            <t t-set="row" t-value="row+1"/>
+                        </t>
+
+                        <t t-if="push > 200">
+                        </t>
+                        <t t-elif="counter > 22">
+                            <t t-set="push" t-value="push+54"/>
+                        </t>
+                        <t t-elif="count > 3200">
+                            <t t-set="push" t-value="push+54"/>
+                        </t>
+
                         <t t-set="counter" t-value="counter+1"/>
+
+                        <t t-if="check == 0">
+                            <t t-if="count > 5200">
+                                <t t-set="add" t-value="add+16"/>
+                                <t t-set="check" t-value="check+1"/>
+                            </t>
+                        </t>
                     </tr>
                 </t>
+                <t t-if="ceil(row) % 22 != 0 and ceil(row) % 22 &lt; 13">
+                    <t t-set="actual_row" t-value="ceil(row) % 22"/>
+                    <t t-set="empty_row" t-value="13 - actual_row"/>
+                    <t t-foreach="range(empty_row)" t-as="line">
+                        <tr style="height: 43.5px;">
+                            <td class="text-center" style="width: 21%;">
+                                <span></span>
+                            </td>
+                            <td class="text-left" style="width: 40%;">
+                                <span></span>
+                            </td>
+                            <td class="text-right" style="width: 23%;">
+                                <span></span>
+                            </td>
+                            <td class="text-right" style="width: 16%;">
+                                <span></span>
+                            </td>
+                        </tr>
+                    </t>
+                </t>
             </table>
-            <div class="new-page" data-page-size="2050" data-page-size-detail="1000" />
-            <!-- <div id="data-page">For check Data Page</div> -->
+            <div class="new-page" data-page-size="3100" data-page-size-detail="1830" count-row="" t-attf-count-row="{{count}}" data-body-set="" t-attf-data-body-set="{{push}}" add-ing="" t-attf-add-ing="{{add}}"/>
+            <!-- <div id="data-page"></div> -->
         </div>
         <t t-call="kbt_account_ext.internal_layout_footer"/>
     </template>
