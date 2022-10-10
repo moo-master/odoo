@@ -1,2 +1,3 @@
 from . import test_account_move
-from . import test_account_payment
+from . import test_account_payment_register
+from . import test_account_move_revesal
