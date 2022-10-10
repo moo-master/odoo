@@ -68,7 +68,12 @@
                         <strong>สาขา/Branch</strong>
                     </div>
                     <div class="col-5" style="padding-top: 5px;">
-                        <t t-esc="o.reconciled_invoice_ids.partner_id.x_branch_name"/>
+                        <t t-if="o.reconciled_invoice_ids.partner_id.x_branch_name == '00000'">
+                            <span>สำนักงานใหญ่</span>
+                        </t>
+                        <t t-else="">
+                            <t t-esc="o.reconciled_invoice_ids.partner_id.x_branch_name"/>
+                        </t>
                     </div>
                 </div>
                 <div class="row" style="height: 40px;">

@@ -25,13 +25,10 @@ def model_org_level(env, model):
         ]
     })
 
-    employee = env.ref('hr.employee_chs')
-    model.partner_id.write({
-        'employee_ids': [employee.id]
-    })
-
+    employee = env.ref('hr.employee_qdp')
     employee.write({
-        'level_id': model_org_level.id
+        'level_id': model_org_level.id,
+        'user_id': env.uid
     })
 
     return model_org_level
@@ -43,9 +40,6 @@ def test_is_approve_send_sale_order(model):
 
 
 def test_action_confirm_false_sale_order(model, model_org_level):
-    model_org_level.line_ids.write({
-        'limit': -1
-    })
     with pytest.raises(ValidationError):
         model.action_confirm()
 
@@ -53,6 +47,14 @@ def test_action_confirm_false_sale_order(model, model_org_level):
 def test_action_confirm_true_sale_order(model, model_org_level):
     model_org_level.line_ids.write({
         'limit': 50000000
+    })
+    model.action_confirm()
+    assert model.state == 'sale'
+
+
+def test_action_confirm_interface_sale_order(model, model_org_level):
+    model.write({
+        'x_is_interface': True
     })
     model.action_confirm()
     assert model.state == 'sale'

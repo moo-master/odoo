@@ -4,7 +4,7 @@ from odoo import models, fields, api
 class OrgLevel(models.Model):
     _name = 'org.level'
     _order = 'write_date asc'
-    _rec_name = "display_name"
+    _rec_name = 'display_name'
 
     _sql_constraints = [
         ('org_level_field_level_uniq',
@@ -34,10 +34,10 @@ class OrgLevel(models.Model):
         compute="_compute_new_display_name", store=True, index=True
     )
 
-    @api.depends('level')
+    @api.depends('display_name', 'description')
     def _compute_new_display_name(self):
         for rec in self:
-            rec.display_name = str(rec.level)
+            rec.display_name = str(rec.level) + ' ' + rec.description
 
     def approval_validation(self, model, amount, move_type):
         for line in self.line_ids:

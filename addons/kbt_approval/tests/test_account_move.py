@@ -36,13 +36,10 @@ def model_org_level(env, model):
         ]
     })
 
-    employee = env.ref('hr.employee_chs')
-    model.partner_id.write({
-        'employee_ids': [employee.id]
-    })
-
+    employee = env.ref('hr.employee_qdp')
     employee.write({
-        'level_id': model_org_level.id
+        'level_id': model_org_level.id,
+        'user_id': env.uid
     })
 
     return model_org_level
@@ -64,6 +61,14 @@ def test_action_post_false_account_move(model, model_org_level):
 def test_action_post_true_account_move(model, model_org_level):
     model_org_level.line_ids.write({
         'limit': 50000000
+    })
+    model.action_post()
+    assert model.state == 'posted'
+
+
+def test_action_post_is_interface_account_move(model, model_org_level):
+    model.write({
+        'x_is_interface': True
     })
     model.action_post()
     assert model.state == 'posted'

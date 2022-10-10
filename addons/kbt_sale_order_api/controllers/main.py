@@ -46,15 +46,16 @@ class SaleOrderDataController(KBTApiBase):
                     "product_id not found."
                 )
 
-            vals = {
+            vals.update({
                 'product_id': product_id.id,
                 'name': order_line.get('name'),
                 'product_uom_qty': order_line.get('product_uom_qty'),
                 'price_unit': order_line.get('price_unit'),
                 'discount': order_line.get('discount'),
                 'sequence': order_line.get('seq_line'),
-                'note': order_line.get('note')
-            }
+                'note': order_line.get('note'),
+                'wht_type_id': product_id.wht_type_id.id
+            })
         else:
             if is_new_line:
                 raise ValueError(
