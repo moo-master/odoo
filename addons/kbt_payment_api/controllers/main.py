@@ -77,6 +77,10 @@ class PaymentDataController(KBTApiBase):
                     raise ValueError(
                         "partner_bank not found."
                     )
+                else:
+                    vals.update({
+                        'partner_bank_id': partner_bank.id or False
+                    })
 
             journal_code = AccountJournal.search([
                 ('code', '=', data['journal_code']),
@@ -122,8 +126,7 @@ class PaymentDataController(KBTApiBase):
                 'payment_type': data['payment_type'],
                 'journal_id': journal_code.id,
                 'amount': data['amount'],
-                'payment_date': date_data,
-                'partner_bank_id': partner_bank.id or False,
+                'payment_date': date_data
             }
             so_id = acc_move.mapped(
                 'invoice_line_ids.sale_line_ids.order_id')

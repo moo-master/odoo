@@ -15,6 +15,7 @@
         'kbt_wht_ext',
     ],
     'data': [
-        'views/res_config_settings_views.xml'
+        'views/res_config_settings_views.xml',
+        'views/account_move_view.xml',
     ]
 }
