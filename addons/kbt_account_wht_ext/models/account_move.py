@@ -9,3 +9,7 @@ class AccountMove(models.Model):
         inverse_name='move_id',
         readonly=True
     )
+    x_invoice_id = fields.Many2one(
+        comodel_name='account.move',
+        string='X Invoice'
+    )
