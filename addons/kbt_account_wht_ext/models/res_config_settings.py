@@ -22,3 +22,13 @@ class ResConfigSettings(models.TransientModel):
         related='company_id.ar_wht_default_account_id',
         readonly=False
     )
+    negotiate_duration = fields.Integer(
+        string='Negotiate Duration',
+        related='company_id.negotiate_duration',
+        readonly=False
+    )
+    payment_fee_percent = fields.Float(
+        string='Payment Fee (%)',
+        related='company_id.payment_fee_percent',
+        readonly=False
+    )

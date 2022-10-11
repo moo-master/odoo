@@ -369,7 +369,7 @@
                             </div>
                             <div class="col-10">
                                 <div class="" style="line-height: 1.75rem;">
-                                    **Reason**
+                                    <t t-esc="o.reason_id.name" />
                                 </div>
                             </div>
                         </t>
@@ -401,10 +401,10 @@
                 <div class="border-top border-dark" style="line-height: 1.75rem;">
                     <div class="text-left">
                         <div>
-                            คำเตือน: ถ้าไม่มีการทักท้วงรายการข้างต้นประการใดภายใน 14 วัน บริษัทๆ จะถือว่ารายการข้างต้นนี้ถูกต้องแล้ว บริษัทๆ จะคิดค่าล่าช้าในอัตราไม่เกิน
+                            คำเตือน: ถ้าไม่มีการทักท้วงรายการข้างต้นประการใดภายใน <span t-esc="o.company_id.negotiate_duration"/> วัน บริษัทๆ จะถือว่ารายการข้างต้นนี้ถูกต้องแล้ว บริษัทๆ จะคิดค่าล่าช้าในอัตราไม่เกิน
                         </div>
                         <div>
-                            2.00% ต่อเดือนสำหรับบิลที่ไม่ชำระตามที่กำหนด / Delay payment fee up to 2.00% per month will be charged on all overdue bill
+                            <span t-out="'{:,.2f}'.format(o.company_id.payment_fee_percent)"/>% ต่อเดือนสำหรับบิลที่ไม่ชำระตามที่กำหนด / Delay payment fee up to <span t-out="'{:,.2f}'.format(o.company_id.payment_fee_percent)"/>% per month will be charged on all overdue bill
                         </div>
                     </div>
                 </div>
