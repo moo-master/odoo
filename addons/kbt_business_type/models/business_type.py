@@ -48,6 +48,10 @@ class BusinessType(models.Model):
         default=True,
     )
 
+    is_unearn_revenue = fields.Boolean(
+        string='Unearn Revenue'
+    )
+
     _sql_constraints = [
         (
             "x_code_uniq",

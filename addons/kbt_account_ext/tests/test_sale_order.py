@@ -81,6 +81,7 @@ def business_type(env, account_payable, model_seq):
         'x_sequence_id': model_seq.id,
         'x_revenue_account_id': account_payable.id,
         'default_gl_account_id': account_payable.id,
+        'is_unearn_revenue': True
     })
 
 
@@ -123,7 +124,7 @@ def test__prepare_invoice_line(model,
                          })]
                          })
     inv_line = so_vals.order_line._prepare_invoice_line()
-    if so_vals.x_is_interface:
+    if so_vals.x_is_interface and so_vals.so_type_id.is_unearn_revenue:
         assert inv_line['account_id'] == business_type.x_revenue_account_id
     else:
         assert expected not in inv_line

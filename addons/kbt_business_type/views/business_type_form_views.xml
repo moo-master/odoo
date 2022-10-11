@@ -12,6 +12,7 @@
                 <field name="x_revenue_account_id"/>
                 <field name="default_gl_account_id"/>
                 <field name="default_gl_loss_account_id"/>
+                <field name="is_unearn_revenue"/>
                 <field name="is_active"/>
             </tree>
         </field>
