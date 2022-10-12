@@ -14,7 +14,6 @@
             </xpath>
             <xpath expr="//group[@id='header_right_group']/div[@name='journal_div']" position="after">
                 <field name="reason_id" />
-                <!-- <field name="partner_id" /> -->
             </xpath>
         </field>
     </record>
