@@ -21,7 +21,6 @@
         'kbt_partner_ext',
         'kbt_account_wht_ext',
         'beecy_reason',
-        # 'account_reports',
     ],
     'assets': {
         'web._assets_common_scripts': [
