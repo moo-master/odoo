@@ -6,8 +6,7 @@ class ResCity(models.Model):
     _inherit = "res.city"
 
     code = fields.Char(
-        string="Code",
-        readonly=True
+        string="Code"
     )
 
     _sql_constraints = [

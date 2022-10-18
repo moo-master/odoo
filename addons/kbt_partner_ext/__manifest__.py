@@ -15,6 +15,7 @@
         'base',
         'account',
         'base_address_city',
+        'base_location'
     ],
     'data': [
         'views/view_partner_form.xml',
