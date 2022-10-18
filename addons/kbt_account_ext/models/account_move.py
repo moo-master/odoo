@@ -29,6 +29,11 @@ class AccountMove(models.Model):
     x_diff_amount = fields.Float(
         string='Diff Amount',
     )
+    reason_id = fields.Many2one(
+        string='Reason',
+        comodel_name='res.reason',
+        domain=[('account_type', '=', 'out_refund')],
+    )
 
     def get_amount_total_text(self, amount):
         return bahttext(amount)

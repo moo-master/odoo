@@ -16,3 +16,11 @@ class ResCompany(models.Model):
         comodel_name='account.account',
         string='AR WHT Account',
     )
+    negotiate_duration = fields.Integer(
+        string='Negotiate Duration',
+        default=14,
+    )
+    payment_fee_percent = fields.Float(
+        string='Payment Fee (%)',
+        default=2.0,
+    )
