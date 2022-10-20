@@ -1,7 +1,7 @@
 {
-    'name': 'KBT Account WHT Ext',
+    'name': 'KBT Account Reports Ext',
     'summary': '''
-        KBT Account WHT Ext
+        KBT Account Reports ext.
     ''',
     'author': 'Roots',
     'category': 'Company',
@@ -12,10 +12,10 @@
         'Pachara P.',
     ],
     'depends': [
-        'kbt_wht_ext',
+        'kbt_account_wht_ext',
+        'account_reports',
     ],
     'data': [
-        'views/res_config_settings_views.xml',
-        'views/account_move_view.xml',
+        'views/account_reports.xml',
     ]
 }

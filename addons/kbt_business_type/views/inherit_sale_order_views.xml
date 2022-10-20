@@ -11,7 +11,13 @@
             </xpath>
 
             <xpath expr="//field[@name='x_is_interface']" position="before">
-                <field name="so_type_id" string="Business Type" attrs="{'required': [('x_is_interface','=', True)]}"/>
+                <field name="so_type_id"
+                    string="Business Type"
+                    attrs="{
+                        'required': [('x_is_interface','=', True)],
+                        'readonly': [('x_is_interface','=', True)]
+                    }"
+                />
             </xpath>
         </field>
     </record>

@@ -20,6 +20,7 @@
         'kbt_business_type',
         'kbt_partner_ext',
         'kbt_account_wht_ext',
+        'beecy_reason',
     ],
     'assets': {
         'web._assets_common_scripts': [

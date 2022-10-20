@@ -8,7 +8,13 @@
         <field name="arch" type="xml">
             <xpath expr="//div[@name='reminder']" position="after">
                 <field name="x_is_interface" />
-                <field name="po_type_id" string="Business Type" attrs="{'required': [('x_is_interface','=', True)]}"/>
+                <field name="po_type_id"
+                    string="Business Type"
+                    attrs="{
+                        'required': [('x_is_interface','=', True)],
+                        'readonly': [('x_is_interface','=', True)]
+                    }"
+                />
             </xpath>
         </field>
     </record>

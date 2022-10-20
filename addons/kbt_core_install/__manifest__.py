@@ -10,6 +10,7 @@
         'base_location',
         'base_location_geonames_import',
         'kbt_account_ext',
+        'kbt_account_reports_ext',
         'kbt_account_wht_ext',
         'kbt_address_ext',
         'kbt_api_base',

@@ -9,6 +9,7 @@ class SaleOrderLine(models.Model):
             SaleOrderLine,
             self)._prepare_invoice_line(
             **optional_values)
-        if self.order_id.x_is_interface and self.order_id.invoice_count > 0:
-            res['account_id'] = self.order_id.so_type_id.x_revenue_account_id
+        order = self.order_id
+        if order.x_is_interface and order.invoice_count > 0 and order.so_type_id.is_unearn_revenue:
+            res['account_id'] = order.so_type_id.x_revenue_account_id
         return res
