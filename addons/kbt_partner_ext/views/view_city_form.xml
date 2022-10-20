@@ -3,10 +3,12 @@
     <record id="inherit_view_city_form" model="ir.ui.view">
         <field name="name">inherit.view.city.form</field>
         <field name="model">res.city</field>
-        <field name="inherit_id" ref="base_address_city.view_city_tree"/>
+        <field name="inherit_id" ref="base_location.view_city_form"/>
         <field name="arch" type="xml">
             <xpath expr="//field[@name='state_id']" position="after">
-                <field name="code"/>
+                <field name="code"
+                    attrs="{'readonly': True}"
+                />
             </xpath>
         </field>
     </record>

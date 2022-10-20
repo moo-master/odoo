@@ -7,7 +7,9 @@
         <field name="priority" eval="100"/>
         <field name="arch" type="xml">
             <xpath expr="//field[@name='state_id']" position="after">
-                <field name="code"/>
+                <field name="code"
+                    attrs="{'readonly': True}"
+                />
             </xpath>
         </field>
     </record>
