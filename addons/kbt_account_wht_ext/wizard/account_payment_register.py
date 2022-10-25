@@ -1,4 +1,4 @@
-from odoo import models, fields
+from odoo import models, fields, api
 
 
 class AccountPaymentRegister(models.TransientModel):
@@ -48,3 +48,22 @@ class AccountPaymentRegister(models.TransientModel):
             'base_amount': line.price_subtotal,
             'wht_amount': line.amount_wht,
         }
+
+    @api.depends('source_amount',
+                 'source_amount_currency',
+                 'source_currency_id',
+                 'company_id',
+                 'currency_id',
+                 'payment_date')
+    def _compute_amount(self):
+        super(AccountPaymentRegister, self)._compute_amount()
+        for wizard in self:
+            moves = False
+            if wizard._context.get('active_model') == 'account.move':
+                moves = wizard.env['account.move'].browse(
+                    wizard._context.get('active_ids', []))
+
+            amount_wht = sum(moves.mapped('amount_wht')) if moves else 0
+            wizard.write({
+                'amount': wizard.amount - amount_wht
+            })

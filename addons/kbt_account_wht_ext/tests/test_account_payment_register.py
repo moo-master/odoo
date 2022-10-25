@@ -171,3 +171,30 @@ def test_create(
         3: account_pnd53_id.id,
     }
     assert wht.account_id.id == res_expected[expected]
+
+
+def test__compute_amount(
+        env,
+        model,
+        invoice,
+        wht3,
+        journal,
+        partner_bank):
+    invoice.action_post()
+    res_action = invoice.action_register_payment()
+    ctx = res_action.get('context')
+    val = {
+        'payment_type': 'inbound',
+        'journal_id': journal.id,
+        'amount': 100,
+        'payment_date': '2022-08-01',
+        'partner_bank_id': partner_bank.id,
+        'payment_difference_handling': 'open',
+        'writeoff_account_id': False
+    }
+    wizard_id = model.with_context(
+        active_model=ctx['active_model'],
+        active_ids=ctx['active_ids']).create(val)
+    wizard_id._compute_amount()
+
+    assert wizard_id.amount == invoice.amount_residual - invoice.amount_wht
