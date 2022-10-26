@@ -1,4 +1,4 @@
-from odoo import models, fields, api
+from odoo import models, fields
 
 
 class AccountPaymentRegister(models.TransientModel):
@@ -49,21 +49,16 @@ class AccountPaymentRegister(models.TransientModel):
             'wht_amount': line.amount_wht,
         }
 
-    @api.depends('source_amount',
-                 'source_amount_currency',
-                 'source_currency_id',
-                 'company_id',
-                 'currency_id',
-                 'payment_date')
-    def _compute_amount(self):
-        super(AccountPaymentRegister, self)._compute_amount()
-        for wizard in self:
-            moves = False
-            if wizard._context.get('active_model') == 'account.move':
-                moves = wizard.env['account.move'].browse(
-                    wizard._context.get('active_ids', []))
+    def _init_payments(self, to_process, edit_mode=False):
 
-            amount_wht = sum(moves.mapped('amount_wht')) if moves else 0
-            wizard.write({
-                'amount': wizard.amount - amount_wht
-            })
+        for data in to_process:
+            # Select reconcile account move line to find move_id
+            move_id = data['to_reconcile'].move_id
+            if move_id.amount_wht:
+                data['create_vals'].update({
+                    'move_wht_id': move_id.id
+                })
+
+        payments = super()._init_payments(to_process, edit_mode=edit_mode)
+
+        return payments

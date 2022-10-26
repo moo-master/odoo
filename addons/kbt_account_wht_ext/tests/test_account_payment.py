@@ -1,11 +1,10 @@
 from pytest_tr_odoo.fixtures import env
 import pytest
-from odoo import fields
 
 
 @pytest.fixture
 def model(env):
-    return env['account.payment.register']
+    return env['account.payment']
 
 
 @pytest.fixture
@@ -110,25 +109,22 @@ def invoice(env, partner_demo, product, account_id, wht3):
                           ({'move_type': 'in_invoice',
                             'company_type': 'person',
                             'journal_type': 'purchase'},
-                             2),
+                           2),
                              ({'move_type': 'in_invoice',
                                'company_type': 'company',
                                'journal_type': 'purchase'},
                               3),
                           ])
-def test_create(
+def test__prepare_move_line_default_vals(
         env,
         model,
         invoice,
-        partner_demo,
-        partner_bank,
-        wht3,
         test_input,
+        expected,
         account_id,
         account_pnd3_id,
         account_pnd53_id,
-        journal,
-        expected):
+        partner_demo):
     partner_demo.company_id.write({
         'ap_wht_default_account_pnd3_id': account_pnd3_id.id,
         'ap_wht_default_account_pnd53_id': account_pnd53_id.id,
@@ -146,28 +142,19 @@ def test_create(
     })
     invoice.action_post()
 
-    res_action = invoice.action_register_payment()
-    ctx = res_action.get('context')
-    val = {
-        'payment_type': 'inbound'
-        if test_input['move_type'] == 'out_invoice' else 'outbound',
-        'journal_id': journal.id,
+    payment = model.new({
         'amount': 100,
-        'payment_date': '2022-08-01',
-        'partner_bank_id': partner_bank.id,
-        'payment_method_line_id': 1,
-        'payment_difference_handling': 'open',
-        'writeoff_account_id': False
-    }
-    wizard_id = model.with_context(
-        active_model=ctx['active_model'],
-        active_ids=ctx['active_ids']).create(val)
-    wizard_id._create_payments()
+        'move_wht_id': invoice.id
+    })
+    res = payment._prepare_move_line_default_vals()
 
-    wht = env['account.wht'].search([])
-    res_expected = {
-        1: account_id.id,
-        2: account_pnd3_id.id,
-        3: account_pnd53_id.id,
+    liquidity_line, liquidity_wht_line, _ = res
+    expected_res = {
+        1: account_id,
+        2: account_pnd3_id,
+        3: account_pnd53_id,
     }
-    assert wht.account_id.id == res_expected[expected]
+    type_val = 'debit' if payment.payment_type == 'inbound' else 'credit'
+    assert liquidity_wht_line['account_id'] == expected_res[expected].id
+    assert liquidity_wht_line[type_val] == invoice.amount_wht
+    assert liquidity_line[type_val] == payment.amount - invoice.amount_wht
