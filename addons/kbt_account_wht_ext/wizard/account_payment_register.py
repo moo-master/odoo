@@ -48,3 +48,17 @@ class AccountPaymentRegister(models.TransientModel):
             'base_amount': line.price_subtotal,
             'wht_amount': line.amount_wht,
         }
+
+    def _init_payments(self, to_process, edit_mode=False):
+
+        for data in to_process:
+            # Select reconcile account move line to find move_id
+            move_id = data['to_reconcile'].move_id
+            if move_id.amount_wht:
+                data['create_vals'].update({
+                    'move_wht_id': move_id.id
+                })
+
+        payments = super()._init_payments(to_process, edit_mode=edit_mode)
+
+        return payments
