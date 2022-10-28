@@ -150,11 +150,6 @@
             </div>
 
             <div class="content" name="partner-address">
-                <style>
-                    #dummy-row {
-                        opacity: 0;
-                    }
-                </style>
                 <table class="border border-dark p-5" style="font-size: 14px; width: 100%;">
                     <tr>
                         <th style="width: 20%; padding-left: 5px;">ชื่อ / Name</th>
@@ -176,8 +171,8 @@
                             <td><t t-esc="o.x_invoice_id.name" /></td>
                         </t>
                         <t t-else="">
-                            <th id="dummy-row">dummy-row</th>
-                            <td id="dummy-row">dummy-row</td>
+                            <th id="dummy-row"> </th>
+                            <td id="dummy-row"> </td>
                         </t>
                     </tr>
                     <tr>
@@ -188,8 +183,8 @@
                             <td><t t-esc="o.x_invoice_id.invoice_date" /></td>
                         </t>
                         <t t-else="">
-                            <th id="dummy-row">dummy-row</th>
-                            <td id="dummy-row">dummy-row</td>
+                            <th id="dummy-row"> </th>
+                            <td id="dummy-row"> </td>
                         </t>
                     </tr>
                 </table>
@@ -198,12 +193,7 @@
                         <th class="border border-dark" style="width: 21%;">
                             <b><span>รหัสลูกค้า/Customer No.</span></b>
                             <br/>
-                            <t t-if="o.partner_id.ref">
-                                <span t-out="o.partner_id.ref"/>
-                            </t>
-                            <t t-else="">
-                                <span>00000</span>
-                            </t>
+                            <span t-out="o.partner_id.ref"/>
                         </th>
                         <th class="border border-dark" style="width: 25%;">
                             <b><span>ระยะเวลาชำระเงิน/Credit Term</span></b>
@@ -229,22 +219,6 @@
                             <b><span>สกุลเงิน/Currency</span></b>
                             <br/>
                             <span t-out="o.company_id.currency_id.name"/>
-                        </th>
-                    </tr>
-                </table>
-                <table class="table border-left border-bottom border-dark" style="font-size: 13px;">
-                    <tr class="text-center">
-                        <th class="border-right border-dark" style="width: 21%;">
-                            <span>รายการที่<br /> (Item No.)</span>
-                        </th>
-                        <th class="border-right border-dark" style="width: 40%;">
-                            <span>รายการสินค้า/บริการ<br /> (Goods/Service)</span>
-                        </th>
-                        <th class="border-right border-dark" style="width: 23%;">
-                            <span>จำนวนสินค้า<br /> (Quantity)</span>
-                        </th>
-                        <th class="border-right border-dark" style="width: 16%;">
-                            <span>จำนวนเงิน<br /> (Amount)</span>
                         </th>
                     </tr>
                 </table>
@@ -451,11 +425,28 @@
 
     <template id="kbt_account_ext.internal_layout_body">
         <div class="main" t-attf-class="page {{font_fam}} page-body-set">
+            <table class="table border-left border-bottom border-dark" style="font-size: 13px; margin-bottom: 0px;">
+                <tr class="text-center">
+                    <th class="border-right border-dark" style="width: 21%;">
+                        <span>รายการที่<br /> (Item No.)</span>
+                    </th>
+                    <th class="border-right border-dark" style="width: 40%;">
+                        <span>รายการสินค้า/บริการ<br /> (Goods/Service)</span>
+                    </th>
+                    <th class="border-right border-dark" style="width: 23%;">
+                        <span>จำนวนสินค้า<br /> (Quantity)</span>
+                    </th>
+                    <th class="border-right border-dark" style="width: 16%;">
+                        <span>จำนวนเงิน<br /> (Amount)</span>
+                    </th>
+                </tr>
+            </table>
             <table class="table border border-dark" style="font-size: 13px;">
                 <t t-set="counter" t-value="1"/>
                 <t t-set="count" t-value="0"/>
                 <t t-set="add" t-value="0"/>
-                <t t-set="push" t-value="155"/>
+                <!-- push value for footer  -->
+                <t t-set="push" t-value="172"/>
                 <t t-set="check" t-value="0"/>
                 <t t-set="row" t-value="0"/>
                 <t t-foreach="o.invoice_line_ids" t-as="line">
@@ -473,6 +464,7 @@
                             <span t-out="'{:,.2f}'.format(line.price_subtotal)"/>
                         </td>
 
+                        <!-- set value for empty row -->
                         <t t-if="len(line.name) > 51">
                             <t t-set="count" t-value="count+196"/>
                             <t t-set="row" t-value="row+1.444"/>
@@ -482,6 +474,7 @@
                             <t t-set="row" t-value="row+1"/>
                         </t>
 
+                        <!-- cal value for push footer -->
                         <t t-if="push > 200">
                         </t>
                         <t t-elif="counter > 22">
