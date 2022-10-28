@@ -6,7 +6,7 @@ class AccountMoveReversal(models.TransientModel):
 
     def reverse_moves(self):
         res = super().reverse_moves()
-        ac_move_ids = self._context.get('active_ids', False)
+        ac_move_ids = self._context.get('active_ids', [False])
         credit_note = self.env['account.move'].browse([res.get('res_id')])
         credit_note.write({
             'x_invoice_id': ac_move_ids[0]
