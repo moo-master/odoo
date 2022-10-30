@@ -41,7 +41,10 @@ class OrgLevel(models.Model):
 
     def approval_validation(self, model, amount, move_type):
         for line in self.line_ids:
-            if line.model_id.model == model and (
-                    model != 'account.move' or line.move_type == move_type):
-                return amount < line.limit
+            if model != 'account.move':
+                if line.model_id.model == model:
+                    return amount <= line.limit
+            else:
+                if line.move_type == move_type:
+                    return amount <= line.limit
         return True
