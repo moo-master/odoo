@@ -5,32 +5,64 @@ from odoo.exceptions import ValidationError
 class AccountMove(models.Model):
     _inherit = 'account.move'
 
-    is_approve_send = fields.Boolean(
-        string='is_approve_send',
-        invisible=True,
+    state = fields.Selection(
+        selection_add=[
+            ('to approve', 'To Approve'),
+        ],
+        ondelete={'to approve': 'set default'}
+    )
+    approve_level = fields.Integer(
+        'approve level',
+        default=0
+    )
+    is_approve = fields.Boolean(
+        compute='_compute_approve',
+        default=True
     )
 
     reject_reason = fields.Char(
         string='Reject Reason Note',
     )
 
-    def action_post(self):
+    def _compute_approve(self):
+        employee = self.env['hr.employee'].search(
+            [('user_id', '=', self.env.uid)], limit=1).sudo()
+        self.is_approve = (
+            employee.level_id.level <= self.approve_level) or (
+            self.state != 'to approve')
+
+    def _user_validation(self):
         employee = self.env['hr.employee'].search(
             [('user_id', '=', self.env.uid)], limit=1).sudo()
         if not self.x_is_interface:
-            if employee.level_id.approval_validation('account.move', sum(
-                    self.line_ids.mapped('debit')), self.move_type):
-                super().action_post()
+            if employee.level_id.approval_validation(
+                    'account.move', self.amount_total, False):
+                return True
             else:
-                self.is_approve_send = True
-                em_level = employee.level_id._rec_name if employee.level_id else "no level_id"
+                manager = employee.parent_id
+                employee_manager = manager.name or 'Administrator'
+                if manager:
+                    self.activity_schedule(
+                        'mail.mail_activity_data_todo',
+                        user_id=manager.user_id.id
+                    )
+                    self.state = 'to approve'
+                    self.approve_level = employee.level_id.level
+                    self.env.cr.commit()  # pylint: disable=invalid-commit
                 raise ValidationError(
                     _(
-                        'You cannot validate this document due limitation policy. Please contact employee %s\n ไม่สามารถดำเนินการได้เนื่องจากเกินวงเงินที่กำหนด กรุณาติดต่อพนักงาน %s',
-                        em_level,
-                        em_level))
-        else:
-            return super().action_post()
+                        'You cannot validate this document due limitation policy. Please contact (%s)\n ไม่สามารถดำเนินการได้เนื่องจากเกินวงเงินที่กำหนด กรุณาติดต่อ (%s)',
+                        employee_manager,
+                        employee_manager))
+
+    def action_post(self):
+        for rec in self:
+            rec._user_validation()
+            rec = super().action_post()
+            self.env['mail.activity'].sudo().search(
+                [('res_model', '=', self._name), ('res_id', 'in', self.ids)]
+            ).unlink()
+            return rec
 
     def action_cancel_reject_reason_wizard(self):
         view = self.env.ref('beecy_reason.view_cancel_reject_reason_form')

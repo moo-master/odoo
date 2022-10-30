@@ -5,64 +5,72 @@ from odoo.exceptions import ValidationError
 
 
 @pytest.fixture
-def model(env):
+def purchase(env):
     return env.ref('purchase.purchase_order_1')
 
 
-@pytest.fixture
-def model_org_level(env, model):
-    model_id = env['ir.model'].search([('model', '=', 'purchase.order')]).id
-    model_org_level = env['org.level'].create({
-        'level': 123456789,
-        'description': "test",
-        'line_ids': [
-            Command.create({
-                'limit': 50,
-                'model_id': model_id,
-                'move_type': 'out_invoice',
-                'org_level_id': model.id
-            }),
-        ]
-    })
-
+@pytest.mark.parametrize('test_input,expected', [
+    ({
+        'level': 0,
+        'description': 'Operation',
+        'limit': 50
+    }, 'to approve'),
+    ({
+        'level': 1,
+        'description': 'Manager',
+        'limit': 5000000
+    }, 'purchase'),
+])
+def test_button_confirm_purchase_order(purchase, env, test_input, expected):
+    po_model = env['ir.model'].search([('model', '=', 'purchase.order')])
+    level = env['org.level'].search([])
     employee = env.ref('hr.employee_qdp')
+    employee_manager = env.ref('hr.employee_stw')
+    employee.write({
+        'level_id': False
+    })
+    for l in level:
+        l.unlink()
+    model_org_level = env['org.level'].create(
+        {
+            'level': test_input['level'],
+            'description': test_input['description'],
+            'line_ids': [
+                Command.create({
+                    'limit': test_input['limit'],
+                    'model_id': po_model.id
+                }),
+            ]
+        }
+    )
     employee.write({
         'level_id': model_org_level.id,
-        'user_id': env.uid
+        'user_id': env.uid,
+        'parent_id': employee_manager.id
     })
-
-    return model_org_level
-
-
-def test_is_approve_send_purchase_order(model):
-    model.is_approve_send = False
-    assert model.is_approve_send == False
-
-
-def test_button_confirm_false_purchase_order(model, model_org_level):
-    model_org_level.line_ids.write({
-        'limit': -1
-    })
-    with pytest.raises(ValidationError):
-        model.button_confirm()
+    if test_input['level'] == 0:
+        with pytest.raises(ValidationError) as excinfo:
+            purchase.button_confirm()
+            msg = (
+                "You cannot validate this document due limitation policy. Please contact (Randall Lewis)"
+                " ไม่สามารถดำเนินการได้เนื่องจากเกินวงเงินที่กำหนด กรุณาติดต่อ (Randall Lewis)")
+            assert purchase.state == expected
+            assert purchase.is_approve == False
+            assert excinfo.value.name == msg
+    else:
+        purchase.button_confirm()
+        assert purchase.state == expected
+        assert purchase.is_approve
 
 
-def test_button_confirm_true_purchase_order(model, model_org_level):
-    model_org_level.line_ids.write({
-        'limit': 50000000
-    })
-    model.button_confirm()
-    assert model.state == 'purchase'
-
-
-def test_button_confirm_interface_purchase_order(model, model_org_level):
-    model.write({
+def test_button_confirm_interface_purchase_order(purchase):
+    purchase.write({
         'x_is_interface': True
     })
-    model.button_confirm()
-    assert model.state == 'purchase'
+    purchase.button_confirm()
+    assert purchase.state == 'purchase'
 
 
-def test_cancel_purchase_order(model):
-    res = model.action_cancel_reject_reason_wizard()
+def test_cancel_purchase_order(purchase):
+    res = purchase.action_cancel_reject_reason_wizard()
     assert res['res_model'] == 'cancel.reject.reason'

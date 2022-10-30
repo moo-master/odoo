@@ -14,6 +14,7 @@
     'depends': [
         'kbt_business_type',
         'hr',
+        'mail',
         'beecy_reason',
     ],
     'data': [

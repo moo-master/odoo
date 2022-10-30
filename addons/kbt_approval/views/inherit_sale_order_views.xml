@@ -6,10 +6,10 @@
         <field name="inherit_id" ref="sale.view_order_form"/>
         <field name="arch" type="xml">
             <xpath expr="//button[@id='action_confirm']" position="after">
-                <button name="action_confirm" string="Approve" type="object" class="oe_highlight" groups="base.group_user" attrs="{'invisible': [('is_approve_send', '=', False)]}"/>
-                <button name="action_cancel_reject_reason_wizard" string="Reject" type="object" groups="base.group_user" attrs="{'invisible': [('is_approve_send', '=', False)]}"/>
-
-                <field name="is_approve_send" invisible="1" />
+                <button name="action_confirm" string="Approve" type="object" class="oe_highlight" groups="base.group_user" attrs="{'invisible': [('is_approve', '=', True)]}"/>
+                <button name="action_cancel_reject_reason_wizard" string="Reject" type="object" groups="base.group_user" attrs="{'invisible': [('is_approve', '=', True)]}"/>
+                <button name="action_cancel" string="Cancel"  type="object" groups="base.group_user" attrs="{'invisible': [('state', '!=', 'to approve')]}"/>
+                <field name="is_approve" invisible="1" />
             </xpath>
         </field>
     </record>
