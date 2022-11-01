@@ -7,10 +7,10 @@
         <field name="arch" type="xml">
             <xpath expr="//field[@name='wht_type_id']" position="replace"/>
             <xpath expr="//field[@name='taxes_id']" position="after">
-                <field name="wht_type_id" string="WHT"/>
+                <field name="wht_type_id" string="WHT" attrs="{'invisible': [('detailed_type', '!=', 'service')]}"/>
             </xpath>
             <xpath expr="//field[@name='purchase_method']" position="after">
-                <field name="purchase_wht_type_id"/>
+                <field name="purchase_wht_type_id" attrs="{'invisible': [('detailed_type', '!=', 'service')]}"/>
             </xpath>
         </field>
     </record>
