@@ -24,7 +24,7 @@ class PurchaseController(KBTApiBase):
         Account = request.env['account.analytic.account']
         vals = {}
 
-        if (not order_line.get('product_code')) and order_line.get('note'):
+        if not order_line.get('product_code') and order_line.get('note'):
             vals = {
                 'sequence': order_line.get('seq_line'),
                 'name': order_line.get('note'),
@@ -51,6 +51,16 @@ class PurchaseController(KBTApiBase):
                     "product_id not found"
                 )
 
+            wht_id = product_id.purchase_wht_type_id
+            if 'x_wht_id' in order_line:
+                wht_id = request.env['account.wht.type'].search([
+                    ('sequence', '=', (seq := int(order_line.get('x_wht_id')))),
+                ])
+                if not wht_id:
+                    raise ValueError(
+                        "Withholding Tax: %s have no data." % seq
+                    )
+
             vals.update({
                 'product_id': product_id.id,
                 'name': order_line.get('name'),
@@ -59,29 +69,13 @@ class PurchaseController(KBTApiBase):
                 'price_unit': order_line.get('price_unit'),
                 'sequence': order_line.get('seq_line'),
                 'note': order_line.get('note'),
-                'wht_type_id': product_id.purchase_wht_type_id.id
+                'wht_type_id': wht_id.id
 
             })
         else:
             raise ValueError(
                 "This item is neither 'product' nor 'note'."
             )
-
-        if 'x_wht_id' in order_line:
-            wht_seq = order_line.get('x_wht_id')
-            wht_id = request.env['account.wht.type'].search([
-                ('sequence', '=', wht_seq),
-            ])
-            if not wht_id:
-                raise ValueError(
-                    "wht_id not found."
-                )
-
-            if order_line.get('x_wht_id') and not wht_id:
-                raise ValueError(
-                    "Withholding Tax: %s have no data." % wht_seq
-                )
-            vals['x_wht_id'] = wht_id.id or False
 
         return vals
 

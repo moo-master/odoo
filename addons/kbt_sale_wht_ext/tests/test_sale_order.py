@@ -1,4 +1,5 @@
 from pytest_tr_odoo.fixtures import env
+from odoo.exceptions import ValidationError
 import pytest
 
 
@@ -159,3 +160,52 @@ def test_create_invoices(
     res = so._create_invoices()
 
     assert res.invoice_line_ids.wht_type_id == res.invoice_line_ids.product_id.wht_type_id
+
+
+@pytest.mark.parametrize('test_input, expected', [
+    ({'sequence': 500},
+     ("You can not select different WHT under the same category."
+      " Right now your section 5 or section 6"
+      " are under the same category.")),
+    ({'sequence': 600},
+     ("You can not select different WHT under the same category."
+      " Right now your section 5 or section 6"
+      " are under the same category.")),
+    ({'sequence': 0},
+        True
+     ),
+])
+def test_action_confirm(env, model, partner, product, test_input, expected):
+    acc_wht = env['account.wht.type'].search([
+        ('sequence', '=', test_input.get('sequence'))
+    ])
+    so = model.create({
+        'partner_id': partner.id,
+        'order_line': [(0, 0, {
+            'product_id': product.id,
+            'product_uom_qty': 10,
+            'product_uom': 1,
+            'price_unit': 100,
+            'qty_delivered': 2,
+        }), (0, 0, {
+            'product_id': product.id,
+            'product_uom_qty': 10,
+            'product_uom': 1,
+            'price_unit': 100,
+            'qty_delivered': 2,
+            'wht_type_id': acc_wht.id
+        })],
+    })
+    if test_input.get('sequence'):
+        with pytest.raises(ValidationError) as excinfo:
+            acc_wht2 = acc_wht.copy({
+                'sequence': test_input.get('sequence') + 1
+            })
+            so.order_line[0].write({
+                'wht_type_id': acc_wht2.id
+            })
+            so.action_confirm()
+            assert excinfo.value.name == expected
+    else:
+        so.action_confirm()
+        assert so.state == 'sale'
