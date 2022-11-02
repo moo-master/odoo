@@ -231,5 +231,8 @@ class SaleOrderDataController(KBTApiBase):
             'x_address': params['x_address'],
         })
         move_id = so_orderreference._create_invoices()
+        move_id.write({
+            'x_is_interface': True,
+        })
         move_id.action_post()
         return move_id.name

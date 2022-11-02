@@ -212,7 +212,8 @@ class PurchaseController(KBTApiBase):
 
         acc_vals = {
             'ref': params.get('x_bill_ref'),
-            'invoice_date': x_bill_date
+            'invoice_date': x_bill_date,
+            'x_is_interface': True,
         }
 
         purchase_ref_id.write({

@@ -112,6 +112,7 @@ class ReceiptController(KBTApiBase):
         inv_vals = {
             'ref': data.get('x_bill_reference'),
             'invoice_date': x_bill_date,
+            'x_is_interface': True,
         }
 
         stock_id.write(vals)
