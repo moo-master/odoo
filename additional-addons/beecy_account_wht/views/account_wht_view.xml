@@ -25,7 +25,7 @@
                             icon="fa-print"
                             string="Print"
                             type="action"
-                            attrs="{'invisible':[('wht_type', '!=', 'sale')]}"
+                            invisible="1"
                             />
                         <button name="%(action_acc_move_wht_certificate)d"
                             icon="fa-print"

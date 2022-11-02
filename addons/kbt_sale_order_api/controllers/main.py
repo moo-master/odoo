@@ -30,7 +30,7 @@ class SaleOrderDataController(KBTApiBase):
         msg_list = []
         return msg_list
 
-    def _prepare_order_line(self, order_line, is_new_line):
+    def _prepare_order_line(self, order_line):
         vals = {}
         if not order_line.get('product_id') and order_line.get('note'):
             vals = {
@@ -46,6 +46,16 @@ class SaleOrderDataController(KBTApiBase):
                     "product_id not found."
                 )
 
+            wht_id = product_id.wht_type_id
+            if 'x_wht_id' in order_line:
+                wht_id = request.env['account.wht.type'].search([
+                    ('sequence', '=', (seq := int(order_line.get('x_wht_id')))),
+                ])
+                if not wht_id:
+                    raise ValueError(
+                        "Withholding Tax: %s have no data." % seq
+                    )
+
             vals.update({
                 'product_id': product_id.id,
                 'name': order_line.get('name'),
@@ -54,13 +64,12 @@ class SaleOrderDataController(KBTApiBase):
                 'discount': order_line.get('discount'),
                 'sequence': order_line.get('seq_line'),
                 'note': order_line.get('note'),
-                'wht_type_id': product_id.wht_type_id.id
+                'wht_type_id': wht_id.id,
             })
         else:
-            if is_new_line:
-                raise ValueError(
-                    "This item is neither 'product' nor 'note'."
-                )
+            raise ValueError(
+                "This item is neither 'product' nor 'note'."
+            )
 
         return vals
 
@@ -141,7 +150,7 @@ class SaleOrderDataController(KBTApiBase):
         vals['x_address'] = data.get('x_address')
 
         order_line_vals_list = [(0, 0, self._prepare_order_line(
-            order_line, True))
+            order_line))
             for order_line in params.get('lineItems')
         ]
         vals['order_line'] = order_line_vals_list
