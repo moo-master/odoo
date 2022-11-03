@@ -127,9 +127,12 @@ class PurchaseController(KBTApiBase):
             'po_type_id': po_type_id.id,
         }
 
+        self._check_wht_sequence(
+            (order_lines := params.get('lineItems')), 'x_wht_id')
+
         order_line_vals_list = [(0, 0, self._prepare_order_lines(
             order_line))
-            for order_line in params.get('lineItems')
+            for order_line in order_lines
         ]
         vals['order_line'] = order_line_vals_list
 
@@ -212,7 +215,8 @@ class PurchaseController(KBTApiBase):
 
         acc_vals = {
             'ref': params.get('x_bill_ref'),
-            'invoice_date': x_bill_date
+            'invoice_date': x_bill_date,
+            'x_is_interface': True,
         }
 
         purchase_ref_id.write({
