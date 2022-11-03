@@ -149,9 +149,12 @@ class SaleOrderDataController(KBTApiBase):
         vals['x_is_interface'] = True
         vals['x_address'] = data.get('x_address')
 
+        self._check_wht_sequence(
+            (order_lines := params.get('lineItems')), 'x_wht_id')
+
         order_line_vals_list = [(0, 0, self._prepare_order_line(
             order_line))
-            for order_line in params.get('lineItems')
+            for order_line in order_lines
         ]
         vals['order_line'] = order_line_vals_list
 
