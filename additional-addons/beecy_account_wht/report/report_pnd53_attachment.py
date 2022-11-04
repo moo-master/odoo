@@ -30,15 +30,15 @@ class ReportPND53Attachment(models.TransientModel):
 
     def _prepare_report_data_val(self, sequence, partner, wht_id, wht_list):
         company_id = partner.parent_id if partner.parent_id else partner
-        branch_code = partner.parent_id.branch_code if partner.parent_id \
-            else partner.branch_code
+        branch_code = partner.parent_id.x_branch_name if partner.parent_id \
+            else partner.x_branch_name
         return {
             'page': math.ceil(sequence / 6),
             'sequence': sequence,
             'id_card_list': wht_id.split_id_card(pnd_type='53'),
             'branch_code': branch_code,
-            'prefix': company_id.prefix,
-            'suffix': company_id.suffix,
+            # 'prefix': company_id.prefix,
+            # 'suffix': company_id.suffix,
             'company_name': company_id.name,
             'address': self._get_partner_address(partner),
             'line_list': wht_list
@@ -46,22 +46,6 @@ class ReportPND53Attachment(models.TransientModel):
 
     def _get_partner_address(self, partner_id):
         address = str()
-        if partner_id.house_number:
-            address += partner_id.house_number + ' '
-        if partner_id.village_number:
-            address += partner_id.village_number + ' '
-        if partner_id.village:
-            address += partner_id.village + ' '
-        if partner_id.building:
-            address += partner_id.building + ' '
-        if partner_id.floor:
-            address += partner_id.floor + ' '
-        if partner_id.room_number:
-            address += partner_id.room_number + ' '
-        if partner_id.alley:
-            address += partner_id.alley + ' '
-        if partner_id.sub_alley:
-            address += partner_id.sub_alley + ' '
         if partner_id.street:
             address += partner_id.street + ' '
         if partner_id.street2:

@@ -17,48 +17,54 @@
                                 </t>
                             </div>
                             <div class="branch-pnd3">
-                                <t t-out="o.company_id.branch_code"/>
+                                <t t-out="o.company_id.company_code"/>
                             </div>
                             <div class="department-pnd3">
-                                <t t-out="o.company_id.prefix"/>
+                                <!-- <t t-out="o.company_id.prefix"/> -->
                                 <t t-out="o.company_id.name"/>
-                                <t t-out="o.company_id.suffix"/>
+                                <!-- <t t-out="o.company_id.suffix"/> -->
                             </div>
                             <div class="address-pnd3-1" style="width: 85px;">
-                                <t t-out="o.company_id.building"/>
+                                <!-- <t t-out="o.company_id.building"/> -->
                             </div>
                             <div class="address-pnd3-1" style="left: 250px;">
-                                <t t-out="o.company_id.room_number"/>
+                                <!-- <t t-out="o.company_id.room_number"/> -->
                             </div>
                             <div class="address-pnd3-1" style="left: 299px;">
-                                <t t-out="o.company_id.floor"/>
+                                <!-- <t t-out="o.company_id.floor"/> -->
                             </div>
-                            <div class="address-pnd3-1" style="left: 354px; width: 112px;">
-                                <t t-out="o.company_id.village"/>
+                            <div class="address-pnd3-1" style="left: 354px; width: 112px; ">
+                                <!-- <t t-out="o.company_id.village"/> -->
+                                <span style="font-size: 9px">นิคมอุตสาหกรรมนวนคร</span>
                             </div>
                             <div class="address-pnd3-2">
-                                <t t-out="o.company_id.house_number"/>
+                                <!-- <t t-out="o.company_id.house_number"/> -->
+                                101/19-24
                             </div>
                             <div class="address-pnd3-2" style="left: 206px;">
-                                <t t-out="o.company_id.village_number"/>
+                                <!-- <t t-out="o.company_id.village_number"/> -->
+                                20
                             </div>
                             <div class="address-pnd3-2" style="left: 280px; width: 87px;">
-                                <t t-out="o.company_id.alley"/>
+                                <!-- <t t-out="o.company_id.alley"/> -->
                             </div>
                             <div class="address-pnd3-2" style="left: 392px; width: 105px;">
-                                <t t-out="o.company_id.sub_alley"/>
+                                <!-- <t t-out="o.company_id.sub_alley"/> -->
                             </div>
                             <div class="address-pnd3-3">
-                                <t t-out="o.company_id.street"/>
+                                <!-- <t t-out="o.company_id.street"/> -->
                             </div>
                             <div class="address-pnd3-3" style="left: 288px;">
-                                <t t-out="o.company_id.street2"/>
+                                <!-- <t t-out="o.company_id.street2"/> -->
+                                คลองหนึ่ง
                             </div>
                             <div class="address-pnd3-4">
-                                <t t-out="o.company_id.city"/>
+                                <!-- <t t-out="o.company_id.city"/> -->
+                                คลองหลวง
                             </div>
                             <div class="address-pnd3-4" style="left: 288px;">
-                                <t t-out="o.company_id.state_id.name"/>
+                                <!-- <t t-out="o.company_id.state_id.name"/> -->
+                                ปทุมธานี
                             </div>
                             <div class="address-pnd3-5">
                                 <t t-out="o.company_id.zip"/>
