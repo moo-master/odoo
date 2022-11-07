@@ -1,5 +1,6 @@
 import requests
 
+from odoo.http import request
 from odoo.addons.rts_api_base.controllers.main import APIBase
 
 
@@ -18,16 +19,24 @@ class KBTApiBase(APIBase):
         response_api.update(kwargs)
         return response_api
 
-    def _check_wht_sequence(self, order_lines, check_val):
+    def _check_wht_sequence(self, order_lines, default_wht):
         section_5_list = []
         section_6_list = []
         for line in order_lines:
-            if (self.section_check((seq := int(line.get(check_val)))) == 5
-                    and seq not in section_5_list):
+            product = request.env['product.product'].search(
+                [('default_code', '=', line.get('product_id'))])
+            if not product:
+                raise ValueError(
+                    "product_id not found."
+                )
+
+            seq = int(line.get('x_wht_id')) if line.get('x_wht_id') \
+                else getattr(product, default_wht).sequence
+            if (self.section_check(seq) == 5 and seq not in section_5_list):
                 section_5_list.append(seq)
-            if (self.section_check(seq) == 6
-                    and seq not in section_6_list):
+            if (self.section_check(seq) == 6 and seq not in section_6_list):
                 section_6_list.append(seq)
+
         if len(section_5_list) > 1 or len(section_6_list) > 1:
             raise ValueError(
                 "You can not select different WHT under the same category."
