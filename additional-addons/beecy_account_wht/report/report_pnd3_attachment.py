@@ -29,26 +29,27 @@ class ReportPND3Attachment(models.TransientModel):
         }
 
     def _prepare_report_data_val(self, sequence, partner, wht_id, wht_list):
-        branch_code = partner.parent_id.branch_code if partner.parent_id \
-            else partner.branch_code
+        branch_code = partner.parent_id.x_branch_name if partner.parent_id \
+            else partner.x_branch_name
+
+        name_lst = partner.name.split(' ')
+        first_name = name_lst[0]
+        last_name = ' '.join(name_lst[1:]) if len(name_lst) > 1 else ''
+
         return {
             'page': math.ceil(sequence / 6),
             'sequence': sequence,
             'id_card_list': wht_id.split_id_card(),
             'branch_code': branch_code,
-            'prefix': partner.prefix,
-            'first_name': partner.firstname,
-            'last_name': partner.lastname,
+            # 'prefix': partner.prefix,
+            'first_name': first_name,
+            'last_name': last_name,
             'address': self._get_partner_address(partner),
             'line_list': wht_list
         }
 
     def _get_partner_address(self, partner_id):
         address = str()
-        if partner_id.house_number:
-            address += partner_id.house_number + ' '
-        if partner_id.alley:
-            address += partner_id.alley + ' '
         if partner_id.street:
             address += partner_id.street + ' '
         if partner_id.street2:

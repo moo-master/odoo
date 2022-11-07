@@ -15,7 +15,7 @@
                 </div>
 
                 <div class="branch-pnd53-attach" style="letter-spacing: 7px;">
-                    <t t-out="o.company_id.branch_code"/>
+                    <t t-out="o.company_id.company_code"/>
                 </div>
 
                 <div class="page-pnd53-attach">

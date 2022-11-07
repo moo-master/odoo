@@ -45,7 +45,8 @@
                             string="Text File"
                             type="action"
                             icon="fa-file"
-                            class="oe_stat_button"/>
+                            class="oe_stat_button"
+                            invisible="1"/>
                     </div>
                     <div class="oe_title">
                         <h1 attrs="{'invisible': [('name', '!=', '/')]}">
