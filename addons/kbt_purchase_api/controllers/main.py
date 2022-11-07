@@ -24,14 +24,14 @@ class PurchaseController(KBTApiBase):
         Account = request.env['account.analytic.account']
         vals = {}
 
-        if not order_line.get('product_code') and order_line.get('note'):
+        if not order_line.get('product_id') and order_line.get('note'):
             vals = {
                 'sequence': order_line.get('seq_line'),
                 'name': order_line.get('note'),
                 'display_type': "line_note",
                 'product_qty': 0,
             }
-        elif order_line.get('product_code'):
+        elif order_line.get('product_id'):
             if order_line.get('analytic_account'):
                 account_analytic_id = Account.search(
                     [('code', '=', order_line.get('analytic_account'))])
@@ -44,15 +44,11 @@ class PurchaseController(KBTApiBase):
                 })
 
             product_id = request.env['product.product'].search([
-                ('default_code', '=', order_line.get('product_code')),
+                ('default_code', '=', order_line.get('product_id')),
             ])
-            if not product_id:
-                raise ValueError(
-                    "product_id not found"
-                )
 
             wht_id = product_id.purchase_wht_type_id
-            if 'x_wht_id' in order_line:
+            if order_line.get('x_wht_id'):
                 wht_id = request.env['account.wht.type'].search([
                     ('sequence', '=', (seq := int(order_line.get('x_wht_id')))),
                 ])
@@ -128,7 +124,10 @@ class PurchaseController(KBTApiBase):
         }
 
         self._check_wht_sequence(
-            (order_lines := params.get('lineItems')), 'x_wht_id')
+            filter(
+                lambda x: x.get('product_id'),
+                (order_lines := params.get('lineItems'))),
+            'purchase_wht_type_id')
 
         order_line_vals_list = [(0, 0, self._prepare_order_lines(
             order_line))
