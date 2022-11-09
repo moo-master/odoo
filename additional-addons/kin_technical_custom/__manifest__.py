@@ -3,21 +3,21 @@
     'name': "kin_technical_custom",
 
     'summary': """
-        Short (1 phrase/line) summary of the module's purpose, used as
-        subtitle on modules listing or apps.openerp.com""",
+        Technical custom groups for support users role.
+        """,
 
     'description': """
-        Long description of module's purpose
+        Technical custom groups for support users role.
     """,
 
-    'author': "My Company",
-    'website': "http://www.yourcompany.com",
+    'author': "Nattikan c.",
+    'website': "https://www.kasetinno.com/",
 
     # Categories can be used to filter modules in modules listing
     # Check https://github.com/odoo/odoo/blob/15.0/odoo/addons/base/data/ir_module_category_data.xml
     # for the full list
     'category': 'Uncategorized',
-    'version': '0.1',
+    'version': '1.0.0',
 
     # any module necessary for this one to work correctly
     'depends': ['base'],
