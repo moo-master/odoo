@@ -41,13 +41,9 @@ class SaleOrderDataController(KBTApiBase):
         elif order_line.get('product_id'):
             product_id = request.env['product.product'].search(
                 [('default_code', '=', order_line.get('product_id'))])
-            if not product_id:
-                raise ValueError(
-                    "product_id not found."
-                )
 
             wht_id = product_id.wht_type_id
-            if 'x_wht_id' in order_line:
+            if order_line.get('x_wht_id'):
                 wht_id = request.env['account.wht.type'].search([
                     ('sequence', '=', (seq := int(order_line.get('x_wht_id')))),
                 ])
@@ -149,9 +145,15 @@ class SaleOrderDataController(KBTApiBase):
         vals['x_is_interface'] = True
         vals['x_address'] = data.get('x_address')
 
+        self._check_wht_sequence(
+            filter(
+                lambda x: x.get('product_id'),
+                (order_lines := params.get('lineItems'))),
+            'wht_type_id')
+
         order_line_vals_list = [(0, 0, self._prepare_order_line(
             order_line))
-            for order_line in params.get('lineItems')
+            for order_line in order_lines
         ]
         vals['order_line'] = order_line_vals_list
 
@@ -231,5 +233,8 @@ class SaleOrderDataController(KBTApiBase):
             'x_address': params['x_address'],
         })
         move_id = so_orderreference._create_invoices()
+        move_id.write({
+            'x_is_interface': True,
+        })
         move_id.action_post()
         return move_id.name

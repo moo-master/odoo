@@ -34,6 +34,14 @@ class AccountMove(models.Model):
         comodel_name='res.reason',
         domain=[('account_type', '=', 'out_refund')],
     )
+    state = fields.Selection(
+        selection_add=[
+            ('reject', 'Reject'),
+        ],
+        ondelete={
+            'reject': 'cascade',
+        }
+    )
 
     def get_amount_total_text(self, amount):
         return bahttext(amount)

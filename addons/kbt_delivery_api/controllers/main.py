@@ -145,6 +145,9 @@ class DeliveryController(KBTApiBase):
                     "acc_move not found."
                 )
         for inv in acc_move:
+            inv.write({
+                'x_is_interface': True,
+            })
             inv.action_post()
             response_api.append(inv.name)
 

@@ -129,6 +129,32 @@ class AccountWhtPnd(models.Model):
     wht_ids_count_str = fields.Char(
         compute='_compute_wht_line_partner'
     )
+    year_select = fields.Selection(
+        selection=[
+            (str(num), str(num)) for num in range(
+                2021, (datetime.now().year) + 2)
+        ],
+        string='Year',
+        default=str(datetime.now().year),
+    )
+    month_select = fields.Selection(
+        string='Month',
+        selection=[
+            ('01', '01'),
+            ('02', '02'),
+            ('03', '03'),
+            ('04', '04'),
+            ('05', '05'),
+            ('06', '06'),
+            ('07', '07'),
+            ('08', '08'),
+            ('09', '09'),
+            ('10', '10'),
+            ('11', '11'),
+            ('12', '12'),
+        ],
+        default=str(datetime.now().month),
+    )
 
     @api.depends('wht_ids')
     def _compute_wht_line_partner(self):
@@ -194,11 +220,11 @@ class AccountWhtPnd(models.Model):
         report_id = self.env[model_name]._get_report_values(self.ids)
         return [report_id['total_page'], len(report_id['data_list'])]
 
-    @api.depends('select_month_date')
+    @api.depends('year_select', 'month_select')
     def _compute_pickup_time_formatted(self):
         for rec in self:
-            if rec.select_month_date:
-                date = rec.select_month_date
-                date_obj = datetime.strptime(str(date), '%Y-%m-%d')
-                rec.select_month = datetime.strftime(date_obj, '%m/%Y')
-                rec.name = datetime.strftime(date_obj, '%m/%Y')
+            date_obj = datetime.strptime(
+                f'{rec.year_select}-{rec.month_select}', '%Y-%m')
+            rec.select_month_date = date_obj
+            rec.select_month = datetime.strftime(date_obj, '%m/%Y')
+            rec.name = datetime.strftime(date_obj, '%m/%Y')

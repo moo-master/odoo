@@ -27,7 +27,9 @@
                             </t>
                         </div>
                         <div class="taxpayer">
-                           <span t-field="o.env.company.title_id.prefix" /> <span t-field="o.env.company.name" /> <span t-field="o.env.company.title_id.suffix" />
+                           <!-- <span t-field="o.env.company.title_id.prefix" /> -->
+                           <span t-field="o.env.company.name" />
+                           <!-- <span t-field="o.env.company.title_id.suffix" /> -->
                         </div>
                         <div class="taxpayer-address">
                             <t t-if="'address_company_line1' in o.env.company.fields_get()">
@@ -35,14 +37,15 @@
                                 <span t-esc="o.env.company.address_company_line2"/>
                             </t>
                             <t t-else="">
-                                <span t-field="o.env.company.house_number" />
+                                <!-- comment field from Beecy -->
+                                <!-- <span t-field="o.env.company.house_number" />
                                 <span t-field="o.env.company.village_number" />
                                 <span t-field="o.env.company.village" />
                                 <span t-field="o.env.company.building" />
                                 <span t-field="o.env.company.floor" />
                                 <span t-field="o.env.company.room_number" />
                                 <span t-field="o.env.company.alley" />
-                                <span t-field="o.env.company.sub_alley" />
+                                <span t-field="o.env.company.sub_alley" /> -->
                                 <span t-field="o.env.company.street" />
                                 <span t-field="o.env.company.street2" />
                                 <span t-field="o.env.company.city" />
@@ -61,7 +64,10 @@
                             </t>
                         </div>
                         <div class="taxpayer-2">
-                            <span t-field="o.partner_id.prefix" /> <span t-field="o.partner_id.name" /> <span t-field="o.partner_id.suffix" />
+                            <!-- comment field from Beecy -->
+                            <!-- <span t-field="o.partner_id.prefix" /> -->
+                            <span t-field="o.partner_id.name" />
+                            <!-- <span t-field="o.partner_id.suffix" /> -->
                         </div>
                         <div class="taxpayer-address-2">
                             <t t-if="'address_partner_line1' in o.partner_id.fields_get()">
@@ -69,14 +75,15 @@
                                 <span t-esc="o.partner_id.address_partner_line2" />
                             </t>
                             <t t-else="">
-                                <span t-field="o.partner_id.house_number" />
+                                <!-- comment field from Beecy -->
+                                <!-- <span t-field="o.partner_id.house_number" />
                                 <span t-field="o.partner_id.village_number" />
                                 <span t-field="o.partner_id.village" />
                                 <span t-field="o.partner_id.building" />
                                 <span t-field="o.partner_id.floor" />
                                 <span t-field="o.partner_id.room_number" />
                                 <span t-field="o.partner_id.alley" />
-                                <span t-field="o.partner_id.sub_alley" />
+                                <span t-field="o.partner_id.sub_alley" /> -->
                                 <span t-field="o.partner_id.street" />
                                 <span t-field="o.partner_id.street2" />
                                 <span t-field="o.partner_id.city" />

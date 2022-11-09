@@ -5,7 +5,7 @@
         <field name="name">account.wht.view.form</field>
         <field name="model">account.wht</field>
         <field name="arch" type="xml">
-            <form string="" create="1">
+            <form string="" create="0">
                 <header>
                     <button name="action_set_to_draft"
                             string="Set to Draft"
@@ -100,7 +100,7 @@
         <field name="name">account.wht.view.tree</field>
         <field name="model">account.wht</field>
         <field name="arch" type="xml">
-            <tree create="1">
+            <tree create="0">
                 <field name="name" />
                 <field name="document_date" />
                 <field name="partner_id" />

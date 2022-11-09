@@ -45,7 +45,8 @@
                             string="Text File"
                             type="action"
                             icon="fa-file"
-                            class="oe_stat_button"/>
+                            class="oe_stat_button"
+                            invisible="1"/>
                     </div>
                     <div class="oe_title">
                         <h1 attrs="{'invisible': [('name', '!=', '/')]}">
@@ -60,11 +61,11 @@
                     <group>
                         <group>
                             <field name="select_month"
-                                   class="oe_read_only"
                                    force_save="1"
                                    string="Month"
                             />
                             <field name="select_month_date"
+                                   invisible="1"
                                    widget="date"
                                    class="oe_edit_only"
                                    force_save="1"
@@ -75,6 +76,12 @@
                                     'maxViewMode': 'years',
                                     'viewModes': 'months',} }"
                             />
+                            <label for="month_select" />
+                            <div name="month_year_div" class="d-flex">
+                                <field name="month_select" />
+                                <span class="oe_inline o_form_label mx-5 font-weight-bold">Year</span>
+                                <field name="year_select" />
+                            </div>
                             <field name="pnd_date"/>
                             <field name="fill_type"/>
                             <field name="additional_fill" attrs="{'invisible': [('fill_type', '!=', 'additional')]}"/>
@@ -89,7 +96,7 @@
                             </group>
                         </group>
                         <field name="wht_ids" nolabel="1" domain="[('wht_kind', '=', pnd_type), ('status', '=', 'done'), ('wht_type', '=', 'purchase')]" context="{'default_wht_kind': pnd_type}">
-                            <tree editable="bottom">
+                            <tree editable="bottom" create="0">
                                 <field name="name" readonly="1"/>
                                 <field name="document_date" readonly="1"/>
                                 <field name="partner_id" readonly="1"/>
