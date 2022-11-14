@@ -51,7 +51,7 @@
 
                     <div t-attf-class="pnd53-box-#{seq_no}-line-2" style="left: 100px; font-size: 11px; width: 348px;">
                         <t t-out="data.get('prefix')"/>
-                        <t t-out="data.get('company_name')"/>
+                        <t t-out="data.get('company_name').replace('(สำนักงานใหญ่)', '')"/>
                         <t t-out="data.get('suffix')"/>
                     </div>
 
