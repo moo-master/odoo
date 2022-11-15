@@ -22,8 +22,12 @@ class SaleOrder(models.Model):
 
     def _create_invoices(self, grouped=False, final=False, date=None):
         res = super()._create_invoices(grouped=grouped, final=final, date=date)
-        for so in res.invoice_line_ids:
-            so.wht_type_id = so.product_id.wht_type_id.id
+        for o_line in self.order_line:
+            for i_line in o_line.invoice_lines:
+                if o_line.wht_type_id:
+                    i_line.wht_type_id = o_line.wht_type_id.id
+                else:
+                    i_line.wht_type_id = o_line.product_id.wht_type_id.id
 
         return res
 

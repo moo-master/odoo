@@ -142,24 +142,36 @@ def test_create_invoices(
     so = model.create({
         'partner_id': partner.id,
         'date_order': '2022-08-31 11:11:11',
-        'order_line': [(0, 0, {
-            'product_id': product.id,
-            'name': product.name,
-            'sequence': 10,
-            'product_uom_qty': 10,
-            'product_uom': 1,
-            'currency_id': currency.id,
-            'price_unit': 100,
-            'qty_delivered': 2,
-            'wht_type_id': acc_wht.id
-        })],
+        'order_line': [
+            (0, 0, {
+                'product_id': product.id,
+                'name': product.name,
+                'sequence': 10,
+                'product_uom_qty': 10,
+                'product_uom': 1,
+                'currency_id': currency.id,
+                'price_unit': 100,
+                'qty_delivered': 2,
+                'wht_type_id': acc_wht.id
+            }),
+            (0, 0, {
+                'product_id': product.id,
+                'name': product.name,
+                'sequence': 10,
+                'product_uom_qty': 10,
+                'product_uom': 1,
+                'currency_id': currency.id,
+                'price_unit': 100,
+                'qty_delivered': 2
+            })
+        ],
     })
 
     so.action_confirm()
 
     res = so._create_invoices()
 
-    assert res.invoice_line_ids.wht_type_id == res.invoice_line_ids.product_id.wht_type_id
+    assert res.invoice_line_ids.wht_type_id == so.order_line.wht_type_id
 
 
 @pytest.mark.parametrize('test_input, expected', [
