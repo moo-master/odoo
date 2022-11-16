@@ -174,4 +174,4 @@ def test_create(
     action = payment.button_open_wht()
     assert wht.account_id.id == res_expected[expected]
     assert action['name'] == 'Paid Withholding Tax'
-    assert payment.count_wht == 1
+    assert payment.wht_count == 1
