@@ -36,6 +36,9 @@ class AccountPaymentRegister(models.TransientModel):
                 'line_ids': line_ids_lst,
             })
             wht.action_done()
+            payments.write({
+                'wht_ids': [(4, wht.id)]
+            })
 
         return payments
 

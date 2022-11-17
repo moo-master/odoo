@@ -1,4 +1,4 @@
-from odoo import models, fields
+from odoo import models, fields, api, _
 
 
 class AccountPayment(models.Model):
@@ -8,6 +8,46 @@ class AccountPayment(models.Model):
         comodel_name='account.move',
         string='Move with WHT'
     )
+    wht_ids = fields.One2many(
+        'account.wht',
+        'payment_id',
+        'Withholding Tax'
+    )
+    wht_count = fields.Integer(
+        'WHT count',
+        compute='_compute_wht_count',
+        default=0
+    )
+
+    @api.depends('wht_ids')
+    def _compute_wht_count(self):
+        for rec in self:
+            rec.wht_count = len(rec.wht_ids)
+            return
+
+    def button_open_wht(self):
+        ''' Redirect the user to the wht(s) paid by this payment.
+        :return:    An action on account.wht.
+        '''
+        self.ensure_one()
+
+        action = {
+            'name': _("Paid Withholding Tax"),
+            'type': 'ir.actions.act_window',
+            'res_model': 'account.wht',
+            'context': {'create': False},
+        }
+        if len(self.wht_ids) == 1:
+            action.update({
+                'view_mode': 'form',
+                'res_id': self.wht_ids.id,
+            })
+        else:
+            action.update({
+                'view_mode': 'list,form',
+                'domain': [('id', 'in', self.wht_ids.ids)],
+            })
+        return action
 
     def _prepare_move_line_default_vals(self, write_off_line_vals=None):
         res = super()._prepare_move_line_default_vals(
