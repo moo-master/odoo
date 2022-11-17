@@ -23,7 +23,7 @@
     ],
     'data': [
         'security/ir.model.access.csv',
-        'data/account.wht.type.csv',
+        # 'data/account.wht.type.csv',
         'data/ir_sequence_data.xml',
         'data/paperformat.xml',
         'data/report_data.xml',
