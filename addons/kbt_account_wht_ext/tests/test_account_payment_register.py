@@ -162,7 +162,7 @@ def test_create(
     wizard_id = model.with_context(
         active_model=ctx['active_model'],
         active_ids=ctx['active_ids']).create(val)
-    wizard_id._create_payments()
+    payment = wizard_id._create_payments()
 
     wht = env['account.wht'].search([])
     res_expected = {
@@ -170,4 +170,8 @@ def test_create(
         2: account_pnd3_id.id,
         3: account_pnd53_id.id,
     }
+    payment._compute_wht_count()
+    action = payment.button_open_wht()
     assert wht.account_id.id == res_expected[expected]
+    assert action['name'] == 'Paid Withholding Tax'
+    assert payment.wht_count == 1

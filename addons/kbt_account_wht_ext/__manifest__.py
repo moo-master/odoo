@@ -17,5 +17,6 @@
     'data': [
         'views/res_config_settings_views.xml',
         'views/account_move_view.xml',
+        'views/account_payment_view.xml'
     ]
 }
