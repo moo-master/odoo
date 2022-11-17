@@ -458,7 +458,12 @@
                             <span t-out="line.name"/>
                         </td>
                         <td class="text-right" style="width: 23%;">
-                            <span t-out="'{:,.2f}'.format(line.quantity) + ' ' + line.product_uom_id.name"/>
+                            <t t-if="line.product_uom_id">
+                                <span t-out="'{:,.2f}'.format(line.quantity) + ' ' + line.product_uom_id.name"/>
+                            </t>
+                            <t t-else="">
+                                <span t-out="'{:,.2f}'.format(line.quantity)"/>
+                            </t>
                         </td>
                         <td class="text-right" style="width: 16%;">
                             <span t-out="'{:,.2f}'.format(line.price_subtotal)"/>

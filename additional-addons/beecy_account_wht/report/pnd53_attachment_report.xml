@@ -2,7 +2,8 @@
 <odoo>
     <template id="report_pnd53_attach_body">
         <t t-call="web.basic_layout">
-            <div class="page height_background_landscape" style="font-size: 15px; background: url(/beecy_account_wht/static/src/img/pnd53-attach.png) no-repeat center; background-size:contain; margin-left: -10px;">
+            <link href="/beecy_account_cheque/static/src/css/angsananew.css" rel="stylesheet"/>
+            <div class="page height_background_landscape" style="font-size: 15px; background: url(/beecy_account_wht/static/src/img/pnd53-attach.png) no-repeat center; background-size:contain; margin-left: -10px; font-family: Angsana New;">
                 <div class='id-card-pnd53-attach'>
                     <t t-set="vat_split_list" t-value="o.split_id_card()"/>
                     <t t-if="vat_split_list">
