@@ -46,6 +46,6 @@
         <field name="view_mode">tree,form</field>
     </record>
 
-    <menuitem id="menu_level" name="Levels" action="action_list_levels" parent="account.account_management_menu" groups="account.group_account_manager" sequence="36"/>
+    <menuitem id="menu_level" name="Levels" action="action_list_levels" parent="hr.menu_human_resources_configuration" groups="hr.group_hr_manager" sequence="1"/>
 
 </odoo>
