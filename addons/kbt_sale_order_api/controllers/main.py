@@ -228,13 +228,22 @@ class SaleOrderDataController(KBTApiBase):
                     'qty_delivered':
                         seq_id.qty_delivered + order_line['qty_delivered']
                 }))
+        partner = so_orderreference.partner_id
+        x_address = params.get('x_address') or (
+            f"{partner.street or ''} {partner.street2 or ''} "
+            + f"{partner.city or ''} {partner.state_id.name or ''} "
+            + f"{partner.country_id.name or ''} {partner.zip or ''}"
+        )
+        x_partner_name = params.get('x_partner_name') or partner.name
         so_orderreference.update({
             'order_line': update_line_lst,
-            'x_address': params['x_address'],
+            'x_address': x_address,
+            'x_partner_name': x_partner_name
         })
         move_id = so_orderreference._create_invoices()
         move_id.write({
             'x_is_interface': True,
+            'x_partner_name': x_partner_name
         })
         move_id.action_post()
         return move_id.name
