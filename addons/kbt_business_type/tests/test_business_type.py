@@ -8,7 +8,6 @@ def model(env):
 
 
 def test__onchange_is_unearn_revenue(env, model):
-    acc = env['account.account'].search([])
     business_type = model.new({
         'x_revenue_account_id': 1,
         'is_unearn_revenue': False
