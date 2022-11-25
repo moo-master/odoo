@@ -1,5 +1,4 @@
-from odoo import models, fields, api, _
-from odoo.exceptions import ValidationError
+from odoo import models, fields, api
 
 
 class SaleOrder(models.Model):
@@ -30,28 +29,3 @@ class SaleOrder(models.Model):
                     i_line.wht_type_id = o_line.product_id.wht_type_id.id
 
         return res
-
-    def action_confirm(self):
-        res = super(SaleOrder, self).action_confirm()
-        for rec in self:
-            section_5_list = []
-            section_6_list = []
-            for line in rec.order_line:
-                if (self.section_check(line.wht_type_id.sequence) == 5
-                        and line.wht_type_id.id not in section_5_list):
-                    section_5_list.append(line.wht_type_id.id)
-                if (self.section_check(line.wht_type_id.sequence) == 6
-                        and line.wht_type_id.id not in section_6_list):
-                    section_6_list.append(line.wht_type_id.id)
-            if len(section_5_list) > 1 or len(section_6_list) > 1:
-                raise ValidationError(
-                    _("You can not select different WHT under the same category."
-                      " Right now your section 5 or section 6"
-                      " are under the same category."))
-        return res
-
-    def section_check(self, sequence):
-        if(int(sequence / 500) == 1 and (sequence % 500) < 100):
-            return 5
-        if(int(sequence / 600) == 1 and (sequence % 600) < 100):
-            return 6
