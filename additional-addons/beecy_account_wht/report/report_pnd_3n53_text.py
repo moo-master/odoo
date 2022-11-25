@@ -10,7 +10,7 @@ class ReportPND3n53Text(models.TransientModel):
 
     def _prepare_text_data(self, text, i, wht_id, line_id):
         partner_id = wht_id.partner_id
-        code = partner_id.branch_code if partner_id.branch != 'hq' else '00000' if partner_id.company_type == 'company' else ''
+        code = partner_id.x_branch_name if partner_id.x_branch_name != 'hq' else '00000' if partner_id.company_type == 'company' else ''
         document_date = (
             wht_id.document_date + relativedelta(years=543)
         ).strftime('%d/%m/%Y')
@@ -20,29 +20,25 @@ class ReportPND3n53Text(models.TransientModel):
         else:
             wht_payment = 1 if wht_id.wht_payment == 'wht' else 2
 
-        if partner_id.company_type == 'person':
-            name = (partner_id.prefix or '') + '|' + \
-                (partner_id.firstname or '') + '||' + (partner_id.lastname or '')
-        else:
-            name = (partner_id.prefix or '') + '|' + (partner_id.name or '') + ((' ' + partner_id.suffix)
-                                                                                if partner_id.suffix and partner_id.name else partner_id.suffix or '')
+        name = partner_id.name
 
-        text += "{}|{}|{}|{}|{}|{}|{}|{}|{}|{}|{}|{}|{}|{}|{}|{}|{}|{}|{}|{}|{}|{}|{}\n".\
+        # if partner_id.company_type == 'person':
+        #     name = (partner_id.prefix or '') + '|' + \
+        #         (partner_id.firstname or '') + '||' + (partner_id.lastname or '')
+        # else:
+        #     name = (partner_id.prefix or '') + '|' + (partner_id.name or '') + ((' ' + partner_id.suffix)
+        # if partner_id.suffix and partner_id.name else partner_id.suffix or
+        # '')
+        street = '|'.join(partner_id.street.split(' '))
+        street2 = '|'.join(partner_id.street2.split(' '))
+        text += "{}|{}|{}|{}|{}|{}|{}|{}|{}|{}|{}|{}|{}|{}|{}\n".\
             format(
                 i,
                 partner_id.vat or '',
                 code,
                 name,
-                partner_id.building or '',
-                partner_id.room_number or '',
-                partner_id.floor or '',
-                partner_id.village or '',
-                partner_id.house_number or '',
-                partner_id.village_number or '',
-                partner_id.alley or '',
-                partner_id.sub_alley or '',
-                partner_id.street or '',
-                partner_id.street2 or '',
+                street or '',
+                street2 or '',
                 partner_id.city or '',
                 partner_id.state_id.name or '',
                 partner_id.zip or '',
