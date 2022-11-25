@@ -8,6 +8,8 @@ class SaleOrder(models.Model):
     x_is_interface = fields.Boolean(
         string='Interface',
         readonly=True,
+        default=False,
+        copy=False,
     )
 
     so_type_id = fields.Many2one(
