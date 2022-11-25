@@ -92,7 +92,7 @@
             <t t-set="payment_day" t-value="o.invoice_payment_term_id.line_ids.days"/>
         </t>
         <t t-set="invoice_date_due" t-value="'-'"/>
-        <t t-if="payment_day">
+        <t t-if="o.invoice_date_due">
             <t t-set="invoice_date_due" t-value="o.invoice_date_due.strftime('%d/%m/%Y')"/>
         </t>
         <t t-set="x_branch_name" t-value="'-'"/>
@@ -102,9 +102,10 @@
         <t t-else="">
             <t t-set="x_branch_name" t-value="o.partner_id.x_branch_name"/>
         </t>
+        <link href="/kbt_account_ext/static/src/css/font.css" rel="stylesheet"/>
 
         <!-- Header -->
-        <div class="header" style="font-size: 14px;">
+        <div class="header" style="font-size: 14px; font-family: THSarabunNew;">
             <div class="content">
                 <div class="row" name="company-logo">
                     <div class="col-11" style="">
@@ -213,7 +214,7 @@
                         <th class="border border-dark" style="width: 23%;">
                             <b><span>วันครบกำหนด/Due Date</span></b>
                             <br/>
-                            <span t-out="invoice_date"/>
+                            <span t-out="invoice_date_due"/>
                         </th>
                         <th class="border border-dark" style="width: 16%;">
                             <b><span>สกุลเงิน/Currency</span></b>
@@ -232,9 +233,11 @@
         <t t-if="o.invoice_date">
             <t t-set="invoice_date" t-value="o.invoice_date.strftime('%d/%m/%Y')"/>
         </t>
+        <link href="/kbt_account_ext/static/src/css/font.css" rel="stylesheet"/>
+
         <!-- Footer -->
-        <div class="footer" t-attf-class="{{font_fam}} last-footer" style="font-size: 14px;">
-        <script type="text/javascript" src="/kbt_account_ext/static/src/js/force_new_page.js"/>
+        <div class="footer" t-attf-class="{{font_fam}} last-footer" style="font-size: 20px; font-family: THSarabunNew;">
+            <script type="text/javascript" src="/kbt_account_ext/static/src/js/force_new_page.js"/>
             <style>
                 #dummy-row {
                     visibility: hidden;
@@ -357,7 +360,7 @@
                                 <div class="row" style="line-height: 1.75rem;">
                                     <div class="col" style="text-align: left;">
                                         <div>
-                                            1. ชำระเงินผ่านบริการชำระเงินข้ามธนาคาร
+                                            1. ชำระเงินผ่านบริการรับชำระเงินข้ามธนาคาร
                                         </div>
                                         <div>
                                             2. โปรดใช้ใบนำฝากพิเศษ (Special Pay-in) ในการชำระเงิน
@@ -375,10 +378,7 @@
                 <div class="border-top border-dark" style="line-height: 1.75rem;">
                     <div class="text-left" style="padding-left: 5px;">
                         <div>
-                            คำเตือน: ถ้าไม่มีการทักท้วงรายการข้างต้นประการใดภายใน <span t-esc="o.company_id.negotiate_duration"/> วัน บริษัทๆ จะถือว่ารายการข้างต้นนี้ถูกต้องแล้ว บริษัทๆ จะคิดค่าล่าช้าในอัตราไม่เกิน
-                        </div>
-                        <div>
-                            <span t-out="'{:,.2f}'.format(o.company_id.payment_fee_percent)"/>% ต่อเดือนสำหรับบิลที่ไม่ชำระตามที่กำหนด / Delay payment fee up to <span t-out="'{:,.2f}'.format(o.company_id.payment_fee_percent)"/>% per month will be charged on all overdue bill
+                            คำเตือน: ถ้าไม่มีการทักท้วงรายการข้างต้นประการใดภายใน <span t-esc="o.company_id.negotiate_duration"/> วัน บริษัทๆ จะถือว่ารายการข้างต้นนี้ถูกต้องแล้ว บริษัทๆ จะคิดค่าล่าช้าในอัตราไม่เกิน <span t-out="'{:,.2f}'.format(o.company_id.payment_fee_percent)"/>% ต่อเดือนสำหรับบิลที่ไม่ชำระตามที่กำหนด / Delay payment fee up to <span t-out="'{:,.2f}'.format(o.company_id.payment_fee_percent)"/>% per month will be charged on all overdue bill
                         </div>
                     </div>
                 </div>
@@ -424,11 +424,13 @@
     </template>
 
     <template id="kbt_account_ext.internal_layout_body">
-        <div class="main" t-attf-class="page {{font_fam}} page-body-set">
-            <table class="table border-left border-bottom border-dark" style="font-size: 13px; margin-bottom: 0px;">
+        <link href="/kbt_account_ext/static/src/css/font.css" rel="stylesheet"/>
+
+        <div class="main" t-attf-class="page {{font_fam}} page-body-set" style="font-family: THSarabunNew;">
+            <table class="table table-sm border-left border-bottom border-dark" style="font-size: 20px; margin-bottom: 0px;">
                 <tr class="text-center">
                     <th class="border-right border-dark" style="width: 21%;">
-                        <span>รายการที่<br /> (Item No.)</span>
+                        <b>รายการที่<br /> (Item No.)</b>
                     </th>
                     <th class="border-right border-dark" style="width: 40%;">
                         <span>รายการสินค้า/บริการ<br /> (Goods/Service)</span>
@@ -441,23 +443,23 @@
                     </th>
                 </tr>
             </table>
-            <table class="table border border-dark" style="font-size: 13px;">
+            <table class="table table-sm border border-dark" style="font-size: 20px;">
                 <t t-set="counter" t-value="1"/>
                 <t t-set="count" t-value="0"/>
                 <t t-set="add" t-value="0"/>
                 <!-- push value for footer  -->
-                <t t-set="push" t-value="172"/>
+                <t t-set="push" t-value="167"/>
                 <t t-set="check" t-value="0"/>
                 <t t-set="row" t-value="0"/>
                 <t t-foreach="o.invoice_line_ids" t-as="line">
                     <tr style="">
-                        <td class="text-center" style="width: 21%;">
+                        <td class="text-center" style="width: 21%; border-right: 1px solid #000000">
                             <span t-out="counter"/>
                         </td>
-                        <td class="text-left" style="width: 40%;">
+                        <td class="text-left" style="width: 40%; border-right: 1px solid #000000">
                             <span t-out="line.name"/>
                         </td>
-                        <td class="text-right" style="width: 23%;">
+                        <td class="text-right" style="width: 23%; border-right: 1px solid #000000">
                             <t t-if="line.product_uom_id">
                                 <span t-out="'{:,.2f}'.format(line.quantity) + ' ' + line.product_uom_id.name"/>
                             </t>
@@ -505,13 +507,13 @@
                     <t t-foreach="range(empty_row)" t-as="line">
                         <t t-if="line == 0">
                             <tr style="height: 43.5px;">
-                                <td class="text-center"  style="width: 21%;">
+                                <td class="text-center"  style="width: 21%; border-right: 1px solid #000000">
                                     <span></span>
                                 </td>
-                                <td class="text-left" style="width: 40%;">
+                                <td class="text-left" style="width: 40%; border-right: 1px solid #000000">
                                     <span></span>
                                 </td>
-                                <td class="text-right" style="width: 23%;">
+                                <td class="text-right" style="width: 23%; border-right: 1px solid #000000">
                                     <span></span>
                                 </td>
                                 <td class="text-right" style="width: 16%;">
@@ -521,13 +523,13 @@
                         </t>
                         <t t-else="">
                             <tr style="height: 43.5px;">
-                                <td class="text-center border-top-0"  style="width: 21%;">
+                                <td class="text-center border-top-0"  style="width: 21%; border-right: 1px solid #000000">
                                     <span></span>
                                 </td>
-                                <td class="text-left border-top-0" style="width: 40%;">
+                                <td class="text-left border-top-0" style="width: 40%; border-right: 1px solid #000000">
                                     <span></span>
                                 </td>
-                                <td class="text-right border-top-0" style="width: 23%;">
+                                <td class="text-right border-top-0" style="width: 23%; border-right: 1px solid #000000">
                                     <span></span>
                                 </td>
                                 <td class="text-right border-top-0" style="width: 16%;">
