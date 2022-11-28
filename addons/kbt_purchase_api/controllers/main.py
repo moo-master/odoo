@@ -123,15 +123,9 @@ class PurchaseController(KBTApiBase):
             'po_type_id': po_type_id.id,
         }
 
-        self._check_wht_sequence(
-            filter(
-                lambda x: x.get('product_id'),
-                (order_lines := params.get('lineItems'))),
-            'purchase_wht_type_id')
-
         order_line_vals_list = [(0, 0, self._prepare_order_lines(
             order_line))
-            for order_line in order_lines
+            for order_line in params.get('lineItems')
         ]
         vals['order_line'] = order_line_vals_list
 
