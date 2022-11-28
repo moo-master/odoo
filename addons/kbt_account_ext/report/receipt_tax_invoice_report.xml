@@ -1,6 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <odoo>
     <template id="receipt_tax_invoice_report_template_new">
+        <link href="/kbt_account_ext/static/src/css/font.css" rel="stylesheet"/>
         <t t-set="o" t-value="o.with_context(lang=lang)" />
 
         <!-- Partner Address Information -->
@@ -23,7 +24,7 @@
             <t t-set="address_line_1" t-value="address_line_1 + str(o.partner_id.zip)"/>
         </t>
 
-        <div class="header">
+        <div class="header" style="font-family: THSarabunNew;">
             <div class="row">
                 <img t-if="o.company_id.logo"
                     t-att-src="image_data_uri(o.company_id.logo)"
@@ -42,10 +43,10 @@
                 </div>
                 <div class="col-4" style="padding-left: 32px; text-align: right;">
                     <t t-if="is_tax_report">
-                        <strong>ใบเสร็จรับเงิน/ใบกำกับภาษี<br/>(Receipt/Tax Invoice)</strong>
+                        <strong>ใบเสร็จรับเงิน/ใบกำกับภาษี<br/>Receipt/Tax Invoice</strong>
                     </t>
                     <t t-else="">
-                        <strong>ใบเสร็จรับเงิน (Receipt)</strong>
+                        <strong>ใบเสร็จรับเงิน<br/>Receipt</strong>
                     </t>
                 </div>
             </div>
@@ -62,7 +63,7 @@
                         <strong>เลขที่/No.</strong>
                     </th>
                     <td class="text-left" style=" width: 20%;">
-                        <t t-esc="o.reconciled_invoice_ids.name"/>
+                        <t t-esc="o.name"/>
                     </td>
                 </tr>
                 <tr class="">
@@ -130,14 +131,14 @@
                 </tr>
             </table>
         </div>
-        <div class="article page-body-set page" data-body-set="216">
+        <div class="article page-body-set page" data-body-set="216" style="font-family: THSarabunNew;">
             <table class="table table-sm o_main_table" style="font-size: 12px;">
                 <thead style="width: 100%; border-bottom: 1px solid #000000;">
                     <tr>
                         <th class="border border-dark" style="width: 20%; text-align: center;">วันที่เอกสาร<br />Doc. Date</th>
                         <th class="border border-dark" style="width: 14%; text-align: center;">ใบกำกับภาษี<br />Tax Invoice</th>
                         <th class="border border-dark" style="width: 32%; text-align: center;">รายการสินค้า/บริการ<br />Goods/Service</th>
-                        <th class="border border-dark" style="width: 14; text-align: center;">วันครบกำหนด<br />Due Date</th>
+                        <th class="border border-dark" style="width: 14; text-align: center;">วันครบกำหนด<br /><t t-esc="o.date.strftime('%d/%m/%Y')"/></th>
                         <th class="border border-dark" style="width: 20%; text-align: center;">จำนวนเงิน<br />Amount</th>
                     </tr>
                 </thead>
@@ -187,24 +188,30 @@
             <div class="last-footer">
                 <script type="text/javascript" src="/kbt_account_ext/static/src/js/force_new_page_payment.js"/>
                 <div style="border: 1px solid #000000; width: 100%; font-size: 12px;">
-                    <t t-if="is_tax_report">
-                        <div class="row">
-                            <div class="col-10" style="padding-left: 20px; padding-top: 5px; text-align: left;">
-                                ยอดรวมสินค้า/บริการ (Goods/Service Amount)
-                            </div>
-                            <div class="col-2" style="padding-right: 20px; padding-top: 5px; text-align: right;">
-                                <t t-out="'{:,.2f}'.format(o.reconciled_invoice_ids.amount_untaxed)"/>
-                            </div>
+                    <div class="row">
+                        <div class="col-10" style="padding-left: 20px; padding-top: 5px; text-align: left;">
+                            ยอดรวมสินค้า/บริการ (Goods/Service Amount)
                         </div>
-                        <div class="row">
-                            <div class="col-10" style="padding-left: 20px; padding-top: 5px; text-align: left;">
-                                ภาษีมูลค่าเพิ่ม (VAT Amount)
-                            </div>
-                            <div class="col-2" style="padding-right: 20px; padding-top: 5px; text-align: right;">
-                                <t t-out="'{:,.2f}'.format(o.reconciled_invoice_ids.amount_tax)"/>
-                            </div>
+                        <div class="col-2" style="padding-right: 20px; padding-top: 5px; text-align: right;">
+                            <t t-out="'{:,.2f}'.format(o.reconciled_invoice_ids.amount_untaxed)"/>
                         </div>
-                    </t>
+                    </div>
+                    <div class="row">
+                        <div class="col-10" style="padding-left: 20px; padding-top: 5px; text-align: left;">
+                            ภาษีมูลค่าเพิ่ม (VAT Amount)
+                        </div>
+                        <div class="col-2" style="padding-right: 20px; padding-top: 5px; text-align: right;">
+                            <t t-out="'{:,.2f}'.format(o.reconciled_invoice_ids.amount_tax)"/>
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="col-10" style="padding-left: 20px; padding-top: 5px; text-align: left;">
+                            ภาษีหัก ณ ที่จ่าย (Withholding Tax)
+                        </div>
+                        <div class="col-2" style="padding-right: 20px; padding-top: 5px; text-align: right;">
+                            <t t-out="'{:,.2f}'.format(o.reconciled_invoice_ids.amount_wht)"/>
+                        </div>
+                    </div>
                     <div class="row">
                         <div class="col-4" style="padding-left: 20px; padding-top: 5px; text-align: left;">
                             <strong>จำนวนเงินรวมทั้งสิ้น (Total Amount)</strong>
@@ -227,7 +234,7 @@
                             □
                         </div>
                         <div class="col-8" style="padding-top: 5px; text-align: left;">
-                            เงินโอนธนาคาร (Bank Remittance) ..................................................................................................................................................
+                            เงินโอนธนาคาร (Bank Remittance) .....................................................................
                         </div>
                     </div>
                     <div class="row">
@@ -238,7 +245,7 @@
                             □
                         </div>
                         <div class="col-8" style="padding-top: 5px; text-align: left;">
-                            เช็คธนาคาร (Chq. Bank) ...................... เลขที่เช็ค (Chq. No.)............................ วันทีสั่งจ่าย (Due On).....................................
+                            เช็คธนาคาร (Chq. Bank) ................ เลขที่เช็ค (Chq. No.)................ วันทีสั่งจ่าย (Due On)................
                         </div>
                     </div>
                     <div class="row">
@@ -256,7 +263,7 @@
                             □
                         </div>
                         <div class="col-8" style="padding-top: 5px; text-align: left;">
-                            ค่าธรรมเนียม (Fee) .................................................................................................................................................................................
+                            ค่าธรรมเนียม (Fee) ...........................................................................................
                         </div>
                     </div>
                     <div class="row">
@@ -265,13 +272,13 @@
                             □
                         </div>
                         <div class="col-8" style="padding-top: 5px; text-align: left;">
-                            อื่นๆ (Other) ............................................................................................................................................................................................
+                            อื่นๆ (Other) ...............................................................................................
                         </div>
                     </div>
                     <div class="row">
                         <div class="col-8" style="padding-top: 5px;" />
                         <div class="col-3" style="padding-top: 5px; text-align: center;">
-                            ..............................................................................
+                            ......................................................
                         </div>
                     </div>
                     <div class="row">
