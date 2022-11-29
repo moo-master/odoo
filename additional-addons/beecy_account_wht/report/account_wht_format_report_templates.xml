@@ -66,7 +66,7 @@
                         <div class="taxpayer-2">
                             <!-- comment field from Beecy -->
                             <!-- <span t-field="o.partner_id.prefix" /> -->
-                            <span t-field="o.partner_id.name" />
+                            <span t-esc="o.partner_id.name.replace('(สำนักงานใหญ่)', '')" />
                             <!-- <span t-field="o.partner_id.suffix" /> -->
                         </div>
                         <div class="taxpayer-address-2">
