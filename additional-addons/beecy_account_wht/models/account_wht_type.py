@@ -12,7 +12,10 @@ class AccountWhtType(models.Model):
         'Sequence'
     )
 
-    name = fields.Char('Name')
+    name = fields.Char(
+        'Name',
+        translate=True
+    )
 
     display_name = fields.Char(
         'Description',
