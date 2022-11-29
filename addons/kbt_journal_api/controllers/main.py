@@ -54,6 +54,14 @@ class JournalController(KBTApiBase):
             raise ValueError(
                 "Journal Not found."
             )
+        if not params.get('x_status'):
+            raise ValueError(
+                "Missing x_status"
+            )
+        if 'auto_post' not in params:
+            raise ValueError(
+                "Missing auto_post"
+            )
 
         date_data = datetime.strptime(params.get('account_date'), '%d-%m-%Y')
         if move_id.invoice_date > date_data.date():
@@ -68,13 +76,15 @@ class JournalController(KBTApiBase):
             'currency_id': currency_id.id or False,
             'journal_id': journal_id.id or False,
             'x_is_interface': True,
+            'auto_post': params.get('auto_post')
         }
         self._check_balance_debit_credit(params.get('lineItems'))
         line_vals_lst = [(0, 0, self._prepare_line_ids(order_line, User))
                          for order_line in params.get('lineItems')]
         vals['line_ids'] = line_vals_lst
         journal_entry = Move.create(vals)
-        journal_entry.action_post()
+        if params.get('x_status') == 'posted':
+            journal_entry.action_post()
 
     def _prepare_line_ids(self, line, user_id):
         account_id = request.env['account.account'].search([

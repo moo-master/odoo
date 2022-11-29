@@ -97,29 +97,29 @@
                                 </div>
                             </t>
 
-                            <!-- <t t-set="pnd_count" t-value="o.get_attach_count()"/> -->
+                            <t t-set="pnd_count" t-value="o.get_attach_count()"/>
 
                             <t t-if="o.attachment_type == 'electronic'">
                                 <div style="position: absolute; left: 359px; top: 497px; font-size: 19px">
                                     <span>&#10003;</span>
                                 </div>
-                                <!-- <div style="position: absolute; left: 660px; top: 499px; font-size: 14px; width: 55px; text-align: center;">
+                                <div style="position: absolute; left: 660px; top: 499px; font-size: 14px; width: 55px; text-align: center;">
                                     <t t-out="pnd_count[1]"/>
                                 </div>
                                 <div style="position: absolute; left: 660px; top: 517px; font-size: 14px; width: 55px; text-align: center;">
                                     <t t-out="pnd_count[0]"/>
-                                </div> -->
+                                </div>
                             </t>
                             <t t-else="">
                                 <div style="position: absolute; left: 359px; top: 426px; font-size: 19px">
                                     <span>&#10003;</span>
                                 </div>
-                                <!-- <div style="position: absolute; left: 660px; top: 429px; font-size: 14px; width: 55px; text-align: center;">
+                                <div style="position: absolute; left: 660px; top: 429px; font-size: 14px; width: 55px; text-align: center;">
                                     <t t-out="pnd_count[1]"/>
                                 </div>
                                 <div style="position: absolute; left: 660px; top: 447px; font-size: 14px; width: 55px; text-align: center;">
                                     <t t-out="pnd_count[0]"/>
-                                </div> -->
+                                </div>
                             </t>
 
                             <t t-set="base_amount" t-value="o.split_amount(o.total_amount)"/>
