@@ -49,6 +49,17 @@ class AccountMove(models.Model):
                     self.state = 'to approve'
                     self.approve_level = employee.level_id.level
                     self.env.cr.commit()  # pylint: disable=invalid-commit
+
+                if manager.is_send_email:
+                    # Email Function
+                    self.env['approval.email.wizard'].create({
+                        'employee_id': employee.id,
+                        'manager_id': manager.id,
+                        'name': 'Document Name',
+                        'order_name': self.name,
+                        'order_amount': self.amount_total,
+                    }).send_approval_email()
+
                 raise ValidationError(
                     _(
                         'You cannot validate this document due limitation policy. Please contact (%s)\n ไม่สามารถดำเนินการได้เนื่องจากเกินวงเงินที่กำหนด กรุณาติดต่อ (%s)',

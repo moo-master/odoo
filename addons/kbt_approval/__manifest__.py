@@ -18,6 +18,7 @@
         'beecy_reason',
     ],
     'data': [
+        'data/approval_email_template.xml',
         'views/org_level_menuitem.xml',
         'views/inherit_hr_employee_views.xml',
         'views/inherit_purchase_order_views.xml',
