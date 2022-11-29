@@ -11,7 +11,12 @@
                 <button name="action_cancel" string="Cancel"  type="object" groups="base.group_user" attrs="{'invisible': [('state', '!=', 'to approve')]}"/>
                 <field name="is_approve" invisible="1" />
             </xpath>
+            <xpath expr="//button[@name='action_draft']" position="replace">
+                <button name="action_draft" states="cancel,reject" type="object" string="Set to Quotation" data-hotkey="w"/>
+            </xpath>
+            <xpath expr="//field[@name='order_line']" position="attributes">
+                <attribute name="attrs">{'readonly': [('state', 'in', ('done', 'cancel', 'to approve'))]}</attribute>
+            </xpath>
         </field>
     </record>
-
 </odoo>
