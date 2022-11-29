@@ -10,6 +10,9 @@
                 <button name="action_cancel_reject_reason_wizard" string="Reject" type="object" groups="base.group_user" attrs="{'invisible': [('is_approve', '=', True)]}"/>
                 <field name="is_approve" invisible="1" />
             </xpath>
+            <xpath expr="//field[@name='invoice_line_ids']" position="attributes">
+                <attribute name="attrs">{'readonly': [('state', '=', 'to approve')]}</attribute>
+            </xpath>
         </field>
     </record>
 

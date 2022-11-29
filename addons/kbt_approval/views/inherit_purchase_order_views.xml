@@ -13,7 +13,12 @@
             <xpath expr="//button[@name='button_approve']" position="attributes">
                 <attribute name="invisible">1</attribute>
             </xpath>
+            <xpath expr="//button[@name='button_draft']" position="replace">
+                <button name="button_draft" states="cancel,reject" string="Set to Draft" type="object" data-hotkey="o"/>
+            </xpath>
+            <xpath expr="//field[@name='order_line']" position="attributes">
+                <attribute name="attrs">{'readonly': [('state', 'in', ('done', 'cancel', 'to approve'))]}</attribute>
+            </xpath>
         </field>
     </record>
-
 </odoo>

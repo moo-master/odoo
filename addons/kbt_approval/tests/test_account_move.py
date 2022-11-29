@@ -67,10 +67,12 @@ def test_action_post_move(move, env, test_input, expected):
             assert move.state == expected
             assert move.is_approve == False
             assert excinfo.value.name == msg
+            assert move.show_reset_to_draft_button
     else:
         move.action_post()
         assert move.state == expected
         assert move.is_approve
+        assert move.show_reset_to_draft_button
 
 
 def test_action_post_interface_move(move):
