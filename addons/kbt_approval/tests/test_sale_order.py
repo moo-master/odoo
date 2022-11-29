@@ -74,3 +74,11 @@ def test_action_confirm_interface_sale_order(sale):
     })
     sale.action_confirm()
     assert sale.state == 'sale'
+
+
+def test_set_draft_sale_order(sale):
+    sale.write({
+        'state': 'reject'
+    })
+    sale.action_draft()
+    assert sale.state == 'draft'
