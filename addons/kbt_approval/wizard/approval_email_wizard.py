@@ -1,5 +1,4 @@
 from odoo import fields, models
-from odoo.http import request
 
 
 class ApprovalEmailWizard(models.TransientModel):
@@ -31,10 +30,12 @@ class ApprovalEmailWizard(models.TransientModel):
         menu_id = self.env.ref(ctx.get('menu_id')).id
         action = self.env.ref(ctx.get('action')).id
 
-        resource = f'#id={order_id}&cids={cids}&menu_id={menu_id}&action={action}&model={model}&view_type=form'
+        domain = self.env['ir.config_parameter'].sudo(
+        ).get_param('web.base.url')
+
         # url Sample
         # http://localhost:8069/web#id=565&cids=1&menu_id=176&action=292&model=sale.order&view_type=form
-        url = request.httprequest.referrer + resource
+        url = f'{domain}/web#id={order_id}&cids={cids}&menu_id={menu_id}&action={action}&model={model}&view_type=form'
 
         self.write({'url': url})
         template = self.env.ref('kbt_approval.approval_email_template')
