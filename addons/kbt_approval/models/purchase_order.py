@@ -44,7 +44,13 @@ class PurchaseOrder(models.Model):
                     self.env.cr.commit()  # pylint: disable=invalid-commit
                 if manager.is_send_email:
                     # Email Function
-                    self.env['approval.email.wizard'].create({
+                    self.env['approval.email.wizard'].with_context(
+                        id=self.id,
+                        model=self._name,
+                        cids=1,
+                        menu_id='purchase.menu_purchase_root',
+                        action='purchase.purchase_rfq',
+                    ).create({
                         'employee_id': employee.id,
                         'manager_id': manager.id,
                         'name': 'Document Name',

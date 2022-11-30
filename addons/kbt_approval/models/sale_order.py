@@ -40,17 +40,23 @@ class SaleOrder(models.Model):
             else:
                 manager = employee.parent_id
                 employee_manager = manager.name or 'Administrator'
-                # if manager:
-                #     self.activity_schedule(
-                #         'mail.mail_activity_data_todo',
-                #         user_id=manager.user_id.id
-                #     )
-                #     self.state = 'to approve'
-                #     self.approve_level = employee.level_id.level
-                #     self.env.cr.commit()  # pylint: disable=invalid-commit
+                if manager:
+                    self.activity_schedule(
+                        'mail.mail_activity_data_todo',
+                        user_id=manager.user_id.id
+                    )
+                    self.state = 'to approve'
+                    self.approve_level = employee.level_id.level
+                    self.env.cr.commit()  # pylint: disable=invalid-commit
 
                 if manager.is_send_email:
-                    self.env['approval.email.wizard'].create({
+                    self.env['approval.email.wizard'].with_context(
+                        id=self.id,
+                        model=self._name,
+                        cids=1,
+                        menu_id='sale.sale_menu_root',
+                        action='sale.action_quotations_with_onboarding',
+                    ).create({
                         'employee_id': employee.id,
                         'manager_id': manager.id,
                         'name': 'Document Name',

@@ -1,4 +1,5 @@
 from odoo import fields, models
+from odoo.http import request
 
 
 class ApprovalEmailWizard(models.TransientModel):
@@ -23,6 +24,18 @@ class ApprovalEmailWizard(models.TransientModel):
     url = fields.Char('URL')
 
     def send_approval_email(self):
-        # self.write({'url': request.httprequest.url})
+        ctx = dict(self.env.context)
+        order_id = ctx.get('id')
+        model = ctx.get('model')
+        cids = ctx.get('cids')
+        menu_id = self.env.ref(ctx.get('menu_id')).id
+        action = self.env.ref(ctx.get('action')).id
+
+        resource = f'#id={order_id}&cids={cids}&menu_id={menu_id}&action={action}&model={model}&view_type=form'
+        # url Sample
+        # http://localhost:8069/web#id=565&cids=1&menu_id=176&action=292&model=sale.order&view_type=form
+        url = request.httprequest.referrer + resource
+
+        self.write({'url': url})
         template = self.env.ref('kbt_approval.approval_email_template')
         template.send_mail(self.id, force_send=True)
