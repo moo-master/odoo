@@ -25,5 +25,6 @@
         'views/inherit_sale_order_views.xml',
         'views/inherit_account_move_views.xml',
         'security/ir.model.access.csv',
+        'data/mail_activity_data.xml'
     ]
 }

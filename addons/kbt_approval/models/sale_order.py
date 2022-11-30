@@ -8,6 +8,7 @@ class SaleOrder(models.Model):
     state = fields.Selection(
         selection_add=[
             ('to approve', 'To Approve'),
+            ('reject', 'Rejected'),
         ]
     )
     approve_level = fields.Integer(
@@ -18,17 +19,31 @@ class SaleOrder(models.Model):
         compute='_compute_approve',
         default=True
     )
-
     cancel_reason = fields.Char(
         string='Cancel Reason Note',
     )
+    reject_reason = fields.Char(
+        string='Reject Reason Note',
+    )
+
+    def action_draft(self):
+        orders = self.filtered(
+            lambda s: s.state in [
+                'cancel', 'sent', 'reject'])
+        return orders.write({
+            'state': 'draft',
+            'signature': False,
+            'signed_by': False,
+            'signed_on': False,
+        })
 
     def _compute_approve(self):
         employee = self.env['hr.employee'].search(
             [('user_id', '=', self.env.uid)], limit=1).sudo()
         self.is_approve = (
-            employee.level_id.level <= self.approve_level) or (
-            self.state != 'to approve')
+            employee.level_id.level <= self.approve_level) \
+            or (self.state != 'to approve') \
+            or (employee.level_id.level > self.approve_level + 1)
 
     def _user_validation(self):
         employee = self.env['hr.employee'].search(
@@ -42,7 +57,7 @@ class SaleOrder(models.Model):
                 employee_manager = manager.name or 'Administrator'
                 if manager:
                     self.activity_schedule(
-                        'mail.mail_activity_data_todo',
+                        'kbt_approval.mail_activity_data_to_approve',
                         user_id=manager.user_id.id
                     )
                     self.state = 'to approve'
@@ -84,7 +99,7 @@ class SaleOrder(models.Model):
         context = dict(
             self.env.context,
             model_name='sale.order',
-            state='cancel'
+            state='reject'
         )
         return {
             'name': _('Reject Quotations'),

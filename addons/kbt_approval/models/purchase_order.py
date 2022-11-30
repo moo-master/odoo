@@ -5,6 +5,11 @@ from odoo.exceptions import ValidationError
 class PurchaseOrder(models.Model):
     _inherit = 'purchase.order'
 
+    state = fields.Selection(
+        selection_add=[
+            ('reject', 'Rejected'),
+        ]
+    )
     approve_level = fields.Integer(
         'approve level',
         default=0
@@ -16,13 +21,17 @@ class PurchaseOrder(models.Model):
     cancel_reason = fields.Char(
         string='Cancel Reason Note',
     )
+    reject_reason = fields.Char(
+        string='Reject Reason Note',
+    )
 
     def _compute_approve(self):
         employee = self.env['hr.employee'].search(
             [('user_id', '=', self.env.uid)], limit=1).sudo()
         self.is_approve = (
-            employee.level_id.level <= self.approve_level) or (
-            self.state != 'to approve')
+            employee.level_id.level <= self.approve_level) \
+            or (self.state != 'to approve') \
+            or (employee.level_id.level > self.approve_level + 1)
 
     def _user_validation(self):
         employee = self.env['hr.employee'].search(
@@ -36,7 +45,7 @@ class PurchaseOrder(models.Model):
                 employee_manager = manager.name or 'Administrator'
                 if manager:
                     self.activity_schedule(
-                        'mail.mail_activity_data_todo',
+                        'kbt_approval.mail_activity_data_to_approve',
                         user_id=manager.user_id.id
                     )
                     self.state = 'to approve'
@@ -78,7 +87,7 @@ class PurchaseOrder(models.Model):
         context = dict(
             self.env.context,
             model_name='purchase.order',
-            state='cancel'
+            state='reject'
         )
         return {
             'name': _('Reject Quotations'),
