@@ -153,7 +153,7 @@ class AccountWhtPnd(models.Model):
             ('11', '11'),
             ('12', '12'),
         ],
-        default=str(datetime.now().month),
+        default='{:02d}'.format(datetime.now().month),
     )
 
     @api.depends('wht_ids')
