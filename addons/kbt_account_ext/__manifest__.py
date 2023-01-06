@@ -22,11 +22,6 @@
         'kbt_account_wht_ext',
         'beecy_reason',
     ],
-    'assets': {
-        'web._assets_common_scripts': [
-            'kbt_account_ext/static/src/js/force_new_page.js',
-        ],
-    },
     'data': [
         'data/paper_format.xml',
         'data/report_data.xml',
