@@ -26,6 +26,9 @@ def test_action_confirm_false_sale_order(sale, env, test_input, expected):
     level = env['org.level'].search([])
     employee = env.ref('hr.employee_qdp')
     employee_manager = env.ref('hr.employee_stw')
+    employee_manager.write({
+        'is_send_email': True
+    })
     employee.write({
         'level_id': False
     })

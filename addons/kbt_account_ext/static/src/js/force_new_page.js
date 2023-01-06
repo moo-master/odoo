@@ -3,7 +3,7 @@
 // page-body-set data page check by last line bottom AND top footer
 
 const elem = document.getElementsByClassName("new-page");
-const rect = elem[0].getBoundingClientRect();
+// const rect = elem[0].getBoundingClientRect();
 
 const data_page_size = elem[0].getAttribute("data-page-size");
 const data_page_size_detail = elem[0].getAttribute("data-page-size-detail");

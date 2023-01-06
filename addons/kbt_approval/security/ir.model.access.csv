@@ -1,3 +1,4 @@
 id,name,model_id/id,group_id/id,perm_read,perm_write,perm_create,perm_unlink
 org_level_manager,org level manager,model_org_level,base.group_user,1,1,1,1
 org_level_line_manager,org level line manager,model_org_level_line,base.group_user,1,1,1,1
+approval_email_wizard_user,approval_email_wizard user,model_approval_email_wizard,base.group_user,1,1,1,1

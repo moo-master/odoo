@@ -9,3 +9,6 @@ class HrEmployee(models.Model):
         comodel_name='org.level',
         ondelete='restrict',
     )
+    is_send_email = fields.Boolean(
+        string='Email Notification',
+    )
