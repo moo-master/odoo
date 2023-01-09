@@ -26,6 +26,7 @@
         'kbt_partner_api',
         'kbt_partner_ext',
         'kbt_payment_api',
+        'kbt_payment_wht_ext',
         'kbt_product_wht_ext',
         'kbt_purchase_api',
         'kbt_purchase_wht_ext',
