@@ -20,19 +20,19 @@
     'version': '0.1',
 
     # any module necessary for this one to work correctly
-    'depends': ['base'],
+    # 'depends': ['base'],
 
     # always loaded
     'data': [
         # 'security/ir.model.access.csv',
         'views/views.xml',
         'views/templates.xml',
-        'kbt_business_type',
-        'kbt_partner_api',
-        'kbt_api_base',
+
     ],
     # only loaded in demonstration mode
     'demo': [
         'demo/demo.xml',
     ],
+    'version': '15.0.0.0.1',
+    'license': 'LGPL-3',
 }
