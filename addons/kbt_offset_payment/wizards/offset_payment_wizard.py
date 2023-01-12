@@ -24,6 +24,16 @@ class OffsetPaymentWizard(models.TransientModel):
         journal = journal.filtered(lambda a: a.code == 'manual')
         return journal
 
+    def _reconcile_payments(self, move_line, payment_line_ids):
+        domain = [('account_internal_type', 'in',
+                   ('receivable', 'payable')), ('reconciled', '=', False)]
+        payment_lines = payment_line_ids.filtered_domain(domain)
+        for account in payment_lines.account_id:
+            (payment_lines + move_line).filtered_domain([
+                ('account_id', '=', account.id),
+                ('reconciled', '=', False)
+            ]).reconcile()
+
     def button_confirm(self):
         move_ids = self.env['account.move'].browse(
             self.env.context.get('active_ids'))
@@ -50,13 +60,14 @@ class OffsetPaymentWizard(models.TransientModel):
                 'destination_account_id': move.partner_id.property_account_receivable_id.id if partner_type == 'customer'
                 else move.partner_id.property_account_payable_id.id
             }
-            self.env['account.payment'].create(move_payment_val)
-            # print('==================: 3 ', move.offset_ids)
+            payment = self.env['account.payment'].with_context(
+                default_invoice_ids=[(4, move.id, False)])
+            move_payment = payment.create(move_payment_val)
+            move_payment.action_post()
+            self._reconcile_payments(move.line_ids, move_payment.line_ids)
             if move.offset_ids:
-                # print('============================: 1')
                 for offset in move.offset_ids:
                     invoice = offset.invoice_id
-                    # print('====================: 2 ', invoice.name)
                     if invoice.payment_state != 'not_paid':
                         raise ValidationError(_(
                             """Document No. %(number)s cannot be processed because the payment has already been processed""",
@@ -80,4 +91,9 @@ class OffsetPaymentWizard(models.TransientModel):
                         'destination_account_id': invoice.partner_id.property_account_receivable_id.id if partner_type == 'customer'
                         else invoice.partner_id.property_account_payable_id.id
                     }
-                    self.env['account.payment'].create(offset_payment_val)
+                    payment = self.env['account.payment'].with_context(
+                        default_invoice_ids=[(4, invoice.id, False)])
+                    invoice_payment = payment.create(offset_payment_val)
+                    invoice_payment.action_post()
+                    self._reconcile_payments(
+                        invoice.line_ids, invoice_payment.line_ids)
