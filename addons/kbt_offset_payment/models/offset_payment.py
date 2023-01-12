@@ -10,6 +10,7 @@ class OffsetPayment(models.Model):
     invoice_id = fields.Many2one(
         comodel_name='account.move',
         string='Invoice/Bill',
+        required=True,
         domain=[
             ('payment_state', '=', 'not_paid'),
             ('partner_id.x_offset', '=', True)
