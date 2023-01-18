@@ -9,6 +9,7 @@ class AccountAccountGroup(models.Model):
 
     name = fields.Char(
         string='Account Group',
+        readonly=True,
     )
     internal_group = fields.Selection([
         ('net_sales', 'NET SALES'),
@@ -18,9 +19,13 @@ class AccountAccountGroup(models.Model):
         ('gross_profit', 'GROSS PROFIT'),
         ('net_profit_before_interest', 'NET PROFIT BEFORE INTEREST'),
         ('net_profit_loss_before_tax_kin', 'NET PROFIT (LOSS) BEFORE TAX - KIN'),
-        ('net_profit_loss_after_income_tax_kin', 'NET PROFIT (LOSS) AFTER INCOME TAX - KIN'),
-    ], string="Internal Group",
+        ('net_profit_loss_after_income_tax_kin',
+         'NET PROFIT (LOSS) AFTER INCOME TAX - KIN'),
+    ],
+        string="Internal Group",
+        readonly=True
     )
     sequence = fields.Integer(
-        string='Sequence'
+        string='Sequence',
+        readonly=True,
     )

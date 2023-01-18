@@ -16,11 +16,11 @@
     'contributors': [
         'Pachara P.',
     ],
-    # 'assets': {
-    #     'web.assets_backend': [
-    #         'kbt_account_ext/static/src/js/account_selection.js',
-    #     ],
-    # },
+    'assets': {
+        'web.assets_backend': [
+            'kbt_account_ext/static/src/js/account_group_selection.js',
+        ],
+    },
     'depends': [
         'kbt_business_type',
         'kbt_partner_ext',

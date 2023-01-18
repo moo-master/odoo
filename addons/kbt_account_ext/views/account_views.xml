@@ -7,7 +7,7 @@
         <field name="inherit_id" ref="account.view_account_form"/>
         <field name="arch" type="xml">
             <xpath expr="//field[@name='allowed_journal_ids']" position="after">
-                <field name="account_group_id" />
+                <field name="account_group_id" widget="account_group_selection"/>
             </xpath>
         </field>
     </record>
