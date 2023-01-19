@@ -27,6 +27,7 @@
         'kbt_account_wht_ext',
         'beecy_reason',
         'report_xlsx_helper',
+        'account_budget',
     ],
     'data': [
         'security/ir.model.access.csv',
