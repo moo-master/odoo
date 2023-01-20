@@ -2,38 +2,22 @@
 <odoo>
 
     <data>
-        <function model="ir.model.data" name="write" >
-            <function model="ir.model.data" name="search">
-                <value eval="[('module', '=', 'account_reports'), ('name', '=', 'account_financial_html_report_action_1')]" />
+        <!-- Hide menu -->
+        <function model="ir.ui.menu" name="write" >
+            <function model="ir.ui.menu" name="search">
+                <value eval="[('name', '=', 'Profit and Loss')]" />
             </function>
-            <value eval="{'noupdate': False}" />
-        </function>
-        <function model="ir.model.data" name="write" >
-            <function model="ir.model.data" name="search">
-                <value eval="[('module', '=', 'account_reports'), ('name', '=', 'account_financial_html_report_action_2')]" />
-            </function>
-            <value eval="{'noupdate': False}" />
+            <value eval="{'action': False}" />
+            <!-- <value eval="{'action': 'ir.actions.client,%s' % ref('account_reports.account_financial_html_report_action_1')}" /> -->
         </function>
 
-        <!-- <record model="account.financial.html.report" id="account_reports.account_financial_report_profitandloss0">
-            <field name="parent_id" eval="False"/>
-        </record>
-        <record model="account.financial.html.report" id="account_reports.account_financial_report_balancesheet0">
-            <field name="parent_id" eval="False"/>
-        </record> -->
-
-        <!-- <record model="ir.ui.menu" id="account_reports.account_financial_html_report_action_1">
-            <field name="groups_id" eval="[(6, 0, [ref('base.group_no_one')])]"/>
-        </record>
-        <record model="ir.ui.menu" id="account_reports.account_financial_html_report_action_2">
-            <field name="groups_id" eval="[(6, 0, [ref('base.group_no_one')])]"/>
-        </record> -->
-
-        <!-- Delete menuitem -->
-        <!-- Profit and Loss menu -->
-        <!-- <delete model="ir.actions.client" id="account_reports.account_financial_html_report_action_1"/> -->
-        <!-- Balance Sheet menu -->
-        <!-- <delete model="ir.actions.client" id="account_reports.account_financial_html_report_action_2"/> -->
+        <function model="ir.ui.menu" name="write" >
+            <function model="ir.ui.menu" name="search">
+                <value eval="[('name', '=', 'Balance Sheet')]" />
+            </function>
+            <value eval="{'action': False}" />
+            <!-- <value eval="{'action': 'ir.actions.client,%s' % ref('account_reports.account_financial_html_report_action_2')}" /> -->
+        </function>
 
     </data>
 
