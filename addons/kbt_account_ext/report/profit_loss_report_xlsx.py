@@ -114,7 +114,7 @@ class ProfitLossReportXlsx(models.AbstractModel):
         worksheet.write(7, 11, 'PLAN', FORMATS['head_format_yellow'])
         worksheet.write(7, 12, last_year, FORMATS['head_format_yellow'])
 
-    def set_current_month_xlsx(
+    def set_table_lines_value(
         self,
         worksheet,
         from_date: datetime,
@@ -300,9 +300,8 @@ class ProfitLossReportXlsx(models.AbstractModel):
         worksheet.set_column(0, 0, 15)
         worksheet.set_column(1, 1, 35)
         worksheet.set_column('C:M', 15)
-        # Prepare data on lines table
-        # data_current_month = self._get_data_current_month()
+
         # Set Header
         self.set_header_xlsx(worksheet, from_date, to_date)
         # Set show account group
-        self.set_current_month_xlsx(worksheet, from_date, to_date)
+        self.set_table_lines_value(worksheet, from_date, to_date)
