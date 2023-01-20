@@ -9,7 +9,7 @@
                 <sheet>
                     <group col="2">
                         <field name="from_date" style="width: 20%" required="1"/>
-                        <field name="to_date" invisible="0"/>
+                        <field name="to_date" invisible="1"/>
                     </group>
                 </sheet>
                 <footer>

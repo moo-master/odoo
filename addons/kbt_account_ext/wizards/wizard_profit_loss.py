@@ -13,7 +13,8 @@ class WizardProfitLoss(models.TransientModel):
     )
     to_date = fields.Date(
         string='To Month',
-        compute='_compute_to_date'
+        default=fields.Date.today().replace(day=1) + relativedelta(months=1)
+        - timedelta(days=1),
     )
 
     def print_report_xls(self):
@@ -21,7 +22,8 @@ class WizardProfitLoss(models.TransientModel):
             'kbt_account_ext.profit_loss_report_xlsx'
         ).report_action(self)
 
-    @api.depends('from_date')
-    def _compute_to_date(self):
+    @api.onchange('from_date')
+    def _onchange_to_date(self):
         self.to_date = self.from_date.replace(day=1) + relativedelta(months=1)\
             - timedelta(days=1)
+        self.from_date = self.from_date.replace(day=1)

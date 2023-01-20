@@ -26,22 +26,14 @@ odoo.define('kbt_account_ext.account_group_selection', function (require) {
                   }).then(function(arg) {
                       self.values = _.map(arg, v => [v['id'], v['display_name']])
                       self.hierarchy_groups = [
-                          {
-                              'name': _t('Balance Sheet'),
-                              'children': [
-                                  {'name': _t('Assets'), 'ids': _.map(_.filter(arg, v => v['internal_group'] == 'asset'), v => v['id'])},
-                                  {'name': _t('Liabilities'), 'ids': _.map(_.filter(arg, v => v['internal_group'] == 'liability'), v => v['id'])},
-                                  {'name': _t('Equity'), 'ids': _.map(_.filter(arg, v => v['internal_group'] == 'equity'), v => v['id'])},
-                              ],
-                          },
-                          {
-                              'name': _t('Profit & Loss'),
-                              'children': [
-                                  {'name': _t('Income'), 'ids': _.map(_.filter(arg, v => v['internal_group'] == 'income'), v => v['id'])},
-                                  {'name': _t('Expense'), 'ids': _.map(_.filter(arg, v => v['internal_group'] == 'expense'), v => v['id'])},
-                              ],
-                          },
-                          {'name': _t('Other'), 'ids': _.map(_.filter(arg, v => !['asset', 'liability', 'equity', 'income', 'expense'].includes(v['internal_group'])), v => v['id'])},
+                          {'name': _t('Net Sales'), 'ids': _.map(_.filter(arg, v => v['internal_group'] == 'net_sales'), v => v['id'])},
+                          {'name': _t('Net Revenue From Sales'), 'ids': _.map(_.filter(arg, v => v['internal_group'] == 'net_revenue_from_sales'), v => v['id'])},
+                          {'name': _t('Contribution At Std Var Cost'), 'ids': _.map(_.filter(arg, v => v['internal_group'] == 'contribution_at_std_var_cost'), v => v['id'])},
+                          {'name': _t('Net Contribution'), 'ids': _.map(_.filter(arg, v => v['internal_group'] == 'net_contribution'), v => v['id'])},
+                          {'name': _t('Gross Profit'), 'ids': _.map(_.filter(arg, v => v['internal_group'] == 'gross_profit'), v => v['id'])},
+                          {'name': _t('Net Profit Before Interest'), 'ids': _.map(_.filter(arg, v => v['internal_group'] == 'net_profit_before_interest'), v => v['id'])},
+                          {'name': _t('Net Profit Loss Before Tax Kin'), 'ids': _.map(_.filter(arg, v => v['internal_group'] == 'net_profit_loss_before_tax_kin'), v => v['id'])},
+                          {'name': _t('Net Profit Loss After Income Tax Kin'), 'ids': _.map(_.filter(arg, v => v['internal_group'] == 'net_profit_loss_after_income_tax_kin'), v => v['id'])},
                       ]
                   });
               }
