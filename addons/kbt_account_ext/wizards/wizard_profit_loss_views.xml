@@ -35,6 +35,6 @@
                 name="Profit and Loss [KIN]"
                 action="action_wizard_profit_loss"
                 parent="account.account_reports_legal_statements_menu"
-                sequence="5"/>
+                sequence="1"/>
 
 </odoo>
