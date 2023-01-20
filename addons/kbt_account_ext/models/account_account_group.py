@@ -8,7 +8,7 @@ class AccountAccountGroup(models.Model):
     _order = 'internal_group, sequence'
 
     name = fields.Char(
-        string='Account Group',
+        string='Name',
         readonly=True,
     )
     internal_group = fields.Selection([
