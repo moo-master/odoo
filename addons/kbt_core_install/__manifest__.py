@@ -36,6 +36,7 @@
         'kbt_wht_ext',
         'os_disable_quick_create',
         'report_xlsx',
+        'report_xlsx_helper',
         'rts_api_base',
         'th_address'
     ]
