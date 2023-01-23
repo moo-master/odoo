@@ -36,6 +36,17 @@
         <t t-if="o.company_id.vat">
             <t t-set="company_address_line_2" t-value="company_address_line_2 + 'เลขประจำตัวผู้เสียภาษี ' + str(o.company_id.vat) + ' '"/>
         </t>
+        <!-- Company Branch -->
+        <t t-set="company_code" t-value="'สาขา '"/>
+        <t t-if="o.env.company.company_code == '00000'">
+            <t t-set="company_code" t-value="company_code + 'สำนักงานใหญ่'"/>
+        </t>
+        <t t-elif="o.env.company.company_code">
+            <t t-set="company_code" t-value="company_code + str(o.env.company.company_code)"/>
+        </t>
+        <t t-else="">
+            <t t-set="company_code" t-value="company_code + '-'"/>
+        </t>
 
         <!-- Partner Address Information -->
         <!-- Partner Address Line 1 -->
@@ -145,6 +156,7 @@
                             <span><t t-out="company_address_line_1"></t></span>
                             <br/>
                             <span><t t-out="company_address_line_2"></t></span>
+                            <span><t t-out="company_code"></t></span>
                         </div>
                     </div>
                 </div>
@@ -260,9 +272,9 @@
                             <div>
                                 ภาษีมูลค่าเพิ่ม (Vat Amount)
                             </div>
-                            <div>
+                            <!-- <div>
                                 ภาษีหัก ณ ที่จ่าย (Withholding Tax)
-                            </div>
+                            </div> -->
                             <div>
                                 จำนวณเงินรวมทั้งสิ้น (Total Amount) <span style="float: right;" t-out="o.get_amount_total_text(o.amount_total)"/>
                             </div>
@@ -280,9 +292,9 @@
                             <div>
                                 <t t-out="'{:,.2f}'.format(o.amount_tax)"/>
                             </div>
-                            <div>
+                            <!-- <div>
                                 <t t-out="'{:,.2f}'.format(o.amount_wht)"/>
-                            </div>
+                            </div> -->
                             <div>
                                 <t t-out="'{:,.2f}'.format(o.amount_total)"/>
                             </div>
@@ -298,9 +310,9 @@
                             <div>
                                 ภาษีมูลค่าเพิ่ม (Vat Amount)
                             </div>
-                            <div>
+                            <!-- <div>
                                 ภาษีหัก ณ ที่จ่าย (Withholding Tax)
-                            </div>
+                            </div> -->
                             <div>
                                 จำนวณเงินรวมทั้งสิ้น (Total Amount)
                             </div>
@@ -312,9 +324,9 @@
                             <div id="dummy-row">
                                 -
                             </div>
-                            <div id="dummy-row">
+                            <!-- <div id="dummy-row">
                                 -
-                            </div>
+                            </div> -->
                             <div>
                                 <t t-out="o.get_amount_total_text(o.amount_total)"/>
                             </div>
@@ -326,9 +338,9 @@
                             <div>
                                 <t t-out="'{:,.2f}'.format(o.amount_tax)"/>
                             </div>
-                            <div>
+                            <!-- <div>
                                 <t t-out="'{:,.2f}'.format(o.amount_wht)"/>
-                            </div>
+                            </div> -->
                             <div>
                                 <t t-out="'{:,.2f}'.format(o.amount_total)"/>
                             </div>
