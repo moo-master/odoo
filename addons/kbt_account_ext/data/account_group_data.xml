@@ -1,0 +1,114 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <data noupdate="0">
+        <!-- account.account.group -->
+        <record model="account.account.group" id="data_account_group_net_sales_1">
+            <field name="name">GROSS SALES @ CURRENT LIST PRICE</field>
+            <field name="internal_group">net_sales</field>
+            <field name="sequence">1</field>
+        </record>
+        <record model="account.account.group" id="data_account_group_net_sales_2">
+            <field name="name">NORMAL SALES DISCOUNTS</field>
+            <field name="internal_group">net_sales</field>
+            <field name="sequence">2</field>
+        </record>
+        <record model="account.account.group" id="data_account_group_net_sales_3">
+            <field name="name">SPECIAL SALES DISCOUNTS</field>
+            <field name="internal_group">net_sales</field>
+            <field name="sequence">3</field>
+        </record>
+        <record model="account.account.group" id="data_account_group_net_sales_4">
+            <field name="name">CASH DISCOUNTS</field>
+            <field name="internal_group">net_sales</field>
+            <field name="sequence">4</field>
+        </record>
+        <record model="account.account.group" id="data_account_group_net_sales_5">
+            <field name="name">FREIGHT INCOME</field>
+            <field name="internal_group">net_sales</field>
+            <field name="sequence">5</field>
+        </record>
+
+        <record model="account.account.group" id="data_account_group_net_revenue_from_sales_1">
+            <field name="name">DIRECT SELLING &amp; DELIVERY EXPENSES</field>
+            <field name="internal_group">net_revenue_from_sales</field>
+            <field name="sequence">1</field>
+        </record>
+
+        <record model="account.account.group" id="data_account_group_contribution_at_std_var_cost_1">
+            <field name="name">STANDARD VAR.COST OF GOODS SOLD</field>
+            <field name="internal_group">contribution_at_std_var_cost</field>
+            <field name="sequence">1</field>
+        </record>
+
+        <record model="account.account.group" id="data_account_group_net_contribution_1">
+            <field name="name">STANDARD COST VARIANCE</field>
+            <field name="internal_group">net_contribution</field>
+            <field name="sequence">1</field>
+        </record>
+        <record model="account.account.group" id="data_account_group_net_contribution_2">
+            <field name="name">ACTUAL COST VARIANCE</field>
+            <field name="internal_group">net_contribution</field>
+            <field name="sequence">2</field>
+        </record>
+
+        <record model="account.account.group" id="data_account_group_gross_profit_1">
+            <field name="name">DEPRECIATION</field>
+            <field name="internal_group">gross_profit</field>
+            <field name="sequence">1</field>
+        </record>
+        <record model="account.account.group" id="data_account_group_gross_profit_2">
+            <field name="name">FACTORY OVERHEAD EXPENSES</field>
+            <field name="internal_group">gross_profit</field>
+            <field name="sequence">2</field>
+        </record>
+        <record model="account.account.group" id="data_account_group_gross_profit_3">
+            <field name="name">FACTORY OVERHEAD ADJUSTMENT</field>
+            <field name="internal_group">gross_profit</field>
+            <field name="sequence">3</field>
+        </record>
+
+        <record model="account.account.group" id="data_account_group_net_profit_before_interest_1">
+            <field name="name">MARKETING EXPENSES</field>
+            <field name="internal_group">net_profit_before_interest</field>
+            <field name="sequence">1</field>
+        </record>
+        <record model="account.account.group" id="data_account_group_net_profit_before_interest_2">
+            <field name="name">ROYALTY FEE, MGT. FEE, LICENSE FEE</field>
+            <field name="internal_group">net_profit_before_interest</field>
+            <field name="sequence">2</field>
+        </record>
+        <record model="account.account.group" id="data_account_group_net_profit_before_interest_3">
+            <field name="name">ADMINISTRATIVE EXPENSES  - GENERAL</field>
+            <field name="internal_group">net_profit_before_interest</field>
+            <field name="sequence">3</field>
+        </record>
+        <record model="account.account.group" id="data_account_group_net_profit_before_interest_4">
+            <field name="name">GAIN (LOSS) ON FX AND DERIVATIVE - AR/AP FROM OPERATIONS</field>
+            <field name="internal_group">net_profit_before_interest</field>
+            <field name="sequence">4</field>
+        </record>
+        <record model="account.account.group" id="data_account_group_net_profit_before_interest_5">
+            <field name="name">INTEREST RECEIVED FROM LEASING</field>
+            <field name="internal_group">net_profit_before_interest</field>
+            <field name="sequence">5</field>
+        </record>
+        <record model="account.account.group" id="data_account_group_net_profit_before_interest_6">
+            <field name="name">INTEREST &amp; OTHER INCOME (EXPENSES)</field>
+            <field name="internal_group">net_profit_before_interest</field>
+            <field name="sequence">6</field>
+        </record>
+
+        <record model="account.account.group" id="data_account_group_net_profit_loss_before_tax_kin_1">
+            <field name="name">INTEREST EXPENSES &amp; FINANCIAL CHARGES</field>
+            <field name="internal_group">net_profit_loss_before_tax_kin</field>
+            <field name="sequence">1</field>
+        </record>
+
+        <record model="account.account.group" id="data_account_group_net_profit_loss_after_income_tax_kin_1">
+            <field name="name">INCOME TAX</field>
+            <field name="internal_group">net_profit_loss_after_income_tax_kin</field>
+            <field name="sequence">1</field>
+        </record>
+
+    </data>
+</odoo>

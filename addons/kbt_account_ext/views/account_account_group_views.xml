@@ -1,0 +1,49 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <data>
+
+        <!-- <record id="view_account_group_search" model="ir.ui.view">
+            <field name="name">account.account.group.search</field>
+            <field name="model">account.account.group</field>
+            <field name="arch" type="xml">
+                <search string="Account Type">
+                    <field name="name" filter_domain="['|', ('name','ilike',self), ('type','ilike',self)]" string="Account Type"/>
+                </search>
+            </field>
+        </record> -->
+
+        <record id="view_account_group_tree" model="ir.ui.view">
+            <field name="name">account.account.group.tree</field>
+            <field name="model">account.account.group</field>
+            <field name="arch" type="xml">
+                <tree string="Account Group">
+                    <field name="name"/>
+                    <field name="internal_group"/>
+                </tree>
+            </field>
+        </record>
+
+        <record id="view_account_group_form" model="ir.ui.view">
+            <field name="name">account.account.group.form</field>
+            <field name="model">account.account.group</field>
+            <field name="arch" type="xml">
+                <form string="Account Type">
+                    <group>
+                        <group>
+                            <field name="name"/>
+                            <field name="internal_group"/>
+                            <field name="sequence"/>
+                        </group>
+                    </group>
+                </form>
+            </field>
+        </record>
+
+        <record id="action_account_group_form" model="ir.actions.act_window">
+            <field name="name">Account Group</field>
+            <field name="res_model">account.account.group</field>
+            <field name="view_mode">tree,form</field>
+        </record>
+
+    </data>
+</odoo>
