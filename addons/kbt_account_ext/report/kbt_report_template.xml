@@ -36,6 +36,17 @@
         <t t-if="o.company_id.vat">
             <t t-set="company_address_line_2" t-value="company_address_line_2 + 'เลขประจำตัวผู้เสียภาษี ' + str(o.company_id.vat) + ' '"/>
         </t>
+        <!-- Company Branch -->
+        <t t-set="company_code" t-value="'สาขา '"/>
+        <t t-if="o.env.company.company_code == '00000'">
+            <t t-set="company_code" t-value="company_code + 'สำนักงานใหญ่'"/>
+        </t>
+        <t t-elif="o.env.company.company_code">
+            <t t-set="company_code" t-value="company_code + str(o.env.company.company_code)"/>
+        </t>
+        <t t-else="">
+            <t t-set="company_code" t-value="company_code + '-'"/>
+        </t>
 
         <!-- Partner Address Information -->
         <!-- Partner Address Line 1 -->
@@ -145,6 +156,7 @@
                             <span><t t-out="company_address_line_1"></t></span>
                             <br/>
                             <span><t t-out="company_address_line_2"></t></span>
+                            <span><t t-out="company_code"></t></span>
                         </div>
                     </div>
                 </div>

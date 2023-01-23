@@ -38,6 +38,18 @@
             <t t-set="move_date" t-value="o.reconciled_bill_ids.invoice_date.strftime('%d/%m/%Y')"/>
         </t>
 
+        <!-- Company Branch -->
+        <t t-set="company_code" t-value="'สาขา '"/>
+        <t t-if="o.env.company.company_code == '00000'">
+            <t t-set="company_code" t-value="company_code + 'สำนักงานใหญ่'"/>
+        </t>
+        <t t-elif="o.env.company.company_code">
+            <t t-set="company_code" t-value="company_code + str(o.env.company.company_code)"/>
+        </t>
+        <t t-else="">
+            <t t-set="company_code" t-value="company_code + '-'"/>
+        </t>
+
         <div class="header" style="font-family: THSarabunNew;">
             <div class="row">
                 <img t-if="o.company_id.logo"
@@ -53,7 +65,7 @@
                     <t t-esc="o.company_id.street"/>
                     <t t-esc="o.company_id.street2"/>
                     <t t-esc="o.company_id.zip"/><br />
-                    โทร <t t-esc="o.company_id.phone"/> เลขประจำตัวผู้เสียภาษีอากร <t t-esc="o.company_id.vat"/> สาขาที่ <t t-esc="o.partner_id.x_branch_name"/>
+                    โทร <t t-esc="o.company_id.phone"/> เลขประจำตัวผู้เสียภาษีอากร <t t-esc="o.company_id.vat"/> <t t-esc="company_code"/>
                 </div>
                 <div class="col-4" style="padding-left: 32px; text-align: right;">
                     <t t-if="is_tax_report">
