@@ -260,9 +260,9 @@
                             <div>
                                 ภาษีมูลค่าเพิ่ม (Vat Amount)
                             </div>
-                            <div>
+                            <!-- <div>
                                 ภาษีหัก ณ ที่จ่าย (Withholding Tax)
-                            </div>
+                            </div> -->
                             <div>
                                 จำนวณเงินรวมทั้งสิ้น (Total Amount) <span style="float: right;" t-out="o.get_amount_total_text(o.amount_total)"/>
                             </div>
@@ -280,9 +280,9 @@
                             <div>
                                 <t t-out="'{:,.2f}'.format(o.amount_tax)"/>
                             </div>
-                            <div>
+                            <!-- <div>
                                 <t t-out="'{:,.2f}'.format(o.amount_wht)"/>
-                            </div>
+                            </div> -->
                             <div>
                                 <t t-out="'{:,.2f}'.format(o.amount_total)"/>
                             </div>
@@ -298,9 +298,9 @@
                             <div>
                                 ภาษีมูลค่าเพิ่ม (Vat Amount)
                             </div>
-                            <div>
+                            <!-- <div>
                                 ภาษีหัก ณ ที่จ่าย (Withholding Tax)
-                            </div>
+                            </div> -->
                             <div>
                                 จำนวณเงินรวมทั้งสิ้น (Total Amount)
                             </div>
@@ -312,9 +312,9 @@
                             <div id="dummy-row">
                                 -
                             </div>
-                            <div id="dummy-row">
+                            <!-- <div id="dummy-row">
                                 -
-                            </div>
+                            </div> -->
                             <div>
                                 <t t-out="o.get_amount_total_text(o.amount_total)"/>
                             </div>
@@ -326,9 +326,9 @@
                             <div>
                                 <t t-out="'{:,.2f}'.format(o.amount_tax)"/>
                             </div>
-                            <div>
+                            <!-- <div>
                                 <t t-out="'{:,.2f}'.format(o.amount_wht)"/>
-                            </div>
+                            </div> -->
                             <div>
                                 <t t-out="'{:,.2f}'.format(o.amount_total)"/>
                             </div>

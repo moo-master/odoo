@@ -219,14 +219,14 @@
                             <t t-out="'{:,.2f}'.format(o.reconciled_invoice_ids.amount_tax)"/>
                         </div>
                     </div>
-                    <div class="row">
+                    <!-- <div class="row">
                         <div class="col-10" style="padding-left: 20px; padding-top: 5px; text-align: left;">
                             ภาษีหัก ณ ที่จ่าย (Withholding Tax)
                         </div>
                         <div class="col-2" style="padding-right: 20px; padding-top: 5px; text-align: right;">
                             <t t-out="'{:,.2f}'.format(o.reconciled_invoice_ids.amount_wht)"/>
                         </div>
-                    </div>
+                    </div> -->
                     <div class="row">
                         <div class="col-4" style="padding-left: 20px; padding-top: 5px; text-align: left;">
                             <strong>จำนวนเงินรวมทั้งสิ้น (Total Amount)</strong>
@@ -340,11 +340,11 @@
         <field name="default" eval="True"/>
         <field name="format">A4</field>
         <field name="orientation">Portrait</field>
-        <field name="margin_top">80</field>
+        <field name="margin_top">72</field>
         <field name="margin_bottom">10</field>
         <field name="margin_left">0</field>
         <field name="margin_right">0</field>
-        <field name="header_spacing">77</field>
+        <field name="header_spacing">65</field>
         <field name="dpi">80</field>
     </record>
 
