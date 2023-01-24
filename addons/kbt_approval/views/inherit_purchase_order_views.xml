@@ -19,6 +19,12 @@
             <xpath expr="//field[@name='order_line']" position="attributes">
                 <attribute name="attrs">{'readonly': [('state', 'in', ('done', 'cancel', 'to approve'))]}</attribute>
             </xpath>
+            <xpath expr="//button[@id='draft_confirm']" position="attributes">
+                <attribute name="string">Send to Approval</attribute>
+            </xpath>
+            <xpath expr="//button[@name='action_rfq_send'][1]" position="attributes">
+                <attribute name="invisible">1</attribute>
+            </xpath>
         </field>
     </record>
 </odoo>
