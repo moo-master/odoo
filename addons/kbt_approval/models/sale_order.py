@@ -74,7 +74,7 @@ class SaleOrder(models.Model):
                     ).create({
                         'employee_id': employee.id,
                         'manager_id': manager.id,
-                        'name': 'Document Name',
+                        'name': 'Sale Order',
                         'order_name': self.name,
                         'order_amount': self.amount_total,
                     }).send_approval_email()
