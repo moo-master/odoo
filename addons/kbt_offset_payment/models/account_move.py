@@ -25,4 +25,4 @@ class AccountMove(models.Model):
     @api.depends('offset_ids')
     def _compute_offset(self):
         for rec in self:
-            rec.total_offset = sum(rec.offset_ids.mapped('total_amount'))
+            rec.total_offset = sum(rec.offset_ids.mapped('total_amount_due'))

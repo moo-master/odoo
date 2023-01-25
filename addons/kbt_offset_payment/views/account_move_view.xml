@@ -6,24 +6,38 @@
         <field name="inherit_id" ref="account.view_move_form"/>
         <field name="priority" eval="100"/>
         <field name="arch" type="xml">
-            <xpath expr="//field[@name='invoice_line_ids']" position="after">
-                <field name="x_offset" invisible="1"/>
-                <field name="offset_ids"
-                    attrs="{
-                        'invisible': [('x_offset', '!=', True)],
-                        'readonly': [('payment_state', '!=', 'not_paid')]
-                        }">
-                    <tree editable="bottom">
-                        <field name='invoice_date'/>
-                        <field name='invoice_id'/>
-                        <field name='partner_id'/>
-                        <field name='amount_untaxed'/>
-                        <field name='total_amount'/>
-                    </tree>
-                </field>
+            <xpath expr="//page[@id='invoice_tab']" position="after">
+                <page name="offset_tab" string="Offset" attrs="{'invisible': ['|', ('x_offset', '!=', True), ('move_type', 'not in', ('out_invoice', 'in_invoice'))]}">
+                    <field name="x_offset" invisible="1"/>
+                    <field name="offset_ids"
+                        attrs="{
+                            'invisible': [('x_offset', '!=', True)],
+                            'readonly': ['|', ('payment_state', '!=', 'not_paid'), ('state', '!=', 'draft')]
+                            }">
+                        <tree editable="bottom">
+                            <field name='move_partner_id' invisible="1"/>
+                            <field name='offset_move_type' invisible="1"/>
+                            <field name='invoice_date'/>
+                            <field name='invoice_id'
+                                domain="[
+                                    ('payment_state', 'in', ('not_paid', 'partial')),
+                                    ('partner_id', '=', move_partner_id),
+                                    ('move_type', '=', offset_move_type),
+                                    ('state', '=', 'posted')
+                                ]"/>
+                            <field name='partner_id'/>
+                            <field name='amount_untaxed'/>
+                            <field name='total_amount'/>
+                            <field name='total_amount_due'/>
+                        </tree>
+                    </field>
+                    <group class="oe_subtotal_footer oe_right">
+                        <field name='total_offset'/>
+                    </group>
+                </page>
             </xpath>
             <xpath expr="//field[@name='amount_total']" position='after'>
-                <field name='total_offset'/>
+                <field name='total_offset' attrs="{'invisible': [('x_offset', '!=', True)]}"/>
             </xpath>
         </field>
     </record>

@@ -35,7 +35,7 @@
                     string="Offset Payment"
                     class="oe_highlight"
                     attrs="{
-                        'invisible': ['|', ('x_offset', '!=', True),('payment_state', '!=', 'not_paid')]
+                        'invisible': ['|', '|', ('x_offset', '!=', True),('payment_state', '!=', 'not_paid'),('state', '!=', 'posted')]
                     }"/>
             </xpath>
         </field>

@@ -13,7 +13,8 @@
     ],
     'depends': [
         'account',
-        'kbt_partner_ext'
+        'kbt_partner_ext',
+        'kbt_account_wht_ext'
     ],
     'data': [
         'security/ir.model.access.csv',
