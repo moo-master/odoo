@@ -24,6 +24,32 @@
             <t t-set="address_line_1" t-value="address_line_1 + str(o.partner_id.zip)"/>
         </t>
 
+        <!-- Date Infomation -->
+        <t t-set="payment_date" t-value="str()"/>
+        <t t-if="o.date">
+            <t t-set="payment_date" t-value="o.date.strftime('%d/%m/%Y')"/>
+        </t>
+
+        <t t-set="move_date" t-value="str()"/>
+        <t t-if="o.reconciled_invoice_ids.invoice_date">
+            <t t-set="move_date" t-value="o.reconciled_invoice_ids.invoice_date.strftime('%d/%m/%Y')"/>
+        </t>
+        <t t-elif="o.reconciled_bill_ids.invoice_date">
+            <t t-set="move_date" t-value="o.reconciled_bill_ids.invoice_date.strftime('%d/%m/%Y')"/>
+        </t>
+
+        <!-- Company Branch -->
+        <t t-set="company_code" t-value="'สาขา '"/>
+        <t t-if="o.env.company.company_code == '00000'">
+            <t t-set="company_code" t-value="company_code + 'สำนักงานใหญ่'"/>
+        </t>
+        <t t-elif="o.env.company.company_code">
+            <t t-set="company_code" t-value="company_code + str(o.env.company.company_code)"/>
+        </t>
+        <t t-else="">
+            <t t-set="company_code" t-value="company_code + '-'"/>
+        </t>
+
         <div class="header" style="font-family: THSarabunNew;">
             <div class="row">
                 <img t-if="o.company_id.logo"
@@ -39,7 +65,7 @@
                     <t t-esc="o.company_id.street"/>
                     <t t-esc="o.company_id.street2"/>
                     <t t-esc="o.company_id.zip"/><br />
-                    โทร <t t-esc="o.company_id.phone"/> เลขประจำตัวผู้เสียภาษีอากร <t t-esc="o.company_id.vat"/> สาขาที่ <t t-esc="o.partner_id.x_branch_name"/>
+                    โทร <t t-esc="o.company_id.phone"/> เลขประจำตัวผู้เสียภาษีอากร <t t-esc="o.company_id.vat"/> <t t-esc="company_code"/>
                 </div>
                 <div class="col-4" style="padding-left: 32px; text-align: right;">
                     <t t-if="is_tax_report">
@@ -82,7 +108,7 @@
                         <strong>วันที่/Date</strong>
                     </td>
                     <td class="" style="">
-                        <t t-esc="o.reconciled_invoice_ids.invoice_date.strftime('%d/%m/%Y')"/>
+                        <t t-esc="move_date"/>
                     </td>
                 </tr>
                 <tr class="" style="">
@@ -118,7 +144,7 @@
                     </td>
                     <td class="border-top-0 border-right border-dark" style="width: 30%">
                         <strong>วันที่รับชำระเงิน (Payment Date)</strong><br/>
-                        <t t-esc="o.date.strftime('%d/%m/%Y')"/>
+                        <t t-esc="payment_date"/>
                     </td>
                     <td class="border-top-0 border-right border-dark" style="width: 30%">
                         <strong>สกุลเงิน (Currency)</strong><br/>
@@ -133,24 +159,25 @@
         </div>
         <div class="article page-body-set page" data-body-set="216" style="font-family: THSarabunNew;">
             <table class="table table-sm o_main_table" style="font-size: 12px;">
-                <thead style="width: 100%; border-bottom: 1px solid #000000;">
+                <thead style="border-bottom: 1px solid #000000;">
                     <tr>
                         <th class="border border-dark" style="width: 20%; text-align: center;">วันที่เอกสาร<br />Doc. Date</th>
                         <th class="border border-dark" style="width: 14%; text-align: center;">ใบกำกับภาษี<br />Tax Invoice</th>
                         <th class="border border-dark" style="width: 32%; text-align: center;">รายการสินค้า/บริการ<br />Goods/Service</th>
-                        <th class="border border-dark" style="width: 14; text-align: center;">วันครบกำหนด<br /><t t-esc="o.date.strftime('%d/%m/%Y')"/></th>
+                        <th class="border border-dark" style="width: 14; text-align: center;">วันครบกำหนด<br /><t t-esc="payment_date"/></th>
                         <th class="border border-dark" style="width: 20%; text-align: center;">จำนวนเงิน<br />Amount</th>
                     </tr>
                 </thead>
                 <tbody>
                     <t t-set="counter" t-value="0"/>
                     <t t-set="row" t-value="0"/>
-                    <t t-foreach="o.reconciled_invoice_ids.invoice_line_ids" t-as="invoice">
+                    <t t-set="move" t-value="o.reconciled_invoice_ids or o.reconciled_bill_ids"/>
+                    <t t-foreach="move.invoice_line_ids" t-as="invoice">
                         <tr>
-                            <td class="border-top-0 border-right border-left border-dark" style="width: 20%; text-align: center;"><span t-esc="o.reconciled_invoice_ids.invoice_date.strftime('%d/%m/%Y')"/></td>
-                            <td class="border-top-0 border-right border-dark" style="width: 13.5%; text-align: center;"><span t-esc="o.reconciled_invoice_ids.name"/></td>
-                            <td class="border-top-0 border-right border-dark" style="width: 32.5%; text-align: left;"><span t-esc="invoice.name"/></td>
-                            <td class="border-top-0 border-right border-dark" style="width: 13.5%; text-align: center;"><span t-esc="o.reconciled_invoice_ids.invoice_payment_term_id.name"/></td>
+                            <td class="border-top-0 border-right border-left border-dark" style="width: 20%; text-align: center;"><span t-esc="move_date"/></td>
+                            <td class="border-top-0 border-right border-dark" style="width: 14%; text-align: center;"><span t-esc="o.reconciled_invoice_ids.name"/></td>
+                            <td class="border-top-0 border-right border-dark" style="width: 32%; text-align: left;"><span t-esc="invoice.name"/></td>
+                            <td class="border-top-0 border-right border-dark" style="width: 14%; text-align: center;"><span t-esc="o.reconciled_invoice_ids.invoice_payment_term_id.name"/></td>
                             <td class="border-top-0 border-right border-dark" style="width: 20%; text-align: right;"><span t-esc="invoice.price_subtotal"/></td>
                             <t t-if="len(invoice.name) > 40">
                                 <t t-set="counter" t-value="counter+91"/>
@@ -204,14 +231,14 @@
                             <t t-out="'{:,.2f}'.format(o.reconciled_invoice_ids.amount_tax)"/>
                         </div>
                     </div>
-                    <div class="row">
+                    <!-- <div class="row">
                         <div class="col-10" style="padding-left: 20px; padding-top: 5px; text-align: left;">
                             ภาษีหัก ณ ที่จ่าย (Withholding Tax)
                         </div>
                         <div class="col-2" style="padding-right: 20px; padding-top: 5px; text-align: right;">
                             <t t-out="'{:,.2f}'.format(o.reconciled_invoice_ids.amount_wht)"/>
                         </div>
-                    </div>
+                    </div> -->
                     <div class="row">
                         <div class="col-4" style="padding-left: 20px; padding-top: 5px; text-align: left;">
                             <strong>จำนวนเงินรวมทั้งสิ้น (Total Amount)</strong>
@@ -325,11 +352,11 @@
         <field name="default" eval="True"/>
         <field name="format">A4</field>
         <field name="orientation">Portrait</field>
-        <field name="margin_top">80</field>
+        <field name="margin_top">72</field>
         <field name="margin_bottom">10</field>
         <field name="margin_left">0</field>
         <field name="margin_right">0</field>
-        <field name="header_spacing">77</field>
+        <field name="header_spacing">65</field>
         <field name="dpi">80</field>
     </record>
 
