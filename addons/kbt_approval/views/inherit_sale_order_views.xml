@@ -14,8 +14,26 @@
             <xpath expr="//button[@name='action_draft']" position="replace">
                 <button name="action_draft" states="cancel,reject" type="object" string="Set to Quotation" data-hotkey="w"/>
             </xpath>
+            <xpath expr="//button[@name='action_confirm'][3]" position="replace">
+                <button name="action_confirm" data-hotkey="v"
+                        string="Send to Approval" type="object"
+                        attrs="{'invisible': [('state', 'not in', ['draft'])]}"/>
+            </xpath>
+            <xpath expr="//button[@name='action_quotation_send'][1]" position="attributes">
+                <!-- state draft -->
+                <attribute name="invisible">1</attribute>
+            </xpath>
+
             <xpath expr="//field[@name='order_line']" position="attributes">
                 <attribute name="attrs">{'readonly': [('state', 'in', ('done', 'cancel', 'to approve'))]}</attribute>
+            </xpath>
+
+            <xpath expr="//notebook" position="inside">
+                <page id="approval_ids"
+                    string="Approve Details"
+                    attrs="{'invisible': [('approval_ids', '=', [])]}">
+                    <field name="approval_ids" context="{'tree_view_ref': 'kbt_approval.user_approval_line_tree_view'}"/>
+                </page>
             </xpath>
         </field>
     </record>
