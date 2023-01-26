@@ -24,6 +24,11 @@ class PurchaseOrder(models.Model):
     reject_reason = fields.Char(
         string='Reject Reason Note',
     )
+    approval_ids = fields.One2many(
+        'user.approval.line',
+        'purchase_id',
+        string='Approval'
+    )
 
     def _compute_approve(self):
         employee = self.env['hr.employee'].search(
@@ -39,6 +44,7 @@ class PurchaseOrder(models.Model):
         if not self.x_is_interface:
             if employee.level_id.approval_validation(
                     'purchase.order', self.amount_total, False):
+                self.approval_ids.confirm_approval_line(employee)
                 return True
             else:
                 manager = employee.parent_id
@@ -48,8 +54,12 @@ class PurchaseOrder(models.Model):
                         'kbt_approval.mail_activity_data_to_approve',
                         user_id=manager.user_id.id
                     )
-                    self.state = 'to approve'
-                    self.approve_level = employee.level_id.level
+                    self.write({
+                        'approval_ids': [(0, 0, {'manager_id': manager.id})],
+                        'state': 'to approve',
+                        'approve_level': employee.level_id.level,
+                    })
+                    self.approval_ids.confirm_approval_line(employee)
                     self.env.cr.commit()  # pylint: disable=invalid-commit
                 if manager.is_send_email:
                     # Email Function
