@@ -72,7 +72,7 @@ class PurchaseOrder(models.Model):
                     ).create({
                         'employee_id': employee.id,
                         'manager_id': manager.id,
-                        'name': 'Document Name',
+                        'name': 'Purchase Order',
                         'order_name': self.name,
                         'order_amount': self.amount_total,
                     }).send_approval_email()

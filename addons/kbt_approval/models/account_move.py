@@ -84,7 +84,7 @@ class AccountMove(models.Model):
                     ).create({
                         'employee_id': employee.id,
                         'manager_id': manager.id,
-                        'name': 'Document Name',
+                        'name': dict(self._fields['move_type'].selection).get(self.move_type),
                         'order_name': self.name,
                         'order_amount': self.amount_total,
                     }).send_approval_email()
