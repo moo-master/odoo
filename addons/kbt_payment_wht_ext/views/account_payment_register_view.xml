@@ -12,8 +12,12 @@
                 <field name="paid_amount" />
             </xpath>
 
-            <xpath expr="//div[@name='amount_div']" position="replace"/>
-            <xpath expr="//label[@for='amount']" position="replace"/>
+            <xpath expr="//label[@for='amount']" position="attributes">
+                <attribute name="invisible" >1</attribute>
+            </xpath>
+            <xpath expr="//div[@name='amount_div']" position="attributes">
+                <attribute name="invisible" >1</attribute>
+            </xpath>
         </field>
     </record>
 
