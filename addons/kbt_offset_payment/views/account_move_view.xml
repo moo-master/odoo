@@ -12,7 +12,7 @@
                     <field name="offset_ids"
                         attrs="{
                             'invisible': [('x_offset', '!=', True)],
-                            'readonly': ['|', ('payment_state', '!=', 'not_paid'), ('state', '!=', 'draft')]
+                            'readonly': ['|', ('payment_state', '!=', 'not_paid'), ('state', 'not in', ('draft', 'posted'))]
                             }">
                         <tree editable="bottom">
                             <field name='move_partner_id' invisible="1"/>

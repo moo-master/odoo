@@ -148,7 +148,7 @@ def test__prepare_move_line_default_vals(
     })
     res = payment._prepare_move_line_default_vals()
 
-    liquidity_line, liquidity_wht_line, _ = res
+    liquidity_line, _, liquidity_wht_line = res
     expected_res = {
         1: account_id,
         2: account_pnd3_id,
