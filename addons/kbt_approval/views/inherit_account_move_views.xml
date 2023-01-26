@@ -16,6 +16,13 @@
             <xpath expr="//button[@name='action_post'][2]" position="attributes">
                 <attribute name="string">Send to Approval</attribute>
             </xpath>
+            <xpath expr="//notebook" position="inside">
+                <page id="approval_ids"
+                    string="Approve Details"
+                    attrs="{'invisible': [('approval_ids', '=', [])]}">
+                    <field name="approval_ids" context="{'tree_view_ref': 'kbt_approval.user_approval_line_tree_view'}"/>
+                </page>
+            </xpath>
         </field>
     </record>
 

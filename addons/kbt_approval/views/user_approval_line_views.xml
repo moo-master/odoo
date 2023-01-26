@@ -1,0 +1,33 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<odoo>
+
+    <record model="ir.ui.view" id="user_approval_line_form_view">
+        <field name="name">user.approval.line.form</field>
+        <field name="model">user.approval.line</field>
+        <field name="arch" type="xml">
+            <form string="Approval">
+                <sheet>
+                    <group>
+                        <field name="manager_id" readonly="1"/>
+                        <field name="is_approve" readonly="1"/>
+                        <field name="approve_date" readonly="1"/>
+                    </group>
+                </sheet>
+            </form>
+        </field>
+    </record>
+
+    <record model="ir.ui.view" id="user_approval_line_tree_view">
+        <field name="name">user.approval.line.tree</field>
+        <field name="model">user.approval.line</field>
+        <field name="arch" type="xml">
+            <tree string="Approve Details" create="0" edit="0" delete="0" default_order="sequence, id">
+                <field name="sequence" invisible="1"/>
+                <field name="manager_id"/>
+                <field name="is_approve"/>
+                <field name="approve_date"/>
+            </tree>
+        </field>
+    </record>
+
+</odoo>
