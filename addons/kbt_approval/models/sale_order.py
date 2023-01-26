@@ -25,6 +25,11 @@ class SaleOrder(models.Model):
     reject_reason = fields.Char(
         string='Reject Reason Note',
     )
+    approval_ids = fields.One2many(
+        'user.approval.line',
+        'sale_id',
+        string='Approval'
+    )
 
     def action_draft(self):
         orders = self.filtered(
@@ -51,6 +56,7 @@ class SaleOrder(models.Model):
         if not self.x_is_interface:
             if employee.level_id.approval_validation(
                     'sale.order', self.amount_total, False):
+                self.approval_ids.confirm_approval_line(employee)
                 return True
             else:
                 manager = employee.parent_id
@@ -60,8 +66,12 @@ class SaleOrder(models.Model):
                         'kbt_approval.mail_activity_data_to_approve',
                         user_id=manager.user_id.id
                     )
-                    self.state = 'to approve'
-                    self.approve_level = employee.level_id.level
+                    self.write({
+                        'approval_ids': [(0, 0, {'manager_id': manager.id})],
+                        'state': 'to approve',
+                        'approve_level': employee.level_id.level,
+                    })
+                    self.approval_ids.confirm_approval_line(employee)
                     self.env.cr.commit()  # pylint: disable=invalid-commit
 
                 if manager.is_send_email:
@@ -74,7 +84,7 @@ class SaleOrder(models.Model):
                     ).create({
                         'employee_id': employee.id,
                         'manager_id': manager.id,
-                        'name': 'Document Name',
+                        'name': 'Sale Order',
                         'order_name': self.name,
                         'order_amount': self.amount_total,
                     }).send_approval_email()
