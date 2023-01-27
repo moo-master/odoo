@@ -39,12 +39,26 @@ class OrgLevel(models.Model):
         for rec in self:
             rec.display_name = str(rec.level) + ' ' + rec.description
 
-    def approval_validation(self, model, amount, move_type):
+    def approval_validation(
+            self,
+            model,
+            amount,
+            move_type,
+            employee,
+            approval):
         for line in self.line_ids:
+            res = True
             if model != 'account.move':
                 if line.model_id.model == model:
-                    return amount <= line.limit
+                    res = amount <= line.limit
             else:
                 if line.move_type == move_type:
-                    return amount <= line.limit
-        return True
+                    res = amount <= line.limit
+
+        if not res:
+            approval.append(employee.parent_id.id)
+            employee.parent_id.level_id.approval_validation(
+                model, amount, move_type, employee.parent_id, approval
+            )
+
+        return approval, res
