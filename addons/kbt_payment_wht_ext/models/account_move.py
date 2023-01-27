@@ -20,3 +20,7 @@ class AccountMove(models.Model):
         })
 
         return res
+
+    def button_draft(self):
+        self.write({'is_wht_paid': False})
+        return super().button_draft()
