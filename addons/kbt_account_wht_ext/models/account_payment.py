@@ -54,7 +54,7 @@ class AccountPayment(models.Model):
         res: list = super()._prepare_move_line_default_vals(
             write_off_line_vals=write_off_line_vals)
 
-        if self.move_wht_id:
+        if self.move_wht_id and not self.move_wht_id.is_wht_paid:
             move = self.move_wht_id
             amount_wht = self.move_wht_id.amount_wht
             liquidity_line = res[0]
