@@ -33,6 +33,7 @@ class PartnerDataController(KBTApiBase):
         Company = request.env['res.company']
         Account = request.env['account.account']
         data_params = params
+        User = request.env.user
 
         for data in data_params.get('data'):
             company_id = Company.search([
@@ -46,7 +47,7 @@ class PartnerDataController(KBTApiBase):
             account_receivable_id = Account.search([
                 ('code', '=', data.get('property_account_receivable_id')),
                 ('reconcile', '=', True),
-                ('company_id.company_code', '=', data.get('company_code')),
+                ('company_id', '=', User.company_id.id),
             ])
             if not account_receivable_id:
                 raise ValueError(
