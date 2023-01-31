@@ -30,14 +30,23 @@ class PartnerDataController(KBTApiBase):
     def _create_update_partner(self, **params):
         Partner = request.env['res.partner']
         ResBank = request.env['res.bank']
+        Company = request.env['res.company']
+        Account = request.env['account.account']
         data_params = params
-        User = request.env.user
 
         for data in data_params.get('data'):
-            account_receivable_id = request.env['account.account'].search([
+            company_id = Company.search([
+                ('company_code', '=', data.get('company_code')),
+            ])
+            if not company_id:
+                raise ValueError(
+                    f"Error company code ({data.get('company_code')})."
+                )
+
+            account_receivable_id = Account.search([
                 ('code', '=', data.get('property_account_receivable_id')),
                 ('reconcile', '=', True),
-                ('company_id', '=', User.company_id.id),
+                ('company_id.company_code', '=', data.get('company_code')),
             ])
             if not account_receivable_id:
                 raise ValueError(
@@ -48,10 +57,10 @@ class PartnerDataController(KBTApiBase):
                     f"Account code ({data.get('property_account_receivable_id')}) is deprecated."
                 )
 
-            account_payable_id = request.env['account.account'].search(
+            account_payable_id = Account.search(
                 [('code', '=', data.get('property_account_payable_id')),
                  ('reconcile', '=', True),
-                 ('company_id.company_code', '=', data.get('company_code'))
+                 ('company_id.company_code', '=', data.get('company_code')),
                  ])
             if not account_payable_id:
                 raise ValueError(
@@ -68,22 +77,17 @@ class PartnerDataController(KBTApiBase):
             if data.get('company_type') not in ['person', 'company']:
                 raise ValueError("company_type must be 'person' or 'company'")
 
+            city_id = request.env['res.city'].search([
+                ('code', '=', data.get('city')),
+                ('code', '!=', False),
+            ], limit=1)
             country_id = request.env['res.country'].search([
                 ('code', '=', data.get('country_id'))
             ], limit=1)
-            if not country_id:
-                raise ValueError("country_id not found.")
-
             state_id = request.env['res.country.state'].search([
                 ('country_id', '=', country_id.id),
                 ('code', '=', data.get('state_id'))
             ], limit=1)
-
-            city_id = request.env['res.city'].search([
-                ('code', '=', data.get('city'))
-            ], limit=1)
-            if not city_id:
-                raise ValueError("city_id not found.")
 
             vals_dict = {
                 'x_interface_id': data.get('x_external_code'),
