@@ -49,15 +49,15 @@ class AccountMove(models.Model):
         for line in vals_list.get('line_ids') or []:
             for invoice_line in vals_list.get('invoice_line_ids') or []:
                 for field in BUSINESS_FIELDS:
-                    if(line[1] in invoice_line and invoice_line[2]
+                    if (line[1] in invoice_line and invoice_line[2]
                             and field in invoice_line[2]):
                         line[2][field] = invoice_line[2][field]
         return vals_list
 
     def section_check(self, sequence):
-        if(int(sequence / 500) == 1 and (sequence % 500) < 100):
+        if (int(sequence / 500) == 1 and (sequence % 500) < 100):
             return 5
-        if(int(sequence / 600) == 1 and (sequence % 600) < 100):
+        if (int(sequence / 600) == 1 and (sequence % 600) < 100):
             return 6
 
     # KBT no need to check WHT sequence
