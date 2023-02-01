@@ -35,6 +35,6 @@ class UserApprovalLine(models.Model):
         if approval:
             approval.write({
                 'is_approve': True,
-                'approve_date': fields.Datetime.now()
+                'approve_datetime': fields.Datetime.now()
             })
         return True
