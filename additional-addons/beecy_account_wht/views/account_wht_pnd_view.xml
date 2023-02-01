@@ -18,6 +18,15 @@
                 <sheet>
                     <div name="button_box" class="oe_button_box">
                         <button
+                            name="%(beecy_account_wht.action_pnd53_report)d"
+                            string="PND 53"
+                            type="action"
+                            invisible="context.get('default_pnd_type') != 'pnd53'"
+                            icon="fa-print"
+                            class="oe_stat_button"
+                            states="confirm"
+                        />
+                        <button
                             name="%(beecy_account_wht.action_pnd3_report)d"
                             string="PND 3"
                             type="action"
@@ -25,7 +34,6 @@
                             icon="fa-print"
                             class="oe_stat_button"
                             states="confirm"
-
                         />
                         <button
                             name="%(beecy_account_wht.action_pnd3_attach_report_pdf)d"
