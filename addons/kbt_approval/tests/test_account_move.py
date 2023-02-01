@@ -16,6 +16,7 @@ def move(env):
             Command.create({'product_id': env.ref('product.consu_delivery_02').id, 'price_unit': 100, 'quantity': 5}),
             Command.create({'product_id': env.ref('product.consu_delivery_03').id, 'price_unit': 100, 'quantity': 5}),
         ],
+        'approval_ids': False,
     })
 
 
