@@ -155,6 +155,14 @@ class AccountWhtPnd(models.Model):
         ],
         default='{:02d}'.format(datetime.now().month),
     )
+    state = fields.Selection(
+        selection=[
+            ('draft', 'Draft'),
+            ('confirm', 'Confirm')
+        ],
+        string='Status',
+        default='draft',
+    )
 
     @api.depends('wht_ids')
     def _compute_wht_line_partner(self):
@@ -228,3 +236,6 @@ class AccountWhtPnd(models.Model):
             rec.select_month_date = date_obj
             rec.select_month = datetime.strftime(date_obj, '%m/%Y')
             rec.name = datetime.strftime(date_obj, '%m/%Y')
+
+    def action_confirm(self):
+        self.update({'state': 'confirm'})
