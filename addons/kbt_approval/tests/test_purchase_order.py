@@ -22,6 +22,7 @@ def purchase(env):
     }, 'purchase'),
 ])
 def test_button_confirm_purchase_order(purchase, env, test_input, expected):
+    purchase.write({'approval_ids': False})
     po_model = env['ir.model'].search([('model', '=', 'purchase.order')])
     level = env['org.level'].search([])
     employee = env.ref('hr.employee_qdp')
@@ -60,6 +61,7 @@ def test_button_confirm_purchase_order(purchase, env, test_input, expected):
             assert purchase.state == expected
             assert purchase.is_approve == False
             assert excinfo.value.name == msg
+            assert purchase.approval_ids
     else:
         purchase.button_confirm()
         assert purchase.state == expected
