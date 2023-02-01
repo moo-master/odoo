@@ -10,7 +10,7 @@
                     <group>
                         <field name="manager_id" readonly="1"/>
                         <field name="is_approve" readonly="1"/>
-                        <field name="approve_date" readonly="1"/>
+                        <field name="approve_datetime" readonly="1"/>
                     </group>
                 </sheet>
             </form>
@@ -25,7 +25,7 @@
                 <field name="sequence" invisible="1"/>
                 <field name="manager_id"/>
                 <field name="is_approve"/>
-                <field name="approve_date"/>
+                <field name="approve_datetime"/>
             </tree>
         </field>
     </record>
