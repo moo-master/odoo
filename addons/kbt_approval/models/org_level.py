@@ -46,8 +46,8 @@ class OrgLevel(models.Model):
             move_type,
             employee,
             approval):
+        res = True
         for line in self.line_ids:
-            res = True
             if model != 'account.move':
                 if line.model_id.model == model:
                     res = amount <= line.limit

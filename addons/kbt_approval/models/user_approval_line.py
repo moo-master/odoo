@@ -21,7 +21,7 @@ class UserApprovalLine(models.Model):
         string='Approve',
         default=False,
     )
-    approve_date = fields.Date(
+    approve_datetime = fields.Datetime(
         string='Approve Date',
     )
     manager_id = fields.Many2one(
@@ -35,6 +35,6 @@ class UserApprovalLine(models.Model):
         if approval:
             approval.write({
                 'is_approve': True,
-                'approve_date': fields.Date.today()
+                'approve_datetime': fields.Datetime.now()
             })
         return True

@@ -22,6 +22,7 @@ def sale(env):
     }, 'sale'),
 ])
 def test_action_confirm_false_sale_order(sale, env, test_input, expected):
+    sale.write({'approval_ids': False})
     so_model = env['ir.model'].search([('model', '=', 'sale.order')])
     level = env['org.level'].search([])
     employee = env.ref('hr.employee_qdp')
@@ -60,6 +61,7 @@ def test_action_confirm_false_sale_order(sale, env, test_input, expected):
             assert sale.state == expected
             assert sale.is_approve == False
             assert excinfo.value.name == msg
+            assert sale.approval_ids
     else:
         sale.action_confirm()
         assert sale.state == expected
