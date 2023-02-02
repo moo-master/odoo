@@ -13,7 +13,8 @@ class OffsetPaymentWizard(models.TransientModel):
     )
 
     def _get_type(self, move_type):
-        return 'inbound', 'customer' if move_type == 'out_invoice' else 'outbound', 'supplier'
+        return ('inbound', 'customer') if move_type == 'out_invoice' \
+            else ('outbound', 'supplier')
 
     def _get_bank_journal(self):
         return self.env['account.journal'].search(
@@ -150,3 +151,5 @@ class OffsetPaymentWizard(models.TransientModel):
                     self._reconcile_payments(
                         invoice.line_ids, invoice_payment.line_ids)
                     self.link_wht(invoice_payment)
+
+                move.write({'x_offset': True})
