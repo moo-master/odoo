@@ -13,12 +13,12 @@ class AccountMove(models.Model):
 
     def action_register_payment(self):
         res = super().action_register_payment()
-        amount_wht = 0 if self.is_wht_paid else self.amount_wht
+        amount_wht = sum(self.filtered(
+            lambda x: not x.is_wht_paid).mapped('amount_wht'))
         res['context'].update({
             'default_wht_amount': amount_wht,
-            'default_paid_amount': self.amount_residual - amount_wht,
+            'default_paid_amount': sum(self.mapped('amount_residual')) - amount_wht,
         })
-
         return res
 
     def button_draft(self):
