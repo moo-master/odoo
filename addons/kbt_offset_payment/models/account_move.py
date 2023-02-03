@@ -7,7 +7,7 @@ class AccountMove(models.Model):
     offset_ids = fields.One2many(
         'offset.payment',
         'move_id',
-        string='Offset'
+        string='Offset',
     )
 
     total_offset = fields.Monetary(
@@ -17,12 +17,25 @@ class AccountMove(models.Model):
     )
 
     # pylint: disable=biszx-boolean-field-name
-    x_offset = fields.Boolean(
+    x_offset_partner = fields.Boolean(
         'Offset',
         related='partner_id.x_offset'
+    )
+    x_offset = fields.Boolean(
+        'Offset',
+    )
+    move_offset_ids = fields.Many2many(
+        'account.move',
+        string='Move Offset',
+        compute='_compute_offset'
     )
 
     @api.depends('offset_ids')
     def _compute_offset(self):
         for rec in self:
-            rec.total_offset = sum(rec.offset_ids.mapped('total_amount_due'))
+            all_offset_lines = self.env['offset.payment'].search(
+                []).mapped('invoice_id').ids
+            rec.write({
+                'total_offset': sum(rec.offset_ids.mapped('total_amount_due')),
+                'move_offset_ids': [(6, 0, all_offset_lines)],
+            })
