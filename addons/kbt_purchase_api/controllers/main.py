@@ -47,12 +47,12 @@ class PurchaseController(KBTApiBase):
                 ('default_code', '=', order_line.get('product_id')),
             ])
 
-            wht_id = product_id.purchase_wht_type_id
-            if order_line.get('x_wht_id'):
+            wht_id: int = product_id.purchase_wht_type_id.id
+            if 'x_wht_id' in order_line:
                 wht_id = request.env['account.wht.type'].search([
-                    ('sequence', '=', (seq := int(order_line.get('x_wht_id')))),
-                ])
-                if not wht_id:
+                    ('sequence', '=', (seq := int(order_line.get('x_wht_id') or 0))),
+                ]).id
+                if not wht_id and seq:
                     raise ValueError(
                         "Withholding Tax: %s have no data." % seq
                     )
@@ -65,8 +65,7 @@ class PurchaseController(KBTApiBase):
                 'price_unit': order_line.get('price_unit'),
                 'sequence': order_line.get('seq_line'),
                 'note': order_line.get('note'),
-                'wht_type_id': wht_id.id
-
+                'wht_type_id': wht_id,
             })
         else:
             raise ValueError(

@@ -12,13 +12,12 @@
         'Patipon S.',
     ],
     'depends': [
-        'account',
         'kbt_partner_ext',
         'kbt_account_wht_ext'
     ],
     'data': [
         'security/ir.model.access.csv',
+        'views/account_move_view.xml',
         'wizards/offset_payment_wizard_view.xml',
-        'views/account_move_view.xml'
     ]
 }

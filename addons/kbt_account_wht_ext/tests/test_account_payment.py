@@ -144,7 +144,7 @@ def test__prepare_move_line_default_vals(
 
     payment = model.new({
         'amount': 100,
-        'move_wht_id': invoice.id
+        'move_wht_ids': [(6, 0, invoice.ids)]
     })
     res = payment._prepare_move_line_default_vals()
 

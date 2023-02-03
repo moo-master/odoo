@@ -6,6 +6,15 @@
         <field name="model">account.wht.pnd</field>
         <field name="arch" type="xml">
             <form string="">
+                <header>
+                    <button string="Confirm"
+                        name="action_confirm"
+                        states="draft"
+                        type="object"
+                        class="oe_highlight"
+                    />
+                    <field name="state" widget="statusbar" statusbar_visible="draft,confirm"/>
+                </header>
                 <sheet>
                     <div name="button_box" class="oe_button_box">
                         <button
@@ -15,6 +24,7 @@
                             invisible="context.get('default_pnd_type') != 'pnd3'"
                             icon="fa-print"
                             class="oe_stat_button"
+                            states="confirm"
                         />
                         <button
                             name="%(beecy_account_wht.action_pnd53_report)d"
@@ -23,6 +33,7 @@
                             invisible="context.get('default_pnd_type') != 'pnd53'"
                             icon="fa-print"
                             class="oe_stat_button"
+                            states="confirm"
                         />
                         <button
                             name="%(beecy_account_wht.action_pnd3_attach_report_pdf)d"
@@ -31,6 +42,7 @@
                             invisible="context.get('default_pnd_type') != 'pnd3'"
                             icon="fa-files-o"
                             class="oe_stat_button"
+                            states="confirm"
                         />
                         <button
                             name="%(beecy_account_wht.action_pnd53_attach_report_pdf)d"
@@ -39,6 +51,7 @@
                             invisible="context.get('default_pnd_type') != 'pnd53'"
                             icon="fa-files-o"
                             class="oe_stat_button"
+                            states="confirm"
                         />
                         <button
                             name="%(beecy_account_wht.action_pnd_3n53_report_txt)d"
@@ -46,6 +59,7 @@
                             type="action"
                             icon="fa-file"
                             class="oe_stat_button"
+                            states="confirm"
                         />
                     </div>
                     <div class="oe_title">
@@ -78,24 +92,24 @@
                             />
                             <label for="month_select" />
                             <div name="month_year_div" class="d-flex">
-                                <field name="month_select" />
+                                <field name="month_select" attrs="{'readonly':[('state','!=','draft')]}"/>
                                 <span class="oe_inline o_form_label mx-5 font-weight-bold">Year</span>
-                                <field name="year_select" />
+                                <field name="year_select" attrs="{'readonly':[('state','!=','draft')]}"/>
                             </div>
-                            <field name="pnd_date"/>
-                            <field name="fill_type"/>
-                            <field name="additional_fill" attrs="{'invisible': [('fill_type', '!=', 'additional')]}"/>
+                            <field name="pnd_date" attrs="{'readonly':[('state','!=','draft')]}"/>
+                            <field name="fill_type" attrs="{'readonly':[('state','!=','draft')]}"/>
+                            <field name="additional_fill" attrs="{'invisible': [('fill_type', '!=', 'additional')], 'readonly':[('state','!=','draft')]}" />
                         </group>
                         <group>
                             <group>
                                 <field name="pnd_type" invisible="1"/>
                                 <field name="company_id" invisible="1"/>
-                                <field name="section" widget="radio"/>
-                                <field name="attachment_type" widget="radio"/>
+                                <field name="section" widget="radio" attrs="{'readonly':[('state','!=','draft')]}"/>
+                                <field name="attachment_type" widget="radio" attrs="{'readonly':[('state','!=','draft')]}"/>
                                 <field name="wht_ids_count_str" nolabel="1" attrs="{'invisible': [('wht_ids_count_str', '=', False)]}"/>
                             </group>
                         </group>
-                        <field name="wht_ids" nolabel="1" domain="[('wht_kind', '=', pnd_type), ('status', '=', 'done'), ('wht_type', '=', 'purchase')]" context="{'default_wht_kind': pnd_type}">
+                        <field name="wht_ids" nolabel="1" domain="[('wht_kind', '=', pnd_type), ('status', '=', 'done'), ('wht_type', '=', 'purchase')]" context="{'default_wht_kind': pnd_type}" attrs="{'readonly':[('state','!=','draft')]}">
                             <tree editable="bottom" create="0">
                                 <field name="name" readonly="1"/>
                                 <field name="document_date" readonly="1"/>

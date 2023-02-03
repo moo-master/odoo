@@ -7,37 +7,40 @@
         <field name="priority" eval="100"/>
         <field name="arch" type="xml">
             <xpath expr="//page[@id='invoice_tab']" position="after">
-                <page name="offset_tab" string="Offset" attrs="{'invisible': ['|', ('x_offset', '!=', True), ('move_type', 'not in', ('out_invoice', 'in_invoice'))]}">
-                    <field name="x_offset" invisible="1"/>
+                <page name="offset_tab" string="Offset" attrs="{'invisible': ['|', ('x_offset_partner', '!=', True), ('move_type', 'not in', ('out_invoice', 'in_invoice'))]}">
+                    <field name="x_offset_partner" invisible="1"/>
+                    <field name="move_offset_ids" invisible="1"/>
                     <field name="offset_ids"
                         attrs="{
-                            'invisible': [('x_offset', '!=', True)],
+                            'invisible': [('x_offset_partner', '!=', True)],
                             'readonly': ['|', ('payment_state', '!=', 'not_paid'), ('state', 'not in', ('draft', 'posted'))]
                             }">
                         <tree editable="bottom">
-                            <field name='move_partner_id' invisible="1"/>
-                            <field name='offset_move_type' invisible="1"/>
-                            <field name='invoice_date'/>
-                            <field name='invoice_id'
+                            <field name="move_partner_id" invisible="1"/>
+                            <field name="offset_move_type" invisible="1"/>
+                            <field name="invoice_date"/>
+                            <field name="invoice_id"
                                 domain="[
                                     ('payment_state', 'in', ('not_paid', 'partial')),
                                     ('partner_id', '=', move_partner_id),
                                     ('move_type', '=', offset_move_type),
-                                    ('state', '=', 'posted')
+                                    ('state', '=', 'posted'),
+                                    ('id', 'not in', parent.move_offset_ids),
                                 ]"/>
-                            <field name='partner_id'/>
-                            <field name='amount_untaxed'/>
-                            <field name='total_amount'/>
-                            <field name='total_amount_due'/>
+                            <field name="partner_id"/>
+                            <field name="amount_untaxed"/>
+                            <field name="total_amount"/>
+                            <field name="total_amount_due"/>
                         </tree>
                     </field>
                     <group class="oe_subtotal_footer oe_right">
-                        <field name='total_offset'/>
+                        <field name="total_offset"/>
+                        <!-- <field name="move_offset_ids" widget="many2many_tags"/> -->
                     </group>
                 </page>
             </xpath>
             <xpath expr="//field[@name='amount_total']" position='after'>
-                <field name='total_offset' attrs="{'invisible': [('x_offset', '!=', True)]}"/>
+                <field name='total_offset' attrs="{'invisible': [('x_offset_partner', '!=', True)]}"/>
             </xpath>
         </field>
     </record>
