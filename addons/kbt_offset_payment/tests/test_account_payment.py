@@ -29,7 +29,8 @@ def test__prepare_move_line_default_vals(
 
     val_dict = {
         'amount': 100,
-        'move_wht_id': invoice.id if test_input['move_wht_id'] else False
+        'move_wht_ids': [(6, 0, invoice.ids)]
+        if test_input['move_wht_id'] else False
     }
     payment = model.with_context(ctx_dict).new(val_dict)
     res = payment._prepare_move_line_default_vals()
