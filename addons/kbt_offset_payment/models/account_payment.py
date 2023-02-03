@@ -11,8 +11,8 @@ class AccountPayment(models.Model):
         ctx = dict(self.env.context)
         debit_credit = 'debit' if self.payment_type == 'inbound' else 'credit'
         if 'offset_account_id' in ctx:
-            if self.move_wht_id:
-                liquidity_line, liquidity_wht_line, receivable_payable = res
+            if self.move_wht_ids:
+                liquidity_line, *remain_data = res
                 if 'offset_amount' in ctx:
                     suspense_line = liquidity_line.copy()
                     suspense_line.update({
@@ -21,11 +21,7 @@ class AccountPayment(models.Model):
                     })
                     liquidity_line[debit_credit] = liquidity_line[debit_credit] - \
                         ctx.get('offset_amount')
-                    res = [
-                        liquidity_line,
-                        suspense_line,
-                        liquidity_wht_line,
-                        receivable_payable]
+                    res = [liquidity_line, suspense_line, *remain_data]
                 else:
                     liquidity_line['account_id'] = ctx.get(
                         'offset_account_id').id

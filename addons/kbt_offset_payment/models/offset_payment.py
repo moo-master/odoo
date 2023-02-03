@@ -3,6 +3,7 @@ from odoo import fields, models, api
 
 class OffsetPayment(models.Model):
     _name = 'offset.payment'
+    _description = 'Offset Payment'
 
     move_id = fields.Many2one(
         comodel_name='account.move'
