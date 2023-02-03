@@ -56,10 +56,11 @@ class AccountPaymentRegister(models.TransientModel):
 
         for data in to_process:
             # Select reconcile account move line to find move_id
-            move_id = data['to_reconcile'].move_id
+            move_id = data['to_reconcile'].move_id.filtered(
+                lambda x: not x.is_paid_wht)
             if move_id.amount_wht:
                 data['create_vals'].update({
-                    'move_wht_id': move_id.id
+                    'move_wht_ids': [(6, 0, move_id.ids)]
                 })
 
         payments = super()._init_payments(to_process, edit_mode=edit_mode)

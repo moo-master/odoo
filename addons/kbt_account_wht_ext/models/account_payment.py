@@ -5,7 +5,7 @@ from math import copysign
 class AccountPayment(models.Model):
     _inherit = 'account.payment'
 
-    move_wht_id = fields.Many2one(
+    move_wht_ids = fields.Many2many(
         comodel_name='account.move',
         string='Move with WHT'
     )
@@ -53,10 +53,8 @@ class AccountPayment(models.Model):
     def _prepare_move_line_default_vals(self, write_off_line_vals=None):
         res: list = super()._prepare_move_line_default_vals(
             write_off_line_vals=write_off_line_vals)
-
-        if self.move_wht_id and not self.move_wht_id.is_wht_paid:
-            move = self.move_wht_id
-            amount_wht = self.move_wht_id.amount_wht
+        for move in self.move_wht_ids:
+            amount_wht = move.amount_wht
             liquidity_line = res[0]
             liquidity_wht_line = liquidity_line.copy()
 
