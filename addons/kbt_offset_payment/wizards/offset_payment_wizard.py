@@ -26,8 +26,10 @@ class OffsetPaymentWizard(models.TransientModel):
         return journal
 
     def _reconcile_payments(self, move_line, payment_line_ids):
-        domain = [('account_internal_type', 'in',
-                   ('receivable', 'payable')), ('reconciled', '=', False)]
+        domain = [
+            ('account_internal_type', 'in', ('receivable', 'payable')),
+            ('reconciled', '=', False)
+        ]
         payment_lines = payment_line_ids.filtered_domain(domain)
         for account in payment_lines.account_id:
             (payment_lines + move_line).filtered_domain([
@@ -92,7 +94,8 @@ class OffsetPaymentWizard(models.TransientModel):
             payment_method_line_id = self._get_manual_payment_method(
                 journal_id, payment_type)
             move_payment_val = {
-                'move_wht_id': move.id if move.amount_wht else False,
+                'move_wht_ids': [(6, 0, move.ids)]
+                if move.amount_wht and not move.is_wht_paid else False,
                 'payment_type': payment_type,
                 'partner_type': partner_type,
                 'partner_id': move.partner_id.id,
@@ -128,7 +131,9 @@ class OffsetPaymentWizard(models.TransientModel):
                     payment_method_line_id = self._get_manual_payment_method(
                         journal_id, payment_type)
                     offset_payment_val = {
-                        'move_wht_id': move.id if move.amount_wht else False,
+                        'move_wht_ids': [(6, 0, invoice.ids)]
+                        if invoice.amount_wht and not invoice.is_wht_paid
+                        else False,
                         'payment_type': payment_type,
                         'partner_type': partner_type,
                         'partner_id': invoice.partner_id.id,
