@@ -29,7 +29,5 @@ class AccountPaymentRegister(models.TransientModel):
                 _('Amount must greater or equal to WHT Amount')
             )
 
-        move.write({
-            'is_wht_paid': True
-        })
+        move.update({'is_wht_paid': True})
         return res

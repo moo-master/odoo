@@ -1,4 +1,4 @@
-from odoo import models, fields
+from odoo import models, fields, api
 
 
 class AccountMove(models.Model):
@@ -13,6 +13,17 @@ class AccountMove(models.Model):
         comodel_name='account.move',
         string='X Invoice'
     )
+    is_wht_exist = fields.Boolean(
+        string='Is WHt Exist',
+        compute='_compute_is_wht_exist',
+    )
+
+    @api.depends('line_ids')
+    def _compute_is_wht_exist(self):
+        for move in self:
+            move.write({
+                'is_wht_exist': any(move.line_ids.mapped('is_wht_line'))
+            })
 
 
 class AccountMoveLine(models.Model):

@@ -75,3 +75,5 @@ def test_button_confirm(
     })
     offset.button_confirm()
     assert invoice.x_offset
+    assert invoice.payment_state == 'paid'
+    assert bill.payment_state == 'paid'
