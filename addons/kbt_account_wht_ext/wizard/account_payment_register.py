@@ -12,7 +12,7 @@ class AccountPaymentRegister(models.TransientModel):
 
         moves = move_type.filtered('invoice_line_ids.wht_type_id')
 
-        for move in moves.filtered(lambda x: not x.is_wht_paid):
+        for move in moves:
             account_id = move.company_id.ar_wht_default_account_id
             if move.move_type != 'out_invoice':
                 account_id = move.company_id.ap_wht_default_account_pnd3_id \
@@ -57,8 +57,8 @@ class AccountPaymentRegister(models.TransientModel):
         for data in to_process:
             # Select reconcile account move line to find move_id
             move_id = data['to_reconcile'].move_id.filtered(
-                lambda x: not x.is_paid_wht)
-            if move_id.amount_wht:
+                lambda x: not x.is_wht_paid)
+            if move_id:
                 data['create_vals'].update({
                     'move_wht_ids': [(6, 0, move_id.ids)]
                 })

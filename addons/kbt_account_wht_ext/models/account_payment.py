@@ -7,7 +7,10 @@ class AccountPayment(models.Model):
 
     move_wht_ids = fields.Many2many(
         comodel_name='account.move',
-        string='Move with WHT'
+        relation='account_payment_account_move_wht_rel',
+        column1='payment_id',
+        column2='move_id',
+        string='Move with WHT',
     )
     wht_ids = fields.One2many(
         'account.wht',
@@ -53,8 +56,13 @@ class AccountPayment(models.Model):
     def _prepare_move_line_default_vals(self, write_off_line_vals=None):
         res: list = super()._prepare_move_line_default_vals(
             write_off_line_vals=write_off_line_vals)
-        for move in self.move_wht_ids:
-            amount_wht = move.amount_wht
+
+        # account.move.line with wht
+        wht_lines = self.move_wht_ids.invoice_line_ids.filtered('wht_type_id')
+        for line in wht_lines:
+            move = line.move_id
+            amount_wht = line.amount_wht
+
             liquidity_line = res[0]
             liquidity_wht_line = liquidity_line.copy()
 
@@ -76,6 +84,7 @@ class AccountPayment(models.Model):
             liquidity_wht_line['amount_currency'] = amount_wht
             liquidity_wht_line['account_id'] = account_id.id
             liquidity_wht_line['is_wht_line'] = True
+            liquidity_wht_line['wht_type_id'] = line.wht_type_id.id
 
             res.append(liquidity_wht_line)
 
