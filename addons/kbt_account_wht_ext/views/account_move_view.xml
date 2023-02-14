@@ -9,6 +9,14 @@
             <xpath expr="//group[@id='other_tab_group']/group/field[@name='partner_bank_id']" position="after">
                 <field name="x_invoice_id" attrs="{'invisible':[('move_type', '!=', 'out_refund')]}"/>
             </xpath>
+
+            <xpath expr="//field[@name='line_ids']" position="after">
+                <field name="is_wht_exist" invisible="1"/>
+            </xpath>
+            <xpath expr="//field[@name='line_ids']/tree/field[@name='name']" position="after">
+                <field name="wht_type_id" attrs="{'column_invisible': [('parent.is_wht_exist', '=', False)]}"/>
+            </xpath>
+
         </field>
     </record>
 

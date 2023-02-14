@@ -36,6 +36,17 @@
         <t t-if="o.company_id.vat">
             <t t-set="company_address_line_2" t-value="company_address_line_2 + 'เลขประจำตัวผู้เสียภาษี ' + str(o.company_id.vat) + ' '"/>
         </t>
+        <!-- Company Branch -->
+        <t t-set="company_code" t-value="'สาขา '"/>
+        <t t-if="o.env.company.company_code == '00000'">
+            <t t-set="company_code" t-value="company_code + 'สำนักงานใหญ่'"/>
+        </t>
+        <t t-elif="o.env.company.company_code">
+            <t t-set="company_code" t-value="company_code + str(o.env.company.company_code)"/>
+        </t>
+        <t t-else="">
+            <t t-set="company_code" t-value="company_code + '-'"/>
+        </t>
 
         <!-- Partner Address Information -->
         <!-- Partner Address Line 1 -->
@@ -145,6 +156,7 @@
                             <span><t t-out="company_address_line_1"></t></span>
                             <br/>
                             <span><t t-out="company_address_line_2"></t></span>
+                            <span><t t-out="company_code"></t></span>
                         </div>
                     </div>
                 </div>
@@ -260,9 +272,9 @@
                             <div>
                                 ภาษีมูลค่าเพิ่ม (Vat Amount)
                             </div>
-                            <div>
+                            <!-- <div>
                                 ภาษีหัก ณ ที่จ่าย (Withholding Tax)
-                            </div>
+                            </div> -->
                             <div>
                                 จำนวณเงินรวมทั้งสิ้น (Total Amount) <span style="float: right;" t-out="o.get_amount_total_text(o.amount_total)"/>
                             </div>
@@ -280,9 +292,9 @@
                             <div>
                                 <t t-out="'{:,.2f}'.format(o.amount_tax)"/>
                             </div>
-                            <div>
+                            <!-- <div>
                                 <t t-out="'{:,.2f}'.format(o.amount_wht)"/>
-                            </div>
+                            </div> -->
                             <div>
                                 <t t-out="'{:,.2f}'.format(o.amount_total)"/>
                             </div>
@@ -298,9 +310,9 @@
                             <div>
                                 ภาษีมูลค่าเพิ่ม (Vat Amount)
                             </div>
-                            <div>
+                            <!-- <div>
                                 ภาษีหัก ณ ที่จ่าย (Withholding Tax)
-                            </div>
+                            </div> -->
                             <div>
                                 จำนวณเงินรวมทั้งสิ้น (Total Amount)
                             </div>
@@ -312,9 +324,9 @@
                             <div id="dummy-row">
                                 -
                             </div>
-                            <div id="dummy-row">
+                            <!-- <div id="dummy-row">
                                 -
-                            </div>
+                            </div> -->
                             <div>
                                 <t t-out="o.get_amount_total_text(o.amount_total)"/>
                             </div>
@@ -326,9 +338,9 @@
                             <div>
                                 <t t-out="'{:,.2f}'.format(o.amount_tax)"/>
                             </div>
-                            <div>
+                            <!-- <div>
                                 <t t-out="'{:,.2f}'.format(o.amount_wht)"/>
-                            </div>
+                            </div> -->
                             <div>
                                 <t t-out="'{:,.2f}'.format(o.amount_total)"/>
                             </div>
@@ -429,21 +441,21 @@
         <div class="main" t-attf-class="page {{font_fam}} page-body-set" style="font-family: THSarabunNew;">
             <table class="table table-sm border-left border-bottom border-dark" style="font-size: 20px; margin-bottom: 0px;">
                 <tr class="text-center">
-                    <th class="border-right border-dark" style="width: 21%;">
-                        <b>รายการที่<br /> (Item No.)</b>
+                    <th class="border-right border-dark" style="width: 10%;">
+                        <b>ลำดับที่<br /> (No.)</b>
                     </th>
-                    <th class="border-right border-dark" style="width: 40%;">
+                    <th class="border-right border-dark" style="width: 64%;">
                         <span>รายการสินค้า/บริการ<br /> (Goods/Service)</span>
                     </th>
-                    <th class="border-right border-dark" style="width: 23%;">
+                    <th class="border-right border-dark" style="width: 13%;">
                         <span>จำนวนสินค้า<br /> (Quantity)</span>
                     </th>
-                    <th class="border-right border-dark" style="width: 16%;">
+                    <th class="border-right border-dark" style="width: 13%;">
                         <span>จำนวนเงิน<br /> (Amount)</span>
                     </th>
                 </tr>
             </table>
-            <table class="table table-sm border border-dark" style="font-size: 20px;">
+            <table class="table table-sm border border-dark border-top-0" style="font-size: 20px;">
                 <t t-set="counter" t-value="1"/>
                 <t t-set="count" t-value="0"/>
                 <t t-set="add" t-value="0"/>
@@ -453,13 +465,13 @@
                 <t t-set="row" t-value="0"/>
                 <t t-foreach="o.invoice_line_ids" t-as="line">
                     <tr style="">
-                        <td class="text-center" style="width: 21%; border-right: 1px solid #000000">
+                        <td class="text-center border-top-0" style="width: 10%; border-right: 1px solid #000000">
                             <span t-out="counter"/>
                         </td>
-                        <td class="text-left" style="width: 40%; border-right: 1px solid #000000">
+                        <td class="text-left border-top-0" style="width: 64%; border-right: 1px solid #000000">
                             <span t-out="line.name"/>
                         </td>
-                        <td class="text-right" style="width: 23%; border-right: 1px solid #000000">
+                        <td class="text-right border-top-0" style="width: 13%; border-right: 1px solid #000000">
                             <t t-if="line.product_uom_id">
                                 <span t-out="'{:,.2f}'.format(line.quantity) + ' ' + line.product_uom_id.name"/>
                             </t>
@@ -467,12 +479,12 @@
                                 <span t-out="'{:,.2f}'.format(line.quantity)"/>
                             </t>
                         </td>
-                        <td class="text-right" style="width: 16%;">
+                        <td class="text-right border-top-0" style="width: 13%;">
                             <span t-out="'{:,.2f}'.format(line.price_subtotal)"/>
                         </td>
 
                         <!-- set value for empty row -->
-                        <t t-if="len(line.name) > 51">
+                        <t t-if="len(line.name) > 80">
                             <t t-set="count" t-value="count+196"/>
                             <t t-set="row" t-value="row+1.444"/>
                         </t>
@@ -507,32 +519,32 @@
                     <t t-foreach="range(empty_row)" t-as="line">
                         <t t-if="line == 0">
                             <tr style="height: 43.5px;">
-                                <td class="text-center"  style="width: 21%; border-right: 1px solid #000000">
+                                <td class="text-center border-top-0"  style="width: 10%; border-right: 1px solid #000000">
                                     <span></span>
                                 </td>
-                                <td class="text-left" style="width: 40%; border-right: 1px solid #000000">
+                                <td class="text-left border-top-0" style="width: 64%; border-right: 1px solid #000000">
                                     <span></span>
                                 </td>
-                                <td class="text-right" style="width: 23%; border-right: 1px solid #000000">
+                                <td class="text-right border-top-0" style="width: 13%; border-right: 1px solid #000000">
                                     <span></span>
                                 </td>
-                                <td class="text-right" style="width: 16%;">
+                                <td class="text-right border-top-0" style="width: 13%;">
                                     <span></span>
                                 </td>
                             </tr>
                         </t>
                         <t t-else="">
                             <tr style="height: 43.5px;">
-                                <td class="text-center border-top-0"  style="width: 21%; border-right: 1px solid #000000">
+                                <td class="text-center border-top-0"  style="width: 10%; border-right: 1px solid #000000">
                                     <span></span>
                                 </td>
-                                <td class="text-left border-top-0" style="width: 40%; border-right: 1px solid #000000">
+                                <td class="text-left border-top-0" style="width: 64%; border-right: 1px solid #000000">
                                     <span></span>
                                 </td>
-                                <td class="text-right border-top-0" style="width: 23%; border-right: 1px solid #000000">
+                                <td class="text-right border-top-0" style="width: 13%; border-right: 1px solid #000000">
                                     <span></span>
                                 </td>
-                                <td class="text-right border-top-0" style="width: 16%;">
+                                <td class="text-right border-top-0" style="width: 13%;">
                                     <span></span>
                                 </td>
                             </tr>

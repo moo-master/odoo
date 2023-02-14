@@ -16,6 +16,7 @@ def move(env):
             Command.create({'product_id': env.ref('product.consu_delivery_02').id, 'price_unit': 100, 'quantity': 5}),
             Command.create({'product_id': env.ref('product.consu_delivery_03').id, 'price_unit': 100, 'quantity': 5}),
         ],
+        'approval_ids': False,
     })
 
 
@@ -36,6 +37,7 @@ def test_action_post_move(move, env, test_input, expected):
     level = env['org.level'].search([])
     employee = env.ref('hr.employee_qdp')
     employee_manager = env.ref('hr.employee_stw')
+    employee_manager.write({'is_send_email': True})
     employee.write({
         'level_id': False
     })

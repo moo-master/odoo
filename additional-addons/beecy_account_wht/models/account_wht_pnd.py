@@ -153,7 +153,15 @@ class AccountWhtPnd(models.Model):
             ('11', '11'),
             ('12', '12'),
         ],
-        default=str(datetime.now().month),
+        default='{:02d}'.format(datetime.now().month),
+    )
+    state = fields.Selection(
+        selection=[
+            ('draft', 'Draft'),
+            ('confirm', 'Confirm')
+        ],
+        string='Status',
+        default='draft',
     )
 
     @api.depends('wht_ids')
@@ -228,3 +236,6 @@ class AccountWhtPnd(models.Model):
             rec.select_month_date = date_obj
             rec.select_month = datetime.strftime(date_obj, '%m/%Y')
             rec.name = datetime.strftime(date_obj, '%m/%Y')
+
+    def action_confirm(self):
+        self.update({'state': 'confirm'})

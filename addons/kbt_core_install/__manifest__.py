@@ -21,10 +21,12 @@
         'kbt_good_receipt_api',
         'kbt_journal_api',
         'kbt_journal_ext',
+        'kbt_offset_payment',
         'kbt_partner_account_ext',
         'kbt_partner_api',
         'kbt_partner_ext',
         'kbt_payment_api',
+        'kbt_payment_wht_ext',
         'kbt_product_wht_ext',
         'kbt_purchase_api',
         'kbt_purchase_wht_ext',
@@ -35,6 +37,7 @@
         'kbt_wht_ext',
         'os_disable_quick_create',
         'report_xlsx',
+        'report_xlsx_helper',
         'rts_api_base',
         'th_address'
     ]

@@ -24,6 +24,11 @@ class PurchaseOrder(models.Model):
     reject_reason = fields.Char(
         string='Reject Reason Note',
     )
+    approval_ids = fields.One2many(
+        'user.approval.line',
+        'purchase_id',
+        string='Approval'
+    )
 
     def _compute_approve(self):
         employee = self.env['hr.employee'].search(
@@ -37,8 +42,11 @@ class PurchaseOrder(models.Model):
         employee = self.env['hr.employee'].search(
             [('user_id', '=', self.env.uid)], limit=1).sudo()
         if not self.x_is_interface:
-            if employee.level_id.approval_validation(
-                    'purchase.order', self.amount_total, False):
+            approve = []
+            approve, res = employee.level_id.approval_validation(
+                'account.move', self.amount_total, False, employee, approve)
+            if not approve or res:
+                self.approval_ids.confirm_approval_line(employee)
                 return True
             else:
                 manager = employee.parent_id
@@ -48,9 +56,34 @@ class PurchaseOrder(models.Model):
                         'kbt_approval.mail_activity_data_to_approve',
                         user_id=manager.user_id.id
                     )
-                    self.state = 'to approve'
-                    self.approve_level = employee.level_id.level
+                    val = {
+                        'state': 'to approve',
+                        'approve_level': employee.level_id.level,
+                    }
+                    if not self.approval_ids:
+                        val.update(
+                            {'approval_ids': [(0, 0, {'manager_id': line}) for line in approve]}
+                        )
+                    self.write(val)
+                    self.approval_ids.confirm_approval_line(employee)
                     self.env.cr.commit()  # pylint: disable=invalid-commit
+
+                if manager.is_send_email:
+                    # Email Function
+                    self.env['approval.email.wizard'].with_context(
+                        id=self.id,
+                        model=self._name,
+                        cids=1,
+                        menu_id='purchase.menu_purchase_root',
+                        action='purchase.purchase_rfq',
+                    ).create({
+                        'employee_id': employee.id,
+                        'manager_id': manager.id,
+                        'name': 'Purchase Order',
+                        'order_name': self.name,
+                        'order_amount': self.amount_total,
+                    }).send_approval_email()
+
                 raise ValidationError(
                     _(
                         'You cannot validate this document due limitation policy. Please contact (%s)\n ไม่สามารถดำเนินการได้เนื่องจากเกินวงเงินที่กำหนด กรุณาติดต่อ (%s)',

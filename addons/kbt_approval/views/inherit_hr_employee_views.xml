@@ -8,6 +8,8 @@
         <field name="arch" type="xml">
             <xpath expr="//field[@name='category_ids']" position="after">
                 <field name="level_id" placeholder="Level"/>
+                <field name="is_send_email" string="Email Notification"/>
+                <span class="o_stat_text">Email Notification</span>
             </xpath>
         </field>
     </record>

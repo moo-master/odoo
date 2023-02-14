@@ -16,14 +16,17 @@
         'hr',
         'mail',
         'beecy_reason',
+        'account_accountant',
     ],
     'data': [
+        'data/approval_email_template.xml',
+        'data/mail_activity_data.xml',
+        'security/ir.model.access.csv',
         'views/org_level_menuitem.xml',
         'views/inherit_hr_employee_views.xml',
         'views/inherit_purchase_order_views.xml',
         'views/inherit_sale_order_views.xml',
         'views/inherit_account_move_views.xml',
-        'security/ir.model.access.csv',
-        'data/mail_activity_data.xml'
+        'views/user_approval_line_views.xml',
     ]
 }
