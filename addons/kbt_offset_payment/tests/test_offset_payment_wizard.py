@@ -36,9 +36,16 @@ def test__get_manual_payment_method(env, offset_wizard, account_journal):
     assert res
 
 
-def test_button_confirm_error(env, model, account_account, invoice, bill):
+def test_button_confirm_error(
+        env,
+        model,
+        account_account,
+        invoice,
+        bill,
+        account_journal):
     offset = model.with_context(active_ids=invoice.ids).create({
-        'account_id': account_account.id
+        'account_id': account_account.id,
+        'journal_id': account_journal.id,
     })
     invoice.write({
         'offset_ids': [(0, 0, {
@@ -68,7 +75,8 @@ def test_button_confirm(
         'ar_wht_default_account_id': account_id.id,
     })
     offset = model.with_context(active_ids=invoice.ids).create({
-        'account_id': account_account.id
+        'account_id': account_account.id,
+        'journal_id': account_journal.id,
     })
     invoice.write({
         'offset_ids': [(0, 0, {'invoice_id': bill.id})]

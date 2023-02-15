@@ -11,6 +11,10 @@ class OffsetPaymentWizard(models.TransientModel):
         string='Offset Account',
         required=True
     )
+    journal_id = fields.Many2one(
+        'account.journal',
+        string='Offset Account Journal',
+    )
 
     def _get_type(self, move_type):
         return ('inbound', 'customer') if move_type == 'out_invoice' \
@@ -90,7 +94,7 @@ class OffsetPaymentWizard(models.TransientModel):
                     _("""Waning! This process cannot continues because the amount to be processed is greater than the amount of this document"""))
             payment_type = 'inbound' if move.move_type == 'out_invoice' else 'outbound'
             partner_type = 'customer' if move.move_type == 'out_invoice' else 'supplier'
-            journal_id = self._get_bank_journal()
+            journal_id = self.journal_id
             payment_method_line_id = self._get_manual_payment_method(
                 journal_id, payment_type)
             move_payment_val = {
