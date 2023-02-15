@@ -7,9 +7,10 @@
             <form>
                 <group>
                     <field name="account_id"/>
+                    <field name="journal_id" required="1"/>
                 </group>
                 <footer>
-                    <button string='Confirm' name="button_confirm" type="object" class="btn-primary"/>
+                    <button string="Confirm" name="button_confirm" type="object" class="btn-primary"/>
                 </footer>
             </form>
         </field>

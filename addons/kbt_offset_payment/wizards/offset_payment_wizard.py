@@ -11,6 +11,10 @@ class OffsetPaymentWizard(models.TransientModel):
         string='Offset Account',
         required=True
     )
+    journal_id = fields.Many2one(
+        'account.journal',
+        string='Offset Account Journal',
+    )
 
     def _get_type(self, move_type):
         return ('inbound', 'customer') if move_type == 'out_invoice' \
