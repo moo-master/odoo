@@ -9,12 +9,18 @@
                 <button name="action_post" string="Approve" type="object" class="oe_highlight" groups="base.group_user" attrs="{'invisible': [('is_approve', '=', True)]}"/>
                 <button name="action_cancel_reject_reason_wizard" string="Reject" type="object" groups="base.group_user" attrs="{'invisible': [('is_approve', '=', True)]}"/>
                 <field name="is_approve" invisible="1" />
+                <field name="is_over_limit" invisible="1" />
             </xpath>
             <xpath expr="//field[@name='invoice_line_ids']" position="attributes">
                 <attribute name="attrs">{'readonly': [('state', '=', 'to approve')]}</attribute>
             </xpath>
             <xpath expr="//button[@name='action_post'][2]" position="attributes">
-                <attribute name="string">Send to Approval</attribute>
+                <attribute name="attrs">{'invisible': ['|', '|', '|', '|', ('is_over_limit', '=', True), ('state', '!=', 'draft'), ('auto_post', '=', True), ('move_type', '=', 'entry'), ('display_inactive_currency_warning','=',True)]}</attribute>
+            </xpath>
+            <xpath expr="//button[@name='action_post'][2]" position="after">
+                <button name="action_post" string="Send to Approval" class="oe_highlight"
+                    type="object" groups="account.group_account_invoice" data-hotkey="v"
+                    attrs="{'invisible': ['|', '|', '|', '|', ('is_over_limit', '=', False), ('state', '!=', 'draft'), ('auto_post', '=', True), ('move_type', '=', 'entry'), ('display_inactive_currency_warning','=',True)]}"/>
             </xpath>
             <xpath expr="//notebook" position="inside">
                 <page id="approval_ids"
