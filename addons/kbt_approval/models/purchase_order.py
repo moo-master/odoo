@@ -1,4 +1,4 @@
-from odoo import models, fields, _
+from odoo import models, fields, _, api
 from odoo.exceptions import ValidationError
 
 
@@ -29,6 +29,21 @@ class PurchaseOrder(models.Model):
         'purchase_id',
         string='Approval'
     )
+    is_over_limit = fields.Boolean(
+        compute='_compute_is_over_limit',
+        string='Over Limit',
+    )
+
+    @api.depends('amount_total')
+    def _compute_is_over_limit(self):
+        for rec in self:
+            employee = self.env['hr.employee'].sudo().search(
+                [('user_id', '=', self.env.uid)], limit=1)
+            _, res = employee.level_id.approval_validation(
+                'purchase.order', rec.amount_total, False, employee, [])
+            rec.write({
+                'is_over_limit': not res
+            })
 
     def _compute_approve(self):
         employee = self.env['hr.employee'].search(
@@ -44,7 +59,7 @@ class PurchaseOrder(models.Model):
         if not self.x_is_interface:
             approve = []
             approve, res = employee.level_id.approval_validation(
-                'account.move', self.amount_total, False, employee, approve)
+                'purchase.order', self.amount_total, False, employee, approve)
             if not approve or res:
                 self.approval_ids.confirm_approval_line(employee)
                 return True

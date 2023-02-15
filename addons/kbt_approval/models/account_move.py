@@ -34,6 +34,21 @@ class AccountMove(models.Model):
         'move_id',
         string='Approval'
     )
+    is_over_limit = fields.Boolean(
+        compute='_compute_is_over_limit',
+        string='Over Limit',
+    )
+
+    @api.depends('amount_total')
+    def _compute_is_over_limit(self):
+        for rec in self:
+            employee = self.env['hr.employee'].sudo().search(
+                [('user_id', '=', self.env.uid)], limit=1)
+            _, res = employee.level_id.approval_validation(
+                'account.move', rec.amount_total, False, employee, [])
+            rec.write({
+                'is_over_limit': not res
+            })
 
     @api.depends('restrict_mode_hash_table', 'state')
     def _compute_show_reset_to_draft_button(self):
@@ -73,7 +88,8 @@ class AccountMove(models.Model):
                     }
                     if not self.approval_ids:
                         val.update(
-                            {'approval_ids': [(0, 0, {'manager_id': line}) for line in approve]}
+                            {'approval_ids': [(0, 0, {'manager_id': line})
+                                              for line in approve]}
                         )
                     self.write(val)
                     self.approval_ids.confirm_approval_line(employee)
