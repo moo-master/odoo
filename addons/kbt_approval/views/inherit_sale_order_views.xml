@@ -10,14 +10,18 @@
                 <button name="action_cancel_reject_reason_wizard" string="Reject" type="object" groups="base.group_user" attrs="{'invisible': [('is_approve', '=', True)]}"/>
                 <button name="action_cancel" string="Cancel"  type="object" groups="base.group_user" attrs="{'invisible': [('state', '!=', 'to approve')]}"/>
                 <field name="is_approve" invisible="1" />
+                <field name="is_over_limit" invisible="1" />
             </xpath>
             <xpath expr="//button[@name='action_draft']" position="replace">
                 <button name="action_draft" states="cancel,reject" type="object" string="Set to Quotation" data-hotkey="w"/>
             </xpath>
-            <xpath expr="//button[@name='action_confirm'][3]" position="replace">
+            <xpath expr="//button[@name='action_confirm'][3]" position="attributes">
+                <attribute name="attrs">{'invisible': ['|', ('is_over_limit', '=', True), ('state', 'not in', ['draft'])]}</attribute>
+            </xpath>
+            <xpath expr="//button[@name='action_confirm'][3]" position="after">
                 <button name="action_confirm" data-hotkey="v"
                         string="Send to Approval" type="object"
-                        attrs="{'invisible': [('state', 'not in', ['draft'])]}"/>
+                        attrs="{'invisible': ['|', ('is_over_limit', '=', False), ('state', 'not in', ['draft'])]}"/>
             </xpath>
             <xpath expr="//button[@name='action_quotation_send'][1]" position="attributes">
                 <!-- state draft -->

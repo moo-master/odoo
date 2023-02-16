@@ -1,0 +1,26 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!-- Copyright (c) 2015-Present Webkul Software Pvt. Ltd. (<https://webkul.com/>) -->
+<!-- See LICENSE file for full copyright and licensing details. -->
+<!-- "License URL : <https://store.webkul.com/license.html/>" -->
+
+<odoo>
+    <data noupdate="1">
+        <record id="payment_acquirer_2c2p" model="payment.acquirer">
+            <field name="name">2C2P Payments</field>
+            <field name="display_as">2C2P Payments</field>
+            <field name="image_128"
+                type="base64"
+                file="wk_2c2p_payment_acquirer/static/src/img/2c2p.png"/>
+            <field name="module_id" ref="base.module_wk_payment_2c2p"/>
+            <field name="description" type="html">
+                <p>
+                    2C2P Payments
+                </p>
+                <ul class="list-inline">
+                    <li class="list-inline-item"><i class="fa fa-check"/>Online Payment</li>
+                    <li class="list-inline-item"><i class="fa fa-check"/>Payment Status Tracking</li>
+                </ul>
+            </field>
+        </record>
+    </data>
+</odoo>

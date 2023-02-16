@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <data noupdate="0">
+        <template id="inherit_account_portal_invoice_report_for_2c2p" inherit_id="account.portal_invoice_page" name="Add Currency ID in invoice For 2c2p">
+            <xpath expr="." position="inside">
+                <input type="hidden" name="odoo_currency" t-att-value="website.currency_id.name" />
+            </xpath>
+        </template>
+    </data>
+</odoo>

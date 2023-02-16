@@ -11,3 +11,4 @@ xlsxwriter
 xlrd
 requests
 validators
+pyjwt==2.3.0
