@@ -51,7 +51,7 @@
         </t>
 
         <div class="header" style="font-family: THSarabunNew;">
-            <div class="row">
+            <div class="row" style="height: 60px; margin-left: -10px;">
                 <img t-if="o.company_id.logo"
                     t-att-src="image_data_uri(o.company_id.logo)"
                     style="absolute: left; left: 0; max-height: 60px;"
@@ -150,35 +150,46 @@
                         <strong>สกุลเงิน (Currency)</strong><br/>
                         <t t-esc="o.reconciled_invoice_ids.currency_id.name"/>
                     </td>
+                    <t t-set="vut" t-value="0"/>
                     <td class="border-top-0 border-right border-dark" style="width: 20%">
                         <strong>หน้า</strong><br/>
                         <span class="page" /> / <span class="topage" />
+                        <t t-set="vut" t-value="page"/>
                     </td>
                 </tr>
             </table>
+            <div class="row" style="margin: 0px; width: 100%; font-family: THSarabunNew; font-size: 12px;">
+                <div class="border border-dark border-right-0" style="width: 20%; text-align: center; padding-top: 5px;">
+                  <b>  วันที่เอกสาร<br />Doc. Date </b>
+                </div>
+                <div class="border border-dark border-right-0" style="width: 14.2%; text-align: center; padding-top: 5px;">
+                    <b>ใบกำกับภาษี<br />Tax Invoice</b>
+                </div>
+                <div class="border border-dark border-right-0" style="width: 31.8%; text-align: center; padding-top: 5px;">
+                    <b>รายการสินค้า/บริการ<br />Goods/Service</b>
+                </div>
+                <div class="border border-dark border-right-0" style="width: 14%; text-align: center; padding-top: 5px;">
+                    <b>วันครบกำหนด<br /><t t-esc="payment_date"/></b>
+                </div>
+                <div class="border border-dark" style="width: 20.2%; text-align: center; padding-top: 5px;">
+                    <b> จำนวนเงิน<br />Amount </b>
+                </div>
+
+            </div>
         </div>
-        <div class="article page-body-set page" data-body-set="216" style="font-family: THSarabunNew;">
-            <table class="table table-sm o_main_table" style="font-size: 12px;">
-                <thead style="border-bottom: 1px solid #000000;">
-                    <tr>
-                        <th class="border border-dark" style="width: 20%; text-align: center;">วันที่เอกสาร<br />Doc. Date</th>
-                        <th class="border border-dark" style="width: 14%; text-align: center;">ใบกำกับภาษี<br />Tax Invoice</th>
-                        <th class="border border-dark" style="width: 32%; text-align: center;">รายการสินค้า/บริการ<br />Goods/Service</th>
-                        <th class="border border-dark" style="width: 14; text-align: center;">วันครบกำหนด<br /><t t-esc="payment_date"/></th>
-                        <th class="border border-dark" style="width: 20%; text-align: center;">จำนวนเงิน<br />Amount</th>
-                    </tr>
-                </thead>
+        <div class="article page-body-set page" data-body-set="200" style="font-family: THSarabunNew;">
+                <table class="table table-sm o_main_table" style="font-size: 12px;">
                 <tbody>
                     <t t-set="counter" t-value="0"/>
                     <t t-set="row" t-value="0"/>
                     <t t-set="move" t-value="o.reconciled_invoice_ids or o.reconciled_bill_ids"/>
                     <t t-foreach="move.invoice_line_ids" t-as="invoice">
-                        <tr>
-                            <td class="border-top-0 border-right border-left border-dark" style="width: 20%; text-align: center;"><span t-esc="move_date"/></td>
-                            <td class="border-top-0 border-right border-dark" style="width: 14%; text-align: center;"><span t-esc="o.reconciled_invoice_ids.name"/></td>
-                            <td class="border-top-0 border-right border-dark" style="width: 32%; text-align: left;"><span t-esc="invoice.name"/></td>
-                            <td class="border-top-0 border-right border-dark" style="width: 14%; text-align: center;"><span t-esc="o.reconciled_invoice_ids.invoice_payment_term_id.name"/></td>
-                            <td class="border-top-0 border-right border-dark" style="width: 20%; text-align: right;"><span t-esc="invoice.price_subtotal"/></td>
+                        <tr >
+                            <td class="border-top-0 border-right border-left border-dark" style="padding-top: 10px; width: 19.9%; text-align: center;"><span t-esc="move_date"/></td>
+                            <td class="border-top-0 border-right border-dark" style="padding-top: 10px; width: 14.3%; text-align: center;"><span t-esc="o.reconciled_invoice_ids.name"/></td>
+                            <td class="border-top-0 border-right border-dark" style="padding-top: 10px; width: 31.9%; text-align: left;"><span t-esc="invoice.name"/></td>
+                            <td class="border-top-0 border-right border-dark" style="padding-top: 10px; width: 14%; text-align: center;"><span t-esc="o.reconciled_invoice_ids.invoice_payment_term_id.name"/></td>
+                            <td class="border-top-0 border-right border-dark" style="padding-top: 10px; width: 20%; text-align: right;"><span t-esc="invoice.price_subtotal"/> </td>
                             <t t-if="len(invoice.name) > 40">
                                 <t t-set="counter" t-value="counter+91"/>
                                 <t t-set="row" t-value="row+1.6875"/>
@@ -188,33 +199,54 @@
                                 <t t-set="row" t-value="row+1"/>
                             </t>
                         </tr>
-                        <t t-if="ceil(row) % 27 == 0">
-                            <tr>
-                                <td style="border-top: 1px solid #000000" />
-                                <td style="border-top: 1px solid #000000" />
-                                <td style="border-top: 1px solid #000000" />
-                                <td style="border-top: 1px solid #000000" />
-                                <td style="border-top: 1px solid #000000" />
-                            </tr>
-                        </t>
-                    </t>
-                    <t t-if="ceil(row) % 27 != 0">
-                        <tr>
-                            <td style="border-top: 1px solid #000000" />
-                            <td style="border-top: 1px solid #000000" />
-                            <td style="border-top: 1px solid #000000" />
-                            <td style="border-top: 1px solid #000000" />
-                            <td style="border-top: 1px solid #000000" />
-                        </tr>
                     </t>
                 </tbody>
             </table>
-            <!-- <div id="data-page" style="display: none;"><t t-esc="counter" /></div> -->
-            <div class="new-page" data-page-size="1457" data-page-size-detail="911" count-row="" t-attf-count-row="{{counter}}"/>
-            <!-- <div id="data-page"><t t-esc="counter" /></div> -->
+            <t t-set="page_new_footer" t-value="ceil(counter / 1457)"/>
+            <t t-set="position" t-value="0"/>
+            <t t-set="count_position" t-value="0"/>
+            <t t-set="count_all" t-value="0"/>
+            <t t-set="count_check" t-value="0"/>
+            <t t-if="(counter % 1457) &gt; 900">
+                <t t-set="count_check" t-value="1"/>
+            </t>
+            <t t-foreach="page_new_footer" t-as="new_line_all">
+                <t t-set="count_all" t-value="count_all+1"/>
+            </t>
+            <t t-foreach="page_new_footer" t-as="new_line">
+                <t t-set="position" t-value="position+430"/>
+                <t t-set="count_position" t-value="count_position+1"/>
+                <t t-if="count_position &gt; 1 and count_position != count_position+count_check">
+                    <t t-set="position" t-value="position+335"/>
+                    <div class="row"  t-attf-style="position:absolute; left: 15px; top: {{position}}px; width: 100%;">
+                            <div t-attf-style="width: 20.2%; border: 1px solid #000000; height: 300px;border-top: 0px;"></div>
+                            <div t-attf-style="width: 14.3%; border: 1px solid #000000; border-left: 0px;height: 300px;border-top: 0px;"></div>
+                            <div t-attf-style="width: 31.9%; border: 1px solid #000000; border-left: 0px;height: 300px;border-top: 0px;"></div>
+                            <div t-attf-style="width: 14%; border: 1px solid #000000; border-left: 0px;height: 300px;border-top: 0px;"></div>
+                            <div t-attf-style="width: 20.1%; border: 1px solid #000000; border-left: 0px;height: 300px;border-top: 0px;"></div>
+                    </div >
+                </t>
+                <t t-if="count_all+count_check &gt; 1 and  count_position == 1">
+                    <div class="row"  t-attf-style="position:absolute; left: 15px; top: {{position}}px; width: 100%;">
+                            <div t-attf-style="width: 20.2%; border: 1px solid #000000; height: 300px;border-top: 0px;"></div>
+                            <div t-attf-style="width: 14.3%; border: 1px solid #000000; border-left: 0px;height: 300px;border-top: 0px;"></div>
+                            <div t-attf-style="width: 31.9%; border: 1px solid #000000; border-left: 0px;height: 300px;border-top: 0px;"></div>
+                            <div t-attf-style="width: 14%; border: 1px solid #000000; border-left: 0px;height: 300px;border-top: 0px;"></div>
+                            <div t-attf-style="width: 20.1%; border: 1px solid #000000; border-left: 0px;height: 300px;border-top: 0px;"></div>
+                    </div >
+                </t>
+            </t>
+            <div class="new-page" data-page-size="1457" data-page-size-detail="900" count-row="" t-attf-count-row="{{counter}}"/>
             <div class="last-footer">
                 <script type="text/javascript" src="/kbt_account_ext/static/src/js/force_new_page_payment.js"/>
-                <div style="border: 1px solid #000000; width: 100%; font-size: 12px;">
+                <div style="border: 1px solid #000000; width: 100%; font-size: 12px; border-top: 0px;">
+                    <div class="row" style="width: 100%; margin: 0px;">
+                        <div style="width: 20.1%; border: 1px solid #000000; border-left: 0px; height: 480px;border-top: 0px;"></div>
+                        <div style="width: 14.3%; border: 1px solid #000000; border-left: 0px;height: 480px;border-top: 0px;"></div>
+                        <div style="width: 31.9%; border: 1px solid #000000; border-left: 0px;height: 480px;border-top: 0px;"></div>
+                        <div style="width: 14%; border: 1px solid #000000; border-left: 0px;height: 480px;border-top: 0px;"></div>
+                        <div style="width: 20.1%; border: 1px solid #000000; border-left: 0px;height: 480px;border-top: 0px;"></div>
+                    </div>
                     <div class="row">
                         <div class="col-10" style="padding-left: 20px; padding-top: 5px; text-align: left;">
                             ยอดรวมสินค้า/บริการ (Goods/Service Amount)
@@ -352,11 +384,11 @@
         <field name="default" eval="True"/>
         <field name="format">A4</field>
         <field name="orientation">Portrait</field>
-        <field name="margin_top">72</field>
+        <field name="margin_top">95</field>
         <field name="margin_bottom">10</field>
         <field name="margin_left">0</field>
         <field name="margin_right">0</field>
-        <field name="header_spacing">65</field>
+        <field name="header_spacing">91</field>
         <field name="dpi">80</field>
     </record>
 

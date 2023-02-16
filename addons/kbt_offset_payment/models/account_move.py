@@ -11,18 +11,19 @@ class AccountMove(models.Model):
     )
 
     total_offset = fields.Monetary(
-        'Total Offset',
+        string='Total Offset',
         currency_field='company_currency_id',
         compute='_compute_offset'
     )
 
     # pylint: disable=biszx-boolean-field-name
     x_offset_partner = fields.Boolean(
-        'Offset',
+        string='Offset',
         related='partner_id.x_offset'
     )
     x_offset = fields.Boolean(
-        'Offset',
+        string='Offset',
+        copy=False,
     )
     move_offset_ids = fields.Many2many(
         'account.move',
