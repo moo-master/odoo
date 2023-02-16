@@ -11,31 +11,21 @@
 # If not, see <https://store.webkul.com/license.html/>
 #################################################################################
 {
-	"name"         : "Webkul 2c2p",
-	"summary"      : """Webkul 2c2p""",
+	"name"         : "Webkul Message Wizard",
+	"summary"      : """To show messages/warnings in Odoo""",
 	"category"     : "Tools",
-	"version"      : "1.0.0",
+	"version"      : "1.0.2",
 	"sequence"     : 1,
 	"author"       : "Webkul Software Pvt. Ltd.",
 	"website"      : "https://store.webkul.com/Odoo.html",
-	"license"      :  "Other proprietary",
+	"license"              :  "Other proprietary",
 	"description"  : """""",
-	"price" 	   : 00,
-	"currency"     : "",
-	"live_test_url": "http://odoodemo.webkul.com/?module=wk_payment_2c2p&version=15.0",
-	"depends" 	   : ["payment", "portal","wk_2c2p_payment_acquirer", "account", "wk_wizard_messages", "website_sale"],
-	"external_dependencies": {"python": ["jwt"]},
+	"live_test_url": "http://odoodemo.webkul.com/?module=wk_wizard_messages&version=12.0",
 	"data"         : [
-		'data/2c2p_post_transcation_cron.xml',
-		'data/2c2p_payment_acquirer.xml',
 		'security/ir.model.access.csv',
-		'views/payment_2c2p_template.xml',
-		'views/payment_acquirer_views.xml',
-		'views/2c2p_responses_views.xml',
+		'wizard/wizard_message.xml'
 	],
-	"demo"         : [],
-	"images"       : [],
+	"images"       : ['static/description/Banner.png'],
 	"installable"  : True,
 	"pre_init_hook": "pre_init_check",
-	"uninstall_hook": "uninstall_hook",
 }

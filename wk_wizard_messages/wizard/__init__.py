@@ -4,10 +4,4 @@
 # See LICENSE file for full copyright and licensing details.
 # License URL : <https://store.webkul.com/license.html/>
 ##############################################################################
-
-
-from . import payment_acquirer
-from . import payment_transcation
-from . import account_payment_method
-from . import sale_subscription
-from . import responses_2c2p
+from . import wizard_message

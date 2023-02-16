@@ -1,0 +1,83 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!-- Copyright (c) 2015-Present Webkul Software Pvt. Ltd. (<https://webkul.com/>) -->
+<!-- See LICENSE file for full copyright and licensing details. -->
+<!-- "License URL : <https://store.webkul.com/license.html/>" -->
+
+<odoo>
+    <record id="twoctwop_transaction_form" model="ir.ui.view">
+        <field name="name">twoctwop.transaction.form</field>
+        <field name="model">twoctwop.transaction</field>
+        <field name="arch" type="xml">
+            <form string="Installments">
+                <header>
+                    <button string="Create Payment" name="post_transcation" type="object" attrs="{'invisible':[('state','!=','draft')]}"/>
+                    <button string="Retry Payment" name="post_transcation" type="object" attrs="{'invisible':[('state','in',['draft','done'])]}"/>
+                    <field name="state" widget="statusbar"/>
+                </header>
+                <sheet>
+                    <group>
+                        <group>
+                            <field name="invoice_no"/>
+                            <field name="name"/>
+                            <field name="subscription_id"/>
+                        </group>
+                    </group>
+                    <notebook>
+                        <page string="Response">
+                            <group colspan="8">
+                                <field name="response" style="word-break: break-word;"/>
+                            </group>
+                            <group colspan="8">
+                                <field name="resp_d"/>
+                            </group>
+                            <group colspan="8">
+                                <field name="extra_comment"/>
+                            </group>
+                        </page>
+                    </notebook>
+                </sheet>
+                <div class="oe_chatter">
+                    <field name="message_follower_ids" groups="base.group_user"/>
+                    <field name="message_ids"/>
+                </div>
+            </form>
+        </field>
+    </record>
+
+    <record id="twoctwop_transaction_list" model="ir.ui.view">
+        <field name="name">twoctwop.transaction.tree</field>
+        <field name="model">twoctwop.transaction</field>
+        <field name="arch" type="xml">
+        <tree default_order="name desc">
+            <field name="invoice_no"/>
+            <field name="name"/>
+            <field name="subscription_id"/>
+            <field name="state" />
+        </tree>
+        </field>
+    </record>
+
+    <record id="twoctwop_transaction_search" model="ir.ui.view">
+        <field name="name">twoctwop.transaction.search</field>
+        <field name="model">twoctwop.transaction</field>
+        <field name="arch" type="xml">
+            <search>
+                <filter name="draft_resp" string="Draft Responses" domain="[('state','=','draft')]"/>
+            </search>
+        </field>
+    </record>
+
+    <record id="twoctwop_transaction_action" model="ir.actions.act_window">
+    <field name="name">2C2P Responses</field>
+    <field name="res_model">twoctwop.transaction</field>
+    <field name="view_mode">search,list,form</field>
+    <field name="context">{'search_default_draft_resp': 1}</field>
+    </record>
+
+    <menuitem id="twoctwop_transaction_menu"
+        name="2C2P Responses"
+        action="twoctwop_transaction_action"
+        sequence="10" 
+        parent="website_sale.menu_ecommerce_settings"/>
+
+</odoo>
