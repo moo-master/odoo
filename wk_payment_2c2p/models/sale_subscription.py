@@ -86,7 +86,3 @@ class SaleOrderInherit(models.Model):
     #     if subscription and len(self.twoctwop_recurring_unique_id or ""):
     #          #self._create_invoices();
     #     return res
-
-
-
-

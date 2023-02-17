@@ -9,6 +9,7 @@
                 <button name="button_confirm" string="Approve" type="object" class="oe_highlight" groups="base.group_user" attrs="{'invisible': [('is_approve', '=', True)]}"/>
                 <button name="action_cancel_reject_reason_wizard" string="Reject" type="object" groups="base.group_user" attrs="{'invisible': [('is_approve', '=', True)]}"/>
                 <field name="is_approve" invisible="1" />
+                <field name="is_over_limit" invisible="1" />
             </xpath>
             <xpath expr="//button[@name='button_approve']" position="attributes">
                 <attribute name="invisible">1</attribute>
@@ -20,7 +21,10 @@
                 <attribute name="attrs">{'readonly': [('state', 'in', ('done', 'cancel', 'to approve'))]}</attribute>
             </xpath>
             <xpath expr="//button[@id='draft_confirm']" position="attributes">
-                <attribute name="string">Send to Approval</attribute>
+                <attribute name="attrs">{'invisible': ['|', ('is_over_limit', '=', True)]}</attribute>
+            </xpath>
+            <xpath expr="//button[@id='draft_confirm']" position="after">
+                <button name="button_confirm" type="object" states="draft" string="Send to Approval" attrs="{'invisible': ['|', ('is_over_limit', '=', False)]}"/>
             </xpath>
             <xpath expr="//button[@name='action_rfq_send'][1]" position="attributes">
                 <attribute name="invisible">1</attribute>
