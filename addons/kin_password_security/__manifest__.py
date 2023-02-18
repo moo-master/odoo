@@ -24,13 +24,21 @@
     'assets':  {
             'web.assets_common': [
                 "password_security/static/src/js/password_gauge.js",
+<<<<<<< Updated upstream
                 # "password_security/static/src/lib/zxcvbn/zxcvbn.min.js",
+=======
+                
+>>>>>>> Stashed changes
                 "password_security/static/lib/zxcvbn/zxcvbn.min.js",
             ],
     },    
     "license": "LGPL-3",
     "data": [
+<<<<<<< Updated upstream
         # "views/password_security.xml",
+=======
+        
+>>>>>>> Stashed changes
         "views/res_config_settings_views.xml",
         "security/ir.model.access.csv",
         "security/res_users_pass_history.xml",
