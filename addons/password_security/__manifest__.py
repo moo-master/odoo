@@ -3,7 +3,7 @@
 # Copyright 2019 initOS GmbH
 # License LGPL-3.0 or later (http://www.gnu.org/licenses/lgpl.html).
 {
-    "name": "Kin Password Security",
+    "name": "Password Security",
     "summary": "Allow admin to set password security requirements.",
     "version": "15.0.1.0.0",
     "author": "LasLabs, "
