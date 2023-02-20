@@ -16,6 +16,8 @@
     "depends": [
         "auth_signup",
         "auth_password_policy_signup",
+        "base",
+        "web",
         
 
     ],
