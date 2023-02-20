@@ -16,10 +16,14 @@
     "depends": [
         "auth_signup",
         "auth_password_policy_signup",
+        "base",
+        "web",
     ],
     "website": "https://github.com/OCA/server-auth",
     "external_dependencies": {
-        "python": ["zxcvbn"]
+        "python": [
+            "zxcvbn-python==4.4.24",
+        ],
     },
     "license": "LGPL-3",
     "data": [
