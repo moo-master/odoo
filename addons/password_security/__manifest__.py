@@ -5,7 +5,7 @@
 {
     "name": "Password Security",
     "summary": "Allow admin to set password security requirements.",
-    "version": "15.0.1.0.0",
+    "version": "15.0.2.0.0",
     "author": "LasLabs, "
     "Kaushal Prajapati, "
     "Tecnativa, "
@@ -18,9 +18,9 @@
         "auth_password_policy_signup",
     ],
     "website": "https://github.com/OCA/server-auth",
-    # "external_dependencies": {
-    #     "python": ["zxcvbn"],
-    # },
+    "external_dependencies": {
+        "python": ["zxcvbn"],
+    },
     "license": "LGPL-3",
     "data": [
         "views/res_config_settings_views.xml",
@@ -29,8 +29,8 @@
     ],
     "assets": {
         "web.assets_common": [
-            "password_security/static/src/js/password_gauge.js",
-            "password_security/static/src/js/password_gauge.js",
+            # "password_security/static/src/js/password_gauge.js",
+            "password_security\static\lib\zxcvbn\zxcvbn.min.js",
         ],
     },
     "demo": [
