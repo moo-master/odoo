@@ -29,8 +29,8 @@
     ],
     "assets": {
         "web.assets_common": [
-            "/password_security/static/src/js/password_gauge.js",
-            "/password_security/static/lib/**/*",
+            "password_security/static/src/js/password_gauge.js",
+            "password_security/static/lib/**/*",
         ],
     },
     "demo": [
