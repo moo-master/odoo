@@ -12,3 +12,4 @@ xlrd
 requests
 validators
 pyjwt==2.3.0
+zxcvbn
