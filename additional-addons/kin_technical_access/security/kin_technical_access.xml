@@ -1,0 +1,30 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+
+    <data noupdate="1">
+    
+    <!-- KIN Groups Main Category  -->
+        <record model="ir.module.category" id="kin_technical_access">
+            <field name="name">Technical Access Custom</field>
+            <field name="description">KIN Custom Technical Accses for employee</field>
+            <field name="sequence">20</field>
+        </record>
+     <!--hide button confirm-->
+        <record id="kin_accounting_button_confirm" model="res.groups">
+            <field name="name">Restrict Access To Accounting Confirm Button</field>
+            <field name="category_id" ref="kin_technical_access"/>
+        </record>   
+
+     <!-- Contract Tab Accounting show or hide -->
+        <record id="kin_accountion_tab_show" model="res.groups">
+            <field name="name">Gain Access To Accounting Tab</field>
+            <field name="category_id" ref="kin_technical_access" />
+            
+        </record>   
+        
+        
+    
+    </data>
+    
+
+</odoo>

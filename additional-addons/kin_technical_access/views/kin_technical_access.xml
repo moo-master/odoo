@@ -1,0 +1,57 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+
+    <data>
+
+        <!--        Inheriting the Accounting From View-->
+
+        <record id="accounting_button_hide" model="ir.ui.view">
+            <field name="name">Accounting Form </field>
+            <field name="model">account.move</field>
+            <field name="inherit_id" ref="account.view_move_form"/>
+            <field name="arch" type="xml">
+
+
+                <xpath expr="//header/button[@name='action_post'][2]" position="attributes">
+                    <attribute name="groups">kin_technical_access.kin_accounting_button_confirm</attribute>
+                    <field name="imlied_ids" eval="[(4,ref('group_account_invoice'))]" />
+
+                </xpath>
+
+                <xpath expr="//header/button[@name='action_post'][1]" position="attributes">
+                    <attribute name="groups">kin_technical_access.kin_accounting_button_confirm</attribute>
+                    <field name="imlied_ids" eval="[(4,ref('group_account_invoice'))]" />
+
+                </xpath>
+
+
+            </field>
+        </record>
+         
+         
+            <!-- Inherittig the contracts -->
+        <record id="contract_accounting_tab_show" model="ir.ui.view">
+            <field name="name">Accounting TAB Show</field>
+            <field name="model">res.partner</field>
+            <field name="inherit_id" ref="account.view_partner_property_form" />
+            <field name="arch" type="xml">
+                <xpath expr="//page[@name='accounting']" position='attributes'>
+                    <attribute name="invisible">1</attribute> 
+                    <attribute name="groups">kin_technical_access.kin_accountion_tab_show</attribute>
+                    <field name="imlied_ids" eval="[(4,ref('group_account_invoice'))]" />
+                    
+                </xpath>
+
+                <xpath expr="//group[@name='banks']" position="attributes">
+                    <attribute name="groups">kin_technical_access.kin_accountion_tab_show</attribute>
+                    <attribute name="invisible">1</attribute>
+                </xpath>
+
+
+            </field>    
+        </record>
+    
+    </data>
+    
+
+</odoo>
