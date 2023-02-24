@@ -6,6 +6,7 @@
 import logging
 import re
 from datetime import datetime, timedelta
+import pytz
 
 from odoo import _, api, fields, models
 from odoo.exceptions import UserError, ValidationError
@@ -22,7 +23,7 @@ except ImportError:
     )
 
 
-def delta_now(**kwargs):
+def delta_now(hours=7,**kwargs):
     dt = datetime.now() + timedelta(**kwargs)
     return fields.Datetime.to_string(dt)
 
@@ -148,7 +149,14 @@ class ResUsers(models.Model):
 
         if not self.company_id.password_expiration:
             return False
+        tz_bkk = pytz.timezone('Asia/Bangkok')
+        password_write_date = tz_bkk.localize(self.password_write_date)
+        password_write_date_utc = password_write_date.astimezone(pytz.utc)
 
+        # Add 7 hours to the password_write_date_utc
+        password_write_date_utc += timedelta(hours=7)
+
+        # Calculate the number of days since the password was last set
         days = (fields.Datetime.now() - self.password_write_date).days
         return days > self.company_id.password_expiration
 
