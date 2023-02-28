@@ -5,7 +5,7 @@
     'license': 'LGPL-3',
 
     'category': 'Tools',
-
+    
     'version': '15.0.1.0.3',
 
     'depends': ['base', 'web', 'mail','hr'],

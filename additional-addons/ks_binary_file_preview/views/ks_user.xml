@@ -14,18 +14,5 @@
             </field>
         </record>
     </data>
-     <record id="hr_expense_sheet_form_view_inherit_sale_expense" model="ir.ui.view">
-        <field name="name">hr.expense.sheet.form.view</field>
-        <field name="model">hr.expense.sheet</field>
-        <field name="inherit_id" ref="hr_expense.view_hr_expense_sheet_form" />
-        <field name="arch" type="xml">
-            <xpath
-                expr="//field[@name='expense_line_ids']/tree/field[@name='attachment_number']"
-                position="after"
-            >
-                <group name="ks_binary" string="Document Preview">
-                        <field name="ks_allow_preview" widget="boolean_toggle"/>
-                </group>
-            </xpath>
-      </record>      
+     
 </odoo>
