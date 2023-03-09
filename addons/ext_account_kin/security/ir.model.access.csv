@@ -1,0 +1,2 @@
+id,name,model_id:id,group_id:id,perm_read,perm_write,perm_create,perm_unlink
+access_ext_account_kin_ext_account_kin,ext_account_kin.ext_account_kin,model_ext_account_kin_ext_account_kin,base.group_user,1,1,1,1
