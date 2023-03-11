@@ -5,9 +5,9 @@
           <field name="model">account.move</field>
           <field name="inherit_id" ref="account.view_move_form"/>
           <field name="arch" type="xml">
-            <xpath expr="//field[@name='partner_id']" position="replace">
+            <!-- <xpath expr="//field[@name='partner_id']" position="replace">
               <field name="partner_id" widget="res_partner_many2one" context="{'res_partner_search_mode': 'supplier', 'show_vat': True}" placeholder="Name, TIN, Email, or Reference" options="{'no_open': True, 'no_create': True}"/>
-            </xpath>
+            </xpath> -->
               <xpath expr="//page[@id='other_tab']//field[@name='ref']" position="after">
                   <field name="x_override_customer"/>
               </xpath>
@@ -29,11 +29,19 @@
 							</t>
 						</t>
 						<h3>
-							<span t-if="chk_tax &gt; 0 and invchk.x_override_customer == False and o.partner_id.vat == False">
+							<!-- <span t-if="chk_tax &gt; 0 and invchk.x_override_customer == False and o.partner_id.vat == False">
+								<strong>Tax Invoice (ABB): <span t-field="o.name"/>
+								</strong>
+							</span> -->
+							<span t-if="chk_tax &gt; 0 and (o.partner_id.vat == False or o.partner_id.street == False or o.partner_id.street2 == False or o.partner_id.city == False or o.partner_id.zip == False)">
 								<strong>Tax Invoice (ABB): <span t-field="o.name"/>
 								</strong>
 							</span>
-							<span t-if="chk_tax &gt; 0 or (invchk.x_override_customer and o.partner_id.vat != False)">
+							<!-- <span t-if="chk_tax &gt; 0 or (invchk.x_override_customer and o.partner_id.vat != False)">
+								<strong>Tax Invoice / Receipt: <span t-field="o.name"/>
+								</strong>
+							</span> -->
+							 <span t-if="chk_tax &gt; 0 and (o.partner_id.vat != False or o.partner_id.street != False or o.partner_id.street2 != False or o.partner_id.city != False or o.partner_id.zip != False)">
 								<strong>Tax Invoice / Receipt: <span t-field="o.name"/>
 								</strong>
 							</span>
@@ -47,28 +55,32 @@
 							<div class="row">
 								<div class="col-6" t-if="o.date">
 										Payment Date: <span t-field="o.date"/>
+										
 								</div>
 							</div>
 							<div class="row">
 								<div class="col-12" t-if="o.partner_type">
-									<t t-if="invchk.x_override_customer == False">
-										<div t-field="o.partner_id" t-options="{&quot;widget&quot;: &quot;contact&quot;, &quot;fields&quot;: [&quot;address&quot;, &quot;name&quot;], &quot;no_marker&quot;: True}"/>
-										<div t-if="o.partner_id.vat" class="mt16">
-											<t t-if="o.company_id.account_fiscal_country_id.vat_label" t-esc="o.company_id.account_fiscal_country_id.vat_label" id="inv_tax_id_label"/>
-											<t t-else="">Tax ID</t>: <span t-field="o.partner_id.vat"/>
-										</div>
-									</t>
-									<t t-if="invchk.x_override_customer">
+									<t t-set="override_customer" t-value="invchk.x_override_customer"/>
+									<t t-if="override_customer">
 										<div t-field="invchk.x_override_customer" t-options="{&quot;widget&quot;: &quot;contact&quot;, &quot;fields&quot;: [&quot;address&quot;, &quot;name&quot;], &quot;no_marker&quot;: True}"/>
 										<div t-if="invchk.x_override_customer.vat" class="mt16">
 											<t t-if="o.company_id.account_fiscal_country_id.vat_label" t-esc="o.company_id.account_fiscal_country_id.vat_label" id="inv_tax_id_label"/>
 											<t t-else="">Tax ID</t>: <span t-field="invchk.x_override_customer.vat"/>
 										</div>
 									</t>
+									<t t-else="">
+										<div t-field="o.partner_id" t-options="{&quot;widget&quot;: &quot;contact&quot;, &quot;fields&quot;: [&quot;address&quot;, &quot;name&quot;], &quot;no_marker&quot;: True}"/>
+										<div t-if="o.partner_id.vat" class="mt16">
+											<t t-if="o.company_id.account_fiscal_country_id.vat_label" t-esc="o.company_id.account_fiscal_country_id.vat_label" id="inv_tax_id_label"/>
+											<t t-else="">Tax ID</t>: <span t-field="o.partner_id.vat"/>
+										</div>
+									</t>
+									
 								</div>
 							</div>
 						</div>
-						<table class="table table-sm">
+						
+						<table class="table table-sm"  style="font-size: 14px;">
 							<thead>
 								<tr>
 									<th>
@@ -81,7 +93,8 @@
 										<span>Unit</span>
 									</th>
 									<th class="text-right">
-										<span>Amount before Tax</span>
+										<span>Amount before Tax</span> 
+										
 									</th>
 							
 								</tr>
@@ -168,8 +181,6 @@
 								<p style="text-align:center" class="m-0" t-esc="o.date.strftime('%d/%m/%Y')"/>
 							</div>
 						</div>
-
-
 					</div>
 					<div style="page-break-before: always;"> 
 						<br/>
@@ -191,30 +202,31 @@
 						
 						<div class="mb-4 mt-3">
 							<div class="row">
-								<div class="col-6" t-if="o.date">
+								<div class="col-12" t-if="o.date">
 										Payment Date: <span t-field="o.date"/>
 								</div>
 							</div>
 							<div class="row">
-								<div class="col-12" t-if="o.partner_type">
-									<t t-if="invchk.x_override_customer == False">
-										<div t-field="o.partner_id" t-options="{&quot;widget&quot;: &quot;contact&quot;, &quot;fields&quot;: [&quot;address&quot;, &quot;name&quot;], &quot;no_marker&quot;: True}"/>
-										<div t-if="o.partner_id.vat" class="mt16">
-											<t t-if="o.company_id.account_fiscal_country_id.vat_label" t-esc="o.company_id.account_fiscal_country_id.vat_label" id="inv_tax_id_label"/>
-											<t t-else="">Tax ID</t>: <span t-field="o.partner_id.vat"/>
-										</div>
-									</t>
-									<t t-if="invchk.x_override_customer">
+								<div class="col-6" t-if="o.partner_type">
+									<t t-set="override_customer" t-value="invchk.x_override_customer"/>
+									<t t-if="override_customer">
 										<div t-field="invchk.x_override_customer" t-options="{&quot;widget&quot;: &quot;contact&quot;, &quot;fields&quot;: [&quot;address&quot;, &quot;name&quot;], &quot;no_marker&quot;: True}"/>
 										<div t-if="invchk.x_override_customer.vat" class="mt16">
 											<t t-if="o.company_id.account_fiscal_country_id.vat_label" t-esc="o.company_id.account_fiscal_country_id.vat_label" id="inv_tax_id_label"/>
 											<t t-else="">Tax ID</t>: <span t-field="invchk.x_override_customer.vat"/>
 										</div>
 									</t>
+									<t t-else="">
+										<div t-field="o.partner_id" t-options="{&quot;widget&quot;: &quot;contact&quot;, &quot;fields&quot;: [&quot;address&quot;, &quot;name&quot;], &quot;no_marker&quot;: True}"/>
+										<div t-if="o.partner_id.vat" class="mt16">
+											<t t-if="o.company_id.account_fiscal_country_id.vat_label" t-esc="o.company_id.account_fiscal_country_id.vat_label" id="inv_tax_id_label"/>
+											<t t-else="">Tax ID</t>: <span t-field="o.partner_id.vat"/>
+										</div>
+									</t>
 								</div>
 							</div>
 						</div>
-						<table class="table table-sm">
+						<table class="table table-sm" style="font-size: 14px;">
 							<thead>
 								<tr>
 									<th>
