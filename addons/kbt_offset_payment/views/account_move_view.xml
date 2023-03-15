@@ -39,6 +39,7 @@
                                     ('move_type', '=', offset_move_type),
                                     ('state', '=', 'posted'),
                                     ('id', 'not in', parent.move_offset_ids),
+                                    ('id', 'not in', parent.offset_ids),
                                 ]"/>
                             <field name="partner_id"/>
                             <field name="amount_untaxed"/>
