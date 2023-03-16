@@ -192,7 +192,7 @@
                             <td class="border-top-0 border-right border-left border-dark" style="padding-top: 10px; width: 19.9%; text-align: center;"><span t-esc="move_date"/></td>
                             <td class="border-top-0 border-right border-dark" style="padding-top: 10px; width: 14.3%; text-align: center;"><span t-esc="o.reconciled_invoice_ids.name"/></td>
                             <td class="border-top-0 border-right border-dark" style="padding-top: 10px; width: 31.9%; text-align: left;"><span t-esc="invoice.name"/></td>
-                            <td class="border-top-0 border-right border-dark" style="padding-top: 10px; width: 14%; text-align: center;"><span t-esc="invoice.quantity"/> <span t-esc="invoice.product_uom_id.name"/></td>
+                            <td class="border-top-0 border-right border-dark" style="padding-top: 10px; width: 14%; text-align: center;"><span t-esc="invoice.quantity"/></td>
                             <td class="border-top-0 border-right border-dark" style="padding-top: 10px; width: 20%; text-align: right;"><span t-esc="invoice.price_subtotal"/> </td>
                             <t t-if="len(invoice.name) > 40">
                                 <t t-set="counter" t-value="counter+91"/>
