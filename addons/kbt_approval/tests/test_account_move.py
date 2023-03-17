@@ -85,12 +85,12 @@ def test_action_post_move(
         with pytest.raises(ValidationError) as excinfo:
             move.action_post()
             msg = (
-                "You cannot validate this document due limitation policy. Please contact (Randall Lewis)"
-                " ไม่สามารถดำเนินการได้เนื่องจากเกินวงเงินที่กำหนด กรุณาติดต่อ (Randall Lewis)")
-            assert move.state == expected
-            assert move.is_approve == False
-            assert excinfo.value.name == msg
-            assert move.show_reset_to_draft_button
+                "Please contact (Randall Lewis) for approving this document"
+                " โปรดติดต่อ (Randall Lewis) สำหรับการอนุมัติเอกสาร")
+            # assert move.state == expected
+            # assert move.is_approve == False
+            # assert excinfo.value.name == msg
+            # assert move.show_reset_to_draft_button
     else:
         move.action_post()
         assert move.state == expected
@@ -132,3 +132,22 @@ def test__compute_is_over_limit(env, mv_model, employee, test_input, expected):
     rec = env['account.move'].new({'amount_total': test_input['amount']})
     rec._compute_is_over_limit()
     assert rec.is_over_limit == expected
+
+
+def test__user_validation(env):
+    ''
+    move = env['account.move'].create({
+        'move_type': 'out_invoice',
+        'partner_id': env.ref('base.res_partner_2').id,
+        'invoice_user_id': env.ref('base.user_demo').id,
+        'invoice_payment_term_id': env.ref('account.account_payment_term_immediate').id,
+        'invoice_date': fields.Date.today(),
+        'invoice_line_ids': [
+            Command.create({'product_id': env.ref(
+                'product.consu_delivery_02').id, 'price_unit': 100, 'quantity': 5}),
+            Command.create({'product_id': env.ref(
+                'product.consu_delivery_03').id, 'price_unit': 100, 'quantity': 5}),
+        ],
+        'approval_ids': False,
+    })
+    move._user_validation()
