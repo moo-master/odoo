@@ -393,7 +393,7 @@
     </record>
 
     <record id="receipt_tax_invoice_report_template_copies" model="ir.actions.report">
-        <field name="name">ใบเสร็จรับเงิน / ใบกำกับภาษี</field>
+        <field name="name">เอกสารใบเสร็จรับเงิน / ใบกำกับภาษี</field>
         <field name="model">account.payment</field>
         <field name="report_type">qweb-pdf</field>
         <field name="report_name">kbt_account_ext.receipt_tax_invoice_report_template</field>
@@ -404,7 +404,7 @@
     </record>
 
     <record id="receipt_tax_invoice_report_template_copies_2" model="ir.actions.report">
-        <field name="name">ใบเสร็จรับเงิน</field>
+        <field name="name">เอกสารใบเสร็จรับเงิน</field>
         <field name="model">account.payment</field>
         <field name="report_type">qweb-pdf</field>
         <field name="report_name">kbt_account_ext.receipt_report_template</field>
