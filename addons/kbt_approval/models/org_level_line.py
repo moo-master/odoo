@@ -36,3 +36,8 @@ class OrgLevelLine(models.Model):
             ('in_receipt', 'Purchase Receipt'),
         ]
     )
+    journal_id = fields.Many2one(
+        comodel_name='account.journal',
+        string='Journal',
+        domain=[('type', '=', 'general')]
+    )
