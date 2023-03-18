@@ -39,26 +39,45 @@ class OrgLevel(models.Model):
         for rec in self:
             rec.display_name = str(rec.level) + ' ' + rec.description
 
+    def check_over_limit(self, model, amount, move_type):
+        is_over_limit = True
+        journal_code = ''
+        for line in self.line_ids:
+            if model != 'account.move':
+                if line.model_id.model == model:
+                    is_over_limit = amount <= line.limit
+                    journal_code = line.journal_id.code
+            else:
+                if line.move_type == move_type:
+                    is_over_limit = amount <= line.limit
+                    journal_code = line.journal_id.code
+        return is_over_limit, journal_code
+
     def approval_validation(
             self,
             model,
             amount,
             move_type,
             employee,
-            approval):
-        res = True
-        for line in self.line_ids:
-            if model != 'account.move':
-                if line.model_id.model == model:
-                    res = amount <= line.limit
-            else:
-                if line.move_type == move_type:
-                    res = amount <= line.limit
-
-        if not res:
-            approval.append(employee.parent_id.id)
-            employee.parent_id.level_id.approval_validation(
-                model, amount, move_type, employee.parent_id, approval
-            )
-
-        return approval, res
+            approval=[]):
+        # pylint: disable=W0102
+        is_over_limit, journal_code = self.check_over_limit(
+            model, amount, move_type)
+        if not is_over_limit:
+            if move_type == 'out_invoice' and employee.ar_approver_id:
+                approval.append(employee.ar_approver_id.id)
+            if move_type == 'in_invoice' and employee.ap_approver_id:
+                approval.append(employee.ap_approver_id.id)
+            if move_type == 'entry' and journal_code:
+                if journal_code == 'ACCAR':
+                    approval.append(employee.ar_approver_id.id)
+                else:
+                    approval.append(employee.ap_approver_id.id)
+            if employee.parent_id:
+                approval.append(employee.parent_id.id)
+                return employee.parent_id.level_id.approval_validation(
+                    model, amount, move_type, employee.parent_id, approval
+                )
+            return list(set(approval))
+        else:
+            return list(set(approval))

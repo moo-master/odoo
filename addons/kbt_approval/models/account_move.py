@@ -44,10 +44,10 @@ class AccountMove(models.Model):
         for rec in self:
             employee = self.env['hr.employee'].sudo().search(
                 [('user_id', '=', self.env.uid)], limit=1)
-            _, res = employee.level_id.approval_validation(
-                'account.move', rec.amount_total, False, employee, [])
             rec.write({
-                'is_over_limit': not res
+                'is_over_limit': not employee.level_id.check_over_limit(
+                    'account.move', rec.amount_total, False
+                )
             })
 
     @api.depends('restrict_mode_hash_table', 'state')
@@ -68,10 +68,9 @@ class AccountMove(models.Model):
         employee = self.env['hr.employee'].search(
             [('user_id', '=', self.env.uid)], limit=1).sudo()
         if not self.x_is_interface:
-            approve = []
-            approve, res = employee.level_id.approval_validation(
-                'account.move', self.amount_total, False, employee, approve)
-            if not approve or res:
+            approve = employee.level_id.approval_validation(
+                'account.move', self.amount_total, self.move_type, employee)
+            if not approve:
                 self.approval_ids.confirm_approval_line(employee)
                 return True
             else:
@@ -94,6 +93,19 @@ class AccountMove(models.Model):
                     self.write(val)
                     self.approval_ids.confirm_approval_line(employee)
                     self.env.cr.commit()  # pylint: disable=invalid-commit
+                    max_level = [rec.level_id.level for rec in
+                                 self.approval_ids.filtered(
+                                     lambda r: r
+                                 ).mapped('manager_id').sudo()]
+                    is_approve_level = [rec.level_id.level
+                                        for rec in self.approval_ids.filtered(
+                                            lambda r: r.is_approve
+                                        ).mapped('manager_id').sudo()]
+
+                    if is_approve_level:
+                        if max(list(set(is_approve_level))) >= \
+                                max(list(set(max_level))):
+                            return True
 
                 if manager.is_send_email:
                     # Email Function
@@ -111,9 +123,11 @@ class AccountMove(models.Model):
                         'order_amount': self.amount_total,
                     }).send_approval_email()
 
+                massage = 'Please contact (%s) for approving this document'
+                massage += '\nโปรดติดต่อ (%s) สำหรับการอนุมัติเอกสาร'
                 raise ValidationError(
                     _(
-                        'You cannot validate this document due limitation policy. Please contact (%s)\n ไม่สามารถดำเนินการได้เนื่องจากเกินวงเงินที่กำหนด กรุณาติดต่อ (%s)',
+                        massage,
                         employee_manager,
                         employee_manager))
 
