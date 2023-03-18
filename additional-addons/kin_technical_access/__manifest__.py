@@ -1,31 +1,32 @@
 # -*- coding: utf-8 -*-
 {
-    'name': "kin_technical_custom",
+    'name': "kin_technical_access",
 
     'summary': """
-        Technical custom groups for support users role.
-        """,
+        Short (1 phrase/line) summary of the module's purpose, used as
+        subtitle on modules listing or apps.openerp.com""",
 
     'description': """
-        Technical custom groups for support users role.
+        Long description of module's purpose
     """,
 
-    'author': "Nattikan c.",
-    'website': "https://www.kasetinno.com/",
+    'author': "My Company",
+    'website': "http://www.yourcompany.com",
 
     # Categories can be used to filter modules in modules listing
     # Check https://github.com/odoo/odoo/blob/15.0/odoo/addons/base/data/ir_module_category_data.xml
     # for the full list
     'category': 'Uncategorized',
-    'version': '1.0.0',
-    'license': 'LGPL-3',
+    'version': '0.1',
+
     # any module necessary for this one to work correctly
-    'depends': ['base'],
+    'depends': ['base', 'product', 'sale', 'account','utm','hr', 'contacts'],
 
     # always loaded
     'data': [
         # 'security/ir.model.access.csv',
-        'security/kin_technical_custom_security.xml',
+        'security/kin_technical_access.xml',
+        'views/kin_technical_access.xml',
         'views/views.xml',
         'views/templates.xml',
     ],
@@ -33,7 +34,6 @@
     'demo': [
         'demo/demo.xml',
     ],
-    'installable': True,
-    'auto_install': False,
+    'sequence': -100,
     'application': True,
 }
