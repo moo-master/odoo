@@ -17,6 +17,7 @@
     ],
     'data': [
         'security/ir.model.access.csv',
+        'views/res_config_settings_views.xml',
         'views/account_move_view.xml',
         'wizards/offset_payment_wizard_view.xml',
     ]

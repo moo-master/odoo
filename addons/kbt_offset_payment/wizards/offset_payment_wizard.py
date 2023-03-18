@@ -9,11 +9,13 @@ class OffsetPaymentWizard(models.TransientModel):
     account_id = fields.Many2one(
         'account.account',
         string='Offset Account',
-        required=True
+        required=True,
+        default=lambda self: self.env.company.de_offset_account_id,
     )
     journal_id = fields.Many2one(
         'account.journal',
         string='Offset Account Journal',
+        default=lambda self: self.env.company.de_offset_account_journal_id,
     )
 
     def _get_type(self, move_type):
