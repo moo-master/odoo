@@ -225,14 +225,6 @@ class AccountWht(models.Model):
                 wht_5_4 = re.search(r'5.4', wht)
                 wht_5_5 = re.search(r'5.5', wht)
                 wht_5_6 = re.search(r'5.6', wht)
-                list_wht_5 = [
-                    wht_5,
-                    wht_5_1,
-                    wht_5_2,
-                    wht_5_3,
-                    wht_5_4,
-                    wht_5_5,
-                    wht_5_6]
                 # wht 6
                 wht_6 = re.search(r'6 อื่นๆ', wht)
                 wht_6_1 = re.search(r'6.1', wht)
@@ -267,15 +259,51 @@ class AccountWht(models.Model):
                     wht_4_2_3,
                     wht_4_2_4,
                     wht_4_2_5,
-                    list_wht_5,
+                    wht_5,
+                    wht_5_1,
+                    wht_5_2,
+                    wht_5_3,
+                    wht_5_4,
+                    wht_5_5,
+                    wht_5_6,
                     list_wht_6)
         wht_note_4_2_5_txt = ", ".join(lines_wht['list_wht_note_4_2_5'])
         wht_note_6_txt = ", ".join(lines_wht['list_wht_note_6'])
         lines_wht.update({
-            'wht_note_4_2_5': wht_note_4_2_5_txt if wht_note_4_2_5_txt != '' else printed,
-            'wht_note_6': wht_note_6_txt if wht_note_6_txt != '' else printed
+            'wht_note_4_2_5': wht_note_4_2_5_txt,
+            'wht_note_6': wht_note_6_txt
         })
+        self._group_wht_5(lines_wht)
         return lines_wht
+
+    def _group_wht_5(self, lines_wht: dict):
+        wht_5_group = [
+            'seq_wht_5_%sdate',
+            'seq_wht_5_%stotal_base_amount',
+            'seq_wht_5_%sbase_amount',
+            'seq_wht_5_%sbase_amount_precision',
+            'seq_wht_5_%stotal_tax_amount',
+            'seq_wht_5_%stax_amount',
+            'seq_wht_5_%stax_amount_precision',
+        ]
+        wht_5_sub_group = [
+            '',
+            '1_',
+            '2_',
+            '3_',
+            '4_',
+            '5_',
+            '6_',
+        ]
+        lines_wht['seq_wht_5_lst'] = []
+        for sub in wht_5_sub_group:
+            data = {}
+            for group in wht_5_group:
+                key = group % sub
+                if lines_wht[key]:
+                    data[group % ''] = lines_wht[key]
+            if data:
+                lines_wht['seq_wht_5_lst'].append(data)
 
     def _create_lines_wht(self):
         list_wht = [
@@ -293,6 +321,12 @@ class AccountWht(models.Model):
             'wht_4_2_4',
             'wht_4_2_5',
             'wht_5',
+            'wht_5_1',
+            'wht_5_2',
+            'wht_5_3',
+            'wht_5_4',
+            'wht_5_5',
+            'wht_5_6',
             'wht_6',
         ]
         lines_wht = {}
@@ -339,7 +373,13 @@ class AccountWht(models.Model):
             wht_4_2_3,
             wht_4_2_4,
             wht_4_2_5,
-            list_wht_5,
+            wht_5,
+            wht_5_1,
+            wht_5_2,
+            wht_5_3,
+            wht_5_4,
+            wht_5_5,
+            wht_5_6,
             list_wht_6,):
         if wht_1 and wht_1.group():
             self.update_group_data_line_wht(
@@ -419,11 +459,47 @@ class AccountWht(models.Model):
                 line,
                 'wht_4_2_5',
             )
-        elif any(list_wht_5):
+        elif wht_5 and wht_5.group():
             self.update_group_data_line_wht(
                 lines_wht,
                 line,
                 'wht_5',
+            )
+        elif wht_5_1 and wht_5_1.group():
+            self.update_group_data_line_wht(
+                lines_wht,
+                line,
+                'wht_5_1',
+            )
+        elif wht_5_2 and wht_5_2.group():
+            self.update_group_data_line_wht(
+                lines_wht,
+                line,
+                'wht_5_2',
+            )
+        elif wht_5_3 and wht_5_3.group():
+            self.update_group_data_line_wht(
+                lines_wht,
+                line,
+                'wht_5_3',
+            )
+        elif wht_5_4 and wht_5_4.group():
+            self.update_group_data_line_wht(
+                lines_wht,
+                line,
+                'wht_5_4',
+            )
+        elif wht_5_5 and wht_5_5.group():
+            self.update_group_data_line_wht(
+                lines_wht,
+                line,
+                'wht_5_5',
+            )
+        elif wht_5_6 and wht_5_6.group():
+            self.update_group_data_line_wht(
+                lines_wht,
+                line,
+                'wht_5_6',
             )
         elif any(list_wht_6):
             self.update_group_data_line_wht(

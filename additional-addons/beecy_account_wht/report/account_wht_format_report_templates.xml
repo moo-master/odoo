@@ -312,18 +312,50 @@
                                 </div>
                             </t>
                             <!-- wh5 -->
-                            <t t-if="data.get('seq_wht_5_date')">
-                                <div class="wht-5-col-1">
-                                    <span style="padding-left:5px;" t-esc="data.get('seq_wht_5_date')" />
-                                </div>
-                                <div class="wht-5-col-2">
-                                    <span t-esc="data.get('seq_wht_5_base_amount')" />
-                                    <span style="padding-left:5px;" t-esc="data.get('seq_wht_5_base_amount_precision')" />
-                                </div>
-                                <div class="wht-5-col-3">
-                                    <span t-esc="data.get('seq_wht_5_tax_amount')" />
-                                    <span style="padding-left:4px;" t-esc="data.get('seq_wht_5_tax_amount_precision')" />
-                                </div>
+                            <t t-if="data.get('seq_wht_5_lst')">
+                                <t t-set="wht_5_row" t-value="0" />
+                                <t t-foreach="data.get('seq_wht_5_lst')" t-as="wht_5_line">
+                                    <t t-if="wht_5_row == 0">
+                                        <div class="wht-5-col-1 row-0">
+                                            <span style="padding-left:5px;" t-esc="wht_5_line.get('seq_wht_5_date')" />
+                                        </div>
+                                        <div class="wht-5-col-2 row-0">
+                                            <span t-esc="wht_5_line.get('seq_wht_5_base_amount')" />
+                                            <span style="padding-left:5px;" t-esc="wht_5_line.get('seq_wht_5_base_amount_precision')" />
+                                        </div>
+                                        <div class="wht-5-col-3 row-0">
+                                            <span t-esc="wht_5_line.get('seq_wht_5_tax_amount')" />
+                                            <span style="padding-left:4px;" t-esc="wht_5_line.get('seq_wht_5_tax_amount_precision')" />
+                                        </div>
+                                    </t>
+                                    <t t-if="wht_5_row == 1">
+                                        <div class="wht-5-col-1 row-1">
+                                            <span style="padding-left:5px;" t-esc="wht_5_line.get('seq_wht_5_date')" />
+                                        </div>
+                                        <div class="wht-5-col-2 row-1">
+                                            <span t-esc="wht_5_line.get('seq_wht_5_base_amount')" />
+                                            <span style="padding-left:5px;" t-esc="wht_5_line.get('seq_wht_5_base_amount_precision')" />
+                                        </div>
+                                        <div class="wht-5-col-3 row-1">
+                                            <span t-esc="wht_5_line.get('seq_wht_5_tax_amount')" />
+                                            <span style="padding-left:4px;" t-esc="wht_5_line.get('seq_wht_5_tax_amount_precision')" />
+                                        </div>
+                                    </t>
+                                    <t t-if="wht_5_row == 2">
+                                        <div class="wht-5-col-1 row-2">
+                                            <span style="padding-left:5px;" t-esc="wht_5_line.get('seq_wht_5_date')" />
+                                        </div>
+                                        <div class="wht-5-col-2 row-2">
+                                            <span t-esc="wht_5_line.get('seq_wht_5_base_amount')" />
+                                            <span style="padding-left:5px;" t-esc="wht_5_line.get('seq_wht_5_base_amount_precision')" />
+                                        </div>
+                                        <div class="wht-5-col-3 row-2">
+                                            <span t-esc="wht_5_line.get('seq_wht_5_tax_amount')" />
+                                            <span style="padding-left:4px;" t-esc="wht_5_line.get('seq_wht_5_tax_amount_precision')" />
+                                        </div>
+                                    </t>
+                                    <t t-set="wht_5_row" t-value="wht_5_row + 1" />
+                                </t>
                             </t>
                             <!-- wht_note_4-2-5 -->
                             <t t-if="data.get('wht_note_4_2_5')">
