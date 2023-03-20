@@ -354,6 +354,45 @@
                                             <span style="padding-left:4px;" t-esc="wht_5_line.get('seq_wht_5_tax_amount_precision')" />
                                         </div>
                                     </t>
+                                    <t t-if="wht_5_row == 3">
+                                        <div class="wht-5-col-1 row-3">
+                                            <span style="padding-left:5px;" t-esc="wht_5_line.get('seq_wht_5_date')" />
+                                        </div>
+                                        <div class="wht-5-col-2 row-3">
+                                            <span t-esc="wht_5_line.get('seq_wht_5_base_amount')" />
+                                            <span style="padding-left:5px;" t-esc="wht_5_line.get('seq_wht_5_base_amount_precision')" />
+                                        </div>
+                                        <div class="wht-5-col-3 row-3">
+                                            <span t-esc="wht_5_line.get('seq_wht_5_tax_amount')" />
+                                            <span style="padding-left:4px;" t-esc="wht_5_line.get('seq_wht_5_tax_amount_precision')" />
+                                        </div>
+                                    </t>
+                                    <t t-if="wht_5_row == 4">
+                                        <div class="wht-5-col-1 row-4">
+                                            <span style="padding-left:5px;" t-esc="wht_5_line.get('seq_wht_5_date')" />
+                                        </div>
+                                        <div class="wht-5-col-2 row-4">
+                                            <span t-esc="wht_5_line.get('seq_wht_5_base_amount')" />
+                                            <span style="padding-left:5px;" t-esc="wht_5_line.get('seq_wht_5_base_amount_precision')" />
+                                        </div>
+                                        <div class="wht-5-col-3 row-4">
+                                            <span t-esc="wht_5_line.get('seq_wht_5_tax_amount')" />
+                                            <span style="padding-left:4px;" t-esc="wht_5_line.get('seq_wht_5_tax_amount_precision')" />
+                                        </div>
+                                    </t>
+                                    <t t-if="wht_5_row == 5">
+                                        <div class="wht-5-col-1 row-5">
+                                            <span style="padding-left:5px;" t-esc="wht_5_line.get('seq_wht_5_date')" />
+                                        </div>
+                                        <div class="wht-5-col-2 row-5">
+                                            <span t-esc="wht_5_line.get('seq_wht_5_base_amount')" />
+                                            <span style="padding-left:5px;" t-esc="wht_5_line.get('seq_wht_5_base_amount_precision')" />
+                                        </div>
+                                        <div class="wht-5-col-3 row-5">
+                                            <span t-esc="wht_5_line.get('seq_wht_5_tax_amount')" />
+                                            <span style="padding-left:4px;" t-esc="wht_5_line.get('seq_wht_5_tax_amount_precision')" />
+                                        </div>
+                                    </t>
                                     <t t-set="wht_5_row" t-value="wht_5_row + 1" />
                                 </t>
                             </t>
