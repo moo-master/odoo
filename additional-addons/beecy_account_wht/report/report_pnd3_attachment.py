@@ -13,9 +13,11 @@ class ReportPND3Attachment(models.TransientModel):
         return list(filter(lambda l: l['page'] == page, data_list))
 
     def _prepare_wht_data_val(self, wht_lines, line_no, wht_type_id, wht_id):
-        wht_payment = 1 if wht_id.wht_payment == 'wht' else 2
-        doc_date = (wht_id.document_date + relativedelta(years=543)).strftime(
-            '%d/%m/%Y')
+        wht_payment = 1 if wht_id[0].wht_payment == 'wht' else 2
+        doc_date = (
+            wht_id[0].document_date
+            + relativedelta(
+                years=543)).strftime('%d/%m/%Y')
         why_type = wht_type_id.printed or '-'
         return {
             'line_no': line_no,
@@ -86,7 +88,7 @@ class ReportPND3Attachment(models.TransientModel):
                 wht_id = wht_lines.mapped('wht_id')
                 wht_list.append(
                     self._prepare_wht_data_val(
-                        wht_lines, count_line))
+                        wht_lines, count_line, wht_type_id, wht_id))
                 data_count += 1
                 count_line += 1
                 if len(wht_list) == 3 or len(wht_type_ids) == data_count:
