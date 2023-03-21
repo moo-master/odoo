@@ -34,8 +34,9 @@ def invoice(env,
 
 
 @pytest.mark.parametrize('test_input', [
-    ({'amount': 0}),
-    ({'amount': 1000})
+    ({'amount': 0, 'vat': False}),
+    ({'amount': 1000, 'vat': False}),
+    ({'amount': 1000, 'vat': '000000'}),
 ])
 def test_action_create_payments(env, model, invoice, test_input):
     invoice.action_post()
@@ -47,10 +48,17 @@ def test_action_create_payments(env, model, invoice, test_input):
         'wht_amount': 100,
     })
     if test_input.get('amount'):
-        wizard.action_create_payments()
-        assert invoice.is_wht_paid
+        invoice.partner_id.vat = test_input['vat']
+        if test_input['vat']:
+            wizard.action_create_payments()
+            assert invoice.is_wht_paid
+        else:
+            with pytest.raises(ValidationError) as excinfo:
+                wizard.action_create_payments()
+                assert excinfo.value.name == ("This contact has not Tax ID, You should fill the Tax ID in the Contact Module")
     else:
         with pytest.raises(ValidationError) as excinfo:
+            invoice.partner_id.vat = '00000'
             wizard.action_create_payments()
             msg = ("Amount must greater or equal to WHT Amount")
             assert excinfo.value.name == msg

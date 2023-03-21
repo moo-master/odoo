@@ -1,4 +1,4 @@
-from odoo import models, fields
+from odoo import models
 
 
 class AccountPaymentRegister(models.TransientModel):
@@ -32,7 +32,7 @@ class AccountPaymentRegister(models.TransientModel):
                 else 'purchase',
                 'wht_payment': 'wht',
                 'account_id': account_id.id,
-                'document_date': fields.Datetime.now(),
+                'document_date': self.wht_payment_date,
                 'line_ids': line_ids_lst,
             })
             wht.action_done()
@@ -64,5 +64,5 @@ class AccountPaymentRegister(models.TransientModel):
                 })
 
         payments = super()._init_payments(to_process, edit_mode=edit_mode)
-
+        payments.update({'wht_payment_date': self.wht_payment_date})
         return payments
