@@ -11,6 +11,10 @@ class AccountPaymentRegister(models.TransientModel):
     paid_amount = fields.Float(
         string='Paid Amount',
     )
+    wht_payment_date = fields.Date(
+        string='Wht Payment Date',
+        default=fields.Date.today(),
+    )
 
     @api.onchange('paid_amount')
     def _onchange_paid_amount(self):
@@ -24,6 +28,11 @@ class AccountPaymentRegister(models.TransientModel):
 
         ctx = dict(self.env.context)
         move = self.env['account.move'].browse(ctx.get('active_ids'))
+        if move.mapped('amount_wht') and any(
+                move.mapped(lambda x: not x.partner_id.vat)):
+            raise ValidationError(
+                _('This contact has not Tax ID, You should fill the Tax ID in the Contact Module'))
+
         if self.amount < self.wht_amount:
             raise ValidationError(
                 _('Amount must greater or equal to WHT Amount')
