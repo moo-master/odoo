@@ -12,19 +12,18 @@ class ReportPND53Attachment(models.TransientModel):
     def _get_report_data(self, data_list, page):
         return list(filter(lambda l: l['page'] == page, data_list))
 
-    def _prepare_wht_data_val(self, wht_line_id, line_no):
-        wht_id = wht_line_id.wht_id
+    def _prepare_wht_data_val(self, wht_lines, line_no, wht_type_id, wht_id):
         wht_payment = 1 if wht_id.wht_payment == 'wht' else 2
         doc_date = (wht_id.document_date + relativedelta(years=543)).strftime(
             '%d/%m/%Y')
-        why_type = wht_line_id.note or wht_line_id.wht_type_id.printed or '-'
+        why_type = wht_type_id.printed or '-'
         return {
             'line_no': line_no,
             'document_date': doc_date,
             'wht_type': why_type,
-            'percent': wht_line_id.percent,
-            'base_amount': round(wht_line_id.base_amount, 2),
-            'wht_amount': round(wht_line_id.wht_amount, 2),
+            'percent': wht_type_id.percent,
+            'base_amount': round(sum(wht_lines.mapped('base_amount')), 2),
+            'wht_amount': round(sum(wht_lines.mapped('wht_amount')), 2),
             'wht_payment': wht_payment,
         }
 
@@ -74,17 +73,26 @@ class ReportPND53Attachment(models.TransientModel):
             wht_list = list()
             line_ids = wht_ids.filtered(
                 lambda w: w.partner_id == partner).line_ids
+            wht_type_ids = line_ids.mapped('wht_type_id')
             data_count = 0
             count_line = 1
-            for rec in line_ids:
-                wht_list.append(self._prepare_wht_data_val(rec, count_line))
+            for wht_type_id in wht_type_ids:
+                wht_lines = line_ids.filtered(
+                    lambda x: x.wht_type_id == wht_type_id)
+                wht_id = wht_lines.mapped('wht_id')
+                wht_list.append(
+                    self._prepare_wht_data_val(
+                        wht_lines,
+                        count_line,
+                        wht_type_id,
+                        wht_id))
                 data_count += 1
                 count_line += 1
-                if len(wht_list) == 3 or len(line_ids) == data_count:
+                if len(wht_list) == 3 or len(wht_type_ids) == data_count:
                     i += 1
                     data_list.append(
                         self._prepare_report_data_val(
-                            i, partner, rec.wht_id, wht_list))
+                            i, partner, wht_id, wht_list))
                     count_line = 1
                     wht_list = list()
 

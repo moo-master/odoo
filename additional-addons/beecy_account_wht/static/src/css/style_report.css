@@ -1297,6 +1297,25 @@ div.wht-5-col-3 {
   font-size: 2.67mm;
 }
 
+div.row-0 {
+  top: 217mm
+}
+div.row-1 {
+  top: 214mm
+}
+div.row-2 {
+  top: 211mm
+}
+div.row-3 {
+  top: 208mm
+}
+div.row-4 {
+  top: 205mm
+}
+div.row-5 {
+  top: 202mm
+}
+
 /* line wht-6  */
 div.wht-6-col-1 {
   position: absolute;
