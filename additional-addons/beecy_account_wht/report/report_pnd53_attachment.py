@@ -13,9 +13,11 @@ class ReportPND53Attachment(models.TransientModel):
         return list(filter(lambda l: l['page'] == page, data_list))
 
     def _prepare_wht_data_val(self, wht_lines, line_no, wht_type_id, wht_id):
-        wht_payment = 1 if wht_id.wht_payment == 'wht' else 2
-        doc_date = (wht_id.document_date + relativedelta(years=543)).strftime(
-            '%d/%m/%Y')
+        wht_payment = 1 if wht_id[0].wht_payment == 'wht' else 2
+        doc_date = (
+            wht_id[0].document_date
+            + relativedelta(
+                years=543)).strftime('%d/%m/%Y')
         why_type = wht_type_id.printed or '-'
         return {
             'line_no': line_no,
