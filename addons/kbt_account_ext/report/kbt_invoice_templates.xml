@@ -17,10 +17,20 @@
 
     <template id="report_kbt_invoice_tax_form">
         <t t-call="web.basic_layout">
-            <t t-set="name_bill" t-value='"เอกสารใบแจ้งหนี้/ใบกำกับภาษี"'/>
-            <t t-set="name_bill_en" t-value='"Invoice/Tax Invoice"'/>
             <t t-set="is_tax_report" t-value="0"/>
             <t t-foreach="docs" t-as="o">
+                <t t-if="o.tax_type == 'no_tax'">
+                    <t t-set="name_bill" t-value='"ใบแจ้งหนี้"'/>
+                    <t t-set="name_bill_en" t-value='"Invoice"'/>
+                </t>
+                <t t-if="o.tax_type == 'tax'">
+                    <t t-set="name_bill" t-value='"ใบแจ้งหนี้/ใบกำกับภาษี"'/>
+                    <t t-set="name_bill_en" t-value='"Invoice/Tax Invoice"'/>
+                </t>
+                <t t-if="o.tax_type == 'deferred'">
+                    <t t-set="name_bill" t-value='"ใบแจ้งหนี้"'/>
+                    <t t-set="name_bill_en" t-value='"Invoice"'/>
+                </t>
                 <t t-call="kbt_account_ext.report_account_document_template"/>
                 <div style="page-break-after:always;"></div>
             </t>

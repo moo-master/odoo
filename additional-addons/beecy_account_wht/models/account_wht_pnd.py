@@ -71,6 +71,13 @@ class AccountWhtPnd(models.Model):
         column2='wht_id',
         string='Withholding Tax'
     )
+    previous_wht_ids = fields.Many2many(
+        comodel_name='account.wht',
+        relation='account_previous_wht_pnds',
+        column1='pnd_id',
+        column2='wht_id',
+        string='Withholding Tax'
+    )
     note = fields.Text(string='Note')
     company_id = fields.Many2one(
         comodel_name='res.company',
@@ -239,3 +246,22 @@ class AccountWhtPnd(models.Model):
 
     def action_confirm(self):
         self.update({'state': 'confirm'})
+
+    @api.model_create_multi
+    def create(self, vals):
+        res = super().create(vals)
+        for wht in res.wht_ids:
+            wht.is_in_use = True
+        res.previous_wht_ids = res.wht_ids
+        return res
+
+    def write(self, vals):
+        res = super().write(vals)
+        if 'wht_ids' in vals:
+            unlink_wht = self.previous_wht_ids - self.wht_ids
+            for wht in unlink_wht:
+                wht.is_in_use = False
+            for wht in self.wht_ids:
+                wht.is_in_use = True
+            self.previous_wht_ids = self.wht_ids
+        return res

@@ -39,6 +39,7 @@
         'report/receipt_tax_invoice_report.xml',
         'report/profit_loss_report_xlsx.xml',
         'views/account_payment_term_views.xml',
+        'views/account_payment.xml',
         'views/account_move_views.xml',
         'views/account_views.xml',
         'views/account_account_group_views.xml',

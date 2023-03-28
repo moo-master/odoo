@@ -19,5 +19,6 @@
         'views/account_move_view.xml',
         'views/account_payment_view.xml',
         'views/account_wht_view.xml',
+        'wizard/account_move_reversal_view.xml',
     ]
 }

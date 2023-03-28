@@ -5,3 +5,6 @@ from . import purchase_order
 from . import sale_order
 from . import account_move
 from . import user_approval_line
+from . import res_company
+from . import res_config_settings
+from . import account_journal
