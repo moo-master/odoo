@@ -40,16 +40,31 @@ class OrgLevel(models.Model):
         for rec in self:
             rec.display_name = str(rec.level) + ' ' + rec.description
 
-    def get_authorize(self, model):
-        auth_model = self.line_ids.filtered(lambda l: l.model_id_name == model)
+    def get_authorize(self, model, move_type, amount):
+        auth_model = self.env['account.move.line']
+        if model == 'account.move':
+            auth_model = self.line_ids.filtered(
+                lambda l: l.model_id_name == model and l.move_type == move_type)
+        else:
+            auth_model = self.line_ids.filtered(
+                lambda l: l.model_id_name == model)
         if auth_model:
-            return True
+            if auth_model.limit < amount and not auth_model.is_last_level:
+                raise ValidationError(
+                    _("Amount have over limit of your manager to approve '%s' model, please contact Administrator") %
+                    model)
+            return auth_model
         if self.level - 1 < 0:
             raise ValidationError(
-                _("You do not have authorize to approve '%s' model") %
+                _("Your manager do not have authorize to approve '%s' model, please contact Administrator") %
                 model)
-        return self.search([('level', '<', self.level)],
-                           order='level desc', limit=1).get_authorize(model)
+        return self.search([('level',
+                             '<',
+                             self.level)],
+                           order='level desc',
+                           limit=1).get_authorize(model,
+                                                  move_type,
+                                                  amount)
 
     def approval_validation(
             self,
