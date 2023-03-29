@@ -12,7 +12,7 @@ class AccountPaymentRegister(models.TransientModel):
 
         moves = move_type.filtered('invoice_line_ids.wht_type_id')
 
-        for move in moves:
+        for move in moves.filtered(lambda mv: not mv.is_wht_paid):
             account_id = move.company_id.ar_wht_default_account_id
             if move.move_type != 'out_invoice':
                 account_id = move.company_id.ap_wht_default_account_pnd3_id \
