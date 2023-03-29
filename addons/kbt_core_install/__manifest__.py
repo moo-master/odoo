@@ -7,7 +7,6 @@
     'version': '15.0.0.0.1',
     'license': 'LGPL-3',
     'depends': [
-        'auth_api_key',
         'base_location',
         'base_location_geonames_import',
         'kbt_account_ext',
