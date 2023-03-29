@@ -1,0 +1,36 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <record id="account_wht_view_form_inherit" model="ir.ui.view">
+        <field name="name">account.wht.view.form.inherit</field>
+        <field name="model">account.wht</field>
+        <field name="inherit_id" ref="beecy_account_wht.account_wht_view_form"/>
+        <field name="arch" type="xml">
+            <xpath expr="//button[@name='action_done']" position="after">
+                <button name="action_cancel"
+                            string="Cancel"
+                            type="object"
+                            attrs="{'invisible':[('status', '=', 'cancel')]}"
+                        />
+            </xpath>
+            <xpath expr="//button[@name='action_set_to_draft']" position="attributes">
+                <attribute name="attrs">{'invisible':[('status', '!=', 'cancel')]}</attribute>
+            </xpath>
+            <xpath expr="//field[@name='document_date']" position="after">
+                <field name="move_id"/>
+            </xpath>
+            <xpath expr="//field[@name='document_date']" position="attributes">
+                <attribute name="string">WHT Payment Date</attribute>
+            </xpath>
+        </field>
+    </record>
+    <record id="account_wht_view_tree_inherit" model="ir.ui.view">
+        <field name="name">account.wht.view.tree.inherit</field>
+        <field name="model">account.wht</field>
+        <field name="inherit_id" ref="beecy_account_wht.account_wht_view_tree"/>
+        <field name="arch" type="xml">
+            <xpath expr="//field[@name='document_date']" position="attributes">
+                <attribute name="string">WHT Payment Date</attribute>
+            </xpath>
+        </field>
+    </record>
+</odoo>

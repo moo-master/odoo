@@ -14,7 +14,7 @@ class OffsetPaymentWizard(models.TransientModel):
     )
     journal_id = fields.Many2one(
         'account.journal',
-        string='Offset Account Journal',
+        string='Payment/Receive Journal',
         default=lambda self: self.env.company.de_offset_account_journal_id,
     )
 

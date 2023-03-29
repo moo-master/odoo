@@ -120,14 +120,15 @@ class PartnerDataController(KBTApiBase):
 
             if not partner_id:
                 # Check acc_number is duplicate
-                self._check_duplicate_number(data.get('bank_acc_number'))
+                if 'bank_acc_number' in data:
+                    self._check_duplicate_number(data.get('bank_acc_number'))
 
-                vals_dict.update({
-                    'bank_ids': [(0, 0, {
-                        'acc_number': data.get('bank_acc_number'),
-                        'bank_id': bank_id.id
-                    })]
-                })
+                    vals_dict.update({
+                        'bank_ids': [(0, 0, {
+                            'acc_number': data.get('bank_acc_number'),
+                            'bank_id': bank_id.id
+                        })]
+                    })
                 Partner.create(vals_dict)
                 return
 
@@ -187,9 +188,10 @@ class PartnerDataController(KBTApiBase):
         return partner_bank_id
 
     def _check_duplicate_number(self, acc_number):
-        partner_bank_id = self._get_res_partner_bank_data(acc_number)
-        if partner_bank_id:
-            raise ValueError(
-                "Bank Account number is duplicate with other contact."
-            )
+        if acc_number:
+            partner_bank_id = self._get_res_partner_bank_data(acc_number)
+            if partner_bank_id:
+                raise ValueError(
+                    "Bank Account number is duplicate with other contact."
+                )
         return acc_number

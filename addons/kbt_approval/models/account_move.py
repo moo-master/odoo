@@ -24,10 +24,10 @@ class AccountMove(models.Model):
         default=True
     )
     cancel_reason = fields.Char(
-        string='Cancel Reason Note',
+        string='Cancel Reason',
     )
     reject_reason = fields.Char(
-        string='Reject Reason Note',
+        string='Reject Reason',
     )
     approval_ids = fields.One2many(
         'user.approval.line',
@@ -38,16 +38,69 @@ class AccountMove(models.Model):
         compute='_compute_is_over_limit',
         string='Over Limit',
     )
+    is_officer_approved = fields.Boolean(
+        string='Officer Approved',
+    )
+    is_ae_approver_approved = fields.Boolean(
+        string='Approver Approved',
+    )
+    is_ae_manager_approved = fields.Boolean(
+        string='Manager Approved',
+    )
+    is_hide_approver_button = fields.Boolean(
+        string='Hide button',
+        compute='_compute_is_hide_approver_button',
+    )
+    is_hide_manager_button = fields.Boolean(
+        string='Hide button',
+        compute='_compute_is_hide_manager_button',
+    )
+
+    @api.depends('amount_total')
+    def _compute_is_hide_approver_button(self):
+        for rec in self:
+            is_hide_approver_button = False
+            if rec.journal_id.account_entry == 'ar':
+                is_hide_approver_button = (rec.state != 'to approve') or \
+                    not (self.env.user == rec.company_id.ar_approver_uid) or \
+                    not rec.is_officer_approved or \
+                    rec.is_ae_approver_approved
+            else:
+                is_hide_approver_button = (rec.state != 'to approve') or \
+                    not (self.env.user == rec.company_id.ap_approver_uid) or \
+                    not rec.is_officer_approved or \
+                    rec.is_ae_approver_approved
+            rec.write({
+                'is_hide_approver_button': is_hide_approver_button
+            })
+
+    @api.depends('amount_total')
+    def _compute_is_hide_manager_button(self):
+        for rec in self:
+            is_hide_manager_button = False
+            if rec.journal_id.account_entry == 'ar':
+                is_hide_manager_button = (rec.state != 'to approve') or \
+                    not (rec.env.user == rec.company_id.ar_manager_uid) or \
+                    not rec.is_officer_approved or \
+                    not rec.is_ae_approver_approved
+            else:
+                is_hide_manager_button = (rec.state != 'to approve') or \
+                    not (rec.env.user == rec.company_id.ap_manager_uid) or \
+                    not rec.is_officer_approved or \
+                    not rec.is_ae_approver_approved
+            rec.write({
+                'is_hide_manager_button': is_hide_manager_button
+            })
 
     @api.depends('amount_total')
     def _compute_is_over_limit(self):
         for rec in self:
             employee = self.env['hr.employee'].sudo().search(
                 [('user_id', '=', self.env.uid)], limit=1)
+            _, res = employee.level_id.approval_validation(
+                'account.move', rec.amount_total, False, employee, [])
             rec.write({
-                'is_over_limit': not employee.level_id.check_over_limit(
-                    'account.move', rec.amount_total, False
-                )
+                'is_over_limit': not res
             })
 
     @api.depends('restrict_mode_hash_table', 'state')
@@ -68,9 +121,10 @@ class AccountMove(models.Model):
         employee = self.env['hr.employee'].search(
             [('user_id', '=', self.env.uid)], limit=1).sudo()
         if not self.x_is_interface:
-            approve = employee.level_id.approval_validation(
-                'account.move', self.amount_total, self.move_type, employee)
-            if not approve:
+            approve = []
+            approve, res = employee.level_id.approval_validation(
+                'account.move', self.amount_total, self.move_type, employee, approve)
+            if not approve or res:
                 self.approval_ids.confirm_approval_line(employee)
                 return True
             else:
@@ -133,18 +187,81 @@ class AccountMove(models.Model):
 
     def action_post(self):
         for rec in self:
-            rec._user_validation()
+            if not self.is_officer_approved:
+                rec._user_validation()
+                self.is_officer_approved = True
+            rec.action_send_ae_approve()
+            rec.action_send_ae_manager_approve()
             rec = super().action_post()
             self.env['mail.activity'].sudo().search(
                 [('res_model', '=', self._name), ('res_id', 'in', self.ids)]
             ).unlink()
             return rec
 
+    def action_approver_approve(self):
+        self.is_ae_approver_approved = True
+        self.action_post()
+
+    def action_manager_approve(self):
+        self.is_ae_manager_approved = True
+        self.action_post()
+
+    def action_send_ae_manager_approve(self):
+        if not self.is_ae_manager_approved:
+            # notice to manager to approve
+            approver = self.env['res.users']
+            if not self.journal_id.account_entry:
+                raise ValidationError(
+                    _('Please set Account Entries of journal'))
+            if self.journal_id.account_entry == 'ap':
+                approver = self.company_id.ap_manager_uid
+            else:
+                approver = self.company_id.ar_manager_uid
+            if approver:
+                self.activity_schedule(
+                    'kbt_approval.mail_activity_data_to_approve',
+                    user_id=approver.id
+                )
+            self.env.cr.commit()  # pylint: disable=invalid-commit
+            massage = 'Please contact (%s) for approving this document'
+            massage += '\nโปรดติดต่อ (%s) สำหรับการอนุมัติเอกสาร'
+            raise ValidationError(
+                _(
+                    massage,
+                    approver.name,
+                    approver.name))
+
+    def action_send_ae_approve(self):
+        if not self.is_ae_approver_approved:
+            # notice to approver to approve
+            approver = self.env['res.users']
+            if not self.journal_id.account_entry:
+                raise ValidationError(
+                    _('Please set Account Entries of journal'))
+            if self.journal_id.account_entry == 'ap':
+                approver = self.company_id.ap_approver_uid
+            else:
+                approver = self.company_id.ar_approver_uid
+            if approver:
+                self.activity_schedule(
+                    'kbt_approval.mail_activity_data_to_approve',
+                    user_id=approver.id
+                )
+            self.env.cr.commit()  # pylint: disable=invalid-commit
+            massage = 'Please contact (%s) for approving this document'
+            massage += '\nโปรดติดต่อ (%s) สำหรับการอนุมัติเอกสาร'
+            raise ValidationError(
+                _(
+                    massage,
+                    approver.name,
+                    approver.name))
+
     def action_cancel_reject_reason_wizard(self):
         view = self.env.ref('beecy_reason.view_cancel_reject_reason_form')
         context = dict(
             self.env.context,
-            model_name='account.move',
+            active_model='account.move',
+            active_id=self.id,
             state='reject'
         )
         return {
