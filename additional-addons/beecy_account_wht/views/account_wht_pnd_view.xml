@@ -5,7 +5,7 @@
         <field name="name">account.wht.pnd.view.form</field>
         <field name="model">account.wht.pnd</field>
         <field name="arch" type="xml">
-            <form string="">
+            <form string="" delete="0">
                 <header>
                     <button string="Confirm"
                         name="action_confirm"
@@ -109,7 +109,7 @@
                                 <field name="wht_ids_count_str" nolabel="1" attrs="{'invisible': [('wht_ids_count_str', '=', False)]}"/>
                             </group>
                         </group>
-                        <field name="wht_ids" nolabel="1" domain="[('wht_kind', '=', pnd_type), ('status', '=', 'done'), ('wht_type', '=', 'purchase')]" context="{'default_wht_kind': pnd_type}" attrs="{'readonly':[('state','!=','draft')]}">
+                        <field name="wht_ids" nolabel="1" domain="[('wht_kind', '=', pnd_type), ('status', '=', 'done'), ('wht_type', '=', 'purchase'), ('is_in_use', '=', False)]" context="{'default_wht_kind': pnd_type}" attrs="{'readonly':[('state','!=','draft')]}">
                             <tree editable="bottom" create="0">
                                 <field name="name" readonly="1"/>
                                 <field name="document_date" readonly="1"/>

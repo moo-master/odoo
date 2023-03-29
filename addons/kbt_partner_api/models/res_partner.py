@@ -17,5 +17,5 @@ class ResPartnerInherit(models.Model):
     @api.model
     def create(self, vals):
         res = super(ResPartnerInherit, self).create(vals)
-        res.ref = res.x_interface_id
+        res.ref = res.x_interface_id[0:16]
         return res

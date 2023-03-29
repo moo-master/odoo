@@ -28,5 +28,7 @@
         'views/inherit_sale_order_views.xml',
         'views/inherit_account_move_views.xml',
         'views/user_approval_line_views.xml',
+        'views/res_config_settings_view.xml',
+        'views/account_journal_view.xml'
     ]
 }

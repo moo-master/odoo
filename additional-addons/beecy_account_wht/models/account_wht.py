@@ -1,3 +1,4 @@
+import string
 from odoo import fields, models, api, _
 import re
 from bahttext import bahttext
@@ -8,6 +9,10 @@ class AccountWht(models.Model):
     _description = 'Account WHT'
     _inherit = ['mail.thread', 'mail.activity.mixin']
     _order = 'document_date desc, name desc'
+
+    is_in_use = fields.Boolean(
+        string='In Use',
+    )
 
     @api.depends('line_ids', 'base_amount')
     def _compute_tax(self):
@@ -555,7 +560,7 @@ class AccountWht(models.Model):
         lines_wht.update({
             f'seq_{seq_wht}_base_amount': "{:,}".format(int(base_amount)),
             f'seq_{seq_wht}_base_amount_precision': base_amount_precision,
-            f'seq_{seq_wht}_date': self.split_datetime(line.invoice_line_id.date),
+            f'seq_{seq_wht}_date': self.split_datetime(self.document_date),
             f'seq_{seq_wht}_tax_amount': "{:,}".format(int(tax_amount)),
             f'seq_{seq_wht}_tax_amount_precision': tax_amount_precision,
             'wht_total_base_amount': "{:,}".format(int(total_amount)),

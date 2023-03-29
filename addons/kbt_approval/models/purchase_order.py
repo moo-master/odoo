@@ -19,10 +19,10 @@ class PurchaseOrder(models.Model):
         default=True
     )
     cancel_reason = fields.Char(
-        string='Cancel Reason Note',
+        string='Cancel Reason',
     )
     reject_reason = fields.Char(
-        string='Reject Reason Note',
+        string='Reject Reason',
     )
     approval_ids = fields.One2many(
         'user.approval.line',
@@ -39,10 +39,10 @@ class PurchaseOrder(models.Model):
         for rec in self:
             employee = self.env['hr.employee'].sudo().search(
                 [('user_id', '=', self.env.uid)], limit=1)
+            _, res = employee.level_id.approval_validation(
+                'purchase.order', rec.amount_total, False, employee, [])
             rec.write({
-                'is_over_limit': not employee.level_id.check_over_limit(
-                    'account.move', rec.amount_total, False
-                )
+                'is_over_limit': not res
             })
 
     def _compute_approve(self):
@@ -57,9 +57,10 @@ class PurchaseOrder(models.Model):
         employee = self.env['hr.employee'].search(
             [('user_id', '=', self.env.uid)], limit=1).sudo()
         if not self.x_is_interface:
-            approve = employee.level_id.approval_validation(
-                'purchase.order', self.amount_total, False, employee)
-            if not approve:
+            approve = []
+            approve, res = employee.level_id.approval_validation(
+                'purchase.order', self.amount_total, False, employee, approve)
+            if not approve or res:
                 self.approval_ids.confirm_approval_line(employee)
                 return True
             else:
@@ -119,7 +120,8 @@ class PurchaseOrder(models.Model):
         view = self.env.ref('beecy_reason.view_cancel_reject_reason_form')
         context = dict(
             self.env.context,
-            model_name='purchase.order',
+            active_model='purchase.order',
+            active_id=self.id,
             state='reject'
         )
         return {

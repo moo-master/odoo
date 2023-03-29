@@ -20,6 +20,7 @@
                                     <field name="model_id"/>
                                     <field name="move_type" attrs="{'readonly':[('model_id_name','!=','account.move')]}"/>
                                     <field name="journal_id" attrs="{'readonly':[('move_type','!=','entry')]}"/>
+                                    <field name="is_last_level"/>
                                 </tree>
                             </field>
                         </page>
