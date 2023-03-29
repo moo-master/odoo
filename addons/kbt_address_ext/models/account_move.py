@@ -29,7 +29,6 @@ class AccountMove(models.Model):
 
     @api.depends('partner_id')
     def _compute_is_admin(self):
-        if self.env.user.has_group('base.group_system'):
-            self.write({
-                'is_admin': True
-            })
+        self.write({
+            'is_admin': self.env.user.has_group('base.group_system')
+        })
