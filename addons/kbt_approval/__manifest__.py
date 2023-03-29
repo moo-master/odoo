@@ -17,6 +17,7 @@
         'mail',
         'beecy_reason',
         'account_accountant',
+        'sale_management'
     ],
     'data': [
         'data/approval_email_template.xml',
