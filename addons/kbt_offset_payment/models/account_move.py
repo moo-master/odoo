@@ -28,7 +28,8 @@ class AccountMove(models.Model):
     move_offset_ids = fields.Many2many(
         'account.move',
         string='Move Offset',
-        compute='_compute_offset'
+        compute='_compute_offset',
+        copy=False,
     )
 
     @api.depends('offset_ids')

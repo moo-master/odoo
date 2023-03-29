@@ -36,6 +36,9 @@
                     <field name="approval_ids" context="{'tree_view_ref': 'kbt_approval.user_approval_line_tree_view'}"/>
                 </page>
             </xpath>
+            <xpath expr="//field[@name='currency_id']" position="after">
+                <field name="reject_reason" attrs="{'invisible': [('state', '!=', 'reject')]}"/>
+            </xpath>
         </field>
     </record>
 </odoo>

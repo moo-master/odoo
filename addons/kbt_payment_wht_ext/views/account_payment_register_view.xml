@@ -12,7 +12,7 @@
                 <field name="paid_amount" />
             </xpath>
             <xpath expr="//field[@name='payment_date']" position="after">
-                <field name="wht_payment_date" />
+                <field name="wht_payment_date"/>
             </xpath>
 
             <xpath expr="//label[@for='amount']" position="attributes">

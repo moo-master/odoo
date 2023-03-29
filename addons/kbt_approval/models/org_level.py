@@ -1,9 +1,10 @@
-from odoo import models, fields, api
+from odoo import models, fields, api, _
+from odoo.exceptions import ValidationError
 
 
 class OrgLevel(models.Model):
     _name = 'org.level'
-    _order = 'write_date asc'
+    _order = 'level, write_date asc'
     _rec_name = 'display_name'
 
     _sql_constraints = [
@@ -39,19 +40,16 @@ class OrgLevel(models.Model):
         for rec in self:
             rec.display_name = str(rec.level) + ' ' + rec.description
 
-    def check_over_limit(self, model, amount, move_type):
-        is_over_limit = True
-        journal_code = ''
-        for line in self.line_ids:
-            if model != 'account.move':
-                if line.model_id.model == model:
-                    is_over_limit = amount <= line.limit
-                    journal_code = line.journal_id.code
-            else:
-                if line.move_type == move_type:
-                    is_over_limit = amount <= line.limit
-                    journal_code = line.journal_id.code
-        return is_over_limit, journal_code
+    def get_authorize(self, model):
+        auth_model = self.line_ids.filtered(lambda l: l.model_id_name == model)
+        if auth_model:
+            return True
+        if self.level - 1 < 0:
+            raise ValidationError(
+                _("You do not have authorize to approve '%s' model") %
+                model)
+        return self.search([('level', '<', self.level)],
+                           order='level desc', limit=1).get_authorize(model)
 
     def approval_validation(
             self,
@@ -59,25 +57,20 @@ class OrgLevel(models.Model):
             amount,
             move_type,
             employee,
-            approval=[]):
-        # pylint: disable=W0102
-        is_over_limit, journal_code = self.check_over_limit(
-            model, amount, move_type)
-        if not is_over_limit:
-            if move_type == 'out_invoice' and employee.ar_approver_id:
-                approval.append(employee.ar_approver_id.id)
-            if move_type == 'in_invoice' and employee.ap_approver_id:
-                approval.append(employee.ap_approver_id.id)
-            if move_type == 'entry' and journal_code:
-                if journal_code == 'ACCAR':
-                    approval.append(employee.ar_approver_id.id)
-                else:
-                    approval.append(employee.ap_approver_id.id)
-            if employee.parent_id:
-                approval.append(employee.parent_id.id)
-                return employee.parent_id.level_id.approval_validation(
-                    model, amount, move_type, employee.parent_id, approval
-                )
-            return list(set(approval))
-        else:
-            return list(set(approval))
+            approval):
+        res = True
+        for line in self.line_ids:
+            if model != 'account.move':
+                if line.model_id.model == model:
+                    res = (amount <= line.limit) or line.is_last_level
+            else:
+                if line.move_type == move_type and line.model_id.model == model:
+                    res = (amount <= line.limit) or line.is_last_level
+
+        if not res:
+            approval.append(employee.parent_id.id)
+            employee.parent_id.level_id.approval_validation(
+                model, amount, move_type, employee.parent_id, approval
+            )
+
+        return approval, res

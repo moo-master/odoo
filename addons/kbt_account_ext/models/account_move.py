@@ -1,4 +1,5 @@
-from odoo import models, fields, api
+from odoo import models, fields, api, _
+from odoo.exceptions import UserError
 
 from bahttext import bahttext
 
@@ -8,8 +9,8 @@ class AccountMove(models.Model):
 
     move_type = fields.Selection(
         selection_add=[
-            ('in_refund', 'Debit Note'),
-            ('out_refund', 'Credit Note'),
+            ('in_refund', 'Vendor Credit Note'),
+            ('out_refund', 'Customer Credit Note'),
         ],
         ondelete={'in_refund': 'set default', 'out_refund': 'set default'}
     )
@@ -42,6 +43,60 @@ class AccountMove(models.Model):
             'reject': 'cascade',
         }
     )
+
+    tax_type = fields.Selection(
+        string="Tax Type",
+        selection=[
+            ('no_tax', 'No Tax'),
+            ('tax', 'Tax'),
+            ('deferred', 'Deferred Tax')
+        ],
+        compute="_compute_tax_type",
+    )
+
+    @api.depends('invoice_line_ids.tax_ids')
+    def _compute_tax_type(self):
+        for rec in self:
+            if not rec.invoice_line_ids[0].tax_ids:
+                rec.write({
+                    'tax_type': 'no_tax'
+                })
+            elif rec.invoice_line_ids[0].tax_ids.tax_exigibility == 'on_payment':
+                rec.write({
+                    'tax_type': 'deferred'
+                })
+            else:
+                rec.write({
+                    'tax_type': 'tax'
+                })
+
+    @api.model_create_multi
+    def create(self, vals):
+        res = super().create(vals)
+        if res.move_type != 'entry':
+            taxs = res.invoice_line_ids.mapped('tax_ids')
+            null_taxs = self.env['account.move.line']
+            for line in res.invoice_line_ids:
+                if not line.tax_ids:
+                    null_taxs = line
+                    break
+            if (taxs and null_taxs) or (len(taxs) > 1):
+                raise UserError(_('Tax must be one and only one.'))
+        return res
+
+    def write(self, vals):
+        res = super().write(vals)
+        if self.move_type != 'entry':
+            if 'line_ids' in vals:
+                taxs = self.invoice_line_ids.mapped('tax_ids')
+                null_taxs = self.env['account.move.line']
+                for line in self.invoice_line_ids:
+                    if not line.tax_ids:
+                        null_taxs = line
+                        break
+                if (taxs and null_taxs) or (len(taxs) > 1):
+                    raise UserError(_('Tax must be one and only one.'))
+        return res
 
     def get_amount_total_text(self, amount):
         return bahttext(amount)

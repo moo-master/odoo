@@ -12,7 +12,7 @@ class AccountPaymentRegister(models.TransientModel):
         string='Paid Amount',
     )
     wht_payment_date = fields.Date(
-        string='Wht Payment Date',
+        string='WHT Payment Date',
         default=fields.Date.today(),
     )
 
@@ -40,3 +40,11 @@ class AccountPaymentRegister(models.TransientModel):
 
         move.update({'is_wht_paid': True})
         return res
+
+    @api.depends('line_ids')
+    def _compute_from_lines(self):
+        for wizard in self:
+            res = super(AccountPaymentRegister, wizard)._compute_from_lines()
+            if self.wht_amount > 0:
+                wizard.can_group_payments = False
+            return res

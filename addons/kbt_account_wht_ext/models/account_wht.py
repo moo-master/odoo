@@ -1,4 +1,4 @@
-from odoo import fields, models
+from odoo import fields, models, api
 
 
 class AccountWht(models.Model):
@@ -8,3 +8,22 @@ class AccountWht(models.Model):
         comodel_name='account.payment',
         string='Payment'
     )
+    status = fields.Selection(
+        selection_add=[
+            ('cancel', 'Cancel'),
+        ],
+        ondelete={'cancel': 'set default'}
+    )
+    move_id = fields.Many2one(
+        comodel_name='account.move',
+        string='Invoice Number',
+        compute='_compute_get_move',
+    )
+
+    def action_cancel(self):
+        self.status = 'cancel'
+
+    @api.depends('invoice_line_ids')
+    def _compute_get_move(self):
+        invoices = self.invoice_line_ids.mapped('move_id')
+        self.move_id = invoices[0]
