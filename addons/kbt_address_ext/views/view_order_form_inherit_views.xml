@@ -17,6 +17,7 @@
                 <attribute name="invisible">1</attribute>
             </xpath>
             <xpath expr="//field[@name='partner_id']" position="after">
+                <field name="x_is_interface" invisible="1"/>
                 <field name="x_address"
                     attrs="{
                         'required': [('x_is_interface','=', True)],
