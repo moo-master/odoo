@@ -18,17 +18,22 @@ class PurchaseOrder(models.Model):
     @api.depends('order_line.taxes_id')
     def _compute_tax_type(self):
         for rec in self:
-            if not rec.order_line[0].taxes_id:
-                rec.write({
-                    'tax_type': 'no_tax'
-                })
-            elif rec.order_line[0].taxes_id.tax_exigibility == 'on_payment':
-                rec.write({
-                    'tax_type': 'deferred'
-                })
+            if rec.order_line:
+                if not rec.order_line[0].taxes_id:
+                    rec.write({
+                        'tax_type': 'no_tax'
+                    })
+                elif rec.order_line[0].taxes_id.is_exempt:
+                    rec.write({
+                        'tax_type': 'deferred'
+                    })
+                else:
+                    rec.write({
+                        'tax_type': 'tax'
+                    })
             else:
                 rec.write({
-                    'tax_type': 'tax'
+                    'tax_type': False
                 })
 
     @api.model_create_multi
@@ -37,7 +42,7 @@ class PurchaseOrder(models.Model):
         taxs = res.order_line.mapped('taxes_id')
         null_taxs = self.env['purchase.order.line']
         for line in res.order_line:
-            if not line.taxes_id:
+            if not line.taxes_id and not line.display_type:
                 null_taxs = line
                 break
         if (taxs and null_taxs) or (len(taxs) > 1):
@@ -50,7 +55,7 @@ class PurchaseOrder(models.Model):
             taxs = self.order_line.mapped('taxes_id')
             null_taxs = self.env['purchase.order.line']
             for line in self.order_line:
-                if not line.taxes_id:
+                if not line.taxes_id and not line.display_type:
                     null_taxs = line
                     break
             if (taxs and null_taxs) or (len(taxs) > 1):

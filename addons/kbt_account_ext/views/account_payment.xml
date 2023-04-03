@@ -8,7 +8,7 @@
             <xpath expr="//button[@name='button_open_invoices']" position="before">
                 <button name="%(receipt_tax_invoice_report_template_copies)d"
                     icon="fa-print"
-                    string="Payment"
+                    string="Print"
                     type="action"
                     attrs="{'invisible': [('reconciled_invoices_count','=', 0)]}"/>
             </xpath>
