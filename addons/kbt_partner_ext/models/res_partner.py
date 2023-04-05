@@ -1,4 +1,5 @@
-from odoo import models, fields
+from odoo import api, models, fields, _
+from odoo.exceptions import UserError
 
 
 class ResPartnerInherit(models.Model):
@@ -13,3 +14,9 @@ class ResPartnerInherit(models.Model):
         string='Branch Name',
         size=5
     )
+
+    @api.constrains('x_branch_name')
+    def _check_numeric(self):
+        if not self.x_branch_name.isdigit():
+            raise UserError(_('Branch name must be numeric.'))
+        return True
