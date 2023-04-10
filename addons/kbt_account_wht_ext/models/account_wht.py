@@ -25,5 +25,6 @@ class AccountWht(models.Model):
 
     @api.depends('invoice_line_ids')
     def _compute_get_move(self):
-        invoices = self.invoice_line_ids.mapped('move_id')
-        self.move_id = invoices[0]
+        for rec in self:
+            invoices = rec.invoice_line_ids.mapped('move_id')
+            rec.move_id = invoices[0]

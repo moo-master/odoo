@@ -57,17 +57,22 @@ class AccountMove(models.Model):
     @api.depends('invoice_line_ids.tax_ids')
     def _compute_tax_type(self):
         for rec in self:
-            if not rec.invoice_line_ids[0].tax_ids:
-                rec.write({
-                    'tax_type': 'no_tax'
-                })
-            elif rec.invoice_line_ids[0].tax_ids.tax_exigibility == 'on_payment':
-                rec.write({
-                    'tax_type': 'deferred'
-                })
+            if rec.invoice_line_ids:
+                if not rec.invoice_line_ids[0].tax_ids:
+                    rec.write({
+                        'tax_type': 'no_tax'
+                    })
+                elif rec.invoice_line_ids[0].tax_ids.is_exempt:
+                    rec.write({
+                        'tax_type': 'deferred'
+                    })
+                else:
+                    rec.write({
+                        'tax_type': 'tax'
+                    })
             else:
                 rec.write({
-                    'tax_type': 'tax'
+                    'tax_type': False
                 })
 
     @api.model_create_multi
@@ -77,7 +82,7 @@ class AccountMove(models.Model):
             taxs = res.invoice_line_ids.mapped('tax_ids')
             null_taxs = self.env['account.move.line']
             for line in res.invoice_line_ids:
-                if not line.tax_ids:
+                if not line.tax_ids and not line.display_type:
                     null_taxs = line
                     break
             if (taxs and null_taxs) or (len(taxs) > 1):
@@ -91,7 +96,7 @@ class AccountMove(models.Model):
                 taxs = self.invoice_line_ids.mapped('tax_ids')
                 null_taxs = self.env['account.move.line']
                 for line in self.invoice_line_ids:
-                    if not line.tax_ids:
+                    if not line.tax_ids and not line.display_type:
                         null_taxs = line
                         break
                 if (taxs and null_taxs) or (len(taxs) > 1):
