@@ -44,5 +44,6 @@
         'views/account_views.xml',
         'views/account_account_group_views.xml',
         'wizards/wizard_profit_loss_views.xml',
+        'views/account_tax_view.xml',
     ]
 }

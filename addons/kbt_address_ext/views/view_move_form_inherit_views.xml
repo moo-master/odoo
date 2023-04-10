@@ -17,8 +17,8 @@
             </xpath>
             <xpath expr="//field[@name='partner_id']" position="after">
                 <field name="is_admin" invisible="1"/>
-                <field name="x_partner_name" attrs="{'invisible': [('move_type', '!=', 'out_invoice')], 'readonly': [('is_admin', '=', False)]}"/>
-                <field name="x_address" attrs="{'invisible': [('move_type', '!=', 'out_invoice')], 'readonly': [('is_admin', '=', False)]}"/>
+                <field name="x_partner_name" attrs="{'invisible': [('move_type', 'not in', ('out_invoice', 'out_refund'))], 'readonly': [('is_admin', '=', False)]}"/>
+                <field name="x_address" attrs="{'invisible': [('move_type', 'not in', ('out_invoice', 'out_refund'))], 'readonly': [('is_admin', '=', False)]}"/>
             </xpath>
         </field>
     </record>

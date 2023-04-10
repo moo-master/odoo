@@ -9,9 +9,9 @@
             <xpath expr="//button[@name='open_bank_statement_view']" position="before">
                 <button name="%(action_kbt_invoice_tax_report)d"
                     icon="fa-print"
-                    string="Invoice"
+                    string="Print"
                     type="action"
-                    attrs="{'invisible': [('move_type','!=', 'out_invoice')]}"/>
+                    attrs="{'invisible': ['|', ('move_type','not in', ('out_invoice', 'out_refund')), ('state', '!=', 'posted')]}"/>
             </xpath>
             <xpath expr="//group[@id='other_tab_group']/group/field[@name='partner_bank_id']" position="after">
                 <field name="x_old_invoice_amount" attrs="{'invisible':[('move_type', '!=', 'out_refund')]}"/>
