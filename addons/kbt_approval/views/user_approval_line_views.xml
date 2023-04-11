@@ -23,6 +23,7 @@
         <field name="arch" type="xml">
             <tree string="Approve Details" create="0" edit="0" delete="0" default_order="sequence, id">
                 <field name="sequence" invisible="1"/>
+                <field name="level_id"/>
                 <field name="manager_id"/>
                 <field name="is_approve"/>
                 <field name="approve_datetime"/>
