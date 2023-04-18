@@ -94,12 +94,13 @@ class SaleOrder(models.Model):
     def user_validation(self):
         employee = self.env['hr.employee'].search(
             [('user_id', '=', self.env.uid)], limit=1).sudo()
-        if not self.x_is_interface and not self.is_skip_level:
+        if not self.x_is_interface:
             if not employee.parent_id.level_id:
                 raise ValidationError(_('Your manager do not have level.'))
-            if employee.parent_id.level_id.level - employee.level_id.level > 1:
-                self.is_skip_level = True
+            if (employee.parent_id.level_id.level
+                    - employee.level_id.level > 1) and (not self.is_skip_level):
                 self.skip_level(employee)
+                self.is_skip_level = True
             approve = []
             approve, res = employee.level_id.approval_validation(
                 'sale.order', self.amount_total, False, employee, approve)
