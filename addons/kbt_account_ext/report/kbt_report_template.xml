@@ -470,56 +470,67 @@
                 <t t-set="check" t-value="0"/>
                 <t t-set="row" t-value="0"/>
                 <t t-foreach="o.invoice_line_ids" t-as="line">
-                    <t t-if="line.display_type != 'line_note'">
-                        <tr style="">
-                            <td class="text-center border-top-0" style="width: 10%; border-right: 1px solid #000000">
+
+                    <tr style="">
+                        <td class="text-center border-top-0" style="width: 10%; border-right: 1px solid #000000">
+                            <t t-if="line.display_type not in ('line_note', 'line_section')">
                                 <span t-out="counter"/>
-                            </td>
-                            <td class="text-left border-top-0" style="width: 64%; border-right: 1px solid #000000">
+                            </t>
+                        </td>
+                        <td class="text-left border-top-0" style="width: 64%; border-right: 1px solid #000000">
+                            <t t-if="line.display_type not in ('line_note', 'line_section')">
                                 <span t-out="line.name"/>
-                            </td>
-                            <td class="text-right border-top-0" style="width: 13%; border-right: 1px solid #000000">
+                            </t>
+                            <t t-else="">
+                                <span t-out="line.name" class="font-italic"/>
+                            </t>
+                        </td>
+                        <td class="text-right border-top-0" style="width: 13%; border-right: 1px solid #000000">
+                            <t t-if="line.display_type not in ('line_note', 'line_section')">
                                 <t t-if="line.product_uom_id">
                                     <span t-out="'{:,.2f}'.format(line.quantity) + ' ' + line.product_uom_id.name"/>
                                 </t>
                                 <t t-else="">
                                     <span t-out="'{:,.2f}'.format(line.quantity)"/>
                                 </t>
-                            </td>
-                            <td class="text-right border-top-0" style="width: 13%;">
+                            </t>
+                        </td>
+                        <td class="text-right border-top-0" style="width: 13%;">
+                            <t t-if="line.display_type not in ('line_note', 'line_section')">
                                 <span t-out="'{:,.2f}'.format(line.price_subtotal)"/>
-                            </td>
+                            </t>
+                        </td>
 
-                            <!-- set value for empty row -->
-                            <t t-if="len(line.name) > 80">
-                                <t t-set="count" t-value="count+196"/>
-                                <t t-set="row" t-value="row+1.444"/>
-                            </t>
-                            <t t-else="">
-                                <t t-set="count" t-value="count+140"/>
-                                <t t-set="row" t-value="row+1"/>
-                            </t>
+                        <!-- set value for empty row -->
+                        <t t-if="len(line.name) > 80">
+                            <t t-set="count" t-value="count+196"/>
+                            <t t-set="row" t-value="row+1.444"/>
+                        </t>
+                        <t t-else="">
+                            <t t-set="count" t-value="count+140"/>
+                            <t t-set="row" t-value="row+1"/>
+                        </t>
 
-                            <!-- cal value for push footer -->
-                            <t t-if="push > 200">
-                            </t>
-                            <t t-elif="counter > 22">
-                                <t t-set="push" t-value="push+54"/>
-                            </t>
-                            <t t-elif="count > 3200">
-                                <t t-set="push" t-value="push+54"/>
-                            </t>
-
+                        <!-- cal value for push footer -->
+                        <t t-if="push > 200">
+                        </t>
+                        <t t-elif="counter > 22">
+                            <t t-set="push" t-value="push+54"/>
+                        </t>
+                        <t t-elif="count > 3200">
+                            <t t-set="push" t-value="push+54"/>
+                        </t>
+                        <t t-if="line.display_type not in ('line_note', 'line_section')">
                             <t t-set="counter" t-value="counter+1"/>
+                        </t>
 
-                            <t t-if="check == 0">
-                                <t t-if="count > 5200">
-                                    <t t-set="add" t-value="add+16"/>
-                                    <t t-set="check" t-value="check+1"/>
-                                </t>
+                        <t t-if="check == 0">
+                            <t t-if="count > 5200">
+                                <t t-set="add" t-value="add+16"/>
+                                <t t-set="check" t-value="check+1"/>
                             </t>
-                        </tr>
-                    </t>
+                        </t>
+                    </tr>
                 </t>
                 <t t-if="ceil(row) % 22 != 0 and ceil(row) % 22 &lt; 13">
                     <t t-set="actual_row" t-value="ceil(row) % 22"/>

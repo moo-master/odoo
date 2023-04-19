@@ -29,6 +29,11 @@ class UserApprovalLine(models.Model):
         string='Manager',
     )
     sequence = fields.Integer('Sequence')
+    level_id = fields.Many2one(
+        comodel_name='org.level',
+        string='Level',
+        related='manager_id.level_id'
+    )
 
     def confirm_approval_line(self, manager):
         approval = self.filtered(lambda x: x.manager_id.id == manager.id)
