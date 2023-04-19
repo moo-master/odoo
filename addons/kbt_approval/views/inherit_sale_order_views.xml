@@ -8,6 +8,7 @@
             <xpath expr="//button[@id='action_confirm']" position="after">
                 <field name="is_skip_level" invisible="1" />
                 <field name="is_can_user_approve" invisible="1" />
+                <field name="is_can_user_reject" invisible="1" />
                 <button name="user_validation"
                     string="Send to Approval" type="object" class="oe_highlight"
                     attrs="{'invisible': ['|', ('state', 'not in', ['draft']), ('is_approve_done', '=', True)]}"/>
@@ -16,7 +17,7 @@
                     attrs="{'invisible': ['|', '|', ('state', 'not in', ['to approve']), ('is_approve_done', '=', True), ('is_can_user_approve', '=', False)]}"/>
                 <button name="action_cancel_reject_reason_wizard"
                     string="Reject" type="object" groups="base.group_user"
-                    attrs="{'invisible': ['|', '|', ('is_approve_done', '=', True), ('state', 'not in', ['to approve']), ('is_can_user_approve', '=', False)]}"/>
+                    attrs="{'invisible': ['|', '|', ('is_approve_done', '=', True), ('state', 'not in', ['to approve']), ('is_can_user_reject', '=', False)]}"/>
                 <button name="action_cancel" string="Cancel"  type="object" groups="base.group_user" attrs="{'invisible': [('state', '!=', 'to approve')]}"/>
             </xpath>
             <xpath expr="//button[@name='action_draft']" position="replace">

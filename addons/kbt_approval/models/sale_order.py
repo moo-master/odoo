@@ -45,6 +45,10 @@ class SaleOrder(models.Model):
         string='User can approve',
         compute='_compute_is_can_user_approve',
     )
+    is_can_user_reject = fields.Boolean(
+        string='User can reject',
+        compute='_compute_is_can_user_reject'
+    )
 
     def _compute_is_can_user_approve(self):
         for rec in self:
@@ -53,6 +57,15 @@ class SaleOrder(models.Model):
             rec.write({'is_can_user_approve': (rec.is_skip_level and (
                 employee.level_id.level == rec.approve_skip_level)) or (
                 employee.level_id == rec.approve_level_id)
+            })
+
+    def _compute_is_can_user_reject(self):
+        for rec in self:
+            employee = self.env['hr.employee'].search(
+                [('user_id', '=', rec.env.uid)], limit=1).sudo()
+            rec.write({'is_can_user_reject': (rec.is_skip_level and (
+                employee.level_id.level >= rec.approve_skip_level)) or (
+                employee.level_id.level >= rec.approve_level_id.level)
             })
 
     def action_force_approve(self):
