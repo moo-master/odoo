@@ -107,8 +107,8 @@ class SaleOrder(models.Model):
         if not self.x_is_interface:
             if not employee.parent_id.level_id:
                 raise ValidationError(_('Your manager do not have level.'))
-            if (employee.parent_id.level_id.level
-                    - employee.level_id.level > 1) and (not self.is_skip_level):
+            if (employee.parent_id.level_id.level - employee.level_id.level
+                    > 1) and (not self.is_skip_level) and (not employee.parent_id):
                 self.skip_level(employee)
                 self.is_skip_level = True
             approve = []
