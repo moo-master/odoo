@@ -68,9 +68,6 @@ class SaleOrder(models.Model):
                 employee.level_id.level >= rec.approve_level_id.level)
             })
 
-    def action_force_approve(self):
-        return self.action_confirm()
-
     def action_draft(self):
         orders = self.filtered(
             lambda s: s.state in [
