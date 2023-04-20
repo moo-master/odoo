@@ -104,6 +104,7 @@ class PurchaseOrder(models.Model):
                 'purchase.order', self.amount_total, False, employee, approve)
             if not approve or res:
                 self.approval_ids.confirm_approval_line(employee)
+                self.is_approve_done = True
                 self.button_approve()
                 return True
             else:
