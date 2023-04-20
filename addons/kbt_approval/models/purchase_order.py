@@ -1,4 +1,4 @@
-from odoo import models, fields, _, api
+from odoo import models, fields, _
 from odoo.exceptions import ValidationError
 
 
@@ -10,13 +10,9 @@ class PurchaseOrder(models.Model):
             ('reject', 'Rejected'),
         ]
     )
-    approve_level = fields.Integer(
-        'approve level',
-        default=0
-    )
-    is_approve = fields.Boolean(
-        compute='_compute_approve',
-        default=True
+    approve_level_id = fields.Many2one(
+        string='Approve Level',
+        comodel_name='org.level'
     )
     cancel_reason = fields.Char(
         string='Cancel Reason',
@@ -29,9 +25,8 @@ class PurchaseOrder(models.Model):
         'purchase_id',
         string='Approval'
     )
-    is_over_limit = fields.Boolean(
-        compute='_compute_is_over_limit',
-        string='Over Limit',
+    is_approve_done = fields.Boolean(
+        string='Approve Done'
     )
     is_skip_level = fields.Boolean(
         string="Skip Level",
@@ -49,14 +44,28 @@ class PurchaseOrder(models.Model):
         string='User can approve',
         compute='_compute_is_can_user_approve',
     )
+    is_can_user_reject = fields.Boolean(
+        string='User can reject',
+        compute='_compute_is_can_user_reject'
+    )
 
-    @api.depends('is_skip_level')
     def _compute_is_can_user_approve(self):
         for rec in self:
             employee = self.env['hr.employee'].search(
                 [('user_id', '=', rec.env.uid)], limit=1).sudo()
-            rec.write({'is_can_user_approve': rec.is_skip_level and (
-                employee.level_id.level == rec.approve_skip_level)})
+            rec.write({'is_can_user_approve': (rec.is_skip_level and (
+                employee.level_id.level == rec.approve_skip_level)) or (
+                employee.level_id == rec.approve_level_id)
+            })
+
+    def _compute_is_can_user_reject(self):
+        for rec in self:
+            employee = self.env['hr.employee'].search(
+                [('user_id', '=', rec.env.uid)], limit=1).sudo()
+            rec.write({'is_can_user_reject': (rec.is_skip_level and (
+                employee.level_id.level >= rec.approve_skip_level)) or (
+                employee.level_id.level >= rec.approve_level_id.level)
+            })
 
     def skip_level(self, employee):
         level = employee.parent_id.level_id.get_authorize(
@@ -80,32 +89,14 @@ class PurchaseOrder(models.Model):
             self.write(val)
             self.env.cr.commit()  # pylint: disable=invalid-commit
 
-    @api.depends('amount_total')
-    def _compute_is_over_limit(self):
-        for rec in self:
-            employee = self.env['hr.employee'].sudo().search(
-                [('user_id', '=', self.env.uid)], limit=1)
-            _, res = employee.level_id.approval_validation(
-                'purchase.order', rec.amount_total, False, employee, [])
-            rec.write({
-                'is_over_limit': not res
-            })
-
-    def _compute_approve(self):
+    def user_validation(self):
         employee = self.env['hr.employee'].search(
             [('user_id', '=', self.env.uid)], limit=1).sudo()
-        self.is_approve = (
-            employee.level_id.level <= self.approve_level) \
-            or (self.state != 'to approve') \
-            or (employee.level_id.level > self.approve_level + 1)
-
-    def _user_validation(self):
-        employee = self.env['hr.employee'].search(
-            [('user_id', '=', self.env.uid)], limit=1).sudo()
-        if not self.x_is_interface and not self.is_skip_level:
+        if not self.x_is_interface:
             if not employee.parent_id.level_id:
                 raise ValidationError(_('Your manager do not have level.'))
-            if employee.parent_id.level_id.level - employee.level_id.level > 1:
+            if (employee.parent_id.level_id.level - employee.level_id.level
+                    > 1) and (not self.is_skip_level) and (not employee.parent_id):
                 self.is_skip_level = True
                 self.skip_level(employee)
             approve = []
@@ -113,6 +104,8 @@ class PurchaseOrder(models.Model):
                 'purchase.order', self.amount_total, False, employee, approve)
             if not approve or res:
                 self.approval_ids.confirm_approval_line(employee)
+                self.is_approve_done = True
+                self.button_approve()
                 return True
             else:
                 manager = employee.parent_id
@@ -124,7 +117,7 @@ class PurchaseOrder(models.Model):
                     )
                     val = {
                         'state': 'to approve',
-                        'approve_level': employee.level_id.level,
+                        'approve_level_id': manager.level_id,
                     }
                     if not self.approval_ids:
                         val.update(
@@ -158,9 +151,8 @@ class PurchaseOrder(models.Model):
                         employee_manager,
                         employee_manager))
 
-    def button_confirm(self):
+    def button_approve(self):
         for rec in self:
-            rec._user_validation()
             rec = super().button_approve()
             self.env['mail.activity'].sudo().search(
                 [('res_model', '=', self._name), ('res_id', 'in', self.ids)]

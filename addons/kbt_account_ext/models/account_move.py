@@ -54,6 +54,17 @@ class AccountMove(models.Model):
         compute="_compute_tax_type",
     )
 
+    @api.constrains('date')
+    def _check_date(self):
+        for rec in self:
+            if rec.move_type == 'in_invoice' and rec.date:
+                if rec.date > rec.invoice_date_due:
+                    raise UserError(
+                        _('Accounting date must be less than Due date.'))
+                if rec.date < rec.invoice_date:
+                    raise UserError(
+                        _('Accounting date must be greater than Bill date.'))
+
     @api.depends('invoice_line_ids.tax_ids')
     def _compute_tax_type(self):
         for rec in self:
