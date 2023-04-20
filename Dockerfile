@@ -1,4 +1,4 @@
-FROM registry.3roots.live/odoo-root:15.0
+FROM registry.3roots.live/odoo-root:15.0-ee
 
 USER root
 

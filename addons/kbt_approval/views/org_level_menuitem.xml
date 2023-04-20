@@ -16,10 +16,11 @@
                             <field name="line_ids" widget="section_and_note_one2many">
                                 <tree editable="bottom">
                                     <field name="model_id_name" invisible="1"/>
-
                                     <field name="limit"/>
                                     <field name="model_id"/>
                                     <field name="move_type" attrs="{'readonly':[('model_id_name','!=','account.move')]}"/>
+                                    <field name="journal_id" attrs="{'readonly':[('move_type','!=','entry')]}"/>
+                                    <field name="is_last_level"/>
                                 </tree>
                             </field>
                         </page>
@@ -46,6 +47,6 @@
         <field name="view_mode">tree,form</field>
     </record>
 
-    <menuitem id="menu_level" name="Levels" action="action_list_levels" parent="account.account_management_menu" groups="account.group_account_manager" sequence="36"/>
+    <menuitem id="menu_level" name="Levels" action="action_list_levels" parent="hr.menu_human_resources_configuration" groups="hr.group_hr_manager" sequence="1"/>
 
 </odoo>

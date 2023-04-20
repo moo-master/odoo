@@ -6,12 +6,48 @@
         <field name="inherit_id" ref="sale.view_order_form"/>
         <field name="arch" type="xml">
             <xpath expr="//button[@id='action_confirm']" position="after">
-                <button name="action_confirm" string="Approve" type="object" class="oe_highlight" groups="base.group_user" attrs="{'invisible': [('is_approve_send', '=', False)]}"/>
-                <button name="action_cancel_reject_reason_wizard" string="Reject" type="object" groups="base.group_user" attrs="{'invisible': [('is_approve_send', '=', False)]}"/>
+                <field name="is_skip_level" invisible="1" />
+                <field name="is_can_user_approve" invisible="1" />
+                <button name="action_confirm" string="Approve" type="object" class="oe_highlight" groups="base.group_user" attrs="{'invisible': ['|', ('is_approve', '=', True), ('is_skip_level', '=', True)]}"/>
+                <button name="action_cancel_reject_reason_wizard" string="Reject" type="object" groups="base.group_user" attrs="{'invisible': [('is_approve', '=', True)]}"/>
+                <button name="action_cancel" string="Cancel"  type="object" groups="base.group_user" attrs="{'invisible': [('state', '!=', 'to approve')]}"/>
+                <field name="is_approve" invisible="1" />
+                <field name="is_over_limit" invisible="1" />
+            </xpath>
+            <xpath expr="//button[@name='action_draft']" position="replace">
+                <button name="action_draft" states="cancel,reject" type="object" string="Set to Quotation" data-hotkey="w"/>
+            </xpath>
+            <xpath expr="//button[@name='action_confirm'][3]" position="attributes">
+                <attribute name="attrs">{'invisible': ['|', ('is_over_limit', '=', True), ('state', 'not in', ['draft'])]}</attribute>
+            </xpath>
+            <xpath expr="//button[@name='action_confirm'][3]" position="after">
+                <button name="action_confirm" data-hotkey="v"
+                        string="Send to Approval" type="object"
+                        attrs="{'invisible': ['|', '|', ('is_over_limit', '=', False), ('state', 'not in', ['draft']), ('is_skip_level', '=', True)]}"/>
+                <button name="action_confirm"
+                        string="Approve" type="object" class="oe_highlight"
+                        attrs="{'invisible': ['|', ('is_can_user_approve', '=', False), ('state', '!=', 'to approve')]}"/>
+            </xpath>
+            <xpath expr="//button[@name='action_quotation_send'][1]" position="attributes">
+                <!-- state draft -->
+                <attribute name="invisible">1</attribute>
+            </xpath>
 
-                <field name="is_approve_send" invisible="1" />
+            <xpath expr="//field[@name='order_line']" position="attributes">
+                <attribute name="attrs">{'readonly': [('state', 'in', ('done', 'cancel', 'to approve'))]}</attribute>
+            </xpath>
+
+            <xpath expr="//field[@name='payment_term_id']" position="after">
+                <field name="reject_reason" attrs="{'invisible': [('state', '!=', 'reject')]}"/>
+            </xpath>
+
+            <xpath expr="//notebook" position="inside">
+                <page id="approval_ids"
+                    string="Approve Details"
+                    attrs="{'invisible': [('approval_ids', '=', [])]}">
+                    <field name="approval_ids" context="{'tree_view_ref': 'kbt_approval.user_approval_line_tree_view'}"/>
+                </page>
             </xpath>
         </field>
     </record>
-
 </odoo>

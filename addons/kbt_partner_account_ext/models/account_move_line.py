@@ -1,4 +1,4 @@
-from odoo import models, fields
+from odoo import models, fields, api
 
 
 class AccountMoveLineInherit(models.Model):
@@ -10,3 +10,10 @@ class AccountMoveLineInherit(models.Model):
         related='move_id.partner_id.x_offset',
         store=True,
     )
+
+    @api.model_create_multi
+    def create(self, vals_list):
+        for each_val in vals_list:
+            if each_val.get('display_type') == 'line_note':
+                each_val['account_id'] = False
+        super().create(vals_list)

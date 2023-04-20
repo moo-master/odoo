@@ -1,155 +1,167 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <odoo>
     <data>
-
-        <template id="account_pnd53_template_id">
+        <template id="account_pnd53_report">
             <t t-foreach="docs" t-as="o">
                 <t t-call="web.basic_layout">
-                    <t t-foreach="o.wht_ids" t-as="wht">
-                        <div data-name="pnd53" style="background-image: url(/beecy_account_wht/static/src/img/pnd53-1.png);
-                            background-repeat: no-repeat; background-size: 210mm 297mm; ">
-                            <div class="page height_background">
-                                <div class='id-card-pnd53'>
-                                    <t t-if="wht.split_id_card()">
-                                        <span t-esc="wht.split_id_card()[0]"></span>
-                                        <span><![CDATA[&nbsp;&nbsp;&nbsp;&nbsp;]]></span>
-                                        <span class="spacing-7" t-esc="wht.split_id_card()[1]"></span>
-                                        <span class="spacing-7" t-esc="wht.split_id_card()[2]"></span>
-                                        <span><![CDATA[&nbsp;]]></span>
-                                        <span class="spacing-7" t-esc="wht.split_id_card()[3]"></span>
-                                        <span class="spacing-9" t-esc="wht.split_id_card()[4]"></span>
-                                    </t>
-                                </div>
-                                <div class="department-pnd53">
-                                    <t t-esc="wht.partner_id.name"/>
-                                </div>
-                                <t t-if="o.section == 'section53'">
-                                    <div class="pnd53-section53">
-                                        <span>&#10003;</span>
-                                    </div>
+                    <div data-name="pnd53" style="background-image: url(/beecy_account_wht/static/src/img/pnd53-1.png); background-repeat: no-repeat; background-size: 210mm 297mm; margin-left: -15px;">
+                        <div class="page height_background_portrait">
+                            <div class='id-card-pnd53'>
+                                <t t-set="vat_split_list" t-value="o.split_id_card()"/>
+                                <t t-if="vat_split_list">
+                                    <span t-out="vat_split_list[0]"/>
+                                    <span style="padding-left: 10px; letter-spacing: 7px;" t-out="vat_split_list[1]"/>
+                                    <span class="spacing-7" style="padding-left: 3px; letter-spacing: 7px;" t-out="vat_split_list[2]"/>
+                                    <span class="spacing-7" style="padding-left: 2px;" t-out="vat_split_list[3]"/>
+                                    <span style="padding-left: 4px;" t-out="vat_split_list[4]"/>
                                 </t>
-                                <t t-elif="o.section == 'section65'">
-                                    <div class="pnd53-section65">
-                                        <span>&#10003;</span>
-                                    </div>
-                                </t>
-                                <t t-elif="o.section == 'section69'">
-                                    <div class="pnd53-section69">
-                                        <span>&#10003;</span>
-                                    </div>
-                                </t>
+                            </div>
+                            <div class="branch-pnd53">
+                                <t t-out="o.company_id.company_code"/>
+                            </div>
+                            <div class="department-pnd53">
+                                <t t-out="o.company_id.name"/>
+                            </div>
+                            <div class="address-pnd53-1" style="width: 70px;">
+                                <!-- <t t-out="o.company_id.building"/> -->
+                            </div>
+                            <div class="address-pnd53-1" style="left: 257px;">
+                                <!-- <t t-out="o.company_id.room_number"/> -->
+                            </div>
+                            <div class="address-pnd53-1" style="left: 305px;">
+                                <!-- <t t-out="o.company_id.floor"/> -->
+                            </div>
+                            <div class="address-pnd53-1" style="left: 355px; width: 115px;">
+                                <!-- <t t-out="o.company_id.village"/> -->
+                                <span style="font-size: 9px">นิคมอุตสาหกรรมนวนคร</span>
+                            </div>
+                            <div class="address-pnd53-2">
+                                <!-- <t t-out="o.company_id.house_number"/> -->
+                                101/19-24
+                            </div>
+                            <div class="address-pnd53-2" style="left: 214px;">
+                                <!-- <t t-out="o.company_id.village_number"/> -->
+                                20
+                            </div>
+                            <div class="address-pnd53-2" style="left: 281px; width: 85px;">
+                                <!-- <t t-out="o.company_id.alley"/> -->
+                            </div>
+                            <div class="address-pnd53-2" style="left: 391px; width: 300px;">
+                                <!-- <t t-out="o.company_id.sub_alley"/> -->
+                            </div>
+                            <div class="address-pnd53-3" style="width: 146px;">
+                                <!-- <t t-out="o.company_id.street"/> -->
+                            </div>
+                            <div class="address-pnd53-3" style="left: 299px;">
+                                <!-- <t t-out="o.company_id.street2"/> -->
+                                คลองหนึ่ง
+                            </div>
+                            <div class="address-pnd53-4">
+                                <!-- <t t-out="o.company_id.city"/> -->
+                                คลองหลวง
+                            </div>
+                            <div class="address-pnd53-4" style="left: 298px;">
+                                <!-- <t t-out="o.company_id.state_id.name"/> -->
+                                ปทุมธานี
+                            </div>
+                            <div class="address-pnd53-5">
+                                <t t-out="o.company_id.zip"/>
+                            </div>
 
-                                <t t-if="o.select_month_date">
-                                    <t t-set="year_selected" t-value="int(o.select_month_date.strftime('%Y')) + 543"/>
-                                    <div class="pnd53-year-pos">
-                                        <t t-esc="year_selected"/>
-                                    </div>
-                                    <t t-set="month_selected" t-value="int(o.select_month_date.strftime('%m'))"/>
-                                    <t t-if="month_selected == 1">
-                                        <div class="pnd53-month1-pos">
-                                            <span>&#10003;</span>
-                                        </div>
-                                    </t>
-                                    <t t-elif="month_selected == 2">
-                                        <div class="pnd53-month2-pos">
-                                            <span>&#10003;</span>
-                                        </div>
-                                    </t>
-                                    <t t-elif="month_selected == 3">
-                                        <div class="pnd53-month3-pos">
-                                            <span>&#10003;</span>
-                                        </div>
-                                    </t>
-                                    <t t-elif="month_selected == 4">
-                                        <div class="pnd53-month4-pos">
-                                            <span>&#10003;</span>
-                                        </div>
-                                    </t>
-                                    <t t-elif="month_selected == 5">
-                                        <div class="pnd53-month5-pos">
-                                            <span>&#10003;</span>
-                                        </div>
-                                    </t>
-                                    <t t-elif="month_selected == 6">
-                                        <div class="pnd53-month6-pos">
-                                            <span>&#10003;</span>
-                                        </div>
-                                    </t>
-                                    <t t-elif="month_selected == 7">
-                                        <div class="pnd53-month7-pos">
-                                            <span>&#10003;</span>
-                                        </div>
-                                    </t>
-                                    <t t-elif="month_selected == 8">
-                                        <div class="pnd53-month8-pos">
-                                            <span>&#10003;</span>
-                                        </div>
-                                    </t>
-                                    <t t-elif="month_selected == 9">
-                                        <div class="pnd53-month9-pos">
-                                            <span>&#10003;</span>
-                                        </div>
-                                    </t>
-                                    <t t-elif="month_selected == 10">
-                                        <div class="pnd53-month10-pos">
-                                            <span>&#10003;</span>
-                                        </div>
-                                    </t>
-                                    <t t-elif="month_selected == 11">
-                                        <div class="pnd53-month11-pos">
-                                            <span>&#10003;</span>
-                                        </div>
-                                    </t>
-                                    <t t-elif="month_selected == 12">
-                                        <div class="pnd53-month12-pos">
-                                            <span>&#10003;</span>
-                                        </div>
-                                    </t>
-                                </t>
-                                <div class="total-pnd53">
-                                    <t t-esc="'%.2f' % wht.base_amount"/>
+                            <t t-if="o.section">
+                                <div t-attf-class="pnd53-#{o.section}">
+                                    <span>&#10003;</span>
                                 </div>
-                                <div class="tax-pnd53">
-                                    <t t-esc="'%.2f' % wht.tax"/>
+                            </t>
+
+                            <t t-if="o.select_month_date">
+                                <t t-set="year_selected" t-value="int(o.select_month_date.strftime('%Y')) + 543"/>
+                                <div class="pnd53-year-pos">
+                                    <t t-esc="year_selected"/>
                                 </div>
+                                <t t-set="month_selected" t-value="int(o.select_month_date.strftime('%m'))"/>
+                                <div t-attf-class="pnd53-month-#{month_selected}">
+                                    <span>&#10003;</span>
+                                </div>
+                            </t>
+
+                            <t t-if="o.fill_type">
+                                <t t-set="fill_type" t-value="1 if o.fill_type == 'ordinary' else 2"/>
+                                <div t-attf-class="pnd53-fill-#{fill_type}">
+                                    <span>&#10003;</span>
+                                </div>
+                                <div style="position: absolute; left: 710px; top: 266px; font-size: 14px; width: 25px; text-align: center;">
+                                    <t t-if="o.fill_type == 'additional'">
+                                        <t t-out="o.additional_fill"/>
+                                    </t>
+                                </div>
+                            </t>
+
+                            <t t-set="pnd_count" t-value="o.get_attach_count()"/>
+
+                            <t t-if="o.attachment_type == 'electronic'">
+                                <div style="position: absolute; left: 359px; top: 497px; font-size: 19px">
+                                    <span>&#10003;</span>
+                                </div>
+                                <div style="position: absolute; left: 660px; top: 499px; font-size: 14px; width: 55px; text-align: center;">
+                                    <t t-out="pnd_count[1]"/>
+                                </div>
+                                <div style="position: absolute; left: 660px; top: 517px; font-size: 14px; width: 55px; text-align: center;">
+                                    <t t-out="pnd_count[0]"/>
+                                </div>
+                            </t>
+                            <t t-else="">
+                                <div style="position: absolute; left: 359px; top: 426px; font-size: 19px">
+                                    <span>&#10003;</span>
+                                </div>
+                                <div style="position: absolute; left: 660px; top: 429px; font-size: 14px; width: 55px; text-align: center;">
+                                    <t t-out="pnd_count[1]"/>
+                                </div>
+                                <div style="position: absolute; left: 660px; top: 447px; font-size: 14px; width: 55px; text-align: center;">
+                                    <t t-out="pnd_count[0]"/>
+                                </div>
+                            </t>
+
+                            <t t-set="base_amount" t-value="o.split_amount(o.total_amount)"/>
+                            <t t-set="tax_amount" t-value="o.split_amount(o.total_tax)"/>
+                            <t t-set="add_amount" t-value="o.split_amount(o.add_amount)"/>
+                            <t t-set="summary_amount" t-value="o.split_amount(o.total_tax_send)"/>
+
+                            <div class="total-pnd53">
+                                <t t-esc="'{:,}'.format(int(base_amount[1]))"/>
+                            </div>
+                            <div class="total-pnd53" style="width: 661px;">
+                                <t t-esc="'%s' % o.get_decimal_amount(base_amount[0])"/>
+                            </div>
+
+                            <div class="tax-pnd53">
+                                <t t-esc="'{:,}'.format(int(tax_amount[1]))"/>
+                            </div>
+                            <div class="tax-pnd53" style="width: 661px;">
+                                <t t-esc="'%s' % o.get_decimal_amount(tax_amount[0])"/>
+                            </div>
+
+                            <div class="add-amount-pnd53">
+                                <t t-esc="'{:,}'.format(int(add_amount[1]))"/>
+                            </div>
+                            <div class="add-amount-pnd53" style="width: 661px;">
+                                <t t-esc="'%s' % o.get_decimal_amount(add_amount[0])"/>
+                            </div>
+
+                            <div class="summary-pnd53">
+                                <t t-esc="'{:,}'.format(int(summary_amount[1]))"/>
+                            </div>
+                            <div class="summary-pnd53" style="width: 661px;">
+                                <t t-esc="'%s' % o.get_decimal_amount(summary_amount[0])"/>
                             </div>
                         </div>
-
-                    </t>
-                    <div style="page-break-before:always;"/>
-                    <div data-name="pnd53" style="background-image: url(/beecy_account_wht/static/src/img/pnd53-2.png);
-                        background-repeat: no-repeat; background-size: 210mm 297mm; ">
-                        <div class="page height_background">
-
-                        </div>
                     </div>
-
+                    <div style="page-break-before:always;"/>
+                    <div data-name="pnd53" style="background-image: url(/beecy_account_wht/static/src/img/pnd53-2.png); background-repeat: no-repeat; background-size: 210mm 297mm; margin-left: -15px;">
+                        <div class="page height_background_portrait"/>
+                    </div>
                 </t>
             </t>
         </template>
-
-        <record id="account_pnd53_paperformat" model="report.paperformat">
-            <field name="name">PND53 Paperformat</field>
-            <field name="default" eval="True"/>
-            <field name="format">A4</field>
-            <field name="orientation">Portrait</field>
-            <field name="margin_top">0</field>
-            <field name="margin_bottom">0</field>
-            <field name="margin_left">0</field>
-            <field name="margin_right">0</field>
-            <field name="header_spacing">70</field>
-            <field name="dpi">80</field>
-        </record>
-
-        <record id="action_pnd53_report" model="ir.actions.report">
-            <field name="name">PND53 Report</field>
-            <field name="model">account.wht.pnd</field>
-            <field name="report_type">qweb-pdf</field>
-            <field name="report_name">beecy_account_wht.account_pnd53_template_id</field>
-            <field name="report_file">beecy_account_wht.account_pnd53_template_id</field>
-            <field name="print_report_name">'PND53 - %s' % (object.name)</field>
-            <field name="paperformat_id" ref="beecy_account_wht.account_pnd53_paperformat"/>
-        </record>
     </data>
-
 </odoo>
