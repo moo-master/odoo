@@ -5,13 +5,15 @@
         <field name="model">business.type</field>
         <field name="arch" type="xml">
             <tree string="Business" editable="top">
-                <field name="x_name"/>
+                <field name="x_name" required="1"/>
                 <field name="x_type"/>
-                <field name="x_code"/>
-                <field name="x_sequence_id"/>
-                <field name="x_revenue_account_id"/>
+                <field name="x_code" required="1"/>
+                <field name="x_sequence_id" required="1"/>
+                <field name="x_revenue_account_id" attrs="{'readonly': [('is_unearn_revenue', '=', False)]}"/>
                 <field name="default_gl_account_id"/>
-                <field name="active"/>
+                <field name="default_gl_loss_account_id"/>
+                <field name="is_unearn_revenue"/>
+                <field name="is_active"/>
             </tree>
         </field>
     </record>

@@ -27,6 +27,13 @@ def partner(env):
 
 
 @pytest.fixture
+def company(env):
+    return env['res.company'].create({
+        'name': 'Limited',
+    })
+
+
+@pytest.fixture
 def product_inv(env):
     return env['product.product'].create({
         'name': 'product test wht',
@@ -82,7 +89,7 @@ def acc_wht(env, partner, account_id):
         'partner_id': partner.id,
         'document_date': '2022-03-01',
         'wht_type': 'sale',
-        'wht_kind': 'pnd2',
+        'wht_kind': 'pnd3',
         'wht_payment': 'wht',
         'account_id': account_id.id,
     })
@@ -130,26 +137,14 @@ def test_action_done(env, acc_wht, mocker, test_input, expected):
 
 
 @ pytest.mark.parametrize('test_input,expected', [
-    ({'vat': '1111111111111'},
-     ('1', '1111', '11111', '11', '1')),
-    ({'vat': '11111111'},
-     False),
+    ({'vat': '1111111111112', 'pnd_type': False},
+     ('1', '1111', '11111', '11', '2')),
+    ({'vat': '1111111111113', 'pnd_type': '53'},
+     ('1', '11', '1', '111', '11111', '3')),
 ])
 def test_split_id_card(acc_wht, test_input, expected):
     acc_wht.partner_id.vat = test_input['vat']
-    res = acc_wht.split_id_card()
-    assert res == expected
-
-
-@ pytest.mark.parametrize('test_input,expected', [
-    ({'vat': '1111111111111'},
-     ('1', '1111', '11111', '11', '1')),
-    ({'vat': '11111111'},
-     False),
-])
-def test_split_company_id_card(env, acc_wht, test_input, expected):
-    env.company.vat = test_input['vat']
-    res = acc_wht.split_company_id_card()
+    res = acc_wht.split_id_card(test_input['pnd_type'])
     assert res == expected
 
 

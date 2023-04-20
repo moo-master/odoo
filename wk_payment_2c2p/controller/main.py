@@ -19,6 +19,8 @@ from odoo.http import request
 from odoo.addons.website_sale.controllers.main import WebsiteSale
 
 _logger = logging.getLogger(__name__)
+import jwt
+import json
 
 
 class TwoCTwoPController(http.Controller):
@@ -26,11 +28,34 @@ class TwoCTwoPController(http.Controller):
     _confirm_url = '/payment/twoctwop/confirm'
 
 
-    @http.route(_response_url, type='json', auth='public', methods=['GET','POST'], save_session=False)
+    @http.route(_response_url, type='json', auth='public', methods=['GET','POST'], csrf=False, save_session=False)
     def twoctwop_form_feedback(self, **post):
-        _logger.info("beginning _handle_feedback_data with post data %s", pprint.pformat(post))
-        request.env['payment.transaction'].sudo()._handle_feedback_data('2c2p', post)
-        return request.redirect('/payment/status')
+        _logger.info("2C2p Feedback================== %s", pprint.pformat(request.httprequest.data))
+        try:
+            pa = request.env['payment.acquirer'].sudo().search([('provider','=','2c2p')], limit=1);
+            bd = request.env['twoctwop.transaction'].sudo().create({
+                'response': json.loads(request.httprequest.data or '{}'),
+                });
+            bd.resp_d = jwt.decode(json.loads(request.httprequest.data or '{}').get('payload', ''), pa.twoctwop_secret_key, algorithms="HS256");
+            _logger.info('Repsonse Saved=========%r===========', bd);
+        except:
+            _logger.info('Error Occurred-----');
+
+
+
+    @http.route('/payment/twoctwop/notification', type='json', auth='public', methods=['GET','POST'], csrf=False, save_session=False)
+    def twoctwop_form_notification(self, **post):
+        _logger.info("2C2P Notification==================== %s", pprint.pformat(request.httprequest.data))
+        # try:
+        #     pa = request.env['payment.acquirer'].sudo().search([('provider','=','2c2p')], limit=1);
+        #     bd = request.env['back.test'].sudo().create({
+        #         'response': str(post) + str(request.httprequest.data),
+        #         'rep_type' : 'notification',
+        #         });
+        #     bd.resp_d = jwt.decode(json.loads(request.httprequest.data or '{}').get('payload', ''), pa.twoctwop_secret_key, algorithms="HS256");
+        #     _logger.info('Repsonse Saved-----%r------', bd);
+        # except:
+        #     _logger.info('Error Occurred-----');
 
     
     @http.route(_confirm_url, type='http', auth='public', methods=['POST'], csrf=False, save_session=False)

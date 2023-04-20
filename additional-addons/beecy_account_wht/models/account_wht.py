@@ -1,3 +1,4 @@
+import string
 from odoo import fields, models, api, _
 import re
 from bahttext import bahttext
@@ -6,6 +7,12 @@ from bahttext import bahttext
 class AccountWht(models.Model):
     _name = 'account.wht'
     _description = 'Account WHT'
+    _inherit = ['mail.thread', 'mail.activity.mixin']
+    _order = 'document_date desc, name desc'
+
+    is_in_use = fields.Boolean(
+        string='In Use',
+    )
 
     @api.depends('line_ids', 'base_amount')
     def _compute_tax(self):
@@ -32,7 +39,8 @@ class AccountWht(models.Model):
         string='Partner',)
     document_date = fields.Date(
         'Document Date',
-        required=True,)
+        required=True,
+        tracking=True)
     wht_type = fields.Selection([
         ('sale', 'Sale'),
         ('purchase', 'Purchase')
@@ -40,18 +48,18 @@ class AccountWht(models.Model):
         string='Type of WHT',
         required=True,)
     wht_kind = fields.Selection([
-        ('pnd1k', '(1) P.N.D.1 K'),
-        ('pnd1ks', '(2) P.N.D.1 K Special'),
-        ('pnd2', '(3) P.N.D.2'),
-        ('pnd3', '(4) P.N.D.3'),
-        ('pnd2k', '(5) P.N.D.2 K'),
-        ('pnd3k', '(6) P.N.D.3 K'),
-        ('pnd53', '(7) P.N.D.53')
+        # ('pnd1k', '(1) P.N.D.1 K'),
+        # ('pnd1ks', '(2) P.N.D.1 K Special'),
+        # ('pnd2', '(3) P.N.D.2'),
+        ('pnd3', '(1) P.N.D.3'),
+        # ('pnd2k', '(5) P.N.D.2 K'),
+        # ('pnd3k', '(6) P.N.D.3 K'),
+        ('pnd53', '(2) P.N.D.53')
     ],
         string='Kind of WHT',
         required=True,)
     wht_payment = fields.Selection([
-        ('wht', '(1) With holding tax'),
+        ('wht', '(1) Withholding Tax'),
         ('forever', '(2) Forever'),
         ('once', '(3) Once'),
         ('other', '(4) Other')
@@ -65,19 +73,20 @@ class AccountWht(models.Model):
         required=True,)
     base_amount = fields.Float(
         'Base Amount',
-        compute='_compute_base_amount',)
+        compute='_compute_base_amount',
+        tracking=True,)
     wht_amount = fields.Float(
         'WHT Amount',
-        compute='_compute_wht_amount',)
+        compute='_compute_wht_amount',
+        tracking=True,)
     status = fields.Selection([
         ('draft', 'Draft'),
         ('done', 'Done'),
     ],
         copy=False,
         default='draft',
-        string='Status',)
-    note = fields.Html(
-        'Note',)
+        string='Status',
+        tracking=True,)
     line_ids = fields.One2many(
         'account.wht.line',
         'wht_id',)
@@ -122,12 +131,12 @@ class AccountWht(models.Model):
     @api.depends('line_ids')
     def _compute_base_amount(self):
         for rec in self:
-            rec.base_amount = sum(rec.line_ids.mapped('base_amount'))
+            rec.base_amount = round(sum(rec.line_ids.mapped('base_amount')), 2)
 
     @api.depends('line_ids')
     def _compute_wht_amount(self):
         for rec in self:
-            rec.wht_amount = sum(rec.line_ids.mapped('wht_amount'))
+            rec.wht_amount = round(sum(rec.line_ids.mapped('wht_amount')), 2)
 
     def action_set_to_draft(self):
         self.update({
@@ -147,14 +156,23 @@ class AccountWht(models.Model):
             })
         return True
 
-    def split_id_card(self):
+    def split_id_card(self, pnd_type=False):
         if self.partner_id.vat and len(self.partner_id.vat) == 13:
-            card_1 = self.partner_id.vat[0]
-            card_2 = self.partner_id.vat[1:5]
-            card_3 = self.partner_id.vat[5:10]
-            card_4 = self.partner_id.vat[10:12]
-            card_5 = self.partner_id.vat[12]
-            return card_1, card_2, card_3, card_4, card_5
+            if pnd_type == '53':
+                card_1 = self.partner_id.vat[0]
+                card_2 = self.partner_id.vat[1:3]
+                card_3 = self.partner_id.vat[3]
+                card_4 = self.partner_id.vat[4:7]
+                card_5 = self.partner_id.vat[7:12]
+                card_6 = self.partner_id.vat[12]
+                return card_1, card_2, card_3, card_4, card_5, card_6
+            else:
+                card_1 = self.partner_id.vat[0]
+                card_2 = self.partner_id.vat[1:5]
+                card_3 = self.partner_id.vat[5:10]
+                card_4 = self.partner_id.vat[10:12]
+                card_5 = self.partner_id.vat[12]
+                return card_1, card_2, card_3, card_4, card_5
         return False
 
     def split_company_id_card(self):
@@ -186,6 +204,7 @@ class AccountWht(models.Model):
         lines_wht = self._create_lines_wht()
         for line in self.line_ids:
             wht = line.wht_type_id.name
+            printed = line.wht_type_id.printed
             if wht:
                 wht_1 = re.search(r'40\s\S+(1)\S+', wht)
                 wht_2 = re.search(r'40\s\S+(2)\S+', wht)
@@ -210,13 +229,7 @@ class AccountWht(models.Model):
                 wht_5_3 = re.search(r'5.3', wht)
                 wht_5_4 = re.search(r'5.4', wht)
                 wht_5_5 = re.search(r'5.5', wht)
-                list_wht_5 = [
-                    wht_5,
-                    wht_5_1,
-                    wht_5_2,
-                    wht_5_3,
-                    wht_5_4,
-                    wht_5_5]
+                wht_5_6 = re.search(r'5.6', wht)
                 # wht 6
                 wht_6 = re.search(r'6 อื่นๆ', wht)
                 wht_6_1 = re.search(r'6.1', wht)
@@ -251,13 +264,51 @@ class AccountWht(models.Model):
                     wht_4_2_3,
                     wht_4_2_4,
                     wht_4_2_5,
-                    list_wht_5,
+                    wht_5,
+                    wht_5_1,
+                    wht_5_2,
+                    wht_5_3,
+                    wht_5_4,
+                    wht_5_5,
+                    wht_5_6,
                     list_wht_6)
+        wht_note_4_2_5_txt = ", ".join(lines_wht['list_wht_note_4_2_5'])
+        wht_note_6_txt = ", ".join(lines_wht['list_wht_note_6'])
         lines_wht.update({
-            'wht_note_4_2_5': ", ".join(lines_wht['list_wht_note_4_2_5']),
-            'wht_note_6': ", ".join(lines_wht['list_wht_note_6'])
+            'wht_note_4_2_5': wht_note_4_2_5_txt,
+            'wht_note_6': wht_note_6_txt
         })
+        self._group_wht_5(lines_wht)
         return lines_wht
+
+    def _group_wht_5(self, lines_wht: dict):
+        wht_5_group = [
+            'seq_wht_5_%sdate',
+            'seq_wht_5_%stotal_base_amount',
+            'seq_wht_5_%sbase_amount',
+            'seq_wht_5_%sbase_amount_precision',
+            'seq_wht_5_%stotal_tax_amount',
+            'seq_wht_5_%stax_amount',
+            'seq_wht_5_%stax_amount_precision',
+        ]
+        wht_5_sub_group = [
+            '',
+            '1_',
+            '2_',
+            '3_',
+            '4_',
+            '5_',
+            '6_',
+        ]
+        lines_wht['seq_wht_5_lst'] = []
+        for sub in wht_5_sub_group:
+            data = {}
+            for group in wht_5_group:
+                key = group % sub
+                if lines_wht[key]:
+                    data[group % ''] = lines_wht[key]
+            if data:
+                lines_wht['seq_wht_5_lst'].append(data)
 
     def _create_lines_wht(self):
         list_wht = [
@@ -275,6 +326,12 @@ class AccountWht(models.Model):
             'wht_4_2_4',
             'wht_4_2_5',
             'wht_5',
+            'wht_5_1',
+            'wht_5_2',
+            'wht_5_3',
+            'wht_5_4',
+            'wht_5_5',
+            'wht_5_6',
             'wht_6',
         ]
         lines_wht = {}
@@ -321,7 +378,13 @@ class AccountWht(models.Model):
             wht_4_2_3,
             wht_4_2_4,
             wht_4_2_5,
-            list_wht_5,
+            wht_5,
+            wht_5_1,
+            wht_5_2,
+            wht_5_3,
+            wht_5_4,
+            wht_5_5,
+            wht_5_6,
             list_wht_6,):
         if wht_1 and wht_1.group():
             self.update_group_data_line_wht(
@@ -401,11 +464,47 @@ class AccountWht(models.Model):
                 line,
                 'wht_4_2_5',
             )
-        elif any(list_wht_5):
+        elif wht_5 and wht_5.group():
             self.update_group_data_line_wht(
                 lines_wht,
                 line,
                 'wht_5',
+            )
+        elif wht_5_1 and wht_5_1.group():
+            self.update_group_data_line_wht(
+                lines_wht,
+                line,
+                'wht_5_1',
+            )
+        elif wht_5_2 and wht_5_2.group():
+            self.update_group_data_line_wht(
+                lines_wht,
+                line,
+                'wht_5_2',
+            )
+        elif wht_5_3 and wht_5_3.group():
+            self.update_group_data_line_wht(
+                lines_wht,
+                line,
+                'wht_5_3',
+            )
+        elif wht_5_4 and wht_5_4.group():
+            self.update_group_data_line_wht(
+                lines_wht,
+                line,
+                'wht_5_4',
+            )
+        elif wht_5_5 and wht_5_5.group():
+            self.update_group_data_line_wht(
+                lines_wht,
+                line,
+                'wht_5_5',
+            )
+        elif wht_5_6 and wht_5_6.group():
+            self.update_group_data_line_wht(
+                lines_wht,
+                line,
+                'wht_5_6',
             )
         elif any(list_wht_6):
             self.update_group_data_line_wht(
@@ -461,7 +560,7 @@ class AccountWht(models.Model):
         lines_wht.update({
             f'seq_{seq_wht}_base_amount': "{:,}".format(int(base_amount)),
             f'seq_{seq_wht}_base_amount_precision': base_amount_precision,
-            f'seq_{seq_wht}_date': self.split_datetime(line.invoice_line_id.date),
+            f'seq_{seq_wht}_date': self.split_datetime(self.document_date),
             f'seq_{seq_wht}_tax_amount': "{:,}".format(int(tax_amount)),
             f'seq_{seq_wht}_tax_amount_precision': tax_amount_precision,
             'wht_total_base_amount': "{:,}".format(int(total_amount)),

@@ -1,0 +1,2 @@
+id,name,model_id:id,group_id:id,perm_read,perm_write,perm_create,perm_unlink
+access_twoctwop_transaction,access.twoctwop.transaction,wk_payment_2c2p.model_twoctwop_transaction,,1,1,1,1

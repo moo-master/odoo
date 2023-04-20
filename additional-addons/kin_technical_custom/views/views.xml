@@ -1,0 +1,60 @@
+<odoo>
+  <data>
+    <!-- explicit list view definition -->
+<!--
+    <record model="ir.ui.view" id="kin_technical_custom.list">
+      <field name="name">kin_technical_custom list</field>
+      <field name="model">kin_technical_custom.kin_technical_custom</field>
+      <field name="arch" type="xml">
+        <tree>
+          <field name="name"/>
+          <field name="value"/>
+          <field name="value2"/>
+        </tree>
+      </field>
+    </record>
+-->
+
+    <!-- actions opening views on models -->
+<!--
+    <record model="ir.actions.act_window" id="kin_technical_custom.action_window">
+      <field name="name">kin_technical_custom window</field>
+      <field name="res_model">kin_technical_custom.kin_technical_custom</field>
+      <field name="view_mode">tree,form</field>
+    </record>
+-->
+
+    <!-- server action to the one above -->
+<!--
+    <record model="ir.actions.server" id="kin_technical_custom.action_server">
+      <field name="name">kin_technical_custom server</field>
+      <field name="model_id" ref="model_kin_technical_custom_kin_technical_custom"/>
+      <field name="state">code</field>
+      <field name="code">
+        action = {
+          "type": "ir.actions.act_window",
+          "view_mode": "tree,form",
+          "res_model": model._name,
+        }
+      </field>
+    </record>
+-->
+
+    <!-- Top menu item -->
+<!--
+    <menuitem name="kin_technical_custom" id="kin_technical_custom.menu_root"/>
+-->
+    <!-- menu categories -->
+<!--
+    <menuitem name="Menu 1" id="kin_technical_custom.menu_1" parent="kin_technical_custom.menu_root"/>
+    <menuitem name="Menu 2" id="kin_technical_custom.menu_2" parent="kin_technical_custom.menu_root"/>
+-->
+    <!-- actions -->
+<!--
+    <menuitem name="List" id="kin_technical_custom.menu_1_list" parent="kin_technical_custom.menu_1"
+              action="kin_technical_custom.action_window"/>
+    <menuitem name="Server to list" id="kin_technical_custom" parent="kin_technical_custom.menu_2"
+              action="kin_technical_custom.action_server"/>
+-->
+  </data>
+</odoo>
