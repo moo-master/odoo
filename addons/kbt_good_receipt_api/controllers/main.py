@@ -1,4 +1,5 @@
 import requests
+from datetime import datetime
 
 from odoo import http
 from odoo.http import request
@@ -15,36 +16,27 @@ class ReceiptController(KBTApiBase):
             if msg:
                 return self._response_api(message=msg)
             res = self._create_goods_receipt(**params)
-            return self._response_api(isSuccess=True, invoice_number=res)
+            return self._response_api(isSuccess=True, purchase_ref=res)
         except requests.HTTPError as http_err:
             return self._response_api(message=str(http_err))
         except Exception as error:
             return self._response_api(message=str(error))
 
     def _check_api_values(self, **params):
-        msg_list = []
         data = params
-        if not data.get('purchase_ref'):
-            msg_list.append('purchase_ref: No Data')
-        if not data.get('x_bill_date'):
-            msg_list.append('x_bill_date: No Data')
-        if not data.get('x_bill_reference'):
-            msg_list.append('x_bill_reference: No Data')
-        if not data.get('Items'):
-            msg_list.append('Items: No Data')
-        else:
-            for line in data.get('Items'):
-                if not line.get('product_id'):
-                    msg_list.append('Items product_id: No Data')
-                if not line.get('name'):
-                    msg_list.append('Items name: No Data')
-                if not line.get('qty_done'):
-                    msg_list.append('Items qty_done: No Data')
+        check_lst = {
+            'purchase_ref',
+            'Items',
+        }
+        missing_vals = check_lst - set(data.keys())
+        msg_list = [f'{val}: Missing' for val in missing_vals]
         return msg_list
 
     def _create_goods_receipt(self, **params):
         data = params
+        Move = request.env['account.move']
         Purchase = request.env['purchase.order']
+        Product = request.env['product.product']
         StockMove = request.env['stock.move']
         StockPick = request.env['stock.picking']
         StockBack = request.env['stock.backorder.confirmation']
@@ -67,27 +59,62 @@ class ReceiptController(KBTApiBase):
             ('purchase_id', '=', purchase_order.id),
             ('state', 'in', ['assigned', 'confirmed']),
         ])
-        date_api = data.get('x_bill_date').split('/')
-        x_bill_date = '{0}-{1}-{2}'.format(
-            date_api[2], date_api[1], date_api[0])
+        if not stock_id:
+            raise ValueError(
+                "Stock not found in Purchase Order %s." % data['purchase_ref']
+            )
+
         update_line_lst = []
         for item in data['Items']:
+            product_id = Product.search([
+                ('default_code', '=', item.get('product_id'))])
             purchase_line = purchase_order.order_line.filtered(
-                lambda x: x.sequence == item['seq_line'])
+                lambda x: x.sequence == item.get('seq_line')
+                and x.product_id.id == product_id.id)
             stock_line = StockMove.search([
                 ('picking_id', '=', stock_id.id),
                 ('purchase_line_id', '=', purchase_line.id),
             ])
+            if not stock_line:
+                raise ValueError(
+                    "stock_line not found."
+                )
+            if item['qty_done'] + \
+                    purchase_line.qty_received > purchase_line.product_qty:
+                name = purchase_line.name
+                prod_qty = purchase_line.product_qty
+                qty_done = item['qty_done']
+                total_qty = prod_qty - purchase_line.qty_received
+                raise ValueError(
+                    f"Your ordered quantity of {name} is "
+                    f"{prod_qty} and current received "
+                    f"quantity is {qty_done} your order "
+                    f"quantity can’t more than {total_qty}")
             update_line_lst.append((1, stock_line.id, {
                 'quantity_done': item['qty_done']
             }))
 
+        x_bill_date = datetime.strptime(params.get('x_bill_date'), '%d-%m-%Y')\
+            if params.get('x_bill_date') else False
+
+        if x_bill_date:
+            if purchase_order.date_approve.date() > x_bill_date.date():
+                raise ValueError(
+                    "Date %s is back date of order date/accounting date." %
+                    x_bill_date.strftime('%d-%m-%Y'))
+
         vals = {
-            'x_bill_date': x_bill_date,
             'x_bill_reference': data.get('x_bill_reference'),
             'x_is_interface': True,
             'move_ids_without_package': update_line_lst,
+            'x_bill_date': x_bill_date,
         }
+        inv_vals = {
+            'ref': data.get('x_bill_reference'),
+            'invoice_date': x_bill_date,
+            'x_is_interface': True,
+        }
+
         stock_id.write(vals)
         res = stock_id._pre_action_done_hook()
         if res is True:
@@ -102,14 +129,8 @@ class ReceiptController(KBTApiBase):
                 button_validate_picking_ids=ctx['button_validate_picking_ids'])
             wiz.process()
 
-        purchase_order.action_create_invoice()
-        inv_ids = purchase_order.invoice_ids
-        response_api = []
-        for inv in inv_ids.filtered(lambda z: z.state == 'draft'):
-            inv.write({
-                'ref': data.get('x_bill_reference'),
-                'invoice_date': x_bill_date,
-            })
-            inv.action_post()
-            response_api.append(inv.name)
-        return response_api
+        res = purchase_order.action_create_invoice()
+        move_id = Move.browse([res.get('res_id')])
+        move_id.write(inv_vals)
+
+        return data.get('purchase_ref')

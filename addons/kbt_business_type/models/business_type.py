@@ -1,4 +1,4 @@
-from odoo import models, fields
+from odoo import models, fields, api
 
 
 class BusinessType(models.Model):
@@ -8,7 +8,6 @@ class BusinessType(models.Model):
 
     x_name = fields.Char(
         string='Name',
-        required=True,
     )
 
     x_type = fields.Selection([
@@ -19,30 +18,34 @@ class BusinessType(models.Model):
 
     x_code = fields.Char(
         string='Code',
-        required=True,
     )
 
     x_sequence_id = fields.Many2one(
         string='Sequence',
         comodel_name='ir.sequence',
-        required=True,
     )
 
     x_revenue_account_id = fields.Many2one(
         string='Default Revenue Account',
         comodel_name='account.account',
-        required=True,
     )
 
     default_gl_account_id = fields.Many2one(
-        string='Default GL Account',
+        string='Default Post Difference Account (Gain)',
         comodel_name='account.account',
-        required=True,
+    )
+    default_gl_loss_account_id = fields.Many2one(
+        string='Default Post Difference Account (Loss)',
+        comodel_name='account.account',
     )
 
-    active = fields.Boolean(
+    is_active = fields.Boolean(
         string='active',
         default=True,
+    )
+
+    is_unearn_revenue = fields.Boolean(
+        string='Unearn Revenue'
     )
 
     _sql_constraints = [
@@ -52,3 +55,11 @@ class BusinessType(models.Model):
             "You already have this Code.",
         )
     ]
+
+    @api.onchange('is_unearn_revenue')
+    def _onchange_is_unearn_revenue(self):
+        for rec in self:
+            if not rec.is_unearn_revenue:
+                rec.write({
+                    'x_revenue_account_id': False
+                })

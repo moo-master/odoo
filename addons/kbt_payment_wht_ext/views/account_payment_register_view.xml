@@ -1,0 +1,27 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+
+    <record id="account_payment_register_form_inherit" model="ir.ui.view">
+        <field name="name">account.payment.register.view.form.inherit</field>
+        <field name="model">account.payment.register</field>
+        <field name="priority">150</field>
+        <field name="inherit_id" ref="account.view_account_payment_register_form"/>
+        <field name="arch" type="xml">
+            <xpath expr="//label[@for='amount']" position="before">
+                <field name="wht_amount" readonly="1"/>
+                <field name="paid_amount" />
+            </xpath>
+            <xpath expr="//field[@name='payment_date']" position="after">
+                <field name="wht_payment_date"/>
+            </xpath>
+
+            <xpath expr="//label[@for='amount']" position="attributes">
+                <attribute name="invisible" >1</attribute>
+            </xpath>
+            <xpath expr="//div[@name='amount_div']" position="attributes">
+                <attribute name="invisible" >1</attribute>
+            </xpath>
+        </field>
+    </record>
+
+</odoo>

@@ -10,3 +10,4 @@ from . import payment_acquirer
 from . import payment_transcation
 from . import account_payment_method
 from . import sale_subscription
+from . import responses_2c2p

@@ -1,17 +1,21 @@
-from odoo import fields, models, api
+from odoo import fields, models, api, _
+from odoo.exceptions import ValidationError
 
 
 class AccountWhtType(models.Model):
     _name = 'account.wht.type'
     _description = 'Account Wht Type'
     _rec_name = 'display_name'
-    _order = 'display_name'
+    _order = 'sequence'
 
     sequence = fields.Integer(
         'Sequence'
     )
 
-    name = fields.Char('Name')
+    name = fields.Char(
+        'Name',
+        translate=True
+    )
 
     display_name = fields.Char(
         'Description',
@@ -36,6 +40,34 @@ class AccountWhtType(models.Model):
         'account.wht.type',
         string='Parent',
     )
+    other_type = fields.Selection(
+        selection=[
+            ('425', '4 (2.5) อื่นๆ'),
+            ('600', '6 อื่นๆ (ระบุ)'),
+        ],
+        string='WHT Other Type',
+        default=False
+    )
+    is_required_note = fields.Boolean(
+        string='Require Note',
+        default=False,
+    )
+
+    def _check_sequence(self, vals):
+        if self.env['account.wht.type'].search(
+                [('sequence', '=', vals.get('sequence'))]):
+            raise ValidationError(
+                _('Sequence of Withholding Tax Must be Unique.')
+            )
+
+    @api.model
+    def create(self, vals):
+        self._check_sequence(vals)
+        return super(AccountWhtType, self).create(vals)
+
+    def write(self, vals):
+        self._check_sequence(vals)
+        return super(AccountWhtType, self).write(vals)
 
     @api.depends('parent_id')
     def _onchange_parent(self):

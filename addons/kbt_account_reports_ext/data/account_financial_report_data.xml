@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+
+    <data>
+        <!-- Hide menu -->
+        <function model="ir.ui.menu" name="write" >
+            <function model="ir.ui.menu" name="search">
+                <value eval="[('name', '=', 'Profit and Loss')]" />
+            </function>
+            <value eval="{'action': False}" />
+            <!-- <value eval="{'action': 'ir.actions.client,%s' % ref('account_reports.account_financial_html_report_action_1')}" /> -->
+        </function>
+
+        <function model="ir.ui.menu" name="write" >
+            <function model="ir.ui.menu" name="search">
+                <value eval="[('name', '=', 'Balance Sheet')]" />
+            </function>
+            <value eval="{'action': False}" />
+            <!-- <value eval="{'action': 'ir.actions.client,%s' % ref('account_reports.account_financial_html_report_action_2')}" /> -->
+        </function>
+
+    </data>
+
+</odoo>
