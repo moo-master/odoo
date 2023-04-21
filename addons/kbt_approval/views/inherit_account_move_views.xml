@@ -10,9 +10,11 @@
                 <field name="is_can_user_approve" invisible="1" />
                 <field name="is_officer_approved" invisible="1" />
                 <field name="is_can_user_reject" invisible="1" />
+                <field name="ae_user" invisible="1"/>
+                <field name="is_ae_approver_approved" invisible="1"/>
                 <button name="user_validation"
                     string="Send to Approval" type="object" class="oe_highlight"
-                    attrs="{'invisible': ['|', ('state', 'not in', ['draft']), ('is_officer_approved', '=', True)]}"/>
+                    attrs="{'invisible': ['|', '|', ('state', 'not in', ['draft']), ('is_officer_approved', '=', True), ('ae_user', '!=', False)]}"/>
                 <button name="user_validation"
                     string="Approve" type="object" class="oe_highlight"
                     attrs="{'invisible': ['|', '|', ('state', 'not in', ['to approve']), ('is_officer_approved', '=', True), ('is_can_user_approve', '=', False)]}"/>
@@ -24,12 +26,24 @@
                 <button name="action_approver_approve"
                     string="Approve" type="object" class="oe_highlight"
                     attrs="{'invisible': ['|', ('state', 'not in', ['to approve']), ('is_hide_approver_button', '=', True)]}"/>
+                <button name="action_approver_approve"
+                    string="Send to AP Manager" type="object" class="oe_highlight"
+                    attrs="{'invisible': ['|', '|', ('state', 'not in', ['draft']), ('ae_user', '!=', 'ap'), ('is_ae_approver_approved', '=', True)]}"/>
+                <button name="action_approver_approve"
+                    string="Send to AR Manager" type="object" class="oe_highlight"
+                    attrs="{'invisible': ['|', '|', ('state', 'not in', ['draft']), ('ae_user', '!=', 'ar'), ('is_ae_approver_approved', '=', True)]}"/>
                 <button name="action_cancel_reject_reason_wizard"
                     string="Reject" type="object" groups="base.group_user"
                     attrs="{'invisible': ['|', ('state', 'not in', ['to approve']), ('is_hide_approver_button', '=', True)]}"/>
                 <button name="action_manager_approve"
                     string="Approve" type="object" class="oe_highlight"
                     attrs="{'invisible': ['|', ('state', 'not in', ['to approve']), ('is_hide_manager_button', '=', True)]}"/>
+                <button name="action_manager_approve"
+                    string="Confirm" type="object" class="oe_highlight"
+                    attrs="{'invisible': ['|', ('state', 'not in', ['draft']), ('ae_user', '!=', 'ap_manager')]}"/>
+                <button name="action_manager_approve"
+                    string="Confirm" type="object" class="oe_highlight"
+                    attrs="{'invisible': ['|', ('state', 'not in', ['draft']), ('ae_user', '!=', 'ar_manager')]}"/>
                 <button name="action_cancel_reject_reason_wizard"
                     string="Reject" type="object" groups="base.group_user"
                     attrs="{'invisible': ['|', ('state', 'not in', ['to approve']), ('is_hide_manager_button', '=', True)]}"/>

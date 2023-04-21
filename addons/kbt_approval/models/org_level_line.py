@@ -1,5 +1,4 @@
-from odoo import models, fields, api, _
-from odoo.exceptions import UserError
+from odoo import models, fields
 
 
 class OrgLevelLine(models.Model):
@@ -46,12 +45,13 @@ class OrgLevelLine(models.Model):
         string="Last Level"
     )
 
-    @api.onchange('is_last_level')
-    def _onchange_last_level(self):
-        if self.model_id:
-            last_level = self.search(
-                [('model_id', '=', self.model_id.id), ('is_last_level', '=', True)])
-            if len(last_level) > 1:
-                raise UserError(
-                    _('Model %s is already have last level.') %
-                    self.model_id_name)
+    # Todo -- constrain last level must one and only one for each model
+    # @api.onchange('is_last_level')
+    # def _onchange_last_level(self):
+    #     if self.model_id:
+    #         last_level = self.search(
+    #             [('model_id', '=', self.model_id.id), ('is_last_level', '=', True)])
+    #         if len(last_level) > 1:
+    #             raise UserError(
+    #                 _('Model %s is already have last level.') %
+    #                 self.model_id_name)
