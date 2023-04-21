@@ -70,6 +70,34 @@ class AccountMove(models.Model):
         string='User can reject',
         compute='_compute_is_can_user_reject'
     )
+    ae_user = fields.Selection(
+        string="AE User",
+        selection=[
+            ('ar', 'AR'),
+            ('ar_manager', 'AR Manager'),
+            ('ap', 'AP'),
+            ('ap_manager', 'AP Manager'),
+        ],
+        compute='_compute_ae_user'
+    )
+
+    @api.depends('journal_id')
+    def _compute_ae_user(self):
+        for rec in self:
+            ae_user = ''
+            if (rec.company_id.ap_approver_uid == rec.env.user) and (
+                    rec.journal_id.account_entry == 'ap'):
+                ae_user = 'ap'
+            if (rec.company_id.ar_approver_uid == rec.env.user) and (
+                    rec.journal_id.account_entry == 'ar'):
+                ae_user = 'ar'
+            if (rec.company_id.ap_manager_uid == rec.env.user) and (
+                    rec.journal_id.account_entry == 'ap'):
+                ae_user = 'ap_manager'
+            if (rec.company_id.ar_manager_uid == rec.env.user) and (
+                    rec.journal_id.account_entry == 'ar'):
+                ae_user = 'ar_manager'
+            rec.write({'ae_user': ae_user or False})
 
     def _compute_is_can_user_approve(self):
         for rec in self:
@@ -260,10 +288,26 @@ class AccountMove(models.Model):
         employee = self.env['hr.employee'].search(
             [('user_id', '=', self.env.uid)], limit=1).sudo()
         self.approval_ids.confirm_approval_line(employee)
+        self.state = 'to approve'
+        self.is_officer_approved = True
+        if not self.approval_ids:
+            if self.journal_id.account_entry == 'ap':
+                manager = self.env['hr.employee'].search(
+                    [('user_id', '=', self.company_id.ap_manager_uid.id)], limit=1).sudo()
+                self.update(
+                    {'approval_ids': [(0, 0, {'manager_id': manager.id})]}
+                )
+            else:
+                manager = self.env['hr.employee'].search(
+                    [('user_id', '=', self.company_id.ar_manager_uid.id)], limit=1).sudo()
+                self.update(
+                    {'approval_ids': [(0, 0, {'manager_id': manager.id})]}
+                )
         self.action_post()
 
     def action_manager_approve(self):
         self.is_ae_manager_approved = True
+        self.is_ae_approver_approved = True
         employee = self.env['hr.employee'].search(
             [('user_id', '=', self.env.uid)], limit=1).sudo()
         self.approval_ids.confirm_approval_line(employee)

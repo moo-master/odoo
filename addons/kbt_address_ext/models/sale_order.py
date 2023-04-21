@@ -14,7 +14,8 @@ class SaleOrder(models.Model):
     def _create_invoices(self, grouped=False, final=False, date=None):
         moves = super()._create_invoices(grouped=grouped, final=final, date=date)
         moves.write({
-            'x_address': self.x_address
+            'x_address': self.x_address,
+            'x_partner_name': self.x_partner_name,
         })
         return moves
 
