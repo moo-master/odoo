@@ -30,7 +30,7 @@
     "assets": {
         "web.assets_common": [
             "/password_security/static/src/js/password_gauge.js",
-            "/password_security/static/่js/zxcvbn/zxcvbn.min.js",
+            "/password_security/static/src/่js/zxcvbn/zxcvbn.min.js",
         ],
     },
     "demo": [
