@@ -11,12 +11,12 @@ class ResCompany(models.Model):
 
     password_expiration = fields.Integer(
         "Days",
-        default=60,
+        default=90,
         help="How many days until passwords expire",
     )
     password_length = fields.Integer(
         "Characters",
-        default=12,
+        default=8,
         help="Minimum number of characters",
     )
     password_lower = fields.Integer(
@@ -36,23 +36,23 @@ class ResCompany(models.Model):
     )
     password_special = fields.Integer(
         "Special",
-        default=1,
+        default=0,
         help="Require number of unique special characters",
     )
     password_estimate = fields.Integer(
         "Estimation",
-        default=3,
+        default=0,
         help="Required score for the strength estimation. Between 0 and 4",
     )
     password_history = fields.Integer(
         "History",
-        default=30,
+        default=0,
         help="Disallow reuse of this many previous passwords - use negative "
         "number for infinite, or 0 to disable",
     )
     password_minimum = fields.Integer(
         "Minimum Hours",
-        default=24,
+        default=1,
         help="Amount of hours until a user may change password again",
     )
 
