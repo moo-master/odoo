@@ -17,6 +17,7 @@ class ResPartnerInherit(models.Model):
 
     @api.constrains('x_branch_name')
     def _check_numeric(self):
-        if not self.x_branch_name.isdigit():
-            raise UserError(_('Branch name must be numeric.'))
+        if self.x_branch_name:
+            if not self.x_branch_name.isdigit():
+                raise UserError(_('Branch name must be numeric.'))
         return True

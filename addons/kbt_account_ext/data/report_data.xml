@@ -9,7 +9,7 @@
         <field name="report_file">kbt_account_ext.report_kbt_invoice_form</field>
         <field name="print_report_name">'เอกสารใบแจ้งหนี้'</field>
         <field name="paperformat_id" ref="kbt_account_ext.kbt_account_paperformat"/>
-        <field name="binding_model_id" ref="account.model_account_move"/>
+        <field name="binding_model_id" eval="False"/>
         <field name="binding_type">report</field>
     </record>
 
@@ -21,7 +21,7 @@
         <field name="report_file">kbt_account_ext.report_kbt_invoice_tax_form</field>
         <field name="print_report_name">'เอกสารใบแจ้งหนี้/ใบกำกับภาษี'</field>
         <field name="paperformat_id" ref="kbt_account_ext.kbt_account_paperformat"/>
-        <field name="binding_model_id" ref="account.model_account_move"/>
+        <field name="binding_model_id" eval="False"/>
         <field name="binding_type">report</field>
     </record>
 
@@ -33,7 +33,7 @@
         <field name="report_file">kbt_account_ext.report_kbt_debit_note_form</field>
         <field name="print_report_name">'ใบลดหนี้/ใบกำกับภาษี'</field>
         <field name="paperformat_id" ref="kbt_account_ext.kbt_account_paperformat"/>
-        <field name="binding_model_id" ref="account.model_account_move"/>
+        <field name="binding_model_id" eval="False"/>
         <field name="binding_type">report</field>
     </record>
 
@@ -45,7 +45,7 @@
         <field name="report_file">kbt_account_ext.report_kbt_credit_note_form</field>
         <field name="print_report_name">'ใบเพิ่มหนี้/ใบกำกับภาษี'</field>
         <field name="paperformat_id" ref="kbt_account_ext.kbt_account_paperformat"/>
-        <field name="binding_model_id" ref="account.model_account_move"/>
+        <field name="binding_model_id" eval="False"/>
         <field name="binding_type">report</field>
     </record>
 
