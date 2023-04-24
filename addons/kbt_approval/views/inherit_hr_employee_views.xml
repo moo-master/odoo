@@ -11,10 +11,6 @@
                 <field name="is_send_email" string="Email Notification"/>
                 <span class="o_stat_text">Email Notification</span>
             </xpath>
-            <xpath expr="//field[@name='coach_id']" position="before">
-                <field name="ap_approver_id"/>
-                <field name="ar_approver_id"/>
-            </xpath>
         </field>
     </record>
 

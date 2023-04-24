@@ -17,18 +17,22 @@ class AccountMove(models.Model):
     )
     approve_level_id = fields.Many2one(
         string='Approve Level',
-        comodel_name='org.level'
+        comodel_name='org.level',
+        copy=False,
     )
     cancel_reason = fields.Char(
         string='Cancel Reason',
+        copy=False,
     )
     reject_reason = fields.Char(
         string='Reject Reason',
+        copy=False,
     )
     approval_ids = fields.One2many(
         'user.approval.line',
         'move_id',
-        string='Approval'
+        string='Approval',
+        copy=False,
     )
     is_officer_approved = fields.Boolean(
         string='Officer Approved',
@@ -80,6 +84,23 @@ class AccountMove(models.Model):
         ],
         compute='_compute_ae_user'
     )
+
+    def button_draft(self):
+        res = super().button_draft()
+        self.env['mail.activity'].sudo().search(
+            [('res_model', '=', self._name), ('res_id', 'in', self.ids)]
+        ).unlink()
+        self.write({
+            'approve_level_id': False,
+            'approval_ids': [(5)],
+            'is_officer_approved': False,
+            'is_ae_approver_approved': False,
+            'is_ae_manager_approved': False,
+            'is_skip_level': False,
+            'approve_skip_level': False,
+            'level_to_approve_skip_level': False,
+        })
+        return res
 
     @api.depends('journal_id')
     def _compute_ae_user(self):
