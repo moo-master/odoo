@@ -4,11 +4,15 @@ from odoo import models, fields, api
 class SaleOrder(models.Model):
     _inherit = 'sale.order'
 
-    x_address = fields.Text('Address')
+    x_address = fields.Text(
+        string='Address',
+    )
 
     x_partner_name = fields.Char(
         string='Partner Name',
-        readonly=True,
+    )
+    is_admin = fields.Boolean(
+        compute="_compute_is_admin"
     )
 
     def _create_invoices(self, grouped=False, final=False, date=None):
@@ -25,3 +29,9 @@ class SaleOrder(models.Model):
             f"{self.partner_id.city or ''} {self.partner_id.state_id.name or ''} " +\
             f"{self.partner_id.country_id.name or ''} {self.partner_id.zip or ''}"
         self.x_partner_name = self.partner_id.name or ''
+
+    @api.depends('partner_id')
+    def _compute_is_admin(self):
+        self.write({
+            'is_admin': self.env.user.has_group('base.group_system')
+        })
