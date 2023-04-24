@@ -32,7 +32,7 @@
 
             <xpath expr="//field[@name='payment_term_id']" position="after">
                 <field name="reject_reason" attrs="{'invisible': [('state', '!=', 'reject')]}"/>
-                <field name="is_approve_done" readonly="1"/>
+                <field name="is_approve_done" readonly="1" invisible="1"/>
             </xpath>
 
             <xpath expr="//notebook" position="inside">

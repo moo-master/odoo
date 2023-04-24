@@ -22,6 +22,8 @@
             <xpath expr="//group[@id='header_right_group']/div[@name='journal_div']" position="after">
                 <field name="reason_id" attrs="{'invisible': [('move_type', 'not in', ('out_refund', 'in_refund'))]}"/>
                 <field name="move_type"/>
+                <field name="is_price_include"/>
+                <field name="is_exempt"/>
             </xpath>
             <xpath expr="//field[@name='product_id']" position="attributes">
                 <attribute name="attrs">{'readonly': [('parent.state', 'in', ('posted', 'cancel'))]}</attribute>

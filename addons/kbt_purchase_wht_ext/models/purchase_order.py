@@ -1,3 +1,4 @@
+from datetime import date
 from odoo import models, fields, api
 
 
@@ -27,5 +28,10 @@ class PurchaseOrder(models.Model):
 
         for po in wht_data.invoice_line_ids:
             po.wht_type_id = po.purchase_line_id.wht_type_id.id
+
+        for move in wht_data:
+            move.write({
+                'invoice_date': date.today()
+            })
 
         return res

@@ -12,21 +12,26 @@ class PurchaseOrder(models.Model):
     )
     approve_level_id = fields.Many2one(
         string='Approve Level',
-        comodel_name='org.level'
+        comodel_name='org.level',
+        copy=False,
     )
     cancel_reason = fields.Char(
         string='Cancel Reason',
+        copy=False,
     )
     reject_reason = fields.Char(
         string='Reject Reason',
+        copy=False,
     )
     approval_ids = fields.One2many(
         'user.approval.line',
         'purchase_id',
-        string='Approval'
+        string='Approval',
+        copy=False,
     )
     is_approve_done = fields.Boolean(
-        string='Approve Done'
+        string='Approve Done',
+        copy=False,
     )
     is_skip_level = fields.Boolean(
         string="Skip Level",
@@ -48,6 +53,21 @@ class PurchaseOrder(models.Model):
         string='User can reject',
         compute='_compute_is_can_user_reject'
     )
+
+    def button_draft(self):
+        res = super().button_draft()
+        self.env['mail.activity'].sudo().search(
+            [('res_model', '=', self._name), ('res_id', 'in', self.ids)]
+        ).unlink()
+        self.write({
+            'approve_level_id': False,
+            'approval_ids': [(5)],
+            'is_approve_done': False,
+            'is_skip_level': False,
+            'approve_skip_level': False,
+            'level_to_approve_skip_level': False,
+        })
+        return res
 
     def _compute_is_can_user_approve(self):
         for rec in self:

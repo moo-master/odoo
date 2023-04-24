@@ -28,6 +28,7 @@
         'beecy_reason',
         'report_xlsx_helper',
         'account_budget',
+        'beecy_base',
     ],
     'data': [
         'security/ir.model.access.csv',
@@ -45,5 +46,6 @@
         'views/account_account_group_views.xml',
         'wizards/wizard_profit_loss_views.xml',
         'views/account_tax_view.xml',
+        'views/res_config_settings.xml',
     ]
 }
