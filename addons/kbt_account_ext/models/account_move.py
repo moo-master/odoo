@@ -65,15 +65,15 @@ class AccountMove(models.Model):
     @api.depends('invoice_line_ids.tax_ids')
     def _compute_tax_in_out(self):
         for rec in self:
+            rec.write({
+                'is_price_include': False,
+                'is_exempt': True
+            })
             if rec.invoice_line_ids:
                 if rec.invoice_line_ids[0].tax_ids:
                     rec.write({
                         'is_price_include': rec.invoice_line_ids[0].tax_ids.price_include,
                         'is_exempt': rec.invoice_line_ids[0].tax_ids.is_exempt
-                    })
-                else:
-                    rec.write({
-                        'is_exempt': True
                     })
 
     @api.constrains('date')

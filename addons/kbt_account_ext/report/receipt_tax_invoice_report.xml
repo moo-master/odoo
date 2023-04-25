@@ -186,17 +186,17 @@
                     <t t-set="move" t-value="o.reconciled_invoice_ids or o.reconciled_bill_ids"/>
                     <t t-foreach="move.invoice_line_ids" t-as="invoice">
                         <tr>
-                            <td class="border-top-0 border-right border-left border-dark" style="padding-top: 10px; width: 19.9%; text-align: center;">
+                            <td class="border-top-0 border-left border-dark" style="padding-top: 10px; width: 19.9%; text-align: center;">
                                 <t t-if="invoice.display_type not in ('line_note', 'line_section')">
                                     <span t-esc="move_date"/>
                                 </t>
                             </td>
-                            <td class="border-top-0 border-right border-dark" style="padding-top: 10px; width: 14.3%; text-align: center;">
+                            <td class="border-top-0 border-dark" style="padding-top: 10px; width: 14.3%; text-align: center;">
                                 <t t-if="invoice.display_type not in ('line_note', 'line_section')">
                                     <span t-esc="o.reconciled_invoice_ids.name"/>
                                 </t>
                             </td>
-                            <td class="border-top-0 border-right border-dark" style="padding-top: 10px; width: 31.9%; text-align: left;">
+                            <td class="border-top-0 border-dark" style="padding-top: 10px; width: 31.9%; text-align: left;">
                                 <t t-if="invoice.display_type == 'line_note'">
                                     <span t-esc="invoice.name" class="font-italic"/>
                                 </t>
@@ -207,12 +207,12 @@
                                     <span t-esc="invoice.name"/>
                                 </t>
                             </td>
-                            <td class="border-top-0 border-right border-dark" style="padding-top: 10px; width: 14%; text-align: center;">
+                            <td class="border-top-0 border-dark" style="padding-top: 10px; width: 14%; text-align: center;">
                                 <t t-if="invoice.display_type not in ('line_note', 'line_section')">
                                     <span t-esc="(o.amount / o.reconciled_invoice_ids.amount_total * 100) / 100 * invoice.quantity" t-options="{'widget': 'float', 'precision': 2}"/>
                                 </t>
                             </td>
-                            <td class="border-top-0 border-right border-dark" style="padding-top: 10px; width: 20%; text-align: right;">
+                            <td class="border-top-0 border-dark" style="padding-top: 10px; width: 20%; text-align: right;">
                                 <t t-if="invoice.display_type not in ('line_note', 'line_section')">
                                     <span t-esc="(o.amount / o.reconciled_invoice_ids.amount_total) * (invoice.price_unit * invoice.quantity)" t-options="{'widget': 'float', 'precision': 2}"/>
                                 </t>
