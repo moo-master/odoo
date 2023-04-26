@@ -1,5 +1,6 @@
 from odoo import models, fields, api, _
 from odoo.exceptions import ValidationError
+from odoo import exceptions, _
 
 
 class AccountMove(models.Model):
@@ -207,7 +208,9 @@ class AccountMove(models.Model):
             [('user_id', '=', self.env.uid)], limit=1).sudo()
         if not self.x_is_interface:
             if not employee.parent_id.level_id:
-                raise ValidationError(_('Your manager do not have level.'))
+                # Back old raise
+                # raise ValidationError(_('Your manager do not have level.'))
+                raise exceptions.except_orm(_('My Title'), _('Your manager do not have level.'))
             if (employee.parent_id.level_id.level - employee.level_id.level
                     > 1) and (not self.is_skip_level) and (not employee.parent_id):
                 self.is_skip_level = True
