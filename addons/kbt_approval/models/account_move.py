@@ -209,7 +209,7 @@ class AccountMove(models.Model):
         if not self.x_is_interface:
             if not employee.parent_id.level_id:
                 # Back old raise
-                raise except_orm(_('Validation Error'), _('Manager level must be greater than 0.'))
+                raise exceptions.except_orm(_('Validation Error'), _('Manager level must be greater than 0.'))
                 # raise exceptions.ValidationError(_('Approval:Your manager do not have level.'))
                 # raise exceptions.except_orm(_('My Title'), _('Your manager do not have level.'))
             if (employee.parent_id.level_id.level - employee.level_id.level
