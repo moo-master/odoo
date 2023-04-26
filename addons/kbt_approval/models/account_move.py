@@ -1,6 +1,6 @@
 from odoo import models, fields, api, _
-from odoo.exceptions import ValidationError, _
-# from odoo import exceptions, _
+# from odoo.exceptions import ValidationError, _
+from odoo import exceptions, _
 
 
 class AccountMove(models.Model):
