@@ -1,0 +1,617 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<odoo>
+    <template id="kbt_account_ext.internal_layout_header">
+        <!-- Company Address Information -->
+        <!-- Company Name -->
+        <t t-set="company_name" t-value="o.company_id.name + ' '"/>
+
+        <!-- Company Address Line 1 -->
+        <t t-set="company_address_line_1" t-value="str()"/>
+
+        <t t-if="o.company_id.street">
+            <t t-set="company_address_line_1" t-value="company_address_line_1 + str(o.company_id.street) + ' '"/>
+        </t>
+        <t t-if="o.company_id.street2">
+            <t t-set="company_address_line_1" t-value="company_address_line_1 + str(o.company_id.street2) + ' '"/>
+        </t>
+        <t t-if="o.company_id.zip_id">
+            <t t-set="company_address_line_1" t-value="company_address_line_1 + str(o.company_id.zip_id.name) + ' '"/>
+        </t>
+        <t t-if="o.company_id.state_id">
+            <t t-set="company_address_line_1" t-value="company_address_line_1 + str(o.company_id.state_id.name) + ' '"/>
+        </t>
+        <t t-if="o.company_id.zip">
+            <t t-set="company_address_line_1" t-value="company_address_line_1 + str(o.company_id.zip) + ' '"/>
+        </t>
+        <!-- Country Name keep for future -->
+        <!-- <t t-if="o.company_id.country_id">
+            <t t-set="company_address_line_1" t-value="company_address_line_1 + str(o.company_id.country_id.name) + ' '"/>
+        </t> -->
+
+        <!-- Company Address Line 2 -->
+        <t t-set="company_address_line_2" t-value="str()"/>
+        <t t-if="o.company_id.phone">
+            <t t-set="company_address_line_2" t-value="company_address_line_2 + 'โทร ' + str(o.company_id.phone) + ' '"/>
+        </t>
+        <t t-if="o.company_id.vat">
+            <t t-set="company_address_line_2" t-value="company_address_line_2 + 'เลขประจำตัวผู้เสียภาษี ' + str(o.company_id.vat) + ' '"/>
+        </t>
+        <!-- Company Branch -->
+        <t t-set="company_code" t-value="'สาขา '"/>
+        <t t-if="o.env.company.company_code == '00000'">
+            <t t-set="company_code" t-value="company_code + 'สำนักงานใหญ่'"/>
+        </t>
+        <t t-elif="o.env.company.company_code">
+            <t t-set="company_code" t-value="company_code + str(o.env.company.company_code)"/>
+        </t>
+        <t t-else="">
+            <t t-set="company_code" t-value="company_code + '-'"/>
+        </t>
+
+        <!-- Partner Address Information -->
+        <!-- Partner Address Line 1 -->
+        <t t-set="address_line_1" t-value="o.x_address"/>
+
+        <!-- <t t-if="o.partner_id.street">
+            <t t-set="address_line_1" t-value="address_line_1 + str(o.partner_id.street) + ' '"/>
+        </t>
+        <t t-if="o.partner_id.street2">
+            <t t-set="address_line_1" t-value="address_line_1 + str(o.partner_id.street2) + ' '"/>
+        </t>
+        <t t-if="o.partner_id.city">
+            <t t-set="address_line_1" t-value="address_line_1 + str(o.partner_id.city) + ' '"/>
+        </t>
+        <t t-if="o.partner_id.state_id">
+            <t t-set="address_line_1" t-value="address_line_1 + str(o.partner_id.state_id.name) + ' '"/>
+        </t>
+        <t t-if="o.partner_id.zip">
+            <t t-set="address_line_1" t-value="address_line_1 + str(o.partner_id.zip)"/>
+        </t> -->
+
+        <!-- Partner Address Line 3 -->
+        <t t-set="address_line_3" t-value="'-'"/>
+        <t t-if="o.partner_id.phone">
+            <t t-set="address_line_3" t-value="str(o.partner_id.phone) + ', '"/>
+        </t>
+        <t t-if="o.partner_id.mobile">
+            <t t-set="address_line_3" t-value="address_line_3 + str(o.partner_id.mobile)"/>
+        </t>
+
+        <!-- Partner Address Line 4 -->
+        <t t-set="address_line_4" t-value="'-'"/>
+        <t t-if="o.partner_id.vat">
+            <t t-set="address_line_4" t-value="str(o.partner_id.vat)"/>
+        </t>
+
+        <!-- Partner Name & Partner Contact -->
+        <t t-if="o.partner_id.parent_id">
+            <t t-set="contact_name" t-value="o.partner_id.name"/>
+
+        </t>
+
+        <!-- Invoice Information -->
+        <t t-set="invoice_name" t-value="o.name"></t>
+
+        <t t-set="invoice_date" t-value="'-'"/>
+        <t t-if="o.invoice_date">
+            <t t-set="invoice_date" t-value="o.invoice_date.strftime('%d/%m/%Y')"/>
+        </t>
+        <t t-set="payment_name" t-value="'-'"/>
+        <t t-set="payment_day" t-value="0"/>
+        <t t-if="o.invoice_payment_term_id">
+            <t t-set="payment_name" t-value="o.invoice_payment_term_id.name"/>
+            <t t-set="payment_day" t-value="o.invoice_payment_term_id.line_ids.days"/>
+        </t>
+        <t t-set="invoice_date_due" t-value="'-'"/>
+        <t t-if="o.invoice_date_due">
+            <t t-set="invoice_date_due" t-value="o.invoice_date_due.strftime('%d/%m/%Y')"/>
+        </t>
+        <t t-set="x_branch_name" t-value="'-'"/>
+        <t t-if="o.partner_id.x_branch_name == '00000'">
+            <t t-set="x_branch_name" t-value="'สำนักงานใหญ่'"/>
+        </t>
+        <t t-else="">
+            <t t-set="x_branch_name" t-value="o.partner_id.x_branch_name"/>
+        </t>
+        <link href="/kbt_account_ext/static/src/css/font.css" rel="stylesheet"/>
+
+        <!-- Header -->
+        <div class="header" style="font-size: 14px; font-family: THSarabunNew;">
+            <div class="content">
+                <div class="row" name="company-logo">
+                    <div class="col-11" style="">
+                        <img t-if="o.company_id.logo" t-att-src="image_data_uri(o.company_id.logo)" class="float-left" style="max-height: 6rem; max-width: 6rem; width: auto; height: auto; display: block;" alt="Logo"/>
+                    </div>
+                    <div class="col-1">
+                        <span class="page"/> / <span class="topage"/>
+                    </div>
+                </div>
+            </div>
+
+            <div class="content" name="company-info">
+                <div class="row">
+                    <div class="col-9">
+                        <div>
+                            <b><span>บริษัท เกษตรอินโน จำกัด</span></b>
+                            <br/>
+                        </div>
+                    </div>
+
+                    <div class="col-3">
+                        <div>
+                            <!-- <b><span t-out="customer_name"/></b> -->
+                            <b><t t-out="name_bill"></t></b>
+                            <br/>
+                            <b><t t-out="name_bill_en"></t></b>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="content" name="company-address">
+                <div class="row">
+                    <div class="col">
+                        <div>
+                            <span><t t-out="company_address_line_1"></t></span>
+                            <br/>
+                            <span><t t-out="company_address_line_2"></t></span>
+                            <span><t t-out="company_code"></t></span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="content" name="partner-address">
+                <table class="border border-dark p-5" style="font-size: 14px; width: 100%;">
+                    <tr>
+                        <th style="width: 20%; padding-left: 5px;">ชื่อ / Name</th>
+                        <td style="width: 48%;">
+                            <t t-if="o.partner_id.company_type == 'person'">
+                                <span t-field="o.x_partner_name"/>
+                            </t>
+                            <t t-else="">
+                                <span t-field="o.x_partner_name"/>
+                            </t>
+                        </td>
+                        <th style="width: 16%;">เลขที่ / No.</th>
+                        <td style="width: 16%;"><t t-out="invoice_name"/></td>
+                    </tr>
+                    <tr>
+                        <th style="padding-left: 5px;">สาขา / Branch</th>
+                        <td><t t-out="x_branch_name"/></td>
+                        <th>วันที่ / Date</th>
+                        <td><t t-out="invoice_date"/></td>
+                    </tr>
+                    <tr>
+                        <th style="padding-left: 5px;">ที่อยู่ / Address</th>
+                        <td><t t-out="address_line_1"/></td>
+                        <t t-if="is_tax_report">
+                            <th>อ้างถึงใบกำกับภาษี</th>
+                            <td><t t-esc="o.x_invoice_id.name" /></td>
+                        </t>
+                        <t t-else="">
+                            <th id="dummy-row"> </th>
+                            <td id="dummy-row"> </td>
+                        </t>
+                    </tr>
+                    <tr>
+                        <th style="padding-left: 5px;">เลขที่ประจำตัวผู้เสียภาษี</th>
+                        <td><t t-out="address_line_4"/></td>
+                        <t t-if="is_tax_report">
+                            <th>วันที่ใบกำกับภาษี</th>
+                            <td><t t-esc="o.x_invoice_id.invoice_date" /></td>
+                        </t>
+                        <t t-else="">
+                            <th id="dummy-row"> </th>
+                            <td id="dummy-row"> </td>
+                        </t>
+                    </tr>
+                </table>
+                <table class="border border-dark" style="font-size: 14px; width: 100%;">
+                    <tr class="text-center">
+                        <th class="border border-dark" style="width: 21%;">
+                            <b><span>รหัสลูกค้า/Customer No.</span></b>
+                            <br/>
+                            <span t-out="o.partner_id.ref"/>
+                        </th>
+                        <th class="border border-dark" style="width: 25%;">
+                            <b><span>ระยะเวลาชำระเงิน/Credit Term</span></b>
+                            <br/>
+                            <span t-out="payment_name"/>
+                        </th>
+                        <th class="border border-dark" style="width: 15%;">
+                            <b><span>Offset Payment</span></b>
+                            <br/>
+                            <t t-if="o.partner_id.x_offset">
+                                <span>x</span>
+                            </t>
+                            <t t-else="">
+                                <span> </span>
+                            </t>
+                        </th>
+                        <th class="border border-dark" style="width: 23%;">
+                            <b><span>วันครบกำหนด/Due Date</span></b>
+                            <br/>
+                            <span t-out="invoice_date_due"/>
+                        </th>
+                        <th class="border border-dark" style="width: 16%;">
+                            <b><span>สกุลเงิน/Currency</span></b>
+                            <br/>
+                            <span t-out="o.company_id.currency_id.name"/>
+                        </th>
+                    </tr>
+                </table>
+            </div>
+        </div>
+    </template>
+
+    <template id="kbt_account_ext.internal_layout_footer">
+        <!-- Information -->
+        <t t-set="invoice_date" t-value="'-'"/>
+        <t t-if="o.invoice_date">
+            <t t-set="invoice_date" t-value="o.invoice_date.strftime('%d/%m/%Y')"/>
+        </t>
+        <link href="/kbt_account_ext/static/src/css/font.css" rel="stylesheet"/>
+
+        <!-- Footer -->
+        <div class="footer" t-attf-class="{{font_fam}} last-footer" style="font-size: 20px; font-family: THSarabunNew;">
+            <script type="text/javascript" src="/kbt_account_ext/static/src/js/force_new_page.js"/>
+            <style>
+                #dummy-row {
+                    visibility: hidden;
+                }
+            </style>
+
+            <div class="border border-dark">
+                <t t-if="is_tax_report">
+                    <div class="row" style="line-height: 1.75rem;">
+                        <div class="col-8" style="text-align: left; padding-left: 20px;">
+                            <div>
+                                มูลค่าของสินค้าหรือบริการตามใบกำกับภาษีเดิม (Amount of Original Invoice)
+                            </div>
+                            <div>
+                                มูลค่าของสินค้าหรือบริการที่ถูกต้อง (Correct Amount)
+                            </div>
+                            <div>
+                                ผลต่างของสินค้าหรือบริการ/มูลค่าที่ลดหนี้ (Amount of Invoice different/Amount of Credit)
+                            </div>
+                            <div>
+                                ภาษีมูลค่าเพิ่ม (Vat Amount)
+                            </div>
+                            <!-- <div>
+                                ภาษีหัก ณ ที่จ่าย (Withholding Tax)
+                            </div> -->
+                            <div>
+                                จำนวนเงินรวมทั้งสิ้น (Total Amount) <span style="float: right;" t-out="o.get_amount_total_text(o.amount_total)"/>
+                            </div>
+                        </div>
+                        <div class="col-4" style="text-align: right; padding-right: 25px;">
+                            <div>
+                                <t t-out="'{:,.2f}'.format(o.x_old_invoice_amount)"/>
+                            </div>
+                            <div>
+                                <t t-out="'{:,.2f}'.format(o.x_real_amount)"/>
+                            </div>
+                            <div>
+                                <t t-out="'{:,.2f}'.format(o.x_diff_amount)"/>
+                            </div>
+                            <div>
+                                <t t-out="'{:,.2f}'.format(o.amount_tax)"/>
+                            </div>
+                            <!-- <div>
+                                <t t-out="'{:,.2f}'.format(o.amount_wht)"/>
+                            </div> -->
+                            <div>
+                                <t t-out="'{:,.2f}'.format(o.amount_total)"/>
+                            </div>
+                        </div>
+                    </div>
+                </t>
+                <t t-else="">
+                    <div class="row" style="line-height: 1.75rem;">
+                        <div class="col-5" style="text-align: left; padding-left: 20px;">
+                            <div>
+                                ยอดรวมสินค้า / บริการ (Goods/Service Amount)
+                            </div>
+                            <div>
+                                ภาษีมูลค่าเพิ่ม (Vat Amount)
+                            </div>
+                            <!-- <div>
+                                ภาษีหัก ณ ที่จ่าย (Withholding Tax)
+                            </div> -->
+                            <div>
+                                จำนวนเงินรวมทั้งสิ้น (Total Amount)
+                            </div>
+                        </div>
+                        <div class="col-4" style="text-align: left;">
+                            <div id="dummy-row">
+                                -
+                            </div>
+                            <div id="dummy-row">
+                                -
+                            </div>
+                            <!-- <div id="dummy-row">
+                                -
+                            </div> -->
+                            <div>
+                                <t t-out="o.get_amount_total_text(o.amount_total)"/>
+                            </div>
+                        </div>
+                        <div class="col-3" style="text-align: right;">
+                            <div>
+                                <t t-out="'{:,.2f}'.format(sum(o.invoice_line_ids.mapped('price_subtotal')))"/>
+                            </div>
+                            <div>
+                                <t t-out="'{:,.2f}'.format(o.amount_tax)"/>
+                            </div>
+                            <!-- <div>
+                                <t t-out="'{:,.2f}'.format(o.amount_wht)"/>
+                            </div> -->
+                            <div>
+                                <t t-out="'{:,.2f}'.format(o.amount_total)"/>
+                            </div>
+                        </div>
+                    </div>
+                </t>
+
+                <div class="border-top border-dark">
+                    <div class="row">
+                        <t t-if="is_tax_report">
+                            <div class="col-2" style="text-align: left; padding-left: 20px;">
+                                <b>
+                                    <span>เหตุผล (Reason)</span>
+                                </b>
+                            </div>
+                            <div class="col-10">
+                                <div class="" style="line-height: 1.75rem;">
+                                    <t t-esc="o.reason_id.name" />
+                                </div>
+                            </div>
+                        </t>
+                        <t t-else="">
+                            <div class="col-2" style="text-align: left; padding-left: 20px;">
+                                <b>
+                                    <span>วิธีการชำระเงิน</span>
+                                </b>
+                            </div>
+                            <div class="col-10">
+                                <div class="row" style="line-height: 1.75rem;">
+                                    <div class="col" style="text-align: left;">
+                                        <div>
+                                            1. ชำระเงินผ่านบริการรับชำระเงินข้ามธนาคาร
+                                        </div>
+                                        <div>
+                                            2. โปรดใช้ใบนำฝากพิเศษ (Special Pay-in) ในการชำระเงิน
+                                        </div>
+                                        <div>
+                                            3. หากมีข้อสงสัยโปรดติดต่อ XXXXXX โทร 0899999999
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </t>
+                    </div>
+                </div>
+
+                <div class="border-top border-dark" style="line-height: 1.75rem;">
+                    <div class="text-left" style="padding-left: 5px;">
+                        <div>
+                            คำเตือน: ถ้าไม่มีการทักท้วงรายการข้างต้นประการใดภายใน <span t-esc="o.company_id.negotiate_duration"/> วัน บริษัทฯ จะถือว่ารายการข้างต้นนี้ถูกต้องแล้ว บริษัทฯ จะคิดค่าล่าช้าในอัตราไม่เกิน <span t-out="'{:,.2f}'.format(o.company_id.payment_fee_percent)"/>% ต่อเดือนสำหรับบิลที่ไม่ชำระตามที่กำหนด / Delay payment fee up to <span t-out="'{:,.2f}'.format(o.company_id.payment_fee_percent)"/>% per month will be charged on all overdue bill
+                        </div>
+                    </div>
+                </div>
+
+                <div class="border-top border-dark" style="text-align: center;">
+                    <div class="row">
+                        <div class="col-4 border-right border-dark">
+                            <span><b>ผู้ออกเอกสาร</b> (Issued by)</span>
+                        </div>
+                        <div class="col-4 border-right border-dark">
+                            <span><b>ผู้ตรวจสอบ</b> (Checked by)</span>
+                        </div>
+                        <div class="col-4">
+                            <span><b>ผู้อนุมัติเอกสาร</b> (Approved by)</span>
+                        </div>
+                    </div>
+                    <div class="row" style="height: 3rem;">
+                        <div class="col-4 border-right border-dark">
+                            <div style="text-align: center;position: absolute; top: -20px; left: 100px;">
+                                <img t-if="o.company_id.issue_uid.signature"
+                                     t-att-src="image_data_uri(o.company_id.issue_uid.signature)"
+                                     style="max-height: 30px;width: 100px; margin-top: 25px" alt="Logo" />
+                            </div>
+                        </div>
+                        <div class="col-4 border-right border-dark">
+                            <span/>
+                        </div>
+                        <div class="col-4">
+                            <div style="text-align: center;position: absolute; top: -20px; left: 100px;">
+                                <img t-if="o.company_id.approve_uid.signature"
+                                     t-att-src="image_data_uri(o.company_id.approve_uid.signature)"
+                                     style="max-height: 30px;width: 100px; margin-top: 25px" alt="Logo" />
+                            </div>
+                        </div>
+                    </div>
+                    <div class="row" style="height: 2rem;">
+                        <div class="col-4 border-right border-dark">
+                            (<span t-out="o.company_id.issue_uid.name"/>)
+                        </div>
+                        <div class="col-4 border-right border-dark">
+                            <span/>
+                        </div>
+                        <div class="col-4">
+                            (<span t-out="o.company_id.approve_uid.name"/>)
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="col-4 border-right border-dark">
+                            <span t-out="invoice_date"/>
+                        </div>
+                        <div class="col-4 border-right border-dark">
+                            <span t-out="invoice_date"/>
+                        </div>
+                        <div class="col-4">
+                            <span t-out="invoice_date"/>
+                        </div>
+                    </div>
+                </div>
+
+            </div>
+        </div>
+    </template>
+
+    <template id="kbt_account_ext.internal_layout_body">
+        <link href="/kbt_account_ext/static/src/css/font.css" rel="stylesheet"/>
+
+        <div class="main" t-attf-class="page {{font_fam}} page-body-set" style="font-family: THSarabunNew;">
+            <table class="table table-sm border-left border-bottom border-dark" style="font-size: 20px; margin-bottom: 0px;">
+                <tr class="text-center">
+                    <th class="border-right border-dark" style="width: 10%;">
+                        <b>ลำดับที่<br /> (No.)</b>
+                    </th>
+                    <th class="border-right border-dark" style="width: 64%;">
+                        <span>รายการสินค้า/บริการ<br /> (Goods/Service)</span>
+                    </th>
+                    <th class="border-right border-dark" style="width: 13%;">
+                        <span>จำนวนสินค้า<br /> (Quantity)</span>
+                    </th>
+                    <th class="border-right border-dark" style="width: 13%;">
+                        <span>จำนวนเงิน<br /> (Amount)</span>
+                    </th>
+                </tr>
+            </table>
+            <table class="table table-sm border border-dark border-top-0" style="font-size: 20px;">
+                <t t-set="counter" t-value="1"/>
+                <t t-set="count" t-value="0"/>
+                <t t-set="add" t-value="0"/>
+                <!-- push value for footer  -->
+                <t t-set="push" t-value="167"/>
+                <t t-set="check" t-value="0"/>
+                <t t-set="row" t-value="0"/>
+                <t t-foreach="o.invoice_line_ids" t-as="line">
+
+                    <tr style="">
+                        <td class="text-center border-top-0" style="width: 10%; border-right: 1px solid #000000">
+                            <t t-if="line.display_type not in ('line_note', 'line_section')">
+                                <span t-out="counter"/>
+                            </t>
+                        </td>
+                        <td class="text-left border-top-0" style="width: 64%; border-right: 1px solid #000000">
+                            <t t-if="line.display_type not in ('line_note', 'line_section')">
+                                <span t-out="line.name"/>
+                            </t>
+                            <t t-if="line.display_type == 'line_note'">
+                                <span t-out="line.name" class="font-italic"/>
+                            </t>
+                            <t t-if="line.display_type == 'line_section'">
+                                <span t-out="line.name" style="font-weight: bold;"/>
+                            </t>
+                        </td>
+                        <td class="text-right border-top-0" style="width: 13%; border-right: 1px solid #000000">
+                            <t t-if="line.display_type not in ('line_note', 'line_section')">
+                                <t t-if="line.product_uom_id">
+                                    <span t-out="'{:,.2f}'.format(line.quantity) + ' ' + line.product_uom_id.name"/>
+                                </t>
+                                <t t-else="">
+                                    <span t-out="'{:,.2f}'.format(line.quantity)"/>
+                                </t>
+                            </t>
+                        </td>
+                        <td class="text-right border-top-0" style="width: 13%;">
+                            <t t-if="line.display_type not in ('line_note', 'line_section')">
+                                <span t-out="'{:,.2f}'.format(line.price_subtotal)"/>
+                            </t>
+                        </td>
+
+                        <!-- set value for empty row -->
+                        <t t-if="line.name">
+                            <t t-if="len(line.name) > 80">
+                                <t t-set="count" t-value="count+196"/>
+                                <t t-set="row" t-value="row+1.444"/>
+                            </t>
+                            <t t-else="">
+                                <t t-set="count" t-value="count+140"/>
+                                <t t-set="row" t-value="row+1"/>
+                            </t>
+                        </t>
+                        <t t-else="">
+                            <t t-set="count" t-value="count+196"/>
+                            <t t-set="row" t-value="row+1.444"/>
+                        </t>
+
+
+                        <!-- cal value for push footer -->
+                        <t t-if="push > 200">
+                        </t>
+                        <t t-elif="counter > 22">
+                            <t t-set="push" t-value="push+54"/>
+                        </t>
+                        <t t-elif="count > 3200">
+                            <t t-set="push" t-value="push+54"/>
+                        </t>
+                        <t t-if="line.display_type not in ('line_note', 'line_section')">
+                            <t t-set="counter" t-value="counter+1"/>
+                        </t>
+
+                        <t t-if="check == 0">
+                            <t t-if="count > 5200">
+                                <t t-set="add" t-value="add+16"/>
+                                <t t-set="check" t-value="check+1"/>
+                            </t>
+                        </t>
+                    </tr>
+                </t>
+                <t t-if="ceil(row) % 22 != 0 and ceil(row) % 22 &lt; 13">
+                    <t t-set="actual_row" t-value="ceil(row) % 22"/>
+                    <t t-set="empty_row" t-value="13 - actual_row"/>
+                    <t t-foreach="range(empty_row)" t-as="line">
+                        <t t-if="line == 0">
+                            <tr style="height: 43.5px;">
+                                <td class="text-center border-top-0"  style="width: 10%; border-right: 1px solid #000000">
+                                    <span></span>
+                                </td>
+                                <td class="text-left border-top-0" style="width: 64%; border-right: 1px solid #000000">
+                                    <span></span>
+                                </td>
+                                <td class="text-right border-top-0" style="width: 13%; border-right: 1px solid #000000">
+                                    <span></span>
+                                </td>
+                                <td class="text-right border-top-0" style="width: 13%;">
+                                    <span></span>
+                                </td>
+                            </tr>
+                        </t>
+                        <t t-else="">
+                            <tr style="height: 43.5px;">
+                                <td class="text-center border-top-0"  style="width: 10%; border-right: 1px solid #000000">
+                                    <span></span>
+                                </td>
+                                <td class="text-left border-top-0" style="width: 64%; border-right: 1px solid #000000">
+                                    <span></span>
+                                </td>
+                                <td class="text-right border-top-0" style="width: 13%; border-right: 1px solid #000000">
+                                    <span></span>
+                                </td>
+                                <td class="text-right border-top-0" style="width: 13%;">
+                                    <span></span>
+                                </td>
+                            </tr>
+                        </t>
+                    </t>
+                </t>
+            </table>
+            <div class="new-page" data-page-size="3100" data-page-size-detail="1830" count-row="" t-attf-count-row="{{count}}" data-body-set="" t-attf-data-body-set="{{push}}" add-ing="" t-attf-add-ing="{{add}}"/>
+            <!-- <div id="data-page"></div> -->
+        </div>
+        <t t-call="kbt_account_ext.internal_layout_footer"/>
+    </template>
+
+    <template id="report_account_document_template">
+        <!-- Header -->
+        <t t-call="kbt_account_ext.internal_layout_header"/>
+        <!-- Body -->
+        <t t-call="kbt_account_ext.internal_layout_body"/>
+        <!-- Footer Inside Body-->
+    </template>
+
+</odoo>

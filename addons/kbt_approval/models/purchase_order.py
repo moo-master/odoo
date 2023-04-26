@@ -5,39 +5,187 @@ from odoo.exceptions import ValidationError
 class PurchaseOrder(models.Model):
     _inherit = 'purchase.order'
 
-    is_approve_send = fields.Boolean(
-        string='is_approve_send',
-        invisible=True,
+    state = fields.Selection(
+        selection_add=[
+            ('reject', 'Rejected'),
+        ]
     )
-
+    approve_level_id = fields.Many2one(
+        string='Approve Level',
+        comodel_name='org.level',
+        copy=False,
+    )
     cancel_reason = fields.Char(
-        string='Cancel Reason Note',
+        string='Cancel Reason',
+        copy=False,
+    )
+    reject_reason = fields.Char(
+        string='Reject Reason',
+        copy=False,
+    )
+    approval_ids = fields.One2many(
+        'user.approval.line',
+        'purchase_id',
+        string='Approval',
+        copy=False,
+    )
+    is_approve_done = fields.Boolean(
+        string='Approve Done',
+        copy=False,
+    )
+    is_skip_level = fields.Boolean(
+        string="Skip Level",
+        copy=False,
+    )
+    approve_skip_level = fields.Integer(
+        string='Approve skip level',
+        copy=False,
+    )
+    level_to_approve_skip_level = fields.Integer(
+        string='Level to Approve skip level',
+        copy=False,
+    )
+    is_can_user_approve = fields.Boolean(
+        string='User can approve',
+        compute='_compute_is_can_user_approve',
+    )
+    is_can_user_reject = fields.Boolean(
+        string='User can reject',
+        compute='_compute_is_can_user_reject'
     )
 
-    def button_confirm(self):
+    def button_draft(self):
+        res = super().button_draft()
+        self.env['mail.activity'].sudo().search(
+            [('res_model', '=', self._name), ('res_id', 'in', self.ids)]
+        ).unlink()
+        self.write({
+            'approve_level_id': False,
+            'approval_ids': [(5)],
+            'is_approve_done': False,
+            'is_skip_level': False,
+            'approve_skip_level': False,
+            'level_to_approve_skip_level': False,
+        })
+        return res
+
+    def _compute_is_can_user_approve(self):
+        for rec in self:
+            employee = self.env['hr.employee'].search(
+                [('user_id', '=', rec.env.uid)], limit=1).sudo()
+            rec.write({'is_can_user_approve': (rec.is_skip_level and (
+                employee.level_id.level == rec.approve_skip_level)) or (
+                employee.level_id == rec.approve_level_id)
+            })
+
+    def _compute_is_can_user_reject(self):
+        for rec in self:
+            employee = self.env['hr.employee'].search(
+                [('user_id', '=', rec.env.uid)], limit=1).sudo()
+            rec.write({'is_can_user_reject': (rec.is_skip_level and (
+                employee.level_id.level >= rec.approve_skip_level)) or (
+                employee.level_id.level >= rec.approve_level_id.level)
+            })
+
+    def skip_level(self, employee):
+        level = employee.parent_id.level_id.get_authorize(
+            'purchase.order', False, self.amount_total)
+        if level:
+            self.activity_schedule(
+                'kbt_approval.mail_activity_data_to_approve',
+                user_id=employee.parent_id.user_id.id
+            )
+            val = {
+                'state': 'to approve',
+                'approve_skip_level': employee.parent_id.level_id.level,
+                'level_to_approve_skip_level': level.org_level_id.level
+            }
+            if not self.approval_ids:
+                val.update(
+                    {'approval_ids': [
+                        (0, 0, {'manager_id': employee.parent_id.id})
+                    ]}
+                )
+            self.write(val)
+            self.env.cr.commit()  # pylint: disable=invalid-commit
+
+    def user_validation(self):
         employee = self.env['hr.employee'].search(
-            [('id', '=', self.partner_id.employee_ids.id)])
+            [('user_id', '=', self.env.uid)], limit=1).sudo()
         if not self.x_is_interface:
-            if employee.level_id.approval_validation(
-                    'purchase.order', self.amount_total, False):
-                super().button_confirm()
+            if not employee.parent_id.level_id:
+                raise ValidationError(_('Your manager do not have level.'))
+            if (employee.parent_id.level_id.level - employee.level_id.level
+                    > 1) and (not self.is_skip_level) and (not employee.parent_id):
+                self.is_skip_level = True
+                self.skip_level(employee)
+            approve = []
+            approve, res = employee.level_id.approval_validation(
+                'purchase.order', self.amount_total, False, employee, approve)
+            if not approve or res:
+                self.approval_ids.confirm_approval_line(employee)
+                self.is_approve_done = True
+                self.button_approve()
+                return True
             else:
-                self.is_approve_send = True
-                em_level = employee.level_id._rec_name if employee.level_id else "no level_id"
+                manager = employee.parent_id
+                employee_manager = manager.name or 'Administrator'
+                if manager:
+                    self.activity_schedule(
+                        'kbt_approval.mail_activity_data_to_approve',
+                        user_id=manager.user_id.id
+                    )
+                    val = {
+                        'state': 'to approve',
+                        'approve_level_id': manager.level_id,
+                    }
+                    if not self.approval_ids:
+                        val.update(
+                            {'approval_ids': [(0, 0, {'manager_id': line}) for line in approve]}
+                        )
+                    self.write(val)
+                    self.approval_ids.confirm_approval_line(employee)
+                    self.env.cr.commit()  # pylint: disable=invalid-commit
+
+                if manager.is_send_email:
+                    # Email Function
+                    self.env['approval.email.wizard'].with_context(
+                        id=self.id,
+                        model=self._name,
+                        cids=1,
+                        menu_id='purchase.menu_purchase_root',
+                        action='purchase.purchase_rfq',
+                    ).create({
+                        'employee_id': employee.id,
+                        'manager_id': manager.id,
+                        'name': 'Purchase Order',
+                        'order_name': self.name,
+                        'order_amount': self.amount_total,
+                    }).send_approval_email()
+
+                massage = 'Please contact (%s) for approving this document'
+                massage += '\nโปรดติดต่อ (%s) สำหรับการอนุมัติเอกสาร'
                 raise ValidationError(
                     _(
-                        'You cannot validate this document due limitation policy. Please contact employee {%s}\n ไม่สามารถดำเนินการได้เนื่องจากเกินวงเงินที่กำหนด กรุณาติดต่อพนักงาน {%s}',
-                        em_level,
-                        em_level))
-        else:
-            super().button_confirm()
+                        massage,
+                        employee_manager,
+                        employee_manager))
+
+    def button_approve(self):
+        for rec in self:
+            rec = super().button_approve()
+            self.env['mail.activity'].sudo().search(
+                [('res_model', '=', self._name), ('res_id', 'in', self.ids)]
+            ).unlink()
+            return rec
 
     def action_cancel_reject_reason_wizard(self):
         view = self.env.ref('beecy_reason.view_cancel_reject_reason_form')
         context = dict(
             self.env.context,
-            model_name='purchase.order',
-            state='cancel'
+            active_model='purchase.order',
+            active_id=self.id,
+            state='reject'
         )
         return {
             'name': _('Reject Quotations'),

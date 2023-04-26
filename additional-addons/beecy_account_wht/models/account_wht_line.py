@@ -54,13 +54,13 @@ class AccountWhtLine(models.Model):
     @api.depends('invoice_line_id.price_subtotal')
     def _compute_base_amount(self):
         for rec in self:
-            rec.base_amount = rec.invoice_line_id.price_subtotal or 0.0
+            rec.base_amount = round(rec.invoice_line_id.price_subtotal, 2) or 0
 
     @api.depends('base_amount', 'percent')
     def _compute_wht_amount(self):
         for rec in self:
-            rec.wht_amount = abs(
-                rec.invoice_line_id.amount_currency) * (rec.percent / 100.0)
+            rec.wht_amount = round(abs(
+                rec.invoice_line_id.amount_currency) * (rec.percent / 100), 2)
 
     @api.onchange('invoice_line_id')
     def _onchange_wht_type_id(self):

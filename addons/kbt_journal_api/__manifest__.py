@@ -12,6 +12,7 @@
         'Pachara P.',
     ],
     'depends': [
-        'kbt_business_type',
+        'kbt_journal_ext',
+        'kbt_api_base',
     ]
 }

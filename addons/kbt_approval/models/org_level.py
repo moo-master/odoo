@@ -1,10 +1,11 @@
-from odoo import models, fields, api
+from odoo import models, fields, api, _
+from odoo.exceptions import ValidationError
 
 
 class OrgLevel(models.Model):
     _name = 'org.level'
-    _order = 'write_date asc'
-    _rec_name = "display_name"
+    _order = 'level, write_date asc'
+    _rec_name = 'display_name'
 
     _sql_constraints = [
         ('org_level_field_level_uniq',
@@ -34,14 +35,57 @@ class OrgLevel(models.Model):
         compute="_compute_new_display_name", store=True, index=True
     )
 
-    @api.depends('level')
+    @api.depends('display_name', 'description')
     def _compute_new_display_name(self):
         for rec in self:
-            rec.display_name = str(rec.level)
+            rec.display_name = str(rec.level) + ' ' + rec.description
 
-    def approval_validation(self, model, amount, move_type):
+    def get_authorize(self, model, move_type, amount):
+        auth_model = self.env['account.move.line']
+        if model == 'account.move':
+            auth_model = self.line_ids.filtered(
+                lambda l: l.model_id_name == model and l.move_type == move_type)
+        else:
+            auth_model = self.line_ids.filtered(
+                lambda l: l.model_id_name == model)
+        if auth_model:
+            if auth_model.limit < amount and not auth_model.is_last_level:
+                raise ValidationError(
+                    _("Amount have over limit of your manager to approve '%s' model, please contact Administrator") %
+                    model)
+            return auth_model
+        if self.level - 1 < 0:
+            raise ValidationError(
+                _("Your manager do not have authorize to approve '%s' model, please contact Administrator") %
+                model)
+        return self.search([('level',
+                             '<',
+                             self.level)],
+                           order='level desc',
+                           limit=1).get_authorize(model,
+                                                  move_type,
+                                                  amount)
+
+    def approval_validation(
+            self,
+            model,
+            amount,
+            move_type,
+            employee,
+            approval):
+        res = True
         for line in self.line_ids:
-            if line.model_id.model == model and (
-                    model != 'account.move' or line.move_type == move_type):
-                return amount < line.limit
-        return True
+            if model != 'account.move':
+                if line.model_id.model == model:
+                    res = (amount <= line.limit) or line.is_last_level
+            else:
+                if line.move_type == move_type and line.model_id.model == model:
+                    res = (amount <= line.limit) or line.is_last_level
+
+        if not res:
+            approval.append(employee.parent_id.id)
+            employee.parent_id.level_id.approval_validation(
+                model, amount, move_type, employee.parent_id, approval
+            )
+
+        return approval, res

@@ -1,0 +1,93 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <data>
+        <!-- PND -->
+        <record id="action_pnd3_report" model="ir.actions.report">
+            <field name="name">PND3 Report</field>
+            <field name="model">account.wht.pnd</field>
+            <field name="report_type">qweb-pdf</field>
+            <field name="report_name">beecy_account_wht.account_pnd3_report</field>
+            <field name="report_file">beecy_account_wht.account_pnd3_report</field>
+            <field name="print_report_name">'PND3 - %s' % (object.name)</field>
+            <field name="paperformat_id" ref="beecy_account_wht.account_wht_pnd_paperformat"/>
+        </record>
+
+        <record id="action_pnd3_attach_report_pdf" model="ir.actions.report">
+            <field name="name">PND3 Attachment Report</field>
+            <field name="model">account.wht.pnd</field>
+            <field name="report_type">qweb-pdf</field>
+            <field name="report_name">beecy_account_wht.report_pnd3_attach_pdf</field>
+            <field name="report_file">beecy_account_wht.report_pnd3_attach_pdf</field>
+            <field name="print_report_name">'PND3 Attachment - %s' % (object.name)</field>
+            <field name="paperformat_id" ref="beecy_account_wht.account_wht_pnd_attach_paperformat"/>
+        </record>
+
+        <record id="action_pnd53_report" model="ir.actions.report">
+            <field name="name">PND53 Report</field>
+            <field name="model">account.wht.pnd</field>
+            <field name="report_type">qweb-pdf</field>
+            <field name="report_name">beecy_account_wht.account_pnd53_report</field>
+            <field name="report_file">beecy_account_wht.account_pnd53_report</field>
+            <field name="print_report_name">'PND53 - %s' % (object.name)</field>
+            <field name="paperformat_id" ref="beecy_account_wht.account_wht_pnd_paperformat"/>
+        </record>
+
+        <record id="action_pnd53_attach_report_pdf" model="ir.actions.report">
+            <field name="name">PND53 Attachment Report</field>
+            <field name="model">account.wht.pnd</field>
+            <field name="report_type">qweb-pdf</field>
+            <field name="report_name">beecy_account_wht.report_pnd53_attach_pdf</field>
+            <field name="report_file">beecy_account_wht.report_pnd53_attach_pdf</field>
+            <field name="print_report_name">'PND53 Attachment - %s' % (object.name)</field>
+            <field name="paperformat_id" ref="beecy_account_wht.account_wht_pnd_attach_paperformat"/>
+        </record>
+
+        <!-- WHT -->
+        <record id="action_acc_move_wht_certificate" model="ir.actions.report">
+            <field name="name">WHT Certificate</field>
+            <field name="model">account.wht</field>
+            <field name="report_type">qweb-pdf</field>
+            <field name="report_name">beecy_account_wht.report_account_wht_certificate</field>
+            <field name="report_file">beecy_account_wht.report_account_wht_certificate</field>
+            <field name="print_report_name">'WHT Certificate - %s' % (object.name)</field>
+            <field name="paperformat_id" ref="beecy_account_wht.account_wht_certificate_format"/>
+            <field name="binding_model_id" eval="False"/>
+            <field name="binding_type">report</field>
+        </record>
+
+        <record id="action_acc_move_wht" model="ir.actions.report">
+            <field name="name">หนังสือรับรอง</field>
+            <field name="model">account.wht</field>
+            <field name="report_type">qweb-pdf</field>
+            <field name="report_name">beecy_account_wht.report_account_wht</field>
+            <field name="report_file">beecy_account_wht.report_account_wht</field>
+            <field name="print_report_name">'หนังสือรับรอง - %s' % (object.name)</field>
+            <field name="paperformat_id" ref="beecy_account_wht.account_wht_format"/>
+            <field name="binding_model_id" eval="False"/>
+            <field name="binding_type">report</field>
+        </record>
+
+        <record id="action_acc_move_wht_substitute" model="ir.actions.report">
+            <field name="name">WHT Substitute</field>
+            <field name="model">account.wht</field>
+            <field name="report_type">qweb-pdf</field>
+            <field name="report_name">beecy_account_wht.report_account_wht_substitute</field>
+            <field name="report_file">beecy_account_wht.report_account_wht_substitute</field>
+            <field name="print_report_name">'WHT Substitute - %s' % (object.name)</field>
+            <field name="paperformat_id" ref="beecy_account_wht.account_wht_substitute_format"/>
+            <field name="binding_model_id" eval="False"/>
+            <field name="binding_type">report</field>
+        </record>
+
+        <!-- QWEB-TEXT -->
+        <record id="action_pnd_3n53_report_txt" model="ir.actions.report">
+            <field name="name">PND3 And PND53 (TXT)</field>
+            <field name="model">account.wht.pnd</field>
+            <field name="report_name">beecy_account_wht.report_pnd_3n53_text</field>
+            <field name="report_file">beecy_account_wht.report_pnd_3n53_text</field>
+            <field name="report_type">qweb-text</field>
+            <field name="paperformat_id" ref="beecy_account_wht.account_wht_pnd_paperformat"/>
+            <field name="print_report_name">'%s' % ('PND3' if object.pnd_type == 'pnd3' else 'PND53')</field>
+        </record>
+    </data>
+</odoo>

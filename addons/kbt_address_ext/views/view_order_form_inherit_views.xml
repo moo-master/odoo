@@ -17,7 +17,20 @@
                 <attribute name="invisible">1</attribute>
             </xpath>
             <xpath expr="//field[@name='partner_id']" position="after">
-                <field name="x_address" />
+                <field name="x_is_interface" invisible="1"/>
+                <field name="is_admin" invisible="1"/>
+                <field name="x_address"
+                    force_save="1"
+                    attrs="{
+                        'required': [('x_is_interface','=', True)],
+                        'readonly': ['|', ('x_is_interface','=', True), ('is_admin', '=', False)]
+                }"/>
+                <field name="x_partner_name"
+                    force_save="1"
+                    attrs="{
+                        'required': [('x_is_interface','=', True)],
+                        'readonly': ['|', ('x_is_interface','=', True), ('is_admin', '=', False)]
+                }"/>
             </xpath>
         </field>
     </record>

@@ -6,10 +6,66 @@
         <field name="inherit_id" ref="account.view_move_form"/>
         <field name="arch" type="xml">
             <xpath expr="//button[@name='action_invoice_sent']" position="before">
-                <button name="action_post" string="Approve" type="object" class="oe_highlight" groups="base.group_user" attrs="{'invisible': [('is_approve_send', '=', False)]}"/>
-                <button name="action_cancel_reject_reason_wizard" string="Reject" type="object" groups="base.group_user" attrs="{'invisible': [('is_approve_send', '=', False)]}"/>
-
-                <field name="is_approve_send" invisible="1" />
+                <field name="is_skip_level" invisible="1" />
+                <field name="is_can_user_approve" invisible="1" />
+                <field name="is_officer_approved" invisible="1" />
+                <field name="is_can_user_reject" invisible="1" />
+                <field name="ae_user" invisible="1"/>
+                <field name="is_ae_approver_approved" invisible="1"/>
+                <button name="user_validation"
+                    string="Send to Approval" type="object" class="oe_highlight"
+                    attrs="{'invisible': ['|', '|', ('state', 'not in', ['draft']), ('is_officer_approved', '=', True), ('ae_user', '!=', False)]}"/>
+                <button name="user_validation"
+                    string="Approve" type="object" class="oe_highlight"
+                    attrs="{'invisible': ['|', '|', ('state', 'not in', ['to approve']), ('is_officer_approved', '=', True), ('is_can_user_approve', '=', False)]}"/>
+                <button name="action_cancel_reject_reason_wizard"
+                    string="Reject" type="object" groups="base.group_user"
+                    attrs="{'invisible': ['|', '|', ('is_officer_approved', '=', True), ('state', 'not in', ['to approve']), ('is_can_user_reject', '=', False)]}"/>
+                <field name="is_hide_approver_button" invisible="1" />
+                <field name="is_hide_manager_button" invisible="1" />
+                <button name="action_approver_approve"
+                    string="Approve" type="object" class="oe_highlight"
+                    attrs="{'invisible': ['|', ('state', 'not in', ['to approve']), ('is_hide_approver_button', '=', True)]}"/>
+                <button name="action_approver_approve"
+                    string="Send to AP Manager" type="object" class="oe_highlight"
+                    attrs="{'invisible': ['|', '|', ('state', 'not in', ['draft']), ('ae_user', '!=', 'ap'), ('is_ae_approver_approved', '=', True)]}"/>
+                <button name="action_approver_approve"
+                    string="Send to AR Manager" type="object" class="oe_highlight"
+                    attrs="{'invisible': ['|', '|', ('state', 'not in', ['draft']), ('ae_user', '!=', 'ar'), ('is_ae_approver_approved', '=', True)]}"/>
+                <button name="action_cancel_reject_reason_wizard"
+                    string="Reject" type="object" groups="base.group_user"
+                    attrs="{'invisible': ['|', ('state', 'not in', ['to approve']), ('is_hide_approver_button', '=', True)]}"/>
+                <button name="action_manager_approve"
+                    string="Approve" type="object" class="oe_highlight"
+                    attrs="{'invisible': ['|', ('state', 'not in', ['to approve']), ('is_hide_manager_button', '=', True)]}"/>
+                <button name="action_manager_approve"
+                    string="Confirm" type="object" class="oe_highlight"
+                    attrs="{'invisible': ['|', ('state', 'not in', ['draft']), ('ae_user', '!=', 'ap_manager')]}"/>
+                <button name="action_manager_approve"
+                    string="Confirm" type="object" class="oe_highlight"
+                    attrs="{'invisible': ['|', ('state', 'not in', ['draft']), ('ae_user', '!=', 'ar_manager')]}"/>
+                <button name="action_cancel_reject_reason_wizard"
+                    string="Reject" type="object" groups="base.group_user"
+                    attrs="{'invisible': ['|', ('state', 'not in', ['to approve']), ('is_hide_manager_button', '=', True)]}"/>
+            </xpath>
+            <xpath expr="//field[@name='invoice_line_ids']" position="attributes">
+                <attribute name="attrs">{'readonly': [('state', '=', 'to approve')]}</attribute>
+            </xpath>
+            <xpath expr="//button[@name='action_post']" position="attributes">
+                <attribute name="invisible">1</attribute>
+            </xpath>
+            <xpath expr="//button[@name='action_post'][2]" position="attributes">
+                <attribute name="invisible">1</attribute>
+            </xpath>
+            <xpath expr="//notebook" position="inside">
+                <page id="approval_ids"
+                    string="Approve Details"
+                    attrs="{'invisible': [('approval_ids', '=', [])]}">
+                    <field name="approval_ids" context="{'tree_view_ref': 'kbt_approval.user_approval_line_tree_view'}"/>
+                </page>
+            </xpath>
+            <xpath expr="//field[@name='payment_reference']" position="after">
+                <field name="reject_reason" attrs="{'invisible': [('state', '!=', 'reject')]}"/>
             </xpath>
         </field>
     </record>

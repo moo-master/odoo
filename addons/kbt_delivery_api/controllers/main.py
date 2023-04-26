@@ -63,26 +63,60 @@ class DeliveryController(KBTApiBase):
             ('sale_id', '=', sale_order.id),
             ('state', 'in', ['assigned', 'confirmed']),
         ])
+        if not stock:
+            raise ValueError(
+                "stock not found."
+            )
 
+        stock_move_lst = []
         for item in data['item']:
             product_id = Product.search([
                 ('default_code', '=', item['product_id']),
             ])
+            if not product_id:
+                raise ValueError(
+                    f"Product code({item.get('product_id')}) not found.")
+
             sale_line = SaleOrderLine.search([
                 ('order_id', '=', sale_order.id),
                 ('sequence', '=', item['seq_line']),
                 ('product_id', '=', product_id.id),
             ])
+            if not sale_line:
+                raise ValueError(
+                    f"Sale Order Line seq_line({item.get('seq_line')}) not found."
+                )
+            if sale_line.product_id.detailed_type == 'service':
+                raise ValueError(
+                    "Can not update Service product by using Consume API."
+                )
             stock_line = StockMove.search([
                 ('sale_line_id', '=', sale_line.id),
                 ('picking_id', '=', stock.id)
             ])
-            stock_line.write({
+            if not stock_line:
+                raise ValueError(
+                    "stock_line not found."
+                )
+            if item['qty_done'] + \
+                    sale_line.qty_delivered > sale_line.product_uom_qty:
+                name = sale_line.name
+                prod_qty = sale_line.product_uom_qty
+                qty_deli = item['qty_done']
+                total_qty = prod_qty - sale_line.qty_delivered
+                raise ValueError(
+                    f"Your ordered quantity of {name} is "
+                    f"{prod_qty} and current delivered "
+                    f"quantity is {qty_deli} your order "
+                    f"quantity can’t more than {total_qty}")
+            stock_move_lst.append((1, stock_line.id, {
                 'quantity_done':
-                    stock_line.quantity_done + item['qty_done']
-            })
+                    stock_line.quantity_done + item.get('qty_done')
+            }))
+
         stock.write({
             'x_is_interface': True,
+            'move_ids_without_package': stock_move_lst
         })
         res = stock._pre_action_done_hook()
         if res is True:
@@ -106,7 +140,14 @@ class DeliveryController(KBTApiBase):
             acc_move = AccountMove.search(res['domain']).filtered(
                 lambda y: y.state == 'draft'
             )
+            if not acc_move:
+                raise ValueError(
+                    "acc_move not found."
+                )
         for inv in acc_move:
+            inv.write({
+                'x_is_interface': True,
+            })
             inv.action_post()
             response_api.append(inv.name)
 

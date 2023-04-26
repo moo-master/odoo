@@ -1,0 +1,28 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+<data noupdate="0">
+    <record model="ir.module.category" id="kin_technical_custom">
+        <field name="name">Technical-Custom</field>
+        <field name="description">Custom Category Transaction</field>
+      
+    </record>
+     <record id="technical_custom_accounting_billing" model="res.groups">
+        <field name="name"> Accounting Billing Create Draft Only</field>
+        <field name="comment">Create draft bills, invoice,contract show accounting tab </field>
+        <field name="category_id" ref="kin_technical_custom"/> 
+       
+    </record>
+    <record id="technical_custom_accounting_invoices" model="res.groups">
+        <field name="name"> Accounting Invoices Create Draft Only</field>
+        <field name="comment">Create draft bills, invoice,contract show accounting tab </field>
+        <field name="category_id" ref="kin_technical_custom"/> 
+       
+    </record>
+        <record id="technical_custom_bank_accounting" model="res.groups">
+        <field name="name"> Accounting Add a Line Bank Accounting</field>
+        <field name="comment">Create draft bills, invoice,contract show accounting tab </field>
+        <field name="category_id" ref="kin_technical_custom"/> 
+       
+    </record>
+</data>
+</odoo>

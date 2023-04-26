@@ -17,6 +17,6 @@
         'kbt_api_base',
     ],
     'data': [
-        'views/purchase_order_views.xml',
+        'views/purchase_order_view.xml',
     ]
 }

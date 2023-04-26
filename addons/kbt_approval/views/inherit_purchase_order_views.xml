@@ -6,12 +6,45 @@
         <field name="inherit_id" ref="purchase.purchase_order_form"/>
         <field name="arch" type="xml">
             <xpath expr="//button[@name='print_quotation']" position="after">
-                <button name="button_confirm" string="Approve" type="object" class="oe_highlight" groups="base.group_user" attrs="{'invisible': [('is_approve_send', '=', False)]}"/>
-                <button name="action_cancel_reject_reason_wizard" string="Reject" type="object" groups="base.group_user" attrs="{'invisible': [('is_approve_send', '=', False)]}"/>
-
-                <field name="is_approve_send" invisible="1" />
+                <field name="is_skip_level" invisible="1" />
+                <field name="is_can_user_approve" invisible="1" />
+                <field name="is_can_user_reject" invisible="1" />
+                <button name="user_validation"
+                    string="Send to Approval" type="object" class="oe_highlight"
+                    attrs="{'invisible': ['|', ('state', 'not in', ['draft']), ('is_approve_done', '=', True)]}"/>
+                <button name="user_validation"
+                    string="Approve" type="object" class="oe_highlight"
+                    attrs="{'invisible': ['|', '|', ('state', 'not in', ['to approve']), ('is_approve_done', '=', True), ('is_can_user_approve', '=', False)]}"/>
+                <button name="action_cancel_reject_reason_wizard"
+                    string="Reject" type="object" groups="base.group_user"
+                    attrs="{'invisible': ['|', '|', ('is_approve_done', '=', True), ('state', 'not in', ['to approve']), ('is_can_user_reject', '=', False)]}"/>
+            </xpath>
+            <xpath expr="//button[@id='draft_confirm']" position="attributes">
+                <attribute name="invisible">1</attribute>
+            </xpath>
+            <xpath expr="//button[@name='button_approve']" position="attributes">
+                <attribute name="invisible">1</attribute>
+            </xpath>
+            <xpath expr="//button[@name='button_draft']" position="replace">
+                <button name="button_draft" states="cancel,reject" string="Set to Draft" type="object" data-hotkey="o"/>
+            </xpath>
+            <xpath expr="//field[@name='order_line']" position="attributes">
+                <attribute name="attrs">{'readonly': [('state', 'in', ('done', 'cancel', 'to approve'))]}</attribute>
+            </xpath>
+            <xpath expr="//button[@name='action_rfq_send'][1]" position="attributes">
+                <attribute name="invisible">1</attribute>
+            </xpath>
+            <xpath expr="//notebook" position="inside">
+                <page id="approval_ids"
+                    string="Approve Details"
+                    attrs="{'invisible': [('approval_ids', '=', [])]}">
+                    <field name="approval_ids" context="{'tree_view_ref': 'kbt_approval.user_approval_line_tree_view'}"/>
+                </page>
+            </xpath>
+            <xpath expr="//field[@name='currency_id']" position="after">
+                <field name="reject_reason" attrs="{'invisible': [('state', '!=', 'reject')]}"/>
+                <field name="is_approve_done" readonly="1" invisible="1"/>
             </xpath>
         </field>
     </record>
-
 </odoo>

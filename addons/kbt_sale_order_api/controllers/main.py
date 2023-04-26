@@ -1,4 +1,5 @@
 import requests
+from datetime import datetime
 
 from odoo import http
 from odoo.http import request
@@ -29,23 +30,44 @@ class SaleOrderDataController(KBTApiBase):
         msg_list = []
         return msg_list
 
-    def _prepare_order_line(self, order_line, is_new_line, seq_id):
-        product_id = request.env['product.product'].search(
-            [('default_code', '=', order_line.get('product_id'))])
-        if is_new_line:
-            return {
+    def _prepare_order_line(self, order_line):
+        vals = {}
+        if not order_line.get('product_id') and order_line.get('note'):
+            vals = {
+                'sequence': order_line.get('seq_line'),
+                'name': order_line.get('note'),
+                'display_type': "line_note",
+            }
+        elif order_line.get('product_id'):
+            product_id = request.env['product.product'].search(
+                [('default_code', '=', order_line.get('product_id'))])
+
+            wht_id: int = product_id.wht_type_id.id
+            if 'x_wht_id' in order_line:
+                wht_id = request.env['account.wht.type'].search([
+                    ('sequence', '=', (seq := int(order_line.get('x_wht_id') or 0))),
+                ]).id
+                if not wht_id and seq:
+                    raise ValueError(
+                        "Withholding Tax: %s have no data." % seq
+                    )
+
+            vals.update({
                 'product_id': product_id.id,
                 'name': order_line.get('name'),
                 'product_uom_qty': order_line.get('product_uom_qty'),
                 'price_unit': order_line.get('price_unit'),
                 'discount': order_line.get('discount'),
                 'sequence': order_line.get('seq_line'),
-                'note': order_line.get('note')
-            }
+                'note': order_line.get('note'),
+                'wht_type_id': wht_id,
+            })
+        else:
+            raise ValueError(
+                "This item is neither 'product' nor 'note'."
+            )
 
-        return {
-            'qty_delivered': seq_id.qty_delivered + order_line['qty_delivered']
-        }
+        return vals
 
     def _create_sale_order(self, **params):
         data = params
@@ -65,13 +87,12 @@ class SaleOrderDataController(KBTApiBase):
         partner_id = Partner.search(
             [('x_interface_id', '=', data.get('x_external_code'))])
         if not partner_id:
-            partner_id = Partner.create(
-                {'name': data.get('x_interface_id')})
+            raise ValueError(
+                "partner_id not found."
+            )
         vals['partner_id'] = partner_id.id
 
-        date_order = data.get('date_order').split('-')
-        datetime_order = '{0}-{1}-{2}'.format(
-            date_order[2], date_order[1], date_order[0])
+        datetime_order = datetime.strptime(data.get('date_order'), '%d-%m-%Y')
         vals['date_order'] = datetime_order
 
         delivery_date = data.get('effective_date').split('-')
@@ -81,41 +102,67 @@ class SaleOrderDataController(KBTApiBase):
 
         account_term = request.env['account.payment.term']
         account_term_id = account_term.search(
-            [('name', '=', data.get('payment_term'))])
+            [('payment_term_code', '=', data.get('payment_term'))])
+        if not account_term_id:
+            raise ValueError(
+                "Payment Term Code Not Found."
+            )
         vals['payment_term_id'] = account_term_id.id
+
         account_analytic = request.env['account.analytic.account']
         account_analytic_id = account_analytic.search(
-            [('name', '=', data.get('analytic_account'))])
+            [('code', '=', data.get('analytic_account'))])
+        if not account_analytic_id:
+            raise ValueError(
+                "Analytic Account Code Not Found."
+            )
         vals['analytic_account_id'] = account_analytic_id.id
 
         business_type = request.env['business.type'].search([
             ('x_code', '=', data['x_so_type_code'])])
+        if not business_type:
+            raise ValueError(
+                "business_type not found."
+            )
+        if not business_type.is_active:
+            raise ValueError(
+                f"Business Type Code ({data['x_so_type_code']}) is inactive."
+            )
+
         vals['so_type_id'] = business_type.id
 
         so_type = params.get('x_so_type_code').upper()
         so_type_id = Business.search([
             ('x_code', '=ilike', so_type)
         ])
+        if not so_type_id:
+            raise ValueError(
+                "so_type_id not found."
+            )
         vals['so_type_id'] = so_type_id.id
 
         vals['x_so_orderreference'] = data.get('x_so_orderreference')
         vals['x_is_interface'] = True
-        vals['x_partner_name'] = data.get('x_partner_name')
         vals['x_address'] = data.get('x_address')
 
         order_line_vals_list = [(0, 0, self._prepare_order_line(
-            order_line, True, False))
+            order_line))
             for order_line in params.get('lineItems')
         ]
         vals['order_line'] = order_line_vals_list
+
         sale = Sale.new(vals)
         sale.onchange_partner_id()
         sale_values = sale._convert_to_write(sale._cache)
         sale_id = Sale.create(sale_values)
-        sale_id.write({
-            'name': params.get('x_so_orderreference')
-        })
+
         sale_id.action_confirm()
+        sale_id.write({
+            'name': params.get('x_so_orderreference'),
+            'payment_term_id': account_term_id.id,
+            'date_order': sale_id.date_order.replace(
+                datetime_order.year, datetime_order.month, datetime_order.day),
+        })
 
     @KBTApiBase.api_wrapper(['kbt.sale_order_update'])
     @http.route('/sale/update', type='json', auth='user')
@@ -145,10 +192,18 @@ class SaleOrderDataController(KBTApiBase):
 
         update_line_lst = []
         for order_line in params['lineItems']:
-            seq_id = request.env['sale.order.line'].search([
-                ('sequence', '=', order_line.get('seq_line')),
-                ('order_id', '=', so_orderreference.id)
-            ])
+
+            seq_id = so_orderreference.order_line.filtered(
+                lambda x: x.sequence == order_line.get('seq_line')
+                and not x.display_type)
+            if not seq_id:
+                raise ValueError(
+                    f"Sale Order Line seq_line({order_line.get('seq_line')}) not found.")
+            if seq_id.product_id.detailed_type != 'service':
+                raise ValueError(
+                    "Can not update Consume product by using Service API."
+                )
+
             if order_line['qty_delivered'] + seq_id.qty_delivered >\
                     seq_id.product_uom_qty:
                 name = seq_id.name
@@ -159,17 +214,30 @@ class SaleOrderDataController(KBTApiBase):
                     f"{prod_qty} and current delivered "
                     f"quantity is {qty_deli} your order "
                     f"quantity can’t more than {prod_qty - seq_id.qty_delivered}")
-            else:
-                update_line_lst.append(
-                    (1, seq_id.id,
-                     self._prepare_order_line(order_line, False, seq_id)))
+            elif seq_id.product_id.detailed_type != 'service':
+                raise ValueError(
+                    "Can not update Consume product by using Service API.")
+            update_line_lst.append(
+                (1, seq_id.id, {
+                    'qty_delivered':
+                        seq_id.qty_delivered + order_line['qty_delivered']
+                }))
+        partner = so_orderreference.partner_id
+        x_address = params.get('x_address') or (
+            f"{partner.street or ''} {partner.street2 or ''} "
+            + f"{partner.city or ''} {partner.state_id.name or ''} "
+            + f"{partner.country_id.name or ''} {partner.zip or ''}"
+        )
+        x_partner_name = params.get('x_partner_name') or partner.name
         so_orderreference.update({
             'order_line': update_line_lst,
-            'x_address': params['x_address'],
+            'x_address': x_address,
+            'x_partner_name': x_partner_name
         })
         move_id = so_orderreference._create_invoices()
         move_id.write({
-            'x_partner_name': so_orderreference.x_partner_name,
+            'x_is_interface': True,
+            'x_partner_name': x_partner_name
         })
         move_id.action_post()
         return move_id.name

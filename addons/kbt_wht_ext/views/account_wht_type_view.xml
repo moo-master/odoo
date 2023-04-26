@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<odoo>
+    <record id="account_wht_type_view_tree_ext" model="ir.ui.view">
+        <field name="name">account_wht_type_view_tree</field>
+        <field name="model">account.wht.type</field>
+        <field name="inherit_id" ref="beecy_account_wht.account_wht_type_view_form"/>
+        <field name="arch" type="xml">
+
+            <xpath expr="//field[@name='sequence']" position="after">
+                <field name="account_id" invisible="1"/>
+            </xpath>
+
+            <xpath expr="//field[@name='other_type']" position="attributes">
+                <attribute name="invisible">1</attribute>
+            </xpath>
+
+        </field>
+    </record>
+
+</odoo>

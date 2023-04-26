@@ -81,6 +81,7 @@ def business_type(env, account_payable, model_seq):
         'x_sequence_id': model_seq.id,
         'x_revenue_account_id': account_payable.id,
         'default_gl_account_id': account_payable.id,
+        'is_unearn_revenue': True
     })
 
 
@@ -110,19 +111,20 @@ def test__prepare_invoice_line(model,
                                product,
                                test_input,
                                expected):
-    so_vals = model.create({'partner_id': partner.id,
-                            'so_type_id': business_type.id,
-                            'x_is_interface': test_input['x_is'],
-                            'company_id': company.id,
-                            'order_line': [(0, 0, {
-                                'product_id': product.id,
-                                'product_uom_qty': 1,
-                                'price_unit': 100,
-                                'sequence': 1
-                            })]
-                            })
+    so_vals = model.new({'partner_id': partner.id,
+                         'so_type_id': business_type.id,
+                         'x_is_interface': test_input['x_is'],
+                         'company_id': company.id,
+                         'invoice_count': 1,
+                         'order_line': [(0, 0, {
+                             'product_id': product.id,
+                             'product_uom_qty': 1,
+                             'price_unit': 100,
+                             'sequence': 1
+                         })]
+                         })
     inv_line = so_vals.order_line._prepare_invoice_line()
-    if so_vals.x_is_interface:
+    if so_vals.x_is_interface and so_vals.so_type_id.is_unearn_revenue:
         assert inv_line['account_id'] == business_type.x_revenue_account_id
     else:
         assert expected not in inv_line
