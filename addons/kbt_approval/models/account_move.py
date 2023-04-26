@@ -1,5 +1,5 @@
 from odoo import models, fields, api, _
-from odoo.exceptions import ValidationError,except_orm,_
+from odoo.exceptions import ValidationError, _
 # from odoo import exceptions, _
 
 
