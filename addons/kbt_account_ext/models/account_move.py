@@ -107,7 +107,7 @@ class AccountMove(models.Model):
                     })
             else:
                 rec.write({
-                    'tax_type': False
+                    'tax_type': 'no_tax'
                 })
 
     @api.model_create_multi

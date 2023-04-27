@@ -58,7 +58,7 @@
                         <strong>ใบเสร็จรับเงิน<br/>Receipt</strong>
                     </t>
                     <t t-if="tax_type == 'tax'">
-                        <strong>ใบเสร็จรับเงิน<br/>Receipt</strong>
+                        <strong>ใบเสร็จรับเงิน/ใบกำกับภาษี<br/>Receipt</strong>
                     </t>
                     <t t-if="tax_type == 'deferred'">
                         <strong>ใบเสร็จรับเงิน/ใบกำกับภาษี<br/>Receipt/Tax Invoice</strong>

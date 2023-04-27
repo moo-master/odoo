@@ -38,16 +38,17 @@ class SaleOrder(models.Model):
 
     @api.model_create_multi
     def create(self, vals):
-        res = super().create(vals)
-        taxs = res.order_line.mapped('tax_id')
-        null_taxs = self.env['sale.order.line']
-        for line in res.order_line:
-            if not line.tax_id and not line.display_type:
-                null_taxs = line
-                break
-        if (taxs and null_taxs) or (len(taxs) > 1):
-            raise UserError(_('Tax must be one and only one.'))
-        return res
+        result = super().create(vals)
+        for res in result:
+            taxs = res.order_line.mapped('tax_id')
+            null_taxs = self.env['sale.order.line']
+            for line in res.order_line:
+                if not line.tax_id and not line.display_type:
+                    null_taxs = line
+                    break
+            if (taxs and null_taxs) or (len(taxs) > 1):
+                raise UserError(_('Tax must be one and only one.'))
+        return result
 
     def write(self, vals):
         res = super().write(vals)
