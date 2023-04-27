@@ -1,0 +1,54 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+
+    <record id="account_journal_dashboard_kanban_view_inherit_approval" model="ir.ui.view">
+        <field name="name">account.journal.dashboard.kanban.approval</field>
+        <field name="model">account.journal</field>
+        <field name="inherit_id" ref="account.account_journal_dashboard_kanban_view" />
+        <field name="arch" type="xml">
+            <xpath expr="//t[@id='account.JournalBodySalePurchase']//div[hasclass('o_kanban_primary_right')]" position="inside">
+                <div class="row" t-if="dashboard.number_ar_staff_to_approve">
+                    <div class="col overflow-hidden text-left">
+                        <a type="object" t-if="journal_type == 'sale'" name="open_ar_staff_move_action">
+                            <t t-esc="dashboard.number_ar_staff_to_approve"/> To Approve (AR Approver)
+                        </a>
+                    </div>
+                    <div class="col-auto text-right">
+                        <span t-if="journal_type == 'sale'"><t t-esc="dashboard.sum_ar_staff_to_approve"/></span>
+                    </div>
+                </div>
+                <div class="row" t-if="dashboard.number_ar_manager_to_approve">
+                    <div class="col overflow-hidden text-left">
+                        <a type="object" t-if="journal_type == 'sale'" name="open_ar_manager_move_action">
+                            <t t-esc="dashboard.number_ar_manager_to_approve"/> To Approve (AR Manager)
+                        </a>
+                    </div>
+                    <div class="col-auto text-right">
+                        <span t-if="journal_type == 'sale'"><t t-esc="dashboard.sum_ar_manager_to_approve"/></span>
+                    </div>
+                </div>
+                <div class="row" t-if="dashboard.number_ap_staff_to_approve">
+                    <div class="col overflow-hidden text-left">
+                        <a type="object" t-if="journal_type == 'purchase'" name="open_ap_staff_move_action">
+                            <t t-esc="dashboard.number_ap_staff_to_approve"/> To Approve (AP Approver)
+                        </a>
+                    </div>
+                    <div class="col-auto text-right">
+                        <span t-if="journal_type == 'purchase'"><t t-esc="dashboard.sum_ap_staff_to_approve"/></span>
+                    </div>
+                </div>
+                <div class="row" t-if="dashboard.number_ap_manager_to_approve">
+                    <div class="col overflow-hidden text-left">
+                        <a type="object" t-if="journal_type == 'purchase'" name="open_ap_manager_move_action">
+                            <t t-esc="dashboard.number_ar_manager_to_approve"/> To Approve (AP Manager)
+                        </a>
+                    </div>
+                    <div class="col-auto text-right">
+                        <span t-if="journal_type == 'purchase'"><t t-esc="dashboard.sum_ap_manager_to_approve"/></span>
+                    </div>
+                </div>
+            </xpath>
+        </field>
+    </record>
+
+</odoo>
