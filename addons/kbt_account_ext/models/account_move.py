@@ -93,49 +93,50 @@ class AccountMove(models.Model):
     def _compute_tax_type(self):
         for rec in self:
             if rec.invoice_line_ids:
-                if not rec.invoice_line_ids[0].tax_ids:
-                    rec.write({
-                        'tax_type': 'no_tax'
-                    })
-                elif rec.invoice_line_ids[0].tax_ids.is_exempt:
+                deferred = rec.invoice_line_ids.filtered(
+                    lambda r: r.tax_type == 'deferred')
+                tax = rec.invoice_line_ids.filtered(lambda r:
+                                                    r.tax_type == 'tax')
+                if deferred:
                     rec.write({
                         'tax_type': 'deferred'
                     })
-                else:
+                elif tax:
                     rec.write({
                         'tax_type': 'tax'
                     })
+                else:
+                    rec.write({
+                        'tax_type': 'no_tax'
+                    })
             else:
                 rec.write({
-                    'tax_type': 'no_tax'
+                    'tax_type': False
                 })
 
     @api.model_create_multi
     def create(self, vals):
-        res = super().create(vals)
-        if res.move_type != 'entry':
-            taxs = res.invoice_line_ids.mapped('tax_ids')
-            null_taxs = self.env['account.move.line']
-            for line in res.invoice_line_ids:
-                if not line.tax_ids and not line.display_type:
-                    null_taxs = line
-                    break
-            if (taxs and null_taxs) or (len(taxs) > 1):
-                raise UserError(_('Tax must be one and only one.'))
-        return res
+        result = super().create(vals)
+        for res in result:
+            deferred = res.invoice_line_ids.filtered(lambda r:
+                                                     r.tax_type == 'deferred')
+            tax = res.invoice_line_ids.filtered(lambda r:
+                                                r.tax_type == 'tax')
+            if (tax and deferred):
+                raise UserError(
+                    _('Order line cannot contain with Tax and Deferred tax.'))
+        return result
 
     def write(self, vals):
         res = super().write(vals)
-        if self.move_type != 'entry':
-            if 'line_ids' in vals:
-                taxs = self.invoice_line_ids.mapped('tax_ids')
-                null_taxs = self.env['account.move.line']
-                for line in self.invoice_line_ids:
-                    if not line.tax_ids and not line.display_type:
-                        null_taxs = line
-                        break
-                if (taxs and null_taxs) or (len(taxs) > 1):
-                    raise UserError(_('Tax must be one and only one.'))
+        if 'line_ids' in vals:
+            deferred = self.invoice_line_ids.filtered(lambda r:
+                                                      r.tax_type == 'deferred')
+            tax = self.invoice_line_ids.filtered(lambda r:
+                                                 r.tax_type == 'tax')
+            if (tax and deferred):
+                raise UserError(
+                    _('Order line cannot contain with Tax and Deferred tax.'))
         return res
 
     def get_amount_total_text(self, amount):
