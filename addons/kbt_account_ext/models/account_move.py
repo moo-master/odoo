@@ -21,7 +21,7 @@ class AccountMove(models.Model):
     )
     x_wht_amount = fields.Float(
         string='WHT Amount',
-        compute='_compute_old_invoice_amount',
+        compute='_compute_wht_amount',
         store=True,
     )
     x_real_amount = fields.Float(
@@ -142,6 +142,12 @@ class AccountMove(models.Model):
     def get_amount_total_text(self, amount):
         return bahttext(amount)
 
+    @api.depends('invoice_line_ids')
+    def _compute_wht_amount(self):
+        for move in self:
+            move.write({'x_wht_amount': sum(
+                line.amount_wht for line in move.invoice_line_ids), })
+
     @api.depends('x_real_amount')
     def _compute_old_invoice_amount(self):
         for move in self:
@@ -149,7 +155,6 @@ class AccountMove(models.Model):
             move.write({
                 'x_old_invoice_amount': invoice_id.amount_untaxed,
                 'x_diff_amount': invoice_id.amount_untaxed - move.x_real_amount,
-                'x_wht_amount': invoice_id.amount_wht,
             })
 
     @api.onchange('x_real_amount')
