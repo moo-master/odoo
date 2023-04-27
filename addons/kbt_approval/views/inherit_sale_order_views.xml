@@ -29,6 +29,24 @@
             <xpath expr="//field[@name='order_line']" position="attributes">
                 <attribute name="attrs">{'readonly': [('state', 'in', ('done', 'cancel', 'to approve'))]}</attribute>
             </xpath>
+            <xpath expr="//tree/field[@name='name']" position="attributes">
+                <attribute name="attrs">{'readonly': [('state', 'in', ('sale'))]}</attribute>
+            </xpath>
+            <xpath expr="//tree/field[@name='product_uom_qty']" position="attributes">
+                <attribute name="attrs">{'readonly': [('state', 'in', ('sale'))]}</attribute>
+            </xpath>
+            <xpath expr="//tree/field[@name='qty_delivered']" position="attributes">
+                <attribute name="attrs">{'readonly': [('state', 'in', ('done', 'cancel', 'to approve'))]}</attribute>
+            </xpath>
+            <xpath expr="//tree/field[@name='price_unit']" position="attributes">
+                <attribute name="attrs">{'readonly': [('state', 'in', ('sale'))]}</attribute>
+            </xpath>
+            <xpath expr="//tree/field[@name='tax_id']" position="attributes">
+                <attribute name="attrs">{'readonly': [('state', 'in', ('sale'))]}</attribute>
+            </xpath>
+            <xpath expr="//tree/field[@name='discount']" position="attributes">
+                <attribute name="attrs">{'readonly': [('state', 'in', ('sale'))]}</attribute>
+            </xpath>
             <xpath expr="//header/button[@name='action_quotation_send'][1]" position="attributes">
                 <attribute name="invisible">1</attribute>
             </xpath>
