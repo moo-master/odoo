@@ -12,7 +12,8 @@
                     string="Business Type"
                     attrs="{
                         'required': [('x_is_interface','=', True)],
-                        'readonly': [('x_is_interface','=', True)]
+                        'readonly': [('x_is_interface','=', True)],
+                        'invisible': [('x_is_interface', '=', False)]
                     }"
                 />
             </xpath>

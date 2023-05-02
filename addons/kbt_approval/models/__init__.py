@@ -8,3 +8,4 @@ from . import user_approval_line
 from . import res_company
 from . import res_config_settings
 from . import account_journal
+from . import account_journal_dashboard

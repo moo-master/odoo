@@ -118,6 +118,21 @@ class SaleOrder(models.Model):
     def user_validation(self):
         employee = self.env['hr.employee'].search(
             [('user_id', '=', self.env.uid)], limit=1).sudo()
+        em_level = employee.level_id.level
+
+        # Other Level case
+        if (self.approval_ids and em_level and (em_level
+                                                < self.approve_level_id.level)) or self.is_approve_done:
+            raise ValidationError(
+                _("You already approve this document, please reload page."))
+
+        # Level 0 case
+        if self.approval_ids and (
+                em_level == 0) and (
+                em_level < self.approve_level_id.level):
+            raise ValidationError(
+                _("You already approve this document, please reload page."))
+
         if not self.x_is_interface:
             if not employee.parent_id.level_id:
                 raise ValidationError(_('Your manager do not have level.'))
@@ -157,6 +172,11 @@ class SaleOrder(models.Model):
                         )
                     self.write(val)
                     self.approval_ids.confirm_approval_line(employee)
+                    self.env['mail.activity'].sudo().search([
+                        ('res_model', '=', self._name),
+                        ('res_id', 'in', self.ids),
+                        ('user_id', '=', self.env.user.id)
+                    ]).unlink()
                     self.env.cr.commit()  # pylint: disable=invalid-commit
 
                 if manager.is_send_email:

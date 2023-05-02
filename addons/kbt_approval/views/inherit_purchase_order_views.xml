@@ -31,6 +31,21 @@
             <xpath expr="//field[@name='order_line']" position="attributes">
                 <attribute name="attrs">{'readonly': [('state', 'in', ('done', 'cancel', 'to approve'))]}</attribute>
             </xpath>
+            <xpath expr="//tree/field[@name='name']" position="attributes">
+                <attribute name="attrs">{'readonly': [('state', 'in', ('purchase'))]}</attribute>
+            </xpath>
+            <xpath expr="//tree/field[@name='product_qty']" position="attributes">
+                <attribute name="attrs">{'readonly': [('state', 'in', ('purchase'))]}</attribute>
+            </xpath>
+            <xpath expr="//tree/field[@name='qty_received']" position="attributes">
+                <attribute name="attrs">{'readonly': [('state', 'in', ('done', 'cancel', 'to approve'))]}</attribute>
+            </xpath>
+            <xpath expr="//tree/field[@name='price_unit']" position="attributes">
+                <attribute name="attrs">{'readonly': [('state', 'in', ('purchase'))]}</attribute>
+            </xpath>
+            <xpath expr="//tree/field[@name='taxes_id']" position="attributes">
+                <attribute name="attrs">{'readonly': [('state', 'in', ('purchase'))]}</attribute>
+            </xpath>
             <xpath expr="//button[@name='action_rfq_send'][1]" position="attributes">
                 <attribute name="invisible">1</attribute>
             </xpath>
