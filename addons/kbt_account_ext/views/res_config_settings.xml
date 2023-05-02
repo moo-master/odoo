@@ -12,24 +12,24 @@
                     <div class="col-12 col-lg-6 o_setting_box" title="Issue By">
                         <div class="o_setting_left_pane"/>
                         <div class="o_setting_right_pane">
-                            <span class="o_form_label">Default Issue User</span>
+                            <span class="o_form_label">Default Issue Employee</span>
                             <div class="text-muted">
-                                Default Issue User of your company
+                                Default Issue Employee of your company
                             </div>
                             <div class="text-muted">
-                                <field name="issue_uid"/>
+                                <field name="issue_eid"/>
                             </div>
                         </div>
                     </div>
                     <div class="col-12 col-lg-6 o_setting_box" title="Approve By">
                         <div class="o_setting_left_pane"/>
                         <div class="o_setting_right_pane">
-                            <span class="o_form_label">Default Approve User</span>
+                            <span class="o_form_label">Default Approve Employee</span>
                             <div class="text-muted">
-                                Default Approve User of your company
+                                Default Approve Employee of your company
                             </div>
                             <div class="text-muted">
-                                <field name="approve_uid"/>
+                                <field name="approve_eid"/>
                             </div>
                         </div>
                     </div>

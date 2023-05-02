@@ -11,6 +11,32 @@ class AccountMoveLine(models.Model):
         store=True,
     )
 
+    tax_type = fields.Selection(
+        string="Tax Type",
+        selection=[
+            ('no_tax', 'No Tax'),
+            ('tax', 'Tax'),
+            ('deferred', 'Deferred Tax')
+        ],
+        compute="_compute_tax_type"
+    )
+
+    @api.depends('tax_ids')
+    def _compute_tax_type(self):
+        for rec in self:
+            if rec.tax_ids.tax_exigibility == 'on_payment':
+                rec.write({
+                    'tax_type': 'deferred'
+                })
+            elif rec.tax_ids.is_exempt or not rec.tax_ids:
+                rec.write({
+                    'tax_type': 'no_tax'
+                })
+            else:
+                rec.write({
+                    'tax_type': 'tax'
+                })
+
     @api.depends('debit',
                  'credit',
                  'amount_currency',
