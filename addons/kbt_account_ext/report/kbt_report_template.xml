@@ -416,8 +416,8 @@
                     <div class="row" style="height: 3rem;">
                         <div class="col-4 border-right border-dark">
                             <div style="text-align: center;position: absolute; top: -20px; left: 100px;">
-                                <img t-if="o.company_id.issue_uid.signature"
-                                     t-att-src="image_data_uri(o.company_id.issue_uid.signature)"
+                                <img t-if="o.company_id.issue_eid.signature"
+                                     t-att-src="image_data_uri(o.company_id.issue_eid.signature)"
                                      style="max-height: 30px;width: 100px; margin-top: 25px" alt="Logo" />
                             </div>
                         </div>
@@ -426,21 +426,21 @@
                         </div>
                         <div class="col-4">
                             <div style="text-align: center;position: absolute; top: -20px; left: 100px;">
-                                <img t-if="o.company_id.approve_uid.signature"
-                                     t-att-src="image_data_uri(o.company_id.approve_uid.signature)"
+                                <img t-if="o.company_id.approve_eid.signature"
+                                     t-att-src="image_data_uri(o.company_id.approve_eid.signature)"
                                      style="max-height: 30px;width: 100px; margin-top: 25px" alt="Logo" />
                             </div>
                         </div>
                     </div>
                     <div class="row" style="height: 2rem;">
                         <div class="col-4 border-right border-dark">
-                            (<span t-out="o.company_id.issue_uid.name"/>)
+                            (<span t-out="o.company_id.issue_eid.name"/>)
                         </div>
                         <div class="col-4 border-right border-dark">
                             <span/>
                         </div>
                         <div class="col-4">
-                            (<span t-out="o.company_id.approve_uid.name"/>)
+                            (<span t-out="o.company_id.approve_eid.name"/>)
                         </div>
                     </div>
                     <div class="row">

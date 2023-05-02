@@ -47,5 +47,6 @@
         'wizards/wizard_profit_loss_views.xml',
         'views/account_tax_view.xml',
         'views/res_config_settings.xml',
+        'views/hr_employee_view.xml',
     ]
 }

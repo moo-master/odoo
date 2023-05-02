@@ -3,12 +3,13 @@ from odoo import fields, models
 
 class ResCompany(models.Model):
     _inherit = "res.company"
-
-    issue_uid = fields.Many2one(
-        comodel_name='res.users',
-        string='Default Issue By'
+    # pylint: disable=biszx-relation2one-field-name
+    issue_eid = fields.Many2one(
+        comodel_name='hr.employee',
+        string='Default Issue By',
     )
-    approve_uid = fields.Many2one(
-        comodel_name='res.users',
-        string='Default Approve By'
+    # pylint: disable=biszx-relation2one-field-name
+    approve_eid = fields.Many2one(
+        comodel_name='hr.employee',
+        string='Default Approve By',
     )

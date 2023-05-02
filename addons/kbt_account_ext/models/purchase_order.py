@@ -19,17 +19,21 @@ class PurchaseOrder(models.Model):
     def _compute_tax_type(self):
         for rec in self:
             if rec.order_line:
-                if not rec.order_line[0].taxes_id:
-                    rec.write({
-                        'tax_type': 'no_tax'
-                    })
-                elif rec.order_line[0].taxes_id.is_exempt:
+                deferred = rec.order_line.filtered(lambda r:
+                                                   r.tax_type == 'deferred')
+                tax = rec.order_line.filtered(lambda r:
+                                              r.tax_type == 'tax')
+                if deferred:
                     rec.write({
                         'tax_type': 'deferred'
                     })
-                else:
+                elif tax:
                     rec.write({
                         'tax_type': 'tax'
+                    })
+                else:
+                    rec.write({
+                        'tax_type': 'no_tax'
                     })
             else:
                 rec.write({
@@ -38,26 +42,55 @@ class PurchaseOrder(models.Model):
 
     @api.model_create_multi
     def create(self, vals):
-        res = super().create(vals)
-        taxs = res.order_line.mapped('taxes_id')
-        null_taxs = self.env['purchase.order.line']
-        for line in res.order_line:
-            if not line.taxes_id and not line.display_type:
-                null_taxs = line
-                break
-        if (taxs and null_taxs) or (len(taxs) > 1):
-            raise UserError(_('Tax must be one and only one.'))
-        return res
+        result = super().create(vals)
+        for res in result:
+            deferred = res.order_line.filtered(lambda r:
+                                               r.tax_type == 'deferred')
+            tax = res.order_line.filtered(lambda r:
+                                          r.tax_type == 'tax')
+            if (tax and deferred):
+                raise UserError(
+                    _('Order line cannot contain with Tax and Deferred tax.'))
+        return result
 
     def write(self, vals):
         res = super().write(vals)
         if 'order_line' in vals:
-            taxs = self.order_line.mapped('taxes_id')
-            null_taxs = self.env['purchase.order.line']
-            for line in self.order_line:
-                if not line.taxes_id and not line.display_type:
-                    null_taxs = line
-                    break
-            if (taxs and null_taxs) or (len(taxs) > 1):
-                raise UserError(_('Tax must be one and only one.'))
+            deferred = self.order_line.filtered(lambda r:
+                                                r.tax_type == 'deferred')
+            tax = self.order_line.filtered(lambda r:
+                                           r.tax_type == 'tax')
+            if (tax and deferred):
+                raise UserError(
+                    _('Order line cannot contain with Tax and Deferred tax.'))
         return res
+
+
+class PurchaseOrderLine(models.Model):
+    _inherit = 'purchase.order.line'
+
+    tax_type = fields.Selection(
+        string="Tax Type",
+        selection=[
+            ('no_tax', 'No Tax'),
+            ('tax', 'Tax'),
+            ('deferred', 'Deferred Tax')
+        ],
+        compute="_compute_tax_type"
+    )
+
+    @api.depends('taxes_id')
+    def _compute_tax_type(self):
+        for rec in self:
+            if rec.taxes_id.tax_exigibility == 'on_payment':
+                rec.write({
+                    'tax_type': 'deferred'
+                })
+            elif rec.taxes_id.is_exempt or not rec.taxes_id:
+                rec.write({
+                    'tax_type': 'no_tax'
+                })
+            else:
+                rec.write({
+                    'tax_type': 'tax'
+                })
